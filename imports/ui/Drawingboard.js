@@ -17,10 +17,16 @@ export default class Drawingboard extends React.Component {
                   { Size: { type: "range" } },
                   'Navigation',
                 ],
-                webStorage: 'session'
+                webStorage: false
               });
+
+              this.myBoard.ev.bind('board:reset', ()=>{console.log('binded')});
+              this.myBoard.ev.bind('board:stopDrawing', ()=>{console.log('binded')});
+              
         });
     }
+
+
 
     componentWillUnmount() {
         this.boardTracker.stop();
@@ -30,7 +36,7 @@ export default class Drawingboard extends React.Component {
 
         const boardStyle = {
             width:400,
-            height:400,
+            height:400
         }
 
         return(
