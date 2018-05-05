@@ -13,7 +13,7 @@ export default class Sim extends React.Component {
 
             try {
                 const sim = sketchToRun(code, '$_p');   //To ensure that rendering the sketch
-                const a = <P5Wrapper sketch={sim} />    //leter doesn't end up in error
+                const a = <P5Wrapper sketch={sim} />    //later doesn't throw an error to crash
             }
             catch(e) {
                 return;
