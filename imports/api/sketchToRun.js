@@ -28,7 +28,8 @@ export default function sketchToRun(sourceCode, customName) {
             comment: false
         },
         instance: customName
-    }
-    let output = p5Convert(sourceCode, paramsToPass);
-    return Function(customName, output);
+    }                                   //This is the 2nd parameter to pass to p5Convert which includes the custom name                         
+    
+    let output = p5Convert(sourceCode, paramsToPass); //output contains the instance code with custom name
+    return Function(customName, output);    //Return an instance mode p5 function
 }
