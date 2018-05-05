@@ -1,12 +1,13 @@
 import React from 'react'
 import './drawing-board/drawingboard';
 import './drawing-board/drawingboard.scss';
+import { Tracker } from 'meteor/tracker';
 
 export default class Drawingboard extends React.Component {
 
     componentDidMount() {
 
-        this.simsTracker =Tracker.autorun(()=>{
+        this.boardTracker =Tracker.autorun(()=>{
             this.myBoard = new DrawingBoard.Board('board', {
                 background: "#000000",
                 color: "#ffffff",
@@ -22,7 +23,7 @@ export default class Drawingboard extends React.Component {
     }
 
     componentWillUnmount() {
-        this.simsTracker.stop();
+        this.boardTracker.stop();
     }
 
     render() {

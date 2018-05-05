@@ -27,6 +27,7 @@ export default class Sim extends React.Component {
     render() {
         return(
         <div>
+            <p>Sim create</p>
             <form onSubmit={this.handleSubmit.bind(this)}>
             <textarea cols='30' rows='25'  name='code' ref='code' placeholder='Code'/>
             <button>Submit</button>
