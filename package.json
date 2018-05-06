@@ -12,5 +12,8 @@
     "react-dom": "^15.4.1",
     "react-p5-wrapper": "0.0.4",
     "react-router": "^3.0.0"
+  },
+  "engines":{
+    "node":"v8.11.1"
   }
 }
