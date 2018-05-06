@@ -75,6 +75,7 @@ export default class Drawingboard extends React.Component {
 
               this.myBoard.ev.bind('board:reset',this.changeArray.bind(this));
               this.myBoard.ev.bind('board:stopDrawing', this.changeArray.bind(this));
+              
         });
     }
 
@@ -93,13 +94,10 @@ export default class Drawingboard extends React.Component {
         return(
             <div>
                 <div id='board' style={boardStyle}></div>
-
                 <button onClick={this.next.bind(this)}>Next</button>
-                <button onClick={this.previous.bind(this)}>Previous</button>
-                
+                <button onClick={this.previous.bind(this)}>Previous</button>                
                 <h1>{this.state.currSlide}</h1>                
-            </div>
-            
+            </div>            
         );
     }
 }

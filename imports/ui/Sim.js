@@ -10,15 +10,6 @@ export default class Sim extends React.Component {
         e.preventDefault();
         const code = this.refs.code.value.trim();
         if(code) {
-
-            try {
-                const sim = sketchToRun(code, '$_p');   //To ensure that rendering the sketch
-                const a = <P5Wrapper sketch={sim} />    //later doesn't throw an error to crash
-            }
-            catch(e) {
-                return;
-            }
-
             Sims.insert({code});
             this.refs.code.value = '';
         }
