@@ -19,12 +19,11 @@ export default class SimsList extends React.Component {
         });
     }
     componentWillUnmount() {
-        this.simsTracker.stop();
     }
 
     renderSims() {
         return this.state.sims.map((sim) => {
-            return <P5Wrapper key={sim._id} sketch={sketchToRun(sim.code,sim._id)} />
+            return <P5Wrapper key={sim._id} sketch={sketchToRun(sim.code, sim._id)} />
         });
     }
 
