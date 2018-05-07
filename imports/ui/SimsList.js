@@ -1,5 +1,5 @@
 import React from 'react';
-import {Iframes} from '../api/iframes';
+import {Sims} from '../api/sims';
 import { Tracker } from 'meteor/tracker';
 
 export default class SimsList extends React.Component {
@@ -12,7 +12,7 @@ export default class SimsList extends React.Component {
     }
     componentDidMount() {
         this.simsTracker =Tracker.autorun(()=>{
-            const sims = Iframes.find().fetch();
+            const sims = Sims.find().fetch();
             this.setState({sims});
         });
     }

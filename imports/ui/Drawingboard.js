@@ -67,7 +67,7 @@ export default class Drawingboard extends React.Component {
                 size: 5,
                 controls: ['Color',
                   { DrawingMode: { filler: false } },
-                  { Size: { type: "range" } },
+                  { Size: { type: 'dropdown' } },
                   'Navigation',
                 ],
                 webStorage: false
