@@ -7,7 +7,7 @@ export default class Add extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         const tag = this.refs.iframe.value;
-        Sims.insert({tag:tag});
+        Sims.insert({tag});
         this.refs.iframe.value = '';
     }
     render() {
