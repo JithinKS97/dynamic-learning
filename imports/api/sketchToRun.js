@@ -1,4 +1,4 @@
-import p5Convert from 'p5-global2instance';
+const p5Convert = require('p5-global2instance')
 
 export default function sketchToRun(sourceCode, customName) {
     const paramsToPass = {      //This is the 2nd parameter to pass to p5Convert which

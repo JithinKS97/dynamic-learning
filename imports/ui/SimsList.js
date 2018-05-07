@@ -1,8 +1,6 @@
 import React from 'react';
-import { Sims } from '../api/sims';
+import {Iframes} from '../api/iframes';
 import { Tracker } from 'meteor/tracker';
-import sketchToRun from '../api/sketchToRun';
-import P5Wrapper from 'react-p5-wrapper';
 
 export default class SimsList extends React.Component {
 
@@ -14,7 +12,7 @@ export default class SimsList extends React.Component {
     }
     componentDidMount() {
         this.simsTracker =Tracker.autorun(()=>{
-            const sims = Sims.find().fetch();
+            const sims = Iframes.find().fetch();
             this.setState({sims});
         });
     }
@@ -23,11 +21,20 @@ export default class SimsList extends React.Component {
 
     renderSims() {
         return this.state.sims.map((sim) => {
-            return <P5Wrapper key={sim._id} sketch={sketchToRun(sim.code, sim._id)} />
+            const src = sim.tag.match(`src\s*=\s*"\s*(.*)\s*">`)[1];
+            console.log(src);
+            console.log('hello');
+            return (
+                <div key={sim._id}>
+                    <iframe src={src} style={{}}></iframe>
+                </div>
+            );
         });
     }
 
     render() {
+
+
         return(
             <div>
                 {this.renderSims()}

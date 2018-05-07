@@ -19,6 +19,7 @@ export default class Sim extends React.Component {
         this.setState({
             code
         });
+        this.refs.code.value = '';
     }
 
     render() {
