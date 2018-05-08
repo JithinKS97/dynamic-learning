@@ -36,8 +36,6 @@ export default class SimsList extends React.Component {
     }
 
     render() {
-
-
         return(
             <div>
                 {this.renderSims()}
