@@ -95,7 +95,13 @@ export default class Drawingboard extends React.Component {
         return notes.map((note)=>{
             return (
                 <p key={note._id}>
-                <button>
+                <button onClick={()=>{
+
+                    const notes = Notes.find(note._id).fetch()[0].notes;
+                    this.setState({notes, currSlide:0});
+                    this.myBoard.setImg(notes[0]);                    
+
+                }}>
                     {note._id}
                 </button>
                 <button onClick = {()=>{
