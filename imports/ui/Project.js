@@ -14,6 +14,7 @@ export default class Project extends React.Component {
                 name
             });
         }
+        this.refs.project.value='';
     }
 
     render() {

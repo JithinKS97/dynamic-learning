@@ -1,7 +1,8 @@
 import React from 'react';
 import {Projects} from '../api/projects';
 import { Tracker } from 'meteor/tracker';
-import Lessonplan from './Lessonplan';
+import LessonPlan from './LessonPlan';
+import {Lessonplans} from '../api/lessonplans';
 
 
 export default class ProjectsList extends React.Component {
@@ -10,16 +11,18 @@ export default class ProjectsList extends React.Component {
         super(props);
         this.state = {
             projects: [],
-            project_id:''
+            selectedProject:''
         };
+        this.deleteLessons.bind(this);
     }
+    
     componentDidMount() {
         this.projectsTracker =Tracker.autorun(()=>{
             const projects = Projects.find().fetch();
             this.setState({projects});
-        });    
-        
+        });        
     }
+
     componentWillUnmount() {
         this.projectsTracker.stop();        
     }
@@ -28,29 +31,38 @@ export default class ProjectsList extends React.Component {
         
         return this.state.projects.map((project) => {
             return (
-                <p key = {project._id}>
+                <div key = {project._id}>
                 <button onClick = {()=>{
-                    this.setState({
-                        project_id:project._id
-                    });
+                    this.setState(
+                        {
+                            selectedProject:project._id
+                        }                        
+                    );
                 }}>{project.name}</button>
-                <button onClick = {()=>{
+                <button onClick = {()=>{                    
                     Projects.remove(project._id);
+                    this.deleteLessons(project._id);
                 }}>X</button>                
-                </p>
+                </div>
             );
         });
     }
 
+    deleteLessons(project_id){
+        const lessons = Lessonplans.find().fetch();
+        lessons.map((lesson)=>{
+            if(lesson.project_id == project_id)
+            {
+                Lessonplans.remove(lesson._id);
+            }
+        });
+    }
+    
     render() {
         return(
             <div>
-                <div>
-                    {this.renderProjects()}
-                </div>
-                <div>
-                    <Lessonplan project_id={this.state.project_id}/>
-                </div>
+                {this.renderProjects()}
+                <LessonPlan selectedProject={this.state.selectedProject}/>
             </div>
         );
     }
