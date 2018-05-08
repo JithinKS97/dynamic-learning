@@ -22,9 +22,7 @@ export default class SimsList extends React.Component {
         this.simsTracker.stop();        
     }
 
-    renderSims() {
-
-        
+    renderSims() {        
         return this.state.sims.map((sim) => {
 
             const iframeResizerOptions = { checkOrigin: false };

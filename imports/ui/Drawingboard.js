@@ -3,6 +3,7 @@ import './drawing-board/drawingboard';
 import './drawing-board/drawingboard.scss';
 import { Tracker } from 'meteor/tracker';
 import SimsList from './SimsList';
+import {Notes} from '../api/notes';
 
 
 export default class Drawingboard extends React.Component {
@@ -11,8 +12,10 @@ export default class Drawingboard extends React.Component {
         super(props);
         this.state = {
             currSlide:-1,
-            notes: []
+            notes: [],
+            Notes: []
         }
+        this.showNotes.bind(this);
     }
 
     changeArray() {        
@@ -60,23 +63,26 @@ export default class Drawingboard extends React.Component {
 
     componentDidMount() {
 
-        this.boardTracker =Tracker.autorun(()=>{            
+        this.myBoard = new DrawingBoard.Board('board', {  //Initialization of drawing board
+            background: "#000000",           //For more details go to drawingboard.js documentation
+            color: "#ffffff",
+            size: 5,
+            controls: ['Color',
+              { DrawingMode: { filler: false } },
+              { Size: { type: 'dropdown' } },
+              'Navigation',
+            ],
+            webStorage: false
+          });
 
-            this.myBoard = new DrawingBoard.Board('board', {  //Initialization of drawing board
-                background: "#000000",           //For more details go to drawingboard.js documentation
-                color: "#ffffff",
-                size: 5,
-                controls: ['Color',
-                  { DrawingMode: { filler: false } },
-                  { Size: { type: 'dropdown' } },
-                  'Navigation',
-                ],
-                webStorage: false
-              });
-
-              this.myBoard.ev.bind('board:reset',this.changeArray.bind(this));
-              this.myBoard.ev.bind('board:stopDrawing', this.changeArray.bind(this));
-              
+          this.myBoard.ev.bind('board:reset',this.changeArray.bind(this));
+          this.myBoard.ev.bind('board:stopDrawing', this.changeArray.bind(this));
+        
+        this.boardTracker =Tracker.autorun(()=>{   
+            NotesArray = Notes.find().fetch();
+            this.setState({
+                Notes: NotesArray
+            });
         });
     }
 
@@ -84,6 +90,21 @@ export default class Drawingboard extends React.Component {
         this.boardTracker.stop();
     }
 
+    showNotes() {
+        const notes = Notes.find().fetch();
+        return notes.map((note)=>{
+            return (
+                <p key={note._id}>
+                <button>
+                    {note._id}
+                </button>
+                <button onClick = {()=>{
+                    Notes.remove(note._id);
+                }}>X</button>
+                </p>
+            );
+        });
+    }
 
     render() {
 
@@ -97,8 +118,20 @@ export default class Drawingboard extends React.Component {
                 <div id='board' style={boardStyle}></div>
                 <button onClick={this.next.bind(this)}>Next</button>
                 <button onClick={this.previous.bind(this)}>Previous</button>                
-                <h1>{this.state.currSlide}</h1>              
-            </div>            
+                <h1>{this.state.currSlide}</h1>
+                <button onClick={()=>{
+                    const notes = this.state.notes;
+                    Notes.insert({notes});
+                }}>Save</button>
+                <button onClick = {()=>{
+                    this.myBoard.reset({ webStorage: false, history: false, background: true });
+                    this.setState({
+                        notes:[],
+                        currSlide:-1
+                    });
+                }}>Reset</button> 
+                <div>{this.showNotes()}</div>  
+            </div>           
         );
     }
 }
