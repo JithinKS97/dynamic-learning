@@ -2,6 +2,7 @@ import React from 'react'
 import './drawing-board/drawingboard';
 import './drawing-board/drawingboard.scss';
 import { Tracker } from 'meteor/tracker';
+import SimsList from './SimsList';
 
 
 export default class Drawingboard extends React.Component {
@@ -96,7 +97,7 @@ export default class Drawingboard extends React.Component {
                 <div id='board' style={boardStyle}></div>
                 <button onClick={this.next.bind(this)}>Next</button>
                 <button onClick={this.previous.bind(this)}>Previous</button>                
-                <h1>{this.state.currSlide}</h1>                
+                <h1>{this.state.currSlide}</h1>              
             </div>            
         );
     }
