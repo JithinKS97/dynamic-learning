@@ -4,6 +4,7 @@ import './drawing-board/drawingboard.scss';
 import { Tracker } from 'meteor/tracker';
 import SimsList from './SimsList';
 import {Notes} from '../api/notes';
+import {Lessonplans} from '../api/lessonplans';
 
 
 export default class Drawingboard extends React.Component {
@@ -13,9 +14,35 @@ export default class Drawingboard extends React.Component {
         this.state = {
             currSlide:-1,
             notes: [],
-            Notes: []
+            LessonPlans: [],
+            lesson_id:''
         }
         this.showNotes.bind(this);
+    }
+
+    componentDidMount() {
+
+        this.myBoard = new DrawingBoard.Board('board', {  //Initialization of drawing board
+            background: "#000000",           //For more details go to drawingboard.js documentation
+            color: "#ffffff",
+            size: 5,
+            controls: ['Color',
+              { DrawingMode: { filler: false } },
+              { Size: { type: 'dropdown' } },
+              'Navigation',
+            ],
+            webStorage: false
+          });
+
+          this.myBoard.ev.bind('board:reset',this.changeArray.bind(this));
+          this.myBoard.ev.bind('board:stopDrawing', this.changeArray.bind(this));
+        
+        this.boardTracker =Tracker.autorun(()=>{   
+            LessonPlansArray = Lessonplans.find().fetch();
+            this.setState({
+                LessonPlans: LessonPlansArray
+            });
+        });
     }
 
     changeArray() {        
@@ -61,55 +88,41 @@ export default class Drawingboard extends React.Component {
         this.myBoard.setImg(this.state.notes[this.state.currSlide-1]);
     }
 
-    componentDidMount() {
-
-        this.myBoard = new DrawingBoard.Board('board', {  //Initialization of drawing board
-            background: "#000000",           //For more details go to drawingboard.js documentation
-            color: "#ffffff",
-            size: 5,
-            controls: ['Color',
-              { DrawingMode: { filler: false } },
-              { Size: { type: 'dropdown' } },
-              'Navigation',
-            ],
-            webStorage: false
-          });
-
-          this.myBoard.ev.bind('board:reset',this.changeArray.bind(this));
-          this.myBoard.ev.bind('board:stopDrawing', this.changeArray.bind(this));
-        
-        this.boardTracker =Tracker.autorun(()=>{   
-            NotesArray = Notes.find().fetch();
-            this.setState({
-                Notes: NotesArray
-            });
-        });
-    }
-
     componentWillUnmount() {
         this.boardTracker.stop();
     }
 
-    showNotes() {
-        const notes = Notes.find().fetch();
-        return notes.map((note)=>{
-            return (
-                <p key={note._id}>
-                <button onClick={()=>{
+    showNotes(lesson_id) {        
 
-                    const notes = Notes.find(note._id).fetch()[0].notes;
-                    this.setState({notes, currSlide:0});
-                    this.myBoard.setImg(notes[0]);                    
 
-                }}>
-                    {note._id}
-                </button>
-                <button onClick = {()=>{
-                    Notes.remove(note._id);
-                }}>X</button>
-                </p>
-            );
-        });
+        const result = this.state.LessonPlans.map((lessonplan)=>{
+            if(lessonplan._id == lesson_id)
+            {   
+                return lessonplan.notes;
+            }
+        }).filter((x)=>{
+            return x
+        });       
+
+        let notes = result[0];
+
+        if(notes){
+            this.setState({
+                notes,
+                currSlide:0,
+                lesson_id
+            },()=>{
+                this.myBoard.setImg(this.state.notes[0]);
+            });
+        } 
+        else {
+            this.myBoard.reset({ webStorage: false, history: false, background: true });
+            this.setState({
+                notes:[],
+                currSlide:-1,
+                lesson_id
+            });
+        }
     }
 
     render() {
@@ -126,17 +139,22 @@ export default class Drawingboard extends React.Component {
                 <button onClick={this.previous.bind(this)}>Previous</button>                
                 <h1>{this.state.currSlide}</h1>
                 <button onClick={()=>{
+
+                    console.log(this.state.lesson_id);
                     const notes = this.state.notes;
-                    Notes.insert({notes});
+                    Lessonplans.update(this.state.lesson_id,{$set:{notes}});
+
                 }}>Save</button>
                 <button onClick = {()=>{
+
                     this.myBoard.reset({ webStorage: false, history: false, background: true });
                     this.setState({
                         notes:[],
                         currSlide:-1
                     });
-                }}>Reset</button> 
-                <div>{this.showNotes()}</div>  
+
+                }}>Reset</button>
+                {/* <h1>{Lessonplans.find(this.props.lesson_id).fetch()[0]?Lessonplans.find(this.props.lesson_id).fetch()[0].name:''}</h1> */}
             </div>           
         );
     }
