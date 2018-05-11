@@ -1,18 +1,16 @@
 {
-  "name": "dynamic-learning",
+  "name": "DynamicLearning",
   "private": true,
   "scripts": {
     "start": "meteor run"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.42",
+    "bcrypt": "^2.0.1",
     "meteor-node-stubs": "^0.3.2",
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
-    "react-rnd": "^7.4.0",
-    "react-router": "^3.0.0"
-  },
-  "engines": {
-    "node": "v8.11.1"
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-router-dom": "^4.2.2",
+    "simpl-schema": "^1.5.0"
   }
 }

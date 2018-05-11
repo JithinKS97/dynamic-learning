@@ -1,9 +1,14 @@
-import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { routes } from '../imports/routes/routes';
+import {Meteor} from 'meteor/meteor';
+import {AppRouter, onAuthChange} from '../imports/routes/AppRouter';
+import {LessonPlans} from '../imports/api/lessonplans'
 
+Tracker.autorun(()=>{
+  const isAuthenticated = !!Meteor.userId()
+  onAuthChange(isAuthenticated)
+})
 
 Meteor.startup(()=>{
-    ReactDOM.render(routes, document.getElementById('app'));
+  ReactDOM.render(AppRouter, document.getElementById('app'));
 });

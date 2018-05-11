@@ -1,9 +1,8 @@
-import { Meteor } from 'meteor/meteor';
-import {Sims} from '../imports/api/sims';
-import {Projects} from '../imports/api/projects';
-import {Lessonplans} from '../imports/api/lessonplans';
-import {Notes} from '../imports/api/notes';
+import { Meteor } from 'meteor/meteor'
+import '../imports/api/users'
+import { LessonPlans } from '../imports/api/lessonplans'
 
 Meteor.startup(() => {
-  // code to run on server at startup
+
+  
 });

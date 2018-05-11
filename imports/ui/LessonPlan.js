@@ -1,32 +1,37 @@
-import React from 'react';
-import {Lessonplans} from '../api/lessonplans';
-import LessonPlansList from './LessonPlansList';
+import React from 'react'
+import { Accounts } from 'meteor/accounts-base'
+import LessonPlansList from './LessonPlansList'
+import { LessonPlans } from '../api/lessonplans'
 
+  
+export default class LessonPlan extends React.Component{
 
-export default class LessonPlan extends React.Component {
-
-    handleSubmit(e) {
-        e.preventDefault();
-        const name = this.refs.lesson.value;
-        const project_id = this.props.selectedProject
-        if(name && project_id) {
-            Lessonplans.insert({
-                name,
-                project_id
-            });            
-        }
-        this.refs.lesson.value='';
+    onLogout() {
+        Accounts.logout()
     }
 
-    render() {
+    createLessonPlan(e) {
+        e.preventDefault()
+        const name = this.refs.lessonplan.value.trim()
+        if(name) {
+            LessonPlans.insert({name,notes:[]})
+        }
+        this.refs.lessonplan.value = ''
+    }
+    
+    render(){
+
         return (
-            <div> 
-                <form onSubmit ={this.handleSubmit.bind(this)}>
-                <input ref='lesson'/>
-                <button>Add Lesson</button>
+            <div>
+                <h1>Lesson plans</h1>
+                <button onClick = {this.onLogout.bind(this)}>Sign out</button>
+                <p>Create Lessonplan</p>
+                <form onSubmit = {this.createLessonPlan.bind(this)}>
+                    <input type = 'text' name = 'lessonplan' ref = 'lessonplan' placeholder = 'Name'/>
+                    <button>Submit</button>
                 </form>
-               <LessonPlansList selectedProject = {this.props.selectedProject}/>
+                <LessonPlansList/>
             </div>
-        );
+        )
     }
 }

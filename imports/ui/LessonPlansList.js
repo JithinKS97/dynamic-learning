@@ -1,64 +1,53 @@
-import React from 'react';
-import { Tracker } from 'meteor/tracker';
-import {Lessonplans} from '../api/lessonplans';
-import Drawingboard from './Drawingboard';
-
+import React from 'react'
+import { LessonPlans } from '../api/lessonplans'
+import {Tracker} from 'meteor/tracker'
+import {Link} from 'react-router-dom'
 
 export default class LessonPlansList extends React.Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
-            lessonplans: [],
-            selectedLesson: ''
-        };
-        this.renderLessons.bind(this);
+            lessonplans:[],
+        }
+        this.renderLessonPlans.bind(this)
     }
+
     componentDidMount() {
-        this.lessonPlansTracker =Tracker.autorun(()=>{
-            const lessonplans = Lessonplans.find().fetch();
+        this.lessonsTracker = Tracker.autorun(()=>{
+            const lessonplans = LessonPlans.find().fetch()
             this.setState({
                 lessonplans
-            });
-        });    
+            })
+        })
     }
+
     componentWillUnmount() {
-        this.lessonPlansTracker.stop();        
+        this.lessonsTracker.stop()
     }
 
-    renderLessons() {
-
-       return this.state.lessonplans.map((lesson)=>{
-        if(lesson.project_id == this.props.selectedProject)
-        {
+    renderLessonPlans() {
+        return this.state.lessonplans.map((lessonplan)=>{
             return (
-                <div key={lesson._id}>
-                    <button onClick ={()=>{
-                        this.setState({
-                            selectedLesson: lesson._id
-                        },this.refs.Drawingboard.showNotes(lesson._id));
-
-        
-                    }}>{lesson.name}</button>
-                    <button onClick = {()=>{
-                        Lessonplans.remove(lesson._id);
-                        this.setState({
-                            selectedLesson: ''
-                        });
-                    }}>X</button>
-                </div>
-            );
-        }
-       });        
+                <p key={lessonplan._id}>                    
+                    <button>
+                        <Link to={{ pathname: '/createlessonplan', state: { lessonplan_id: lessonplan._id}}}>
+                            {lessonplan.name}
+                        </Link>
+                    </button>
+                    <button onClick = {() => {
+                        LessonPlans.remove(lessonplan._id)
+                    }}>X</button>                 
+                </p>
+            )
+        })
     }
-
+    
     render() {
-
-        return(
+        return (
             <div>
-                {this.renderLessons()}
-                <Drawingboard ref = 'Drawingboard'/>
+                {this.renderLessonPlans()}
             </div>
-        );
+        )
     }
 }
