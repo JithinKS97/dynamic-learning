@@ -20,10 +20,12 @@ export default class CreateLessonPlan extends React.Component {
             if(LessonPlans.find(this.state.lessonplan_id).fetch()[0])
             {
                 const slides = LessonPlans.find(this.state.lessonplan_id).fetch()[0].slides
-                console.log(slides)
                 this.setState({slides}, ()=>{
-                    if(this.state.currSlide == 0)
-                        this.refs.d.b.setImg(this.state.slides[0])
+                    if(this.state.currSlide == 0) {
+                        if(this.state.slides[0]) {
+                            this.refs.d.b.setImg(this.state.slides[0].note)
+                        }                       
+                    }                        
                 })
             }
         })
@@ -47,15 +49,15 @@ export default class CreateLessonPlan extends React.Component {
             array with index as the current slide no.
         */
 
-        const currSlide = this.state.currSlide;
-        const slides = [...this.state.slides];
+        const currSlide = this.state.currSlide
+        const slides = [...this.state.slides]
 
         const note = {
             note: this.refs.d.b.getImg()
         }
 
         slides[currSlide]= note
-        this.setState({slides,currSlide});
+        this.setState({slides,currSlide})
     }
 
     next() {
@@ -73,27 +75,27 @@ export default class CreateLessonPlan extends React.Component {
             is set to the board in the call back.
         */
 
-        this.refs.d.b.initHistory();
+        this.refs.d.b.initHistory()
 
-        let currSlide = this.state.currSlide;
-        currSlide++;
+        let currSlide = this.state.currSlide
+        currSlide++
 
-        const slides = [...this.state.slides];
+        const slides = [...this.state.slides]
 
         if(currSlide === slides.length || slides.length === 0) {            
-            this.refs.d.b.reset({ webStorage: false, history: true, background: true }); 
-            slides.push({note:this.refs.d.b.getImg()});
+            this.refs.d.b.reset({ webStorage: false, history: true, background: true }) 
+            slides.push({note:this.refs.d.b.getImg()})
             this.setState({
                 slides,
                 currSlide
-            });
+            })
         }
         else if(currSlide<slides.length) {
             this.setState({
                 currSlide
             },()=>{
-                this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note);
-            });            
+                this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+            })            
         }        
     }
 
@@ -108,20 +110,20 @@ export default class CreateLessonPlan extends React.Component {
             The current slide is set and in the call back, the notes are set to the board.
          */
 
-        let currSlide = this.state.currSlide;
+        let currSlide = this.state.currSlide
         if(currSlide!=0)
         {
             this.refs.d.b.initHistory()
         }
-        const slides = [...this.state.slides];
+        const slides = [...this.state.slides]
         if(currSlide>0) {
-            currSlide--;
+            currSlide--
         }
         this.setState({
             currSlide
         },()=>{
             this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
-        });
+        })
     }
 
     save() {
@@ -133,11 +135,62 @@ export default class CreateLessonPlan extends React.Component {
            The slides array is emptied and current slide no is set to 0    
         */
 
-        this.refs.d.b.reset({ webStorage: false, history: true, background: true }); 
+        this.refs.d.b.reset({ webStorage: false, history: true, background: true }) 
         this.setState({
             slides:[],
             currSlide: 0
         })
+    }
+
+    addSim(e) {
+
+        e.preventDefault()
+        slides = [...this.state.slides]
+
+        let iframe = this.refs.sim.value
+        const src = iframe.match(`src\s*=\s*"\s*(.*)\s*">`)[1]  
+
+        iframeArray = slides[this.state.currSlide].iframes
+
+        if(iframeArray) {
+            slides[this.state.currSlide].iframes.push(src)
+        }
+        else {
+            slides[this.state.currSlide].iframes = []
+            slides[this.state.currSlide].iframes.push(src)
+        }
+        this.setState({
+            slides
+        })
+
+        this.refs.sim.value = ''
+    }
+
+    renderSims() {
+        slides = [...this.state.slides]
+        if( slides[this.state.currSlide]) {
+
+            if(slides[this.state.currSlide].iframes) {
+                let iframeArray = slides[this.state.currSlide].iframes
+            
+                return iframeArray.map((iframe,index)=>{
+                    return (
+                        <div key = {index}>
+                            <iframe src = {iframe}></iframe>
+                            <button onClick = {() => {
+                                iframeArray.splice(index,1)
+                                
+                                slides[this.state.currSlide].iframes = iframeArray
+                                this.setState({
+                                    slides
+                                })
+
+                            }}>X</button>
+                        </div>
+                    )
+                })
+            }
+        }
     }
 
     render() {
@@ -148,7 +201,12 @@ export default class CreateLessonPlan extends React.Component {
                 <button onClick = {this.previous.bind(this)}>Previous</button>
                 <button onClick = {this.save.bind(this)}>save</button>
                 <button onClick = {this.reset.bind(this)}>reset</button>
+                <form onSubmit = {this.addSim.bind(this)}>
+                    <input ref = 'sim'/>
+                    <button>Add</button>
+                </form>
                 <h1>{this.state.currSlide}</h1>
+                {this.renderSims()}
             </div>
         )
     }
