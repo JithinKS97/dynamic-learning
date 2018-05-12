@@ -7,15 +7,18 @@ export default class CreateLessonPlan extends React.Component {
     componentDidMount() {
 
         Tracker.autorun(()=>{
-            this.refs.d.b.ev.bind('board:reset',this.changeArray.bind(this));
-            this.refs.d.b.ev.bind('board:stopDrawing', this.changeArray.bind(this));
+
+            if(this.refs.d) {
+                this.refs.d.b.ev.bind('board:reset',this.changeArray.bind(this));
+                this.refs.d.b.ev.bind('board:stopDrawing', this.changeArray.bind(this));
+            }
+
             if(LessonPlans.find(this.state.lessonplan_id).fetch()[0])
             {
-                const notes = LessonPlans.find(this.state.lessonplan_id).fetch()[0].notes
-                console.log(notes)
-                this.setState({notes}, ()=>{
+                const slides = LessonPlans.find(this.state.lessonplan_id).fetch()[0].slides
+                this.setState({slides}, ()=>{
                     if(this.state.currSlide == 0)
-                        this.refs.d.b.setImg(this.state.notes[0])
+                        this.refs.d.b.setImg(this.state.slides[0])
                 })
             }
         })
@@ -25,16 +28,16 @@ export default class CreateLessonPlan extends React.Component {
         super(props)
         this.state = {
             currSlide:0,
-            notes: [],
+            slides: [],
             lessonplan_id: this.props.location.state.lessonplan_id
         }
     }
 
     changeArray() {
         const currSlide = this.state.currSlide;
-        const notes = [...this.state.notes];
-        notes[currSlide] = this.refs.d.b.getImg();
-        this.setState({notes,currSlide});
+        const slides = [...this.state.slides];
+        slides[currSlide] = this.refs.d.b.getImg();
+        this.setState({slides,currSlide});
     }
 
     next() {
@@ -43,21 +46,21 @@ export default class CreateLessonPlan extends React.Component {
         let currSlide = this.state.currSlide;
         currSlide++;
 
-        const notes = [...this.state.notes];
+        const slides = [...this.state.slides];
 
-        if(currSlide === notes.length || notes.length === 0) {            
+        if(currSlide === slides.length || slides.length === 0) {            
             this.refs.d.b.reset({ webStorage: false, history: true, background: true }); 
-            notes.push(this.refs.d.b.getImg());
+            slides.push(this.refs.d.b.getImg());
             this.setState({
-                notes,
+                slides,
                 currSlide
             });
         }
-        else if(currSlide<notes.length) {
+        else if(currSlide<slides.length) {
             this.setState({
                 currSlide
             },()=>{
-                this.refs.d.b.setImg(this.state.notes[this.state.currSlide]);
+                this.refs.d.b.setImg(this.state.slides[this.state.currSlide]);
             });            
         }        
     }
@@ -68,24 +71,24 @@ export default class CreateLessonPlan extends React.Component {
         {
             this.refs.d.b.initHistory()
         }
-        const notes = [...this.state.notes];
+        const slides = [...this.state.slides];
         if(currSlide>0) {
             currSlide--;
         }
         this.setState({
             currSlide
         },()=>{
-            this.refs.d.b.setImg(this.state.notes[this.state.currSlide])
+            this.refs.d.b.setImg(this.state.slides[this.state.currSlide])
         });
     }
 
     save() {
-        LessonPlans.update(this.state.lessonplan_id, {$set:{notes:this.state.notes}})
+        LessonPlans.update(this.state.lessonplan_id, {$set:{slides:this.state.slides}})
     }
     reset() {
         this.refs.d.b.reset({ webStorage: false, history: true, background: true }); 
         this.setState({
-            notes:[],
+            slides:[],
             currSlide: 0
         })
     }
