@@ -6,6 +6,8 @@ export default class CreateLessonPlan extends React.Component {
 
     componentDidMount() {
 
+        this.refs.d.b.reset({ webStorage: false, history: true, background: true })        
+
         Tracker.autorun(()=>{
 
             /*
@@ -32,12 +34,15 @@ export default class CreateLessonPlan extends React.Component {
     }
 
     constructor(props) {
+
         super(props)
         this.state = {
             currSlide:0,
             slides: [],
             lessonplan_id: this.props.location.state.lessonplan_id
         }
+        
+        
     }
 
     changeArray() {
@@ -74,6 +79,7 @@ export default class CreateLessonPlan extends React.Component {
             Otherwise, the current slide is set to state and the notes of that particular slide
             is set to the board in the call back.
         */
+        
 
         this.refs.d.b.initHistory()
 
@@ -82,14 +88,14 @@ export default class CreateLessonPlan extends React.Component {
 
         const slides = [...this.state.slides]
 
-        console.log(currSlide, slides.length)
-
         if(currSlide === slides.length || currSlide-slides.length==1) {            
             this.refs.d.b.reset({ webStorage: false, history: true, background: true }) 
             slides.push({note:this.refs.d.b.getImg()})
             this.setState({
                 slides,
                 currSlide
+            },()=>{
+                this.refs.d.b.reset({ webStorage: false, history: true, background: true })
             })
         }
         else if(currSlide<slides.length) {
@@ -98,7 +104,8 @@ export default class CreateLessonPlan extends React.Component {
             },()=>{
                 this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
             })            
-        }        
+        }  
+              
     }
 
     previous() { 
@@ -141,6 +148,8 @@ export default class CreateLessonPlan extends React.Component {
         this.setState({
             slides:[],
             currSlide: 0
+        },()=>{
+            this.refs.d.b.reset({ webStorage: false, history: true, background: true })
         })
     }
 
@@ -154,11 +163,6 @@ export default class CreateLessonPlan extends React.Component {
 
         /* If the length of the slide is 0, it is initialized first, otherwise there will
            be error */
-
-        if(slides[this.currSlide] === undefined) {
-            slides[this.state.currSlide] = []
-            slides[this.state.currSlide].iframe = []
-        }
 
         iframeArray = slides[this.state.currSlide].iframes        
 
@@ -174,6 +178,8 @@ export default class CreateLessonPlan extends React.Component {
          })
 
         this.refs.sim.value = ''
+
+        
     }
 
     renderSims() {
