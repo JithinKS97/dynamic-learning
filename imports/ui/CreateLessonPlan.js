@@ -11,7 +11,7 @@ export default class CreateLessonPlan extends React.Component {
             /*
                     If this refs.d is undefined, the code inside should not run
             */
-
+             
             if(this.refs.d) {
                 this.refs.d.b.ev.bind('board:reset',this.changeArray.bind(this));
                 this.refs.d.b.ev.bind('board:stopDrawing', this.changeArray.bind(this));
@@ -82,7 +82,9 @@ export default class CreateLessonPlan extends React.Component {
 
         const slides = [...this.state.slides]
 
-        if(currSlide === slides.length || slides.length === 0) {            
+        console.log(currSlide, slides.length)
+
+        if(currSlide === slides.length || currSlide-slides.length==1) {            
             this.refs.d.b.reset({ webStorage: false, history: true, background: true }) 
             slides.push({note:this.refs.d.b.getImg()})
             this.setState({
@@ -142,26 +144,34 @@ export default class CreateLessonPlan extends React.Component {
         })
     }
 
-    addSim(e) {
+    addSim(e) {   
 
         e.preventDefault()
         slides = [...this.state.slides]
-
+      
         let iframe = this.refs.sim.value
-        const src = iframe.match(`src\s*=\s*"\s*(.*)\s*">`)[1]  
+        const src = iframe.match(`src\s*=\s*"\s*(.*)\s*">`)[1]
 
-        iframeArray = slides[this.state.currSlide].iframes
+        /* If the length of the slide is 0, it is initialized first, otherwise there will
+           be error */
+
+        if(slides[this.currSlide] === undefined) {
+            slides[this.state.currSlide] = []
+            slides[this.state.currSlide].iframe = []
+        }
+
+        iframeArray = slides[this.state.currSlide].iframes        
 
         if(iframeArray) {
-            slides[this.state.currSlide].iframes.push(src)
+             slides[this.state.currSlide].iframes.push(src)
         }
         else {
-            slides[this.state.currSlide].iframes = []
-            slides[this.state.currSlide].iframes.push(src)
+             slides[this.state.currSlide].iframes = []
+             slides[this.state.currSlide].iframes.push(src)
         }
-        this.setState({
-            slides
-        })
+         this.setState({
+             slides
+         })
 
         this.refs.sim.value = ''
     }
