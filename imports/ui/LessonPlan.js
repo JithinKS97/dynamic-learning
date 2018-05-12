@@ -13,8 +13,16 @@ export default class LessonPlan extends React.Component{
     createLessonPlan(e) {
         e.preventDefault()
         const name = this.refs.lessonplan.value.trim()
+
+        let slides = []
+
+        slides[0] = {
+            note:'',
+            iframes: []
+        }
+
         if(name) {
-            LessonPlans.insert({name,slides:[]})
+            LessonPlans.insert({name,slides})
         } 
         this.refs.lessonplan.value = ''
     }

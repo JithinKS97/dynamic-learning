@@ -4,220 +4,201 @@ import { LessonPlans } from '../api/lessonplans'
 
 export default class CreateLessonPlan extends React.Component {
 
-    componentDidMount() {
-
-        this.refs.d.b.reset({ webStorage: false, history: true, background: true })        
-
-        Tracker.autorun(()=>{
-
-            /*
-                    If this refs.d is undefined, the code inside should not run
-            */
-             
-            if(this.refs.d) {
-                this.refs.d.b.ev.bind('board:reset',this.changeArray.bind(this));
-                this.refs.d.b.ev.bind('board:stopDrawing', this.changeArray.bind(this));
-            }
-
-            if(LessonPlans.find(this.state.lessonplan_id).fetch()[0])
-            {
-                const slides = LessonPlans.find(this.state.lessonplan_id).fetch()[0].slides
-                this.setState({slides}, ()=>{
-                    if(this.state.currSlide == 0) {
-                        if(this.state.slides[0]) {
-                            this.refs.d.b.setImg(this.state.slides[0].note)
-                        }                       
-                    }                        
-                })
-            }
-        })
-    }
-
     constructor(props) {
-
         super(props)
         this.state = {
             currSlide:0,
             slides: [],
             lessonplan_id: this.props.location.state.lessonplan_id
-        }     
-        
+        }
+        this.pushSlide.bind(this)
+        this.renderSims.bind(this)
     }
 
-    changeArray() {
+    componentDidMount() {
 
+        this.refs.d.b.ev.bind('board:reset',this.changed.bind(this));
+        this.refs.d.b.ev.bind('board:stopDrawing', this.changed.bind(this));
+
+        Tracker.autorun(()=>{
+            /*Fetching the lesson plan using the lesson id passed throgh the Link*/
+            const lessonplan = LessonPlans.find(this.state.lessonplan_id).fetch()[0]
+            /*
+                If the fetched value is not null, the slide values are set to the state, if the 
+                note in the first slide is empty string, the board is reset so that, the
+                slide's note is assigned a valid data.
+            */
+            if(lessonplan) {
+                this.setState({
+                    slides:lessonplan.slides
+                },() => {
+                    if(this.state.slides[0].note === '') {
+                        this.refs.d.b.reset({ webStorage: false, history: true, background: true })
+                    }
+                    else {
+                        this.refs.d.b.setImg(this.state.slides[0].note)
+                    }
+                })
+            }
+        })
+    }
+
+    changed() {
         /*
-            If either board:reset or boardLstopDrawing occur, the change should be saved to the
-            state. For that, the current slide no. and the slides array are retrieved from the
-            states. The note is made into an object with key note. It is then added to the slides
-            array with index as the current slide no.
+            Whenever board:reset or board:StopDrawing event occurs, this function is called.
+            Here we retrieve the current slide no. and note from the states. The notes are
+            updated and stored back to the state.
         */
-
         const currSlide = this.state.currSlide
         const slides = [...this.state.slides]
-
-        const note = {
-            note: this.refs.d.b.getImg()
-        }
-
+        const note = this.refs.d.b.getImg()
         slides[currSlide].note = note
-        this.setState({slides,currSlide})
-        console.log(this.state)
+        this.setState({slides})
     }
 
     next() {
 
         /*
-            The history is initialised because we do not want to get the drawings of other 
-            slides to this slide. The current slide no. is retrieved from states and incremented.
-            The slides array is retrieved.
+            The undo stack is cleared. The current slide no. and slides are retrieved.
 
-            If the current slide is the last slide or no slide has yet been made, board is
-            cleared and the empty board is pushed to the slides array. The value being pushed
-            is an object which contain note. The changes are saved back to the state.
+            If the current slide is the last slide, a new slide is pushed to the slides array.
+            Current slide is incremented and stored to the state. The board is reset.
 
-            Otherwise, the current slide is set to state and the notes of that particular slide
-            is set to the board in the call back.
+            If the current slide is not the last slide, current slide no. is incremented and 
+            and the notes of that particular slide is set to the board.
         */
-        
 
         this.refs.d.b.initHistory()
 
-        let currSlide = this.state.currSlide
-        currSlide++
-
         const slides = [...this.state.slides]
-
-        if(currSlide === slides.length || currSlide-slides.length==1) {            
-            this.refs.d.b.reset({ webStorage: false, history: true, background: true }) 
-            slides.push({note:this.refs.d.b.getImg()})
+        let currSlide = this.state.currSlide
+  
+        if(currSlide === slides.length-1) {
+            this.pushSlide(slides)
+            currSlide++
             this.setState({
-                slides,
                 currSlide
             },()=>{
                 this.refs.d.b.reset({ webStorage: false, history: true, background: true })
             })
         }
-        else if(currSlide<slides.length) {
+        else {
+            currSlide++
             this.setState({
                 currSlide
             },()=>{
                 this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
-            })            
-        }                
+            })
+        }
     }
 
-    previous() { 
+    previous() {
 
         /*
-            The current slide no. is retrieved and if its 0, initHistory should not be called
-            because the history need not be cleared since the slide is not changed when previous
-            is pressed.
+            If the current slide is not the beggining slide, Undo stack is cleared.
+            The current slide no. is decremented and the notes od that particular
+            slide is set to the board.
+        */
 
-            The slides are retrieved. If the current slide no. is greater than 0, it is decremented.
-            The current slide is set and in the call back, the notes are set to the board.
-         */
-
-        let currSlide = this.state.currSlide
-        if(currSlide!=0)
-        {
-            this.refs.d.b.initHistory()
-        }
         const slides = [...this.state.slides]
-        if(currSlide>0) {
+        let currSlide = this.state.currSlide
+
+        if(currSlide!=0) {
+            this.refs.d.b.initHistory()
             currSlide--
+            this.setState({
+                currSlide
+            },()=>{
+                this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+            })
         }
+    }
+
+    pushSlide(slides) {
+
+        const newSlide = {
+            note: '',
+            iframes: []
+        }
+
+        slides.push(newSlide)
+
         this.setState({
-            currSlide
-        },()=>{
-            this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+            slides
         })
+    }
+
+    reset() {
+        this.setState({
+            currSlide:0,
+            slides:[]
+        },()=>{
+            const slides = this.state.slides
+            this.pushSlide(slides)
+            this.refs.d.b.reset({ webStorage: false, history: true, background: true })
+        })
+    }
+
+    addSim(e) {
+        e.preventDefault()
+        const tag = this.refs.tag.value
+        const src = tag.match(`src\s*=\s*"\s*(.*)\s*">`)[1]
+        const slides = this.state.slides
+        slides[this.state.currSlide].iframes.push(src)
+        this.setState({
+            slides
+        },()=>{
+            console.log(this.state.slides)
+        })
+        this.refs.tag.value = ''
+    }
+
+    renderSims() {
+        const slides = this.state.slides
+        const currSlide = this.state.currSlide
+        if(slides.length!=0) {
+
+            /*
+                I don't know why. But deletion won't work if you had named the array to which 
+                you initially bring the iframes as iframes instead of iframeArray.
+            */
+
+            const iframeArray = slides[currSlide].iframes
+            return iframeArray.map((iframe,index)=>{
+                return (
+                    <div key = {index}>
+                        <iframe src = {iframe}></iframe>
+                        <button onClick = {()=>{                            
+                            iframeArray.splice(index,1)
+                            slides[currSlide].iframes = iframeArray
+                            this.setState({
+                                slides
+                            })  
+                        }}>X</button>
+                    </div>
+                )
+            })
+        }
     }
 
     save() {
         LessonPlans.update(this.state.lessonplan_id, {$set:{slides:this.state.slides}})
     }
-    reset() {
-
-        /* For resetting, the drawing board is cleared and the slides array is cleared.
-           The slides array is emptied and current slide no is set to 0    
-        */
-
-        this.refs.d.b.reset({ webStorage: false, history: true, background: true }) 
-        this.setState({
-            slides:[],
-            currSlide: 0
-        },()=>{
-            this.refs.d.b.reset({ webStorage: false, history: true, background: true })
-        })
-    }
-
-    addSim(e) {   
-
-        e.preventDefault()
-        slides = [...this.state.slides]
-      
-        let iframe = this.refs.sim.value
-        const src = iframe.match(`src\s*=\s*"\s*(.*)\s*">`)[1]
-
-        iframeArray = slides[this.state.currSlide].iframes        
-
-        if(iframeArray) {
-             slides[this.state.currSlide].iframes.push(src)
-        }
-        else {
-             slides[this.state.currSlide].iframes = []
-             slides[this.state.currSlide].iframes.push(src)
-        }
-        this.setState({
-            slides
-        })
-        this.refs.sim.value = ''
-        console.log(this.state.slides)
-        
-    }
-
-    renderSims() {
-        slides = [...this.state.slides]
-        if( slides[this.state.currSlide]) {
-
-            if(slides[this.state.currSlide].iframes) {
-                let iframeArray = slides[this.state.currSlide].iframes
-            
-                return iframeArray.map((iframe,index)=>{
-                    return (
-                        <div key = {index}>
-                            <iframe src = {iframe}></iframe>
-                            <button onClick = {() => {
-                                iframeArray.splice(index,1)
-                                
-                                slides[this.state.currSlide].iframes = iframeArray
-
-                                this.setState({
-                                    slides
-                                })
-
-                            }}>X</button>
-                        </div>
-                    )
-                })
-            }
-        }
-    }
 
     render() {
-        return (
+
+        return(
             <div>
                 <DrawingBoardCmp ref = 'd'/>
                 <button onClick = {this.next.bind(this)}>Next</button>
                 <button onClick = {this.previous.bind(this)}>Previous</button>
-                <button onClick = {this.save.bind(this)}>save</button>
-                <button onClick = {this.reset.bind(this)}>reset</button>
+                <button onClick = {this.reset.bind(this)}>Reset</button>
+                <button onClick = {this.save.bind(this)}>Save</button>
+                <h1>{this.state.currSlide}</h1>
                 <form onSubmit = {this.addSim.bind(this)}>
-                    <input ref = 'sim'/>
+                    <input ref='tag'/>
                     <button>Add</button>
                 </form>
-                <h1>{this.state.currSlide}</h1>
                 {this.renderSims()}
             </div>
         )
