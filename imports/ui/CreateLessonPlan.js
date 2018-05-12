@@ -40,8 +40,7 @@ export default class CreateLessonPlan extends React.Component {
             currSlide:0,
             slides: [],
             lessonplan_id: this.props.location.state.lessonplan_id
-        }
-        
+        }     
         
     }
 
@@ -61,8 +60,9 @@ export default class CreateLessonPlan extends React.Component {
             note: this.refs.d.b.getImg()
         }
 
-        slides[currSlide]= note
+        slides[currSlide].note = note
         this.setState({slides,currSlide})
+        console.log(this.state)
     }
 
     next() {
@@ -104,8 +104,7 @@ export default class CreateLessonPlan extends React.Component {
             },()=>{
                 this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
             })            
-        }  
-              
+        }                
     }
 
     previous() { 
@@ -161,9 +160,6 @@ export default class CreateLessonPlan extends React.Component {
         let iframe = this.refs.sim.value
         const src = iframe.match(`src\s*=\s*"\s*(.*)\s*">`)[1]
 
-        /* If the length of the slide is 0, it is initialized first, otherwise there will
-           be error */
-
         iframeArray = slides[this.state.currSlide].iframes        
 
         if(iframeArray) {
@@ -173,12 +169,11 @@ export default class CreateLessonPlan extends React.Component {
              slides[this.state.currSlide].iframes = []
              slides[this.state.currSlide].iframes.push(src)
         }
-         this.setState({
-             slides
-         })
-
+        this.setState({
+            slides
+        })
         this.refs.sim.value = ''
-
+        console.log(this.state.slides)
         
     }
 
@@ -197,6 +192,7 @@ export default class CreateLessonPlan extends React.Component {
                                 iframeArray.splice(index,1)
                                 
                                 slides[this.state.currSlide].iframes = iframeArray
+
                                 this.setState({
                                     slides
                                 })
