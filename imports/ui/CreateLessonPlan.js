@@ -36,7 +36,7 @@ export default class CreateLessonPlan extends React.Component {
                         this.refs.d.b.reset({ webStorage: false, history: true, background: true })
                     }
                     else {
-                        this.refs.d.b.setImg(this.state.slides[0].note)
+                        this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
                     }
                 })
             }
