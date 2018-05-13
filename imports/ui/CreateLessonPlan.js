@@ -1,6 +1,7 @@
 import React from 'react'
 import DrawingBoardCmp from './DrawingBoardCmp'
 import { LessonPlans } from '../api/lessonplans'
+import SimsList from './SimsList'
 
 export default class CreateLessonPlan extends React.Component {
 
@@ -12,7 +13,7 @@ export default class CreateLessonPlan extends React.Component {
             lessonplan_id: this.props.location.state.lessonplan_id
         }
         this.pushSlide.bind(this)
-        this.renderSims.bind(this)
+        this.renderSlides.bind(this)
     }
 
     componentDidMount() {
@@ -54,6 +55,7 @@ export default class CreateLessonPlan extends React.Component {
         const note = this.refs.d.b.getImg()
         slides[currSlide].note = note
         this.setState({slides})
+        
     }
 
     next() {
@@ -153,40 +155,55 @@ export default class CreateLessonPlan extends React.Component {
         this.refs.tag.value = ''
     }
 
-    renderSims() {
-        const slides = this.state.slides
-        const currSlide = this.state.currSlide
-        if(slides.length!=0) {
-
-            /*
-                I don't know why. But deletion won't work if you had named the array to which 
-                you initially bring the iframes as iframes instead of iframeArray.
-            */
-
-            const iframeArray = slides[currSlide].iframes
-            return iframeArray.map((iframe,index)=>{
-                return (
-                    <div key = {index}>
-                        <iframe src = {iframe}></iframe>
-                        <button onClick = {()=>{                            
-                            iframeArray.splice(index,1)
-                            slides[currSlide].iframes = iframeArray
-                            this.setState({
-                                slides
-                            })  
-                        }}>X</button>
-                    </div>
-                )
-            })
-        }
-    }
-
     save() {
         LessonPlans.update(this.state.lessonplan_id, {$set:{slides:this.state.slides}})
     }
 
-    render() {
+    renderSlides() {
+        
+        const slidesArray = this.state.slides
+        if(slidesArray.length!=0) {
+            return slidesArray.map((slide, index)=>{
+                return (
+                    <div key = {index}>
+                        <button onClick = {()=>{
+                            this.setState({
+                                currSlide: index
+                            }, () => {
+                                this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+                            })
 
+                        }}>{index}</button>
+
+                        <button onClick = {()=>{
+
+                            if(slidesArray.length!=1) {
+                                slidesArray.splice(index, 1)
+
+                                let destination = index-1
+    
+                                if(index == 0) {
+                                    destination = 0
+                                }
+    
+                                this.setState({
+                                    slides: slidesArray,
+                                    currSlide: destination
+                                },()=>{
+                                    this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+                                })
+                            }
+                            
+                        }}>X</button>
+
+                    </div>
+                )
+            })
+        }
+        
+    }
+
+    render() {
         return(
             <div>
                 <DrawingBoardCmp ref = 'd'/>
@@ -199,7 +216,8 @@ export default class CreateLessonPlan extends React.Component {
                     <input ref='tag'/>
                     <button>Add</button>
                 </form>
-                {this.renderSims()}
+                <SimsList that = {this} currSlide={this.state.currSlide} slides={this.state.slides}/>
+                {this.renderSlides()}
             </div>
         )
     }
