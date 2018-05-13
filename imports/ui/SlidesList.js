@@ -48,6 +48,10 @@ export default class SlidesList extends React.Component {
                                     that.refs.d.b.setImg(that.state.slides[that.state.currSlide].note)
                                 })
                             }
+                            else {
+                                that.refs.d.b.reset({ webStorage: false, history: true, background: true })
+                                that.refs.d.b.initHistory()
+                            }
                             
                         }}>X</button> 
 

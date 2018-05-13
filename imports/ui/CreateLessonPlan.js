@@ -4,6 +4,7 @@ import { LessonPlans } from '../api/lessonplans'
 import SimsList from './SimsList'
 import SlidesList from './SlidesList'
 
+
 export default class CreateLessonPlan extends React.Component {
 
     constructor(props) {
@@ -139,6 +140,7 @@ export default class CreateLessonPlan extends React.Component {
             this.pushSlide(slides)
             this.refs.d.b.reset({ webStorage: false, history: true, background: true })
         })
+        this.refs.d.b.initHistory()
     }
 
     addSim(e) {
@@ -149,8 +151,6 @@ export default class CreateLessonPlan extends React.Component {
         slides[this.state.currSlide].iframes.push(src)
         this.setState({
             slides
-        },()=>{
-            console.log(this.state.slides)
         })
         this.refs.tag.value = ''
     }
