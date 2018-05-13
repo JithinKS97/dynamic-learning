@@ -2,6 +2,7 @@ import React from 'react'
 import DrawingBoardCmp from './DrawingBoardCmp'
 import { LessonPlans } from '../api/lessonplans'
 import SimsList from './SimsList'
+import SlidesList from './SlidesList'
 
 export default class CreateLessonPlan extends React.Component {
 
@@ -13,7 +14,6 @@ export default class CreateLessonPlan extends React.Component {
             lessonplan_id: this.props.location.state.lessonplan_id
         }
         this.pushSlide.bind(this)
-        this.renderSlides.bind(this)
     }
 
     componentDidMount() {
@@ -159,65 +159,27 @@ export default class CreateLessonPlan extends React.Component {
         LessonPlans.update(this.state.lessonplan_id, {$set:{slides:this.state.slides}})
     }
 
-    renderSlides() {
-        
-        const slidesArray = this.state.slides
-        if(slidesArray.length!=0) {
-            return slidesArray.map((slide, index)=>{
-                return (
-                    <div key = {index}>
-                        <button onClick = {()=>{
-                            this.setState({
-                                currSlide: index
-                            }, () => {
-                                this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
-                            })
-
-                        }}>{index}</button>
-
-                        <button onClick = {()=>{
-
-                            if(slidesArray.length!=1) {
-                                slidesArray.splice(index, 1)
-
-                                let destination = index-1
-    
-                                if(index == 0) {
-                                    destination = 0
-                                }
-    
-                                this.setState({
-                                    slides: slidesArray,
-                                    currSlide: destination
-                                },()=>{
-                                    this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
-                                })
-                            }
-                            
-                        }}>X</button>
-
-                    </div>
-                )
-            })
-        }
-        
-    }
-
     render() {
         return(
             <div>
-                <DrawingBoardCmp ref = 'd'/>
-                <button onClick = {this.next.bind(this)}>Next</button>
-                <button onClick = {this.previous.bind(this)}>Previous</button>
-                <button onClick = {this.reset.bind(this)}>Reset</button>
-                <button onClick = {this.save.bind(this)}>Save</button>
+                <DrawingBoardCmp ref = 'd'/> 
+                               
                 <h1>{this.state.currSlide}</h1>
+
+                <div>
+                    <button onClick = {this.next.bind(this)}>Next</button>
+                    <button onClick = {this.previous.bind(this)}>Previous</button>
+                    <button onClick = {this.save.bind(this)}>Save</button>
+                    <button onClick = {this.reset.bind(this)}>Reset</button>
+                </div>
+
                 <form onSubmit = {this.addSim.bind(this)}>
                     <input ref='tag'/>
                     <button>Add</button>
                 </form>
+
                 <SimsList that = {this} currSlide={this.state.currSlide} slides={this.state.slides}/>
-                {this.renderSlides()}
+                <SlidesList that = {this} slides={this.state.slides}/>
             </div>
         )
     }
