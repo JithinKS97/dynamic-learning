@@ -7,6 +7,8 @@ export default class SimsList extends React.Component {
     }
 
     renderSims() {
+
+
         const slides = this.props.slides
         const currSlide = this.props.currSlide
         if(slides.length!=0) {
@@ -15,7 +17,6 @@ export default class SimsList extends React.Component {
                 I don't know why. But deletion won't work if you had named the array to which 
                 you initially bring the iframes as iframes instead of iframeArray.
             */
-
             
             const iframeArray = slides[currSlide].iframes
             return iframeArray.map((iframe,index)=>{
@@ -27,7 +28,7 @@ export default class SimsList extends React.Component {
                             slides[currSlide].iframes = iframeArray
                             this.props.that.setState({
                                 slides
-                            })  
+                            })
                         }}>X</button>
                     </div>
                 )

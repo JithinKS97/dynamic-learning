@@ -1,7 +1,7 @@
 import React from 'react'
 import { LessonPlans } from '../api/lessonplans'
 import {Tracker} from 'meteor/tracker'
-import {Link} from 'react-router-dom'
+import LessonPlan from './LessonPlan'
 
 export default class LessonPlansList extends React.Component {
 
@@ -27,22 +27,21 @@ export default class LessonPlansList extends React.Component {
     }
 
     renderLessonPlans() {
-        return this.state.lessonplans.map((lessonplan)=>{
+
+        if(this.state.lessonplans.length == 0) {
             return (
-                <p key={lessonplan._id}>                    
-                    <button>
-                        <Link to={{ pathname: '/createlessonplan', state: { lessonplan_id: lessonplan._id}}}>
-                            {lessonplan.name}
-                        </Link>
-                    </button>
-                    <button onClick = {() => {
-                        LessonPlans.remove(lessonplan._id)
-                    }}>X</button>                 
-                </p>
+                <div>
+                    <p>Add your first lessonplan</p>
+                </div>  
             )
-        })
+        }
+        else {
+            return this.state.lessonplans.map((lessonplan)=>{
+                return(<LessonPlan key = {lessonplan._id} lessonplan_id = {lessonplan._id} name = {lessonplan.name}/>)
+            })
+        }       
     }
-    
+       
     render() {
         return (
             <div>

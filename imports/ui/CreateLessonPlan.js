@@ -147,6 +147,7 @@ export default class CreateLessonPlan extends React.Component {
         e.preventDefault()
         const tag = this.refs.tag.value
         const src = tag.match(`src\s*=\s*"\s*(.*)\s*">`)[1]
+        src.trim()
         const slides = this.state.slides
         slides[this.state.currSlide].iframes.push(src)
         this.setState({
@@ -180,6 +181,7 @@ export default class CreateLessonPlan extends React.Component {
 
                 <SimsList that = {this} currSlide={this.state.currSlide} slides={this.state.slides}/>
                 <SlidesList that = {this} slides={this.state.slides}/>
+                
             </div>
         )
     }

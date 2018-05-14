@@ -9,20 +9,20 @@ import { PublicRoute } from './PublicRoute'
 
 import Login from '../ui/Login'
 import CreateLessonPlan from '../ui/CreateLessonPlan'
-import LessonPlan from '../ui/LessonPlan'
+import LessonPlans from '../ui/LessonPlans'
 import Signup from '../ui/Signup'
 import NotFound from '../ui/NotFound'
 
 const history = createHistory()
 const unAuthenticatedPages = ['/', '/signup']
-const authenticatedPages = ['/lessonplan', '/drawingboard','/createlessonplan']
+const authenticatedPages = ['/lessonplans', '/drawingboard','/createlessonplan']
 
 export const onAuthChange = (isAuthenticated) => {
   const IsUnauthenticatedPage = unAuthenticatedPages.includes(location.pathname)
   const IsAuthenticatedPage = authenticatedPages.includes(location.pathname)
   
   if(IsUnauthenticatedPage && isAuthenticated) {
-      history.replace('/lessonplan')
+      history.replace('/lessonplans')
   } else if(IsAuthenticatedPage && !isAuthenticated) {
       history.replace('/')
   }
@@ -34,7 +34,7 @@ export const AppRouter = (
         <Switch>
         <PublicRoute exact path='/' component = {Login}></PublicRoute>
         <PublicRoute path='/signup' component = {Signup}></PublicRoute>
-        <PrivateRoute path='/lessonplan' component = {LessonPlan}></PrivateRoute>
+        <PrivateRoute path='/lessonplans' component = {LessonPlans}></PrivateRoute>
         <PrivateRoute path='/createlessonplan' component = {CreateLessonPlan}></PrivateRoute>
         <Route path = '*' component = {NotFound}></Route>
         </Switch>
