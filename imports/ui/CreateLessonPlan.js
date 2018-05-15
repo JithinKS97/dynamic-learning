@@ -15,6 +15,7 @@ export default class CreateLessonPlan extends React.Component {
             lessonplan_id: this.props.location.state.lessonplan_id
         }
         this.pushSlide.bind(this)
+        this.saveChanges.bind(this)
     }
 
     componentDidMount() {
@@ -160,6 +161,31 @@ export default class CreateLessonPlan extends React.Component {
         LessonPlans.update(this.state.lessonplan_id, {$set:{slides:this.state.slides}})
     }
 
+
+    saveChanges(slides, currSlide) {
+
+        if(slides == undefined) {
+            this.setState({
+                currSlide
+            },()=>{
+                this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+            })
+        }        
+        else if(currSlide == undefined) {
+            this.setState({
+                slides
+            })
+        }        
+        else {
+            this.setState({
+                slides,
+                currSlide
+            },()=>{
+                this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+            })
+        }
+    }
+
     render() {
         return(
             <div>
@@ -179,8 +205,8 @@ export default class CreateLessonPlan extends React.Component {
                     <button>Add</button>
                 </form>
 
-                <SimsList that = {this} currSlide={this.state.currSlide} slides={this.state.slides}/>
-                <SlidesList that = {this} slides={this.state.slides}/>
+                <SimsList saveChanges= {this.saveChanges.bind(this)} currSlide={this.state.currSlide} slides={this.state.slides}/>
+                <SlidesList reset = {this.reset.bind(this)} saveChanges= {this.saveChanges.bind(this)} slides={this.state.slides}/>
                 
             </div>
         )

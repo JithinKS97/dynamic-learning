@@ -10,50 +10,38 @@ export default class SlidesList extends React.Component {
 
     renderSlides() {        
         
-        const slidesArray = this.props.slides
+        const slides = this.props.slides
 
         const that = this.props.that
 
-        if(slidesArray.length!=0) {
+        if(slides.length!=0) {
 
-            return slidesArray.map((slide, index)=>{
+            return slides.map((slide, index)=>{
 
                 return (
                     
                     <div key = {index}>
 
-                        <button onClick = {()=>{
-                            that.setState({
-                                currSlide: index
-                            }, () => {
-                                that.refs.d.b.setImg(that.state.slides[that.state.currSlide].note)
-                            })    
-                        }}>{index}</button>
+                        <button onClick = {()=>{this.props.saveChanges(undefined, index)}}>{index}</button>
     
                         <button onClick = {()=>{
     
-                            if(slidesArray.length!=1) {
-                                slidesArray.splice(index, 1)
+                            if(slides.length!=1) {
+                                slides.splice(index, 1)
     
-                                let destination = index-1
+                                let currSlide = index-1
     
                                 if(index == 0) {
-                                    destination = 0
+                                    currSlide = 0
                                 }
     
-                                that.setState({
-                                    slides: slidesArray,
-                                    currSlide: destination
-                                },()=>{
-                                    that.refs.d.b.setImg(that.state.slides[that.state.currSlide].note)
-                                })
+                                this.props.saveChanges(slides, currSlide)
                             }
                             else {
-                                that.refs.d.b.reset({ webStorage: false, history: true, background: true })
-                                that.refs.d.b.initHistory()
+                                this.props.reset()
                             }
                             
-                        }}>X</button> 
+                        }}>X</button>
 
                     </div>
                 )

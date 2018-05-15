@@ -12,10 +12,11 @@ import CreateLessonPlan from '../ui/CreateLessonPlan'
 import LessonPlans from '../ui/LessonPlans'
 import Signup from '../ui/Signup'
 import NotFound from '../ui/NotFound'
+import UploadSim from '../ui/UploadSim'
 
 const history = createHistory()
 const unAuthenticatedPages = ['/', '/signup']
-const authenticatedPages = ['/lessonplans', '/drawingboard','/createlessonplan']
+const authenticatedPages = ['/lessonplans', '/drawingboard','/createlessonplan','/simupload']
 
 export const onAuthChange = (isAuthenticated) => {
   const IsUnauthenticatedPage = unAuthenticatedPages.includes(location.pathname)
@@ -35,6 +36,7 @@ export const AppRouter = (
         <PublicRoute exact path='/' component = {Login}></PublicRoute>
         <PublicRoute path='/signup' component = {Signup}></PublicRoute>
         <PrivateRoute path='/lessonplans' component = {LessonPlans}></PrivateRoute>
+        <PrivateRoute path='/uploadsim' component = {UploadSim}></PrivateRoute>
         <PrivateRoute path='/createlessonplan' component = {CreateLessonPlan}></PrivateRoute>
         <Route path = '*' component = {NotFound}></Route>
         </Switch>
