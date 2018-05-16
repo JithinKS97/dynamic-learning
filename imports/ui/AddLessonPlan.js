@@ -1,12 +1,12 @@
 import React from 'react'
 import { LessonPlans } from '../api/lessonplans'
+import {Meteor} from 'meteor/meteor'
 
 const AddLessonPlans = ()=>{
 
     return (
         
-        <div className = 'item'>
-
+        <div>
             <form onSubmit = {(e)=>{
 
                 e.preventDefault()
@@ -20,7 +20,7 @@ const AddLessonPlans = ()=>{
                 }
 
                 if(name) {
-                    LessonPlans.insert({name,slides})
+                    Meteor.call('lessonplans.insert', name, slides)
                 } 
 
                 e.target.lessonplan.value = ''

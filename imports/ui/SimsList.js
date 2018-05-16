@@ -8,9 +8,9 @@ export default class SimsList extends React.Component {
 
     renderSims() {
 
-
         const slides = this.props.slides
         const currSlide = this.props.currSlide
+
         if(slides.length!=0) {
 
             const iframeArray = slides[currSlide].iframes
@@ -26,11 +26,14 @@ export default class SimsList extends React.Component {
                     </div>
                 )
             })
-        }
-        
+        }        
     }
 
     render() {
-        return <div>{this.renderSims()}</div>
+        return (
+            <div>
+                    {this.renderSims()}
+            </div>
+        )
     }
 }

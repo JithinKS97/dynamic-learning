@@ -2,6 +2,7 @@ import React from 'react'
 import { LessonPlans } from '../api/lessonplans'
 import {Tracker} from 'meteor/tracker'
 import LessonPlan from './LessonPlan'
+import { Meteor } from 'meteor/meteor'
 
 export default class LessonPlansList extends React.Component {
 
@@ -15,6 +16,9 @@ export default class LessonPlansList extends React.Component {
 
     componentDidMount() {
         this.lessonsTracker = Tracker.autorun(()=>{
+
+            Meteor.subscribe('lessonplans')
+
             const lessonplans = LessonPlans.find().fetch()
             this.setState({
                 lessonplans

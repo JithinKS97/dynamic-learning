@@ -46,11 +46,12 @@ export default class UploadSim extends React.Component {
     }
 
     renderSim() {
+
         if(this.state.src)
             return <iframe src={this.state.src}></iframe>
-
         else if(this.state.error!='')
             return <p>Invalid tag</p>
+
     }
 
     submitButton() {
@@ -59,31 +60,30 @@ export default class UploadSim extends React.Component {
             return (
                 <div>                    
                     <p>Name of the simulation</p>
-                    <input ref = 'name'/>                
+                    <input ref='name' onChange = {()=>{this.setState({name:this.refs.name.value})}}/>                
 
-                    <button onClick = {(e)=>{
+                    {this.state.name?
 
-                        e.preventDefault()
-
-                        let iframe = this.state.src
-                        let name = this.refs.name.value
-
-
-                        Sims.insert({
-                            name,
-                            iframe
-                        },() => {
-                            alert('Submitted successfully')
-
-                            this.refs.sim.value = ''
-
-                            this.setState({
-                                src:'',
-                                error:''
+                            <button onClick = {(e)=>{
+                            e.preventDefault()
+                            let iframe = this.state.src
+                            let name = this.refs.name.value
+                            
+                            Sims.insert({
+                                name,
+                                iframe
+                            },() => {
+                                alert('Submitted successfully')
+                                this.refs.sim.value = ''
+                                this.setState({
+                                    src:'',
+                                    error:''
+                                })
                             })
-                        })
+                            }}>Submit</button>
 
-                    }}>Submit</button>
+                    :null}
+                    
                 </div>
             )
         }
@@ -91,6 +91,9 @@ export default class UploadSim extends React.Component {
     }
     
     render() {
+
+        console.log(this.state)
+
         return(
             <div>
                 <form>

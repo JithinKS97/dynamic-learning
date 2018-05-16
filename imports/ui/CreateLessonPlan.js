@@ -3,7 +3,9 @@ import DrawingBoardCmp from './DrawingBoardCmp'
 import { LessonPlans } from '../api/lessonplans'
 import SimsList from './SimsList'
 import SlidesList from './SlidesList'
-
+import AddSim from './AddSim'
+import { Link } from 'react-router-dom'
+ 
 
 export default class CreateLessonPlan extends React.Component {
 
@@ -20,10 +22,12 @@ export default class CreateLessonPlan extends React.Component {
 
     componentDidMount() {
 
+        Meteor.subscribe('lessonplans')
+
         this.refs.d.b.ev.bind('board:reset',this.changed.bind(this));
         this.refs.d.b.ev.bind('board:stopDrawing', this.changed.bind(this));
 
-        Tracker.autorun(()=>{
+        this.simTracker = Tracker.autorun(()=>{
             /*Fetching the lesson plan using the lesson id passed throgh the Link*/
             const lessonplan = LessonPlans.find(this.state.lessonplan_id).fetch()[0]
             /*
@@ -44,6 +48,9 @@ export default class CreateLessonPlan extends React.Component {
                 })
             }
         })
+    }
+    componentWillUnmount() {
+        this.simTracker.stop()
     }
 
     changed() {
@@ -144,21 +151,8 @@ export default class CreateLessonPlan extends React.Component {
         this.refs.d.b.initHistory()
     }
 
-    addSim(e) {
-        e.preventDefault()
-        const tag = this.refs.tag.value
-        const src = tag.match(`src\s*=\s*"\s*(.*)\s*">`)[1]
-        src.trim()
-        const slides = this.state.slides
-        slides[this.state.currSlide].iframes.push(src)
-        this.setState({
-            slides
-        })
-        this.refs.tag.value = ''
-    }
-
     save() {
-        LessonPlans.update(this.state.lessonplan_id, {$set:{slides:this.state.slides}})
+        Meteor.call('lessonplans.update', this.state.lessonplan_id, this.state.slides)
     }
 
 
@@ -198,16 +192,13 @@ export default class CreateLessonPlan extends React.Component {
                     <button onClick = {this.previous.bind(this)}>Previous</button>
                     <button onClick = {this.save.bind(this)}>Save</button>
                     <button onClick = {this.reset.bind(this)}>Reset</button>
+                    <Link to = '/lessonplans'><button>Back</button></Link>
                 </div>
 
-                <form onSubmit = {this.addSim.bind(this)}>
-                    <input ref='tag'/>
-                    <button>Add</button>
-                </form>
-
-                <SimsList saveChanges= {this.saveChanges.bind(this)} currSlide={this.state.currSlide} slides={this.state.slides}/>
                 <SlidesList reset = {this.reset.bind(this)} saveChanges= {this.saveChanges.bind(this)} slides={this.state.slides}/>
-                
+                <AddSim currSlide={this.state.currSlide} slides={this.state.slides} saveChanges= {this.saveChanges.bind(this)}/>
+                <SimsList saveChanges= {this.saveChanges.bind(this)} currSlide={this.state.currSlide} slides={this.state.slides}/>
+                                    
             </div>
         )
     }
