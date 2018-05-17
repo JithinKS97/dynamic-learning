@@ -2,7 +2,7 @@ import React from 'react'
 import DrawingBoardCmp from './DrawingBoardCmp'
 import { LessonPlans } from '../api/lessonplans'
 import SimsList from './SimsList'
-import SlidesList from './SlidesList'
+import List from './List'
 import AddSim from './AddSim'
 import { Link } from 'react-router-dom'
  
@@ -29,7 +29,7 @@ export default class CreateLessonPlan extends React.Component {
 
         this.simTracker = Tracker.autorun(()=>{
             /*Fetching the lesson plan using the lesson id passed throgh the Link*/
-            const lessonplan = LessonPlans.find(this.state.lessonplan_id).fetch()[0]
+            const lessonplan = LessonPlans.findOne(this.state.lessonplan_id)
             /*
                 If the fetched value is not null, the slide values are set to the state, if the 
                 note in the first slide is empty string, the board is reset so that, the
@@ -49,6 +49,19 @@ export default class CreateLessonPlan extends React.Component {
             }
         })
     }
+
+    shouldComponentUpdate(nextState) {
+        if(this.state.slides === nextState.slides)
+            return false
+        else
+            return true
+
+        if(this.state.currSlide === this.state.currSlide)
+            return false
+        else
+            return true
+    }
+
     componentWillUnmount() {
         this.simTracker.stop()
     }
@@ -155,7 +168,6 @@ export default class CreateLessonPlan extends React.Component {
         Meteor.call('lessonplans.update', this.state.lessonplan_id, this.state.slides)
     }
 
-
     saveChanges(slides, currSlide) {
 
         if(slides == undefined) {
@@ -180,6 +192,27 @@ export default class CreateLessonPlan extends React.Component {
         }
     }
 
+    deleteSlide(slides, index) {
+
+        if(slides.length!=1) {
+            slides.splice(index, 1)    
+            let currSlide = index-1    
+            if(index == 0) {
+                currSlide = 0
+            }    
+            this.saveChanges(slides, currSlide)
+        }
+        else
+            this.reset()                            
+    }
+
+    deleteSim(slides, iframeArray, index) {
+        
+        iframeArray.splice(index,1)
+        slides[this.state.currSlide].iframes = iframeArray
+        this.saveChanges(slides)
+    }
+
     render() {
         return(
             <div>
@@ -195,9 +228,9 @@ export default class CreateLessonPlan extends React.Component {
                     <Link to = '/lessonplans'><button>Back</button></Link>
                 </div>
 
-                <SlidesList reset = {this.reset.bind(this)} saveChanges= {this.saveChanges.bind(this)} slides={this.state.slides}/>
-                <AddSim currSlide={this.state.currSlide} slides={this.state.slides} saveChanges= {this.saveChanges.bind(this)}/>
-                <SimsList saveChanges= {this.saveChanges.bind(this)} currSlide={this.state.currSlide} slides={this.state.slides}/>
+                <List {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
                                     
             </div>
         )

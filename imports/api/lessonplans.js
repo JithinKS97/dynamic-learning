@@ -39,7 +39,6 @@ Meteor.methods({
         }
 
         LessonPlans.update(id, {$set:{slides}})
-
     }
 })
 

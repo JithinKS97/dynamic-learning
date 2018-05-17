@@ -1,4 +1,5 @@
 import React from 'react'
+import SimContainer from './SimContainer'
 
 export default class SimsList extends React.Component {
 
@@ -13,16 +14,12 @@ export default class SimsList extends React.Component {
 
         if(slides.length!=0) {
 
-            const iframeArray = slides[currSlide].iframes
-            return iframeArray.map((iframe,index)=>{
+            const iframes = slides[currSlide].iframes
+            return iframes.map((iframe,index)=>{
                 return (
                     <div key = {index}>
-                        <iframe src = {iframe}></iframe>
-                        <button onClick = {()=>{                            
-                            iframeArray.splice(index,1)
-                            slides[currSlide].iframes = iframeArray
-                            this.props.saveChanges(slides)
-                        }}>X</button>
+                        <SimContainer src = {iframe}/>
+                        <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>
                     </div>
                 )
             })
@@ -32,7 +29,7 @@ export default class SimsList extends React.Component {
     render() {
         return (
             <div>
-                    {this.renderSims()}
+                {this.renderSims()}
             </div>
         )
     }

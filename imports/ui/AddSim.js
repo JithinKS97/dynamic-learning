@@ -29,8 +29,15 @@ export default class AddSim extends React.Component {
     } 
 
 
-    componentWillUnmount() {
+    componentWillUnmount(nextState) {
         this.simTracker.stop()
+    }
+
+    shouldComponentUpdate(nextState) {
+        if(this.state.src === nextState.src)
+            return false
+        else
+            return true
     }
 
     simsList() {
@@ -66,6 +73,8 @@ export default class AddSim extends React.Component {
                 <h1>Select simulation</h1>
                 {this.simsList()}
                 {this.showSim()}
+                {this.state.src?
+                
                 <button onClick = {()=>{
 
                     const slides = this.props.slides
@@ -78,7 +87,8 @@ export default class AddSim extends React.Component {
                         isOpen:false
                     })
 
-                }}>Add</button>
+                    }}>Add
+                </button>:null}
                 <button onClick = {()=>{
                     this.setState( {
                             isOpen:false,

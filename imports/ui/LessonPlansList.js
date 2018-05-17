@@ -41,7 +41,7 @@ export default class LessonPlansList extends React.Component {
         }
         else {
             return this.state.lessonplans.map((lessonplan)=>{
-                return(<LessonPlan key = {lessonplan._id} lessonplan_id = {lessonplan._id} name = {lessonplan.name}/>)
+                return(<LessonPlan key = {lessonplan._id} {...lessonplan}/>)
             })
         }       
     }
