@@ -2,12 +2,12 @@ import React from 'react'
 import Upload from './Upload'
 import Meteor from 'meteor/meteor'
 
-export default class UploadSim extends React.Component {
+const UploadSim = () =>{
 
+    return(
+        <Upload isOpen = {true} methodName = {'sims.insert'}/>
+    )
 
-    render() {
-        return(
-            <Upload methodName = {'sims.insert'}/>
-        )
-    }
 }
+
+export default UploadSim

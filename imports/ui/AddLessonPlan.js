@@ -1,5 +1,6 @@
 import React from 'react'
 import { LessonPlans } from '../api/lessonplans'
+import { Requests } from '../api/requests'
 import {Meteor} from 'meteor/meteor'
 
 const AddLessonPlans = ()=>{
@@ -20,7 +21,21 @@ const AddLessonPlans = ()=>{
                 }
 
                 if(name) {
-                    Meteor.call('lessonplans.insert', name, slides)
+                    LessonPlans.insert({
+                        name,
+                        slides,
+                        userId:this.userId
+                    },(err, docs)=>{
+                        slides = []
+
+                        slides[0] = {
+                            title:'',
+                            comments:[],
+                            iframes:[]
+                        }
+
+                        Requests.insert({_id:docs, slides})
+                    })
                 } 
 
                 e.target.lessonplan.value = ''

@@ -231,7 +231,11 @@ export default class CreateLessonPlan extends React.Component {
                 <List {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                 <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
                 <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
-                                    
+                <Link to={{ pathname: '/request', state: { lessonplan_id: this.state.lessonplan_id}}}>
+                    <button>
+                        Request new simulations
+                    </button>
+                </Link>                  
             </div>
         )
     }

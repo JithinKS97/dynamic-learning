@@ -2,6 +2,7 @@ import React from 'react'
 import { Sims } from  '../api/sims'
 import { Meteor } from 'meteor/meteor'
 import SimContainer from './SimContainer'
+import Modal from 'react-modal'
  
 
 export default class Upload extends React.Component {
@@ -11,7 +12,8 @@ export default class Upload extends React.Component {
         super(props)
         this.state = {
             src:'',
-            error:''
+            error:'',
+            isOpen: false
         }
         this.submitButton.bind(this)
     }
@@ -57,22 +59,23 @@ export default class Upload extends React.Component {
                 <div>                    
                     <p>Name of the simulation</p>
                     <input ref='name' onChange = {()=>{this.setState({name:this.refs.name.value})}}/>              
-                        {this.state.name?
+                        
                             <button onClick = {(e)=>{
                             e.preventDefault()
                             let iframe = this.state.src
                             let name = this.refs.name.value
-
-                            Meteor.call(this.props.methodName, name, iframe,()=>{
-                                this.refs.sim.value = ''
-                                this.setState({
-                                    src:'',
-                                    error:''
-                                })
-                            })                                                  
-                            
-                            }}>Submit</button>
-                    :null}                    
+                            if(name) {
+                                Meteor.call(this.props.methodName, name, iframe,()=>{
+                                    this.refs.sim.value = ''
+                                    this.setState({
+                                        src:'',
+                                        error:'',
+                                        isOpen:false
+                                    })
+                                    alert('uploaded succesfully')
+                                })  
+                            }                                                                        
+                            }}>Submit</button>                
                 </div>
             )
         }
@@ -83,6 +86,8 @@ export default class Upload extends React.Component {
         
         return(
             <div>
+            <button onClick = {()=>this.setState({isOpen:true})}>Add Simulation</button>        
+            <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
                 <form>
                     <h1>Submit simulation</h1>
                     <p>Enter the Iframe tag</p>
@@ -90,6 +95,8 @@ export default class Upload extends React.Component {
                     <SimContainer src = {this.state.src}/>
                     <div>{this.submitButton()}</div>
                 </form>
+                <button onClick = {()=>this.setState({isOpen:false})}>Cancel</button>   
+            </Modal>
             </div>
         )
     }
