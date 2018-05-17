@@ -12,18 +12,26 @@ export default class Request extends React.Component {
         super(props)
 
         this.state = {
+            show:false,
             slides: [],
             currSlide: 0,
             lessonplan_id: this.props.location.state.lessonplan_id
         }
+        this.update.bind(this)
     }
 
     componentDidMount() {
         Tracker.autorun(()=>{
             const request = Requests.findOne(this.state.lessonplan_id)
-            this.setState({
-                ...request
-            })
+            if(request) {
+
+                const show = !!request.slides[0].title
+
+                this.setState({
+                    ...request,
+                    show
+                })
+            }
         })
     }
 
@@ -39,32 +47,48 @@ export default class Request extends React.Component {
 
     }
 
-    push() {
+    push(e) {
 
+        e.preventDefault();
         slides = this.state.slides
 
-        const slide = {
-            iframes:[],
-            comments:[]
+        if(this.state.show == false) {            
+            slides[0].title = this.refs.title.value
+            this.setState({slides, show:true})            
         }
+        else {
+            slide = {
+                title: this.refs.title.value,
+                comments: [],
+                iframes: []
+            }
+            slides.push(slide)
+            this.setState({
+                slides
+            })
+        }
+        this.refs.title.value = ''
+        this.update()
+    }
 
-        slides.push(slide)
-        this.setState({
-            slides
-        },()=>{
-            Requests.update(this.state.lessonplan_id, {$set:{slides}})
-        })
-        
+    update() {
+        const slides = this.state.slides
+        Requests.update(this.state.lessonplan_id, {$set:{slides}})
     }
 
     render() {
+
     return (
             <div>
                 <h1>Request</h1>
                 <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
                 <Upload isOpen = {true} methodName = {'sims.insert'}/>
-                <button onClick = {this.push.bind(this)}>New request</button>
-                <List {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+
+                <form onSubmit = {this.push.bind(this)}>
+                    <input ref = 'title'/>
+                    <button>New request</button>
+                </form>
+                {this.state.show?<List showTitle = {true} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>:null}
             </div>
         )  
     }
