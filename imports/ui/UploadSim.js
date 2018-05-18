@@ -8,7 +8,7 @@ import { Sims} from '../api/sims'
 const UploadSim = () =>{
 
     return(
-        <Upload isOpen = {true} methodName = {(name, iframe,callback)=>{
+        <Upload methodName = {(name, iframe,callback)=>{
             Sims.insert({name,iframe},callback())
         }}/>
     )

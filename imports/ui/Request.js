@@ -17,11 +17,15 @@ export default class Request extends React.Component {
             currSlide: 0,
         }
         this.update.bind(this)
+        this.pushSim.bind(this)
     }
 
     componentDidMount() {
         const requests = this.props.location.state.requests
+
         const show = !!requests.slides[0].title
+
+        console.log(requests)
 
         this.setState({
             ...requests,
@@ -30,7 +34,6 @@ export default class Request extends React.Component {
     }
 
     deleteSim() {
-
     }
 
     push(e) {
@@ -95,6 +98,7 @@ export default class Request extends React.Component {
         this.setState({
             currSlide:0,
             slides,
+            title:'',
             show:false
         },()=>{
             this.update()
@@ -122,6 +126,28 @@ export default class Request extends React.Component {
         this.update()
     }
     
+    pushSim(iframe) {
+        slides = this.state.slides
+        currSlide = this.state.currSlide
+        console.log(slides[currSlide])
+        slides[currSlide].iframes.push(iframe)
+        this.setState({
+            slides
+        })
+    }
+
+    deleteSim(slides, iframeArray, index) {
+
+        /* This function decides what to do when cross button is pressed in the
+           simulation. The simulation is deleted from the iframes array and the
+           changes are saved.
+        */
+        
+        iframeArray.splice(index,1)
+        slides[this.state.currSlide].iframes = iframeArray
+        this.saveChanges(slides)
+    }
+    
 
 
     render() {
@@ -130,14 +156,21 @@ export default class Request extends React.Component {
             <div>
                 <h1>Request</h1>
                 <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
-                <Upload isOpen = {true} methodName = {'sims.insert'}/>
 
                 <form onSubmit = {this.push.bind(this)}>
                     <input ref = 'title'/>
                     <button>New request</button>
                 </form>
-                
+                                
                 <h1>{this.state.currSlide}</h1>
+
+                {this.state.show?<Upload isOpen = {true} methodName = {(name, iframe, callback)=>{
+
+                    this.pushSim(iframe)
+                    callback();
+
+                }}/>:null}
+
                 {this.state.show?<List showTitle = {true} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>:null}
 
             </div>

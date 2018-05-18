@@ -1,6 +1,7 @@
 import React from 'react'
 import DrawingBoardCmp from './DrawingBoardCmp'
 import { Requests } from '../api/requests'
+import { LessonPlans } from '../api/lessonplans'
 import SimsList from './SimsList'
 import List from './List'
 import AddSim from './AddSim'
@@ -232,7 +233,9 @@ export default class CreateLessonPlan extends React.Component {
         _id = this.state._id
         slides = this.state.slides
 
-        LessonPlans.update(_id, {$set:{slides}})
+        LessonPlans.update(_id, {$set:{slides}},()=>{
+            alert('Saved successfully')
+        })
     }
 
     saveChanges(slides, currSlide) {
@@ -267,7 +270,7 @@ export default class CreateLessonPlan extends React.Component {
     deleteSlide(slides, index) {
 
         /* This function decides what to do when the X button is pressed in the
-           slide element. If there is only one element. it is not deleted. But
+           slide element. If there is only one element. it is not deleted,
            it is just reset. Otherwise, the slide is deleted and the current slide
            is set to the preceeding slide.
         */
