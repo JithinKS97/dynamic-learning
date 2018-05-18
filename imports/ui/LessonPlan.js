@@ -16,7 +16,7 @@ const LessonPlan = (props)=>{
 
     return (
         <div>
-            <Link to={{ pathname: '/createlessonplan', state: {...props}}}>
+            <Link to={{ pathname: `/createlessonplan/${props._id}`}}>
                 <button>
                     {props.name}
                 </button>

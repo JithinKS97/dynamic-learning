@@ -38,8 +38,8 @@ export const AppRouter = (
         <PublicRoute path='/signup' component = {Signup}></PublicRoute>
         <PrivateRoute path='/lessonplans' component = {LessonPlans}></PrivateRoute>
         <PrivateRoute path='/uploadsim' component = {UploadSim}></PrivateRoute>
-        <PrivateRoute path='/request' component = {Request}></PrivateRoute>
-        <PrivateRoute path='/createlessonplan' component = {CreateLessonPlan}></PrivateRoute>
+        <PrivateRoute path='/request/:_id' component = {Request}></PrivateRoute>
+        <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
         <Route path = '*' component = {NotFound}></Route>
         </Switch>
         </div>

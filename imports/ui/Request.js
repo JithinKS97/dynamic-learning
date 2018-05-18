@@ -6,6 +6,7 @@ import { Requests } from '../api/requests'
 import { Meteor } from 'meteor/tracker'
 import Forum from './Forum'
 import {Tracker} from 'meteor/tracker'
+import { Link } from 'react-router-dom'
 
 export default class Request extends React.Component {
 
@@ -24,15 +25,22 @@ export default class Request extends React.Component {
 
     componentDidMount() {
 
-        Tracker.autorun(()=>{
-            const requests = this.props.location.state.requests
-            const show = !!requests.slides[0].title
-            console.log()    
-            this.setState({
-                ...requests,
-                show
-            })
+        this.requestsTracker = Tracker.autorun(()=>{
+
+            const requests = Requests.findOne(this.props.match.params._id)
+
+            if(requests) {
+                const show = !!requests.slides[0].title   
+                this.setState({
+                    ...requests,
+                    show
+                })
+            }           
         })
+    }
+
+    componentWillUnmount() {
+        this.requestsTracker.stop()
     }
 
     deleteSim() {
@@ -45,6 +53,7 @@ export default class Request extends React.Component {
         if(this.refs.title.value) {
 
             slides = this.state.slides
+            currSlide = slides.length
 
             if(this.state.show == false) {            
                 slides[0].title = this.refs.title.value
@@ -58,7 +67,8 @@ export default class Request extends React.Component {
                 }
                 slides.push(slide)
                 this.setState({
-                    slides
+                    slides,
+                    currSlide
                 })
             }
             this.refs.title.value = ''
@@ -67,7 +77,6 @@ export default class Request extends React.Component {
     }
 
     update() {
-        console.log('ehasd')
         const slides = this.state.slides
         Requests.update(this.state._id, {$set:{slides}})
     }
@@ -176,6 +185,8 @@ export default class Request extends React.Component {
                     callback();
 
                 }}/>:null}
+
+                <Link to = {`/createlessonplan/${this.state._id}`}><button>Back</button></Link>
 
             </div>
         )  

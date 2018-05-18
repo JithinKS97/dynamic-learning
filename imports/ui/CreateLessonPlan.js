@@ -27,7 +27,7 @@ export default class CreateLessonPlan extends React.Component {
         this.state = {
             currSlide:0,
             slides: [],
-            _id:'',
+            _id: this.props.match.params._id,
             requests:''
         }
 
@@ -66,14 +66,7 @@ export default class CreateLessonPlan extends React.Component {
         this.db.ev.bind('board:stopDrawing', this.changed.bind(this));
 
         this.simTracker = Tracker.autorun(()=>{
-
-            /* The lessonplan is obtained as the prop passed from the LessonPlan
-               component. Since the Requests collection associated with this
-               lessonplan has the same id. The id is obtained and the requests for
-               this lessonplan are retrieved from the database.
-            */
-
-            const requests = Requests.findOne(this.props.location.state._id)
+            
 
             /*The obtained lessonplan is spreaded and set to the state along with the
               with the requests.
@@ -84,19 +77,21 @@ export default class CreateLessonPlan extends React.Component {
               If notes are already there, the first slide is set to the drawing board.
             */
 
-            this.setState({                                                                    
-                ...this.props.location.state,
-                requests
+            const lessonplan = LessonPlans.findOne(this.props.match.params._id)
 
-            },() => {
-                if(this.state.slides[0].note === '') {
-                    this.db.reset({ webStorage: false, history: true, background: true })
-                }
-                else {
-                    this.db.setImg(this.state.slides[this.state.currSlide].note)
-                }
-            })
-
+            if(lessonplan) {
+                this.setState({                                                                    
+                    ...lessonplan
+    
+                },() => {
+                    if(this.state.slides[0].note === '') {
+                        this.db.reset({ webStorage: false, history: true, background: true })
+                    }
+                    else {
+                        this.db.setImg(this.state.slides[this.state.currSlide].note)
+                    }
+                })   
+            }
         })
     }
 
@@ -319,7 +314,7 @@ export default class CreateLessonPlan extends React.Component {
                 <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
                 <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
 
-                <Link to={{ pathname: '/request', state: { lessonplan_id: this.state._id, requests:this.state.requests}}}>
+                <Link to={{ pathname: `/request/${this.state._id}`}}>
                     <button>
                         Request new simulations
                     </button>
