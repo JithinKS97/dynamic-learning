@@ -1,12 +1,15 @@
 import React from 'react'
 import Upload from './Upload'
 import Meteor from 'meteor/meteor'
+import { Sims} from '../api/sims'
+
+
 
 const UploadSim = () =>{
 
     return(
-        <Upload isOpen = {true} methodName = {()=>{
-            console.log('hellooo')
+        <Upload isOpen = {true} methodName = {(name, iframe,callback)=>{
+            Sims.insert({name,iframe},callback())
         }}/>
     )
 

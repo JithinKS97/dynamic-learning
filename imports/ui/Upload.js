@@ -66,8 +66,14 @@ export default class Upload extends React.Component {
                             let name = this.refs.name.value
                             if(name) {
                                 
-                                this.props.methodName()
-                                
+                                this.props.methodName(name, iframe,()=>{
+                                    alert('Uploaded succesfully')
+                                    this.setState({
+                                        src:'',
+                                        error:'',
+                                        isOpen: false
+                                    })
+                                })
                             }                                                                        
                             }}>Submit</button>                
                 </div>
