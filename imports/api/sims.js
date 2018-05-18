@@ -9,14 +9,3 @@ if(Meteor.isServer) {
         return Sims.find()
     })
 }
-
-Meteor.methods({
-    'sims.insert'(name, iframe) {
-
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        Sims.insert({name,iframe})
-    }
-})

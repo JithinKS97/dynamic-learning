@@ -5,7 +5,9 @@ import Meteor from 'meteor/meteor'
 const UploadSim = () =>{
 
     return(
-        <Upload isOpen = {true} methodName = {'sims.insert'}/>
+        <Upload isOpen = {true} methodName = {()=>{
+            console.log('hellooo')
+        }}/>
     )
 
 }

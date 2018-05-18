@@ -65,15 +65,9 @@ export default class Upload extends React.Component {
                             let iframe = this.state.src
                             let name = this.refs.name.value
                             if(name) {
-                                Meteor.call(this.props.methodName, name, iframe,()=>{
-                                    this.refs.sim.value = ''
-                                    this.setState({
-                                        src:'',
-                                        error:'',
-                                        isOpen:false
-                                    })
-                                    alert('uploaded succesfully')
-                                })  
+                                
+                                this.props.methodName()
+                                
                             }                                                                        
                             }}>Submit</button>                
                 </div>

@@ -1,21 +1,24 @@
 import React from 'react'
 import DrawingBoardCmp from './DrawingBoardCmp'
-import { LessonPlans } from '../api/lessonplans'
+import { Requests } from '../api/requests'
 import SimsList from './SimsList'
 import List from './List'
 import AddSim from './AddSim'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
  
 
 export default class CreateLessonPlan extends React.Component {
-
+    
     constructor(props) {
         super(props)
+        
         this.state = {
             currSlide:0,
             slides: [],
-            lessonplan_id: this.props.location.state.lessonplan_id
+            _id:'',
+            requests:''
         }
+
         this.pushSlide.bind(this)
         this.saveChanges.bind(this)
     }
@@ -24,29 +27,25 @@ export default class CreateLessonPlan extends React.Component {
 
         Meteor.subscribe('lessonplans')
 
-        this.refs.d.b.ev.bind('board:reset',this.changed.bind(this));
-        this.refs.d.b.ev.bind('board:stopDrawing', this.changed.bind(this));
+        this.refs.d.b.ev.bind('board:reset', this.changed.bind(this));
 
-        this.simTracker = Tracker.autorun(()=>{
-            /*Fetching the lesson plan using the lesson id passed throgh the Link*/
-            const lessonplan = LessonPlans.findOne(this.state.lessonplan_id)
-            /*
-                If the fetched value is not null, the slide values are set to the state, if the 
-                note in the first slide is empty string, the board is reset so that, the
-                slide's note is assigned a valid data.
-            */
-            if(lessonplan) {
-                this.setState({
-                    slides:lessonplan.slides
-                },() => {
-                    if(this.state.slides[0].note === '') {
-                        this.refs.d.b.reset({ webStorage: false, history: true, background: true })
-                    }
-                    else {
-                        this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
-                    }
-                })
-            }
+        this.simTracker = Tracker.autorun(()=>{ 
+
+            const requests = Requests.findOne(this.props.location.state._id)
+
+            this.setState({                                                                    
+                ...this.props.location.state,
+                requests
+
+            },() => {
+                if(this.state.slides[0].note === '') {
+                    this.refs.d.b.reset({ webStorage: false, history: true, background: true })
+                }
+                else {
+                    this.refs.d.b.setImg(this.state.slides[this.state.currSlide].note)
+                }
+            })
+
         })
     }
 
@@ -165,7 +164,7 @@ export default class CreateLessonPlan extends React.Component {
     }
 
     save() {
-        Meteor.call('lessonplans.update', this.state.lessonplan_id, this.state.slides)
+        Meteor.call('lessonplans.update', this.state._id, this.state.slides)
     }
 
     saveChanges(slides, currSlide) {
@@ -231,7 +230,7 @@ export default class CreateLessonPlan extends React.Component {
                 <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                 <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
                 <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
-                <Link to={{ pathname: '/request', state: { lessonplan_id: this.state.lessonplan_id}}}>
+                <Link to={{ pathname: '/request', state: { lessonplan_id: this.state._id, requests:this.state.requests}}}>
                     <button>
                         Request new simulations
                     </button>

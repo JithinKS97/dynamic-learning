@@ -12,14 +12,6 @@ if(Meteor.isServer) {
 
 Meteor.methods({
 
-    'lessonplans.remove'(id) {
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        LessonPlans.remove(id)
-    },
-
     'lessonplans.update'(id, slides) {
 
         if(!this.userId) {

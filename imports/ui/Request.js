@@ -9,34 +9,32 @@ export default class Request extends React.Component {
 
 
     constructor(props) {
+
         super(props)
 
         this.state = {
             show:false,
             slides: [],
             currSlide: 0,
-            lessonplan_id: this.props.location.state.lessonplan_id
         }
         this.update.bind(this)
     }
 
     componentDidMount() {
         Tracker.autorun(()=>{
-            const request = Requests.findOne(this.state.lessonplan_id)
-            if(request) {
 
-                const show = !!request.slides[0].title
+            const requests = this.props.location.state.requests
+            const show = !!requests.slides[0].title
 
-                this.setState({
-                    ...request,
-                    show
-                })
-            }
+            this.setState({
+                ...requests,
+                show
+            })
         })
     }
 
-    deleteSlide() {
-
+    componentWillMount() {
+        
     }
 
     saveChanges() {
@@ -73,8 +71,64 @@ export default class Request extends React.Component {
 
     update() {
         const slides = this.state.slides
-        Requests.update(this.state.lessonplan_id, {$set:{slides}})
+        Requests.update(this.state._id, {$set:{slides}})
     }
+
+    deleteSlide(slides, index) {
+
+        if(slides.length!=1) {
+            slides.splice(index, 1)    
+            let currSlide = index-1    
+            if(index == 0) {
+                currSlide = 0
+            }    
+            this.saveChanges(slides, currSlide)
+        }
+        else
+            this.reset()                            
+    }
+
+    reset() {
+
+        const slides = []
+        const slide = {
+            comments: [],
+            iframes: [],
+            title: '',
+        }
+        slides.push(slide)
+
+        this.setState({
+            currSlide:0,
+            slides,
+            show:false
+        },()=>{
+            this.update()
+        })
+    }
+
+    saveChanges(slides, currSlide) {
+
+        if(slides == undefined) {
+            this.setState({
+                currSlide
+            })
+        }        
+        else if(currSlide == undefined) {
+            this.setState({
+                slides
+            })
+        }        
+        else {
+            this.setState({
+                slides,
+                currSlide
+            })
+        }
+        this.update()
+    }
+    
+
 
     render() {
 
@@ -88,6 +142,7 @@ export default class Request extends React.Component {
                     <input ref = 'title'/>
                     <button>New request</button>
                 </form>
+                <h1>{this.state.currSlide}</h1>
                 {this.state.show?<List showTitle = {true} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>:null}
             </div>
         )  
