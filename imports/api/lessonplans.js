@@ -9,16 +9,3 @@ if(Meteor.isServer) {
         return LessonPlans.find({userId:this.userId})
     })
 }
-
-Meteor.methods({
-
-    'lessonplans.update'(id, slides) {
-
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        LessonPlans.update(id, {$set:{slides}})
-    }
-})
-

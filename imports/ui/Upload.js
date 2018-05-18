@@ -86,17 +86,17 @@ export default class Upload extends React.Component {
         
         return(
             <div>
-            <button onClick = {()=>this.setState({isOpen:true})}>Add Simulation</button>        
-            <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
-                <form>
-                    <h1>Submit simulation</h1>
-                    <p>Enter the Iframe tag</p>
-                    <input onChange={this.enteredLink.bind(this)} ref = 'sim'/>
-                    <SimContainer src = {this.state.src}/>
-                    <div>{this.submitButton()}</div>
-                </form>
-                <button onClick = {()=>this.setState({isOpen:false})}>Cancel</button>   
-            </Modal>
+                <button onClick = {()=>this.setState({isOpen:true})}>Add Simulation</button>        
+                <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
+                    <form>
+                        <h1>Submit simulation</h1>
+                        <p>Enter the Iframe tag</p>
+                        <input onChange={this.enteredLink.bind(this)} ref = 'sim'/>
+                        <SimContainer src = {this.state.src}/>
+                        <div>{this.submitButton()}</div>
+                    </form>
+                    <button onClick = {()=>this.setState({isOpen:false})}>Cancel</button>   
+                </Modal>
             </div>
         )
     }

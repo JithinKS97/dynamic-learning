@@ -5,6 +5,15 @@ import { Requests } from '../api/requests'
 
 const LessonPlan = (props)=>{
 
+    /* This component renders the individual lessonplan buttons
+       The lessonplan object is passed as the props of the Link
+       to the CreateLessonPlanComponent.
+
+       Since the Request object is associated with a Lessonplan.
+       If the Lessonplan is delted, the corrsponding Requests
+       are also removed.
+    */
+
     return (
         <div>
             <Link to={{ pathname: '/createlessonplan', state: {...props}}}>

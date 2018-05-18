@@ -17,7 +17,11 @@ export default class DrawingBoardCmp extends React.Component {
             ],
             webStorage: false
           });;
+          
+          this.props.getDB(this.b) //This function passs the reference to drawing board
+                                   //object to the CreateLessonPlan component
     }
+    
 
     render() {
 

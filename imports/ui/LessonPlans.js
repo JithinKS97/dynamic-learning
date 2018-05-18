@@ -9,6 +9,8 @@ export default class LessonPlans extends React.Component{
 
     render(){
 
+        /* This Component renders the main LessonPlans dashboard of the teachers */
+
         return (
             <div>                
                 <h1>Lessonplans</h1>

@@ -32,6 +32,10 @@ export default class LessonPlansList extends React.Component {
 
     renderLessonPlans() {
 
+        /* This component renders the LessonPlans. The data in the lessonplan
+           is passed as prop to the LessonPlan component.
+        */
+
         if(this.state.lessonplans.length == 0) {
             return (
                 <div>
