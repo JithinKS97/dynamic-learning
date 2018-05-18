@@ -9,6 +9,14 @@ export default class SimsList extends React.Component {
 
     renderSims() {
 
+        /* This component displays a list of simulations. 
+           The props contatin the current slides and the slides.
+
+           The iframes of the current slide are onbained and rendered.
+
+           On clicking the X button the delete function passed in the props is called.
+        */
+
         const slides = this.props.slides
         const currSlide = this.props.currSlide
 

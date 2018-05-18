@@ -7,6 +7,11 @@ import Modal from 'react-modal'
 
 export default class Upload extends React.Component {
 
+    /*This component performs the function of uploading the iframe
+      src stores the src of the input iframe tag, isOpen is for opening
+      and closing of the modal.
+    */
+
     constructor(props) {
         
         super(props)
@@ -19,7 +24,7 @@ export default class Upload extends React.Component {
     }
 
     componentDidMount() {
-        Meteor.subscribe('sims')
+        
     }
     
     enteredLink(e) {
@@ -29,9 +34,17 @@ export default class Upload extends React.Component {
         this.setState({
             error:link
         })
+
+        /* The link.match checks if the iframe entered is valid by using regular
+           expression. THe src should be set only if the entered tag is valid.
+        */
+
         const tag = link.match(`(?:<iframe[^>]*)(?:(?:\/>)|(?:>.*?<\/iframe>))`)
         if(tag) {
             const validTag = tag[0]
+
+            /* The contents in the src is obtained using regular expression */
+
             const src = validTag.match(`src\s*=\s*"\s*(.*)\s*">`)
             if(src) {
                 validSrc = src[1]
@@ -54,6 +67,11 @@ export default class Upload extends React.Component {
 
     submitButton() {
 
+        /* The iframe is uploaded to the collection in this function. Only if the
+           src is valid and a name is provided in the input field, insertions is
+           performed.
+        */
+
         if(this.state.src) {
             return (
                 <div>                    
@@ -61,9 +79,11 @@ export default class Upload extends React.Component {
                     <input ref='name' onChange = {()=>{this.setState({name:this.refs.name.value})}}/>              
                         
                             <button onClick = {(e)=>{
+
                             e.preventDefault()
                             let iframe = this.state.src
                             let name = this.refs.name.value
+
                             if(name) {
                                 
                                 this.props.methodName(name, iframe,()=>{

@@ -2,6 +2,7 @@ import React from 'react'
 
 const SimContainer = (props) => {
 
+    /* Holds the simulation */
 
     return(
 

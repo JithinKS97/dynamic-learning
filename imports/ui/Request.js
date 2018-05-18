@@ -7,11 +7,6 @@ import { Meteor } from 'meteor/tracker'
 
 export default class Request extends React.Component {
 
-    /*This Component is for posting the Requests by the teachers. Here teachers
-      can post the requests and the others can post comments as well as upload
-      simulations.
-      */
-
     constructor(props) {
 
         super(props)
