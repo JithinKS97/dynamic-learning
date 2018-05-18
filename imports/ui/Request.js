@@ -4,6 +4,8 @@ import SimsList from './SimsList'
 import Upload from './Upload'
 import { Requests } from '../api/requests'
 import { Meteor } from 'meteor/tracker'
+import Forum from './Forum'
+import {Tracker} from 'meteor/tracker'
 
 export default class Request extends React.Component {
 
@@ -21,15 +23,15 @@ export default class Request extends React.Component {
     }
 
     componentDidMount() {
-        const requests = this.props.location.state.requests
 
-        const show = !!requests.slides[0].title
-
-        console.log(requests)
-
-        this.setState({
-            ...requests,
-            show
+        Tracker.autorun(()=>{
+            const requests = this.props.location.state.requests
+            const show = !!requests.slides[0].title
+            console.log()    
+            this.setState({
+                ...requests,
+                show
+            })
         })
     }
 
@@ -65,6 +67,7 @@ export default class Request extends React.Component {
     }
 
     update() {
+        console.log('ehasd')
         const slides = this.state.slides
         Requests.update(this.state._id, {$set:{slides}})
     }
@@ -129,7 +132,6 @@ export default class Request extends React.Component {
     pushSim(iframe) {
         slides = this.state.slides
         currSlide = this.state.currSlide
-        console.log(slides[currSlide])
         slides[currSlide].iframes.push(iframe)
         this.setState({
             slides
@@ -164,14 +166,16 @@ export default class Request extends React.Component {
                                 
                 <h1>{this.state.currSlide}</h1>
 
+                {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
+
+                {this.state.show?<Forum {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
+
                 {this.state.show?<Upload isOpen = {true} methodName = {(name, iframe, callback)=>{
 
                     this.pushSim(iframe)
                     callback();
 
                 }}/>:null}
-
-                {this.state.show?<List showTitle = {true} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>:null}
 
             </div>
         )  
