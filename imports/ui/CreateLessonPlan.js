@@ -43,7 +43,7 @@ export default class CreateLessonPlan extends React.Component {
 
         /*This function is intended for getting the reference to the drawing board
           object in the DrawingBoardCmp. This function is passed as the prop to the
-          DrawingBoardCmp. The function is executed in the componentDidMount where
+          DrawingBoardCmp. It is executed in the componentDidMount where
           drawingboard is initialized, which is passed as db. The reference is
           retrieved here and used in this component.           
         */
@@ -285,8 +285,8 @@ export default class CreateLessonPlan extends React.Component {
     deleteSim(slides, iframeArray, index) {
 
         /* This function decides what to do when cross button is pressed in the
-           simulation. The simulation is deleted from the iframes array and the
-           changes are saved.
+           simulation. The simulation is deleted from the iframes array of the
+           current slide and the changes are saved.
         */
         
         iframeArray.splice(index,1)

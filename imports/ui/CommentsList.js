@@ -1,7 +1,7 @@
 import React from 'react'
-import Comment from './Comment'
+import CommentBox from './CommentBox'
 
-export default class Comments extends React.Component {
+export default class CommentsList extends React.Component {
 
     constructor(props) {
         super(props)
@@ -15,7 +15,7 @@ export default class Comments extends React.Component {
             comments = slides[currSlide].comments
             return comments.map((comment, index)=>{
                 return (
-                    <Comment key = {index} comment = {comment}/>
+                    <CommentBox key = {index} comment = {comment} index = {index} {...this.props}/>
                 )
             })
         }

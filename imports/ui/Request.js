@@ -3,8 +3,8 @@ import List from './List'
 import SimsList from './SimsList'
 import Upload from './Upload'
 import { Requests } from '../api/requests'
-import { Meteor } from 'meteor/tracker'
-import Forum from './Forum'
+import CommentForm from './CommentForm'
+import CommentsList from './CommentsList'
 import {Tracker} from 'meteor/tracker'
 import { Link } from 'react-router-dom'
 
@@ -41,9 +41,6 @@ export default class Request extends React.Component {
 
     componentWillUnmount() {
         this.requestsTracker.stop()
-    }
-
-    deleteSim() {
     }
 
     push(e) {
@@ -145,6 +142,7 @@ export default class Request extends React.Component {
         this.setState({
             slides
         })
+        this.update()
     }
 
     deleteSim(slides, iframeArray, index) {
@@ -158,15 +156,19 @@ export default class Request extends React.Component {
         slides[this.state.currSlide].iframes = iframeArray
         this.saveChanges(slides)
     }
-    
 
+    deleteComment(index) {
+        slides = this.state.slides
+        currSlide = this.state.currSlide
+        slides[currSlide].comments.splice(index,1)
+        this.saveChanges(slides)
+    }
 
     render() {
 
     return (
             <div>
                 <h1>Request</h1>
-                <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
 
                 <form onSubmit = {this.push.bind(this)}>
                     <input ref = 'title'/>
@@ -177,7 +179,9 @@ export default class Request extends React.Component {
 
                 {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
 
-                {this.state.show?<Forum {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
+                {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
+
+                {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
 
                 {this.state.show?<Upload isOpen = {true} methodName = {(name, iframe, callback)=>{
 
@@ -187,6 +191,8 @@ export default class Request extends React.Component {
                 }}/>:null}
 
                 <Link to = {`/createlessonplan/${this.state._id}`}><button>Back</button></Link>
+                
+                <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
 
             </div>
         )  
