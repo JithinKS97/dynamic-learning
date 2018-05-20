@@ -17,8 +17,7 @@ export default class SimsList extends React.Component {
            On clicking the X button the delete function passed in the props is called.
         */
 
-        const slides = this.props.slides
-        const currSlide = this.props.currSlide
+        const { slides, currSlide } = this.props
 
         if(slides.length!=0) {
 

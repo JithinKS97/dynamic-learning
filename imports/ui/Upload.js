@@ -40,6 +40,7 @@ export default class Upload extends React.Component {
         */
 
         const tag = link.match(`(?:<iframe[^>]*)(?:(?:\/>)|(?:>.*?<\/iframe>))`)
+        
         if(tag) {
             const validTag = tag[0]
 

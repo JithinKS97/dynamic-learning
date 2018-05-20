@@ -27,7 +27,7 @@ export default class DrawingBoardCmp extends React.Component {
 
         const boardStyle = {
             width: '400px',
-            height: '400px',
+            height: '400px'
         }
 
         return(<div style = {boardStyle} id="container"></div>)

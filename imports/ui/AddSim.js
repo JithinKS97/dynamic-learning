@@ -126,8 +126,7 @@ export default class AddSim extends React.Component {
                            Finally the Modal is closed after the insertion of the simulation.
                         */
 
-                        const slides = this.props.slides
-                        const currSlide = this.props.currSlide
+                         const { slides, currSlide } = this.props
 
                         slides[currSlide].iframes.push(this.state.src)
                         this.props.saveChanges(slides)

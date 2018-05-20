@@ -17,7 +17,7 @@ export default class Request extends React.Component {
         this.state = {
             show:false,
             slides: [],
-            currSlide: 0,
+            currSlide: 0
         }
         this.update.bind(this)
         this.pushSim.bind(this)
@@ -27,7 +27,9 @@ export default class Request extends React.Component {
 
         this.requestsTracker = Tracker.autorun(()=>{
 
-            const requests = Requests.findOne(this.props.match.params._id)
+            const {_id} = this.props.match.params
+
+            const requests = Requests.findOne(_id)
 
             if(requests) {
                 const show = !!requests.slides[0].title   
@@ -35,7 +37,7 @@ export default class Request extends React.Component {
                     ...requests,
                     show
                 })
-            }           
+            }          
         })
     }
 
@@ -49,7 +51,7 @@ export default class Request extends React.Component {
 
         if(this.refs.title.value) {
 
-            slides = this.state.slides
+            const { slides } = this.state
             currSlide = slides.length
 
             if(this.state.show == false) {            
@@ -74,7 +76,7 @@ export default class Request extends React.Component {
     }
 
     update() {
-        const slides = this.state.slides
+        const { slides }  = this.state
         Requests.update(this.state._id, {$set:{slides}})
     }
 
@@ -136,8 +138,8 @@ export default class Request extends React.Component {
     }
     
     pushSim(iframe) {
-        slides = this.state.slides
-        currSlide = this.state.currSlide
+        const { slides, currSlide }  = this.state
+
         slides[currSlide].iframes.push(iframe)
         this.setState({
             slides
@@ -158,8 +160,9 @@ export default class Request extends React.Component {
     }
 
     deleteComment(index) {
-        slides = this.state.slides
-        currSlide = this.state.currSlide
+        
+        const { slides, currSlide }  = this.state
+
         slides[currSlide].comments.splice(index,1)
         this.saveChanges(slides)
     }
@@ -168,6 +171,7 @@ export default class Request extends React.Component {
 
     return (
             <div>
+                                
                 <h1>Request</h1>
 
                 <form onSubmit = {this.push.bind(this)}>

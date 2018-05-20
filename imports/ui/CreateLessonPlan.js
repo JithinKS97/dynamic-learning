@@ -5,7 +5,7 @@ import { LessonPlans } from '../api/lessonplans'
 import SimsList from './SimsList'
 import List from './List'
 import AddSim from './AddSim'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
  
 
 export default class CreateLessonPlan extends React.Component {
@@ -27,8 +27,7 @@ export default class CreateLessonPlan extends React.Component {
         this.state = {
             currSlide:0,
             slides: [],
-            _id: this.props.match.params._id,
-            requests:''
+            _id: '',
         }
 
         /* In pushSlide and saveChanges, this keyword is used. For binding the this
@@ -50,6 +49,7 @@ export default class CreateLessonPlan extends React.Component {
 
         this.db = db
     }
+
 
     componentDidMount() {
 
@@ -76,13 +76,14 @@ export default class CreateLessonPlan extends React.Component {
 
               If notes are already there, the first slide is set to the drawing board.
             */
+           const { _id } = this.props.match.params
 
-            const lessonplan = LessonPlans.findOne(this.props.match.params._id)
+           const lessonplan = LessonPlans.findOne(_id)
 
             if(lessonplan) {
-                this.setState({                                                                    
-                    ...lessonplan
-    
+
+                this.setState({                                                
+                    ...lessonplan   
                 },() => {
                     if(this.state.slides[0].note === '') {
                         this.db.reset({ webStorage: false, history: true, background: true })
@@ -121,8 +122,8 @@ export default class CreateLessonPlan extends React.Component {
             Here we retrieve the current slide no. and note from the states. The notes are
             updated and stored back to the state.
         */
-        const currSlide = this.state.currSlide
-        const slides = [...this.state.slides]
+        const {currSlide, slides} = this.state
+        
         const note = this.db.getImg()
         slides[currSlide].note = note
         this.setState({slides})
@@ -143,26 +144,28 @@ export default class CreateLessonPlan extends React.Component {
 
         this.db.initHistory()
 
-        const slides = [...this.state.slides]
-        let currSlide = this.state.currSlide
+        const {currSlide, slides} = this.state
   
         if(currSlide === slides.length-1) {
-            this.pushSlide(slides)
+            return
+        }
+        else {
             currSlide++
+            this.saveChanges(slides, currSlide)
+        }
+    }
+
+    addNewSlide() {        
+        
+        const {currSlide, slides} = this.state
+
+        this.pushSlide(slides)
+            currSlide = slides.length-1
             this.setState({
                 currSlide
             },()=>{
                 this.db.reset({ webStorage: false, history: true, background: true })
-            })
-        }
-        else {
-            currSlide++
-            this.setState({
-                currSlide
-            },()=>{
-                this.db.setImg(this.state.slides[this.state.currSlide].note)
-            })
-        }
+        })
     }
 
     previous() {
@@ -173,17 +176,12 @@ export default class CreateLessonPlan extends React.Component {
             slide is set to the board.
         */
 
-        const slides = [...this.state.slides]
-        let currSlide = this.state.currSlide
+       const {currSlide, slides} = this.state
 
         if(currSlide!=0) {
             this.db.initHistory()
             currSlide--
-            this.setState({
-                currSlide
-            },()=>{
-                this.db.setImg(this.state.slides[this.state.currSlide].note)
-            })
+            this.saveChanges(slides,currSlide)
         }
     }
 
@@ -225,8 +223,7 @@ export default class CreateLessonPlan extends React.Component {
 
     save() {
 
-        _id = this.state._id
-        slides = this.state.slides
+        const {_id, slides} = this.state
 
         LessonPlans.update(_id, {$set:{slides}},()=>{
             alert('Saved successfully')
@@ -298,11 +295,12 @@ export default class CreateLessonPlan extends React.Component {
 
         return(
             <div>
-                <DrawingBoardCmp getDB = {this.getDB.bind(this)} ref = 'd'/> 
+                {<DrawingBoardCmp getDB = {this.getDB.bind(this)} ref = 'd'/>} 
                                
                 <h1>{this.state.currSlide}</h1>
 
                 <div>
+                    <button onClick = {this.addNewSlide.bind(this)}>+</button>
                     <button onClick = {this.next.bind(this)}>Next</button>
                     <button onClick = {this.previous.bind(this)}>Previous</button>
                     <button onClick = {this.save.bind(this)}>Save</button>
