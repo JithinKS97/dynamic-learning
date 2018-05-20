@@ -84,10 +84,12 @@ export default class Request extends React.Component {
 
         if(slides.length!=1) {
             slides.splice(index, 1)    
-            let currSlide = index-1    
+            let currSlide = this.state.currSlide   
             if(index == 0) {
                 currSlide = 0
             }    
+            if(currSlide == slides.length)
+                currSlide = slides.length-1
             this.saveChanges(slides, currSlide)
         }
         else

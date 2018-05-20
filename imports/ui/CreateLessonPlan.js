@@ -144,7 +144,7 @@ export default class CreateLessonPlan extends React.Component {
 
         this.db.initHistory()
 
-        const {currSlide, slides} = this.state
+        let {currSlide, slides} = this.state
   
         if(currSlide === slides.length-1) {
             return
@@ -157,7 +157,7 @@ export default class CreateLessonPlan extends React.Component {
 
     addNewSlide() {        
         
-        const {currSlide, slides} = this.state
+        let {currSlide, slides} = this.state
 
         this.pushSlide(slides)
             currSlide = slides.length-1
@@ -176,7 +176,7 @@ export default class CreateLessonPlan extends React.Component {
             slide is set to the board.
         */
 
-       const {currSlide, slides} = this.state
+       let {currSlide, slides} = this.state
 
         if(currSlide!=0) {
             this.db.initHistory()
@@ -269,10 +269,12 @@ export default class CreateLessonPlan extends React.Component {
 
         if(slides.length!=1) {
             slides.splice(index, 1)    
-            let currSlide = index-1    
+            let currSlide = this.state.currSlide   
             if(index == 0) {
                 currSlide = 0
             }    
+            if(currSlide == slides.length)
+                currSlide = slides.length-1
             this.saveChanges(slides, currSlide)
         }
         else
