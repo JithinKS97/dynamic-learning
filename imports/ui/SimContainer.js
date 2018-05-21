@@ -6,9 +6,7 @@ export default class SimContainer extends React.Component{
 
     constructor(props){
         super(props)
-        this.iframe = React.createRef()
-
-        
+        this.iframe = React.createRef()        
     }
 
 
@@ -21,7 +19,7 @@ export default class SimContainer extends React.Component{
         return(
 
             <div className = 'sim'>
-                <iframe src={this.props.src}></iframe>                   
+                {this.props.src?<iframe src={this.props.src}></iframe>:null}               
             </div>
         )
     }

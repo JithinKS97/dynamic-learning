@@ -141,7 +141,8 @@ export default class AddSim extends React.Component {
                         this.props.saveChanges(slides)
 
                         this.setState({
-                            isOpen:false
+                            isOpen:false,
+                            src:''
                         })
                     }
 
