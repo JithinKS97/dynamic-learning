@@ -38,10 +38,12 @@ const AddLessonPlans = ()=>{
                 */
 
                 if(name) {
+
+
                     LessonPlans.insert({
                         name,
                         slides,
-                        userId:this.userId
+                        userId:Meteor.userId()
                     },(err, docs)=>{
 
                         slides = []

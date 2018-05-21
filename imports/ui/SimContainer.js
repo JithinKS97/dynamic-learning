@@ -1,22 +1,28 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 
-const SimContainer = (props) => {
 
-    /* Holds the simulation */
+export default class SimContainer extends React.Component{
 
-    return(
+    constructor(props){
+        super(props)
+        this.iframe = React.createRef()
 
-        <div>
-
-            {
-                props.src?
-                <iframe src={props.src}></iframe>:
-                null
-            }
         
-        </div>
-    )
+    }
 
+
+    componentDidMount() {
+        
+    }
+    
+    render(){
+        
+        return(
+
+            <div className = 'sim'>
+                <iframe src={this.props.src}></iframe>                   
+            </div>
+        )
+    }
 }
-
-export default SimContainer

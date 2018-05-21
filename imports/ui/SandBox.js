@@ -1,5 +1,4 @@
 import React from 'react'
-import iFrameResize from 'iframe-resizer'
 
 class SandBox extends React.Component {
 

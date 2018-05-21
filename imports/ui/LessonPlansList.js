@@ -18,6 +18,7 @@ export default class LessonPlansList extends React.Component {
         this.lessonsTracker = Tracker.autorun(()=>{
 
             Meteor.subscribe('lessonplans')
+            Meteor.subscribe('requests')
 
             const lessonplans = LessonPlans.find().fetch()
             this.setState({

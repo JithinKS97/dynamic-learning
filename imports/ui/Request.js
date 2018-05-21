@@ -25,9 +25,13 @@ export default class Request extends React.Component {
 
     componentDidMount() {
 
+        Meteor.subscribe('requests')
+
         this.requestsTracker = Tracker.autorun(()=>{
 
             const {_id} = this.props.match.params
+            
+            Meteor.subscribe('requests')
 
             const requests = Requests.findOne(_id)
 
@@ -84,7 +88,7 @@ export default class Request extends React.Component {
 
         if(slides.length!=1) {
             slides.splice(index, 1)    
-            let currSlide = this.state.currSlide   
+            let { currSlide } = this.state   
             if(index == 0) {
                 currSlide = 0
             }    

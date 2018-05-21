@@ -1,5 +1,6 @@
 import React from 'react'
 import SimContainer from './SimContainer'
+import Rnd from 'react-rnd'
 
 export default class SimsList extends React.Component {
 
@@ -21,12 +22,30 @@ export default class SimsList extends React.Component {
 
         if(slides.length!=0) {
 
-            const iframes = slides[currSlide].iframes
+            const { iframes } = slides[currSlide]
             return iframes.map((iframe,index)=>{
+                
                 return (
-                    <div key = {index}>
-                        <SimContainer src = {iframe}/>
+                    <div key = {index} className = 'sim'>
+
+
+                    <Rnd size={{ width: iframe.w,  height: iframe.h }}
+                         position={{ x: iframe.x, y: iframe.y }}
+                         onDragStop={(e, d) => {
+
+                             slides[currSlide].iframes[index].x = d.lastX
+                             slides[currSlide].iframes[index].y = d.lastY
+
+                             this.props.saveChanges(slides, undefined)
+                         }}                         
+                    >
+                    
+                        
+                        <SimContainer src = {iframe.src}/>
                         <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>
+                        
+                    
+                    </Rnd>
                     </div>
                 )
             })

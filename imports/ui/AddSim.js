@@ -36,6 +36,7 @@ export default class AddSim extends React.Component {
 
         this.simTracker = Tracker.autorun(()=>{
             const sims = Sims.find().fetch()
+
             this.setState({
                 sims
             })
@@ -126,9 +127,17 @@ export default class AddSim extends React.Component {
                            Finally the Modal is closed after the insertion of the simulation.
                         */
 
-                         const { slides, currSlide } = this.props
+                        const { slides, currSlide } = this.props
 
-                        slides[currSlide].iframes.push(this.state.src)
+                        const sim = {
+                            src: this.state.src,
+                            x: 0,
+                            y: 0,
+                            w: 640,
+                            h: 360
+                        }
+
+                        slides[currSlide].iframes.push(sim)
                         this.props.saveChanges(slides)
 
                         this.setState({

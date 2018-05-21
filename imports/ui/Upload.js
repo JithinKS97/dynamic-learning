@@ -24,7 +24,7 @@ export default class Upload extends React.Component {
     }
 
     componentDidMount() {
-        
+        Meteor.subscribe('sims')
     }
     
     enteredLink(e) {
@@ -82,7 +82,7 @@ export default class Upload extends React.Component {
                             <button onClick = {(e)=>{
 
                             e.preventDefault()
-                            let iframe = this.state.src
+                            const iframe = this.state.src
                             let name = this.refs.name.value
 
                             if(name) {
@@ -116,7 +116,7 @@ export default class Upload extends React.Component {
                         <SimContainer src = {this.state.src}/>
                         <div>{this.submitButton()}</div>
                     </form>
-                    <button onClick = {()=>this.setState({isOpen:false})}>Cancel</button>   
+                    <button onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>   
                 </Modal>
             </div>
         )

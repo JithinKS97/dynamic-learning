@@ -9,6 +9,7 @@ const UploadSim = () =>{
 
     return(
         <Upload methodName = {(name, iframe,callback)=>{
+
             Sims.insert({name,iframe},callback())
         }}/>
     )
