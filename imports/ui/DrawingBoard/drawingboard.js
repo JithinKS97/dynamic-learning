@@ -342,7 +342,7 @@
     
         this.initHistory();
         //init default board values before controls are added (mostly pencil color and size)
-        this.reset({ webStorage: false, history: false, background: false });
+        this.reset({ webStorage: false, history: false, background: true });
         //init controls (they will need the default board values to work like pencil color and size)
         this.initControls();
         //set board's size after the controls div is added

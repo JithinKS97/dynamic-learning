@@ -68,7 +68,7 @@ export default class CreateLessonPlan extends React.Component {
     }
 
 
-    componentDidMount() {
+    componentDidMount() {  
       this.isInteractEnabled=false;
       this.undoArray= [];
       this.curPosition= [];
@@ -101,7 +101,6 @@ export default class CreateLessonPlan extends React.Component {
            const { _id } = this.props.match.params
 
            const lessonplan = LessonPlans.findOne(_id)
-           console.log(lessonplan);
             if(lessonplan) {
               if (this.undoArray.length == 0 && lessonplan.slides[0].note != ''){
                 this.undoArray = lessonplan.slides.map((slide) => {
@@ -115,11 +114,9 @@ export default class CreateLessonPlan extends React.Component {
                 },() => {
                     if(this.state.slides[0].note === '') {
                         this.db.reset({ webStorage: false, history: true, background: true })
-                        console.log(this.undoArray, this.curPosition);
                     }
                     else {
                         this.db.setImg(this.state.slides[this.state.currSlide].note)
-                        console.log(this.undoArray, this.curPosition);
                     }
                 })
             }
@@ -166,7 +163,6 @@ export default class CreateLessonPlan extends React.Component {
           this.curPosition.push(0);
         }
 
-        console.log(this.undoArray,this.curPosition);
         this.setState({slides})
     }
 
@@ -312,7 +308,6 @@ export default class CreateLessonPlan extends React.Component {
             let { currSlide } = this.state
             this.undoArray.splice(index,1);
             this.curPosition.splice(index,1);
-            console.log(this.curPosition, this.undoArray);
             if(index == 0) {
                 currSlide = 0
             }
@@ -340,10 +335,12 @@ export default class CreateLessonPlan extends React.Component {
 
     interact(){
       this.isInteractEnabled = !this.isInteractEnabled;
-      if(this.isInteractEnabled)
-        document.getElementsByClassName('drawing-board-canvas')[0].style['pointer-events'] = 'none';
-      else
-        document.getElementsByClassName('drawing-board-canvas')[0].style['pointer-events'] = 'unset';
+      if(this.isInteractEnabled) {
+        document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+      }
+      else {
+        document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
+      }
     }
 
     undo(e){
@@ -352,7 +349,6 @@ export default class CreateLessonPlan extends React.Component {
       slides[this.state.currSlide].note = this.undoArray[this.state.currSlide][this.curPosition[this.state.currSlide]];
       this.db.setImg(this.undoArray[this.state.currSlide][this.curPosition[this.state.currSlide]]);
       this.undoArray[this.state.currSlide].pop()
-      console.log(this.undoArray, this.curPosition);
       this.setState({
         slides
       });
@@ -370,9 +366,14 @@ export default class CreateLessonPlan extends React.Component {
 
             <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
-            <button onClick = {this.interact.bind(this)}>Interact</button>
+           
             <button onClick = {this.reset.bind(this)}>Reset</button>  
             <button onClick = {this.save.bind(this)}>Save</button>
+
+            <p>Interact
+                <input onChange={this.interact.bind(this)} type = 'checkbox'/>
+            </p>
+
             <Link to = '/lessonplans'><button>Back</button></Link>
              <Link to={{ pathname: `/request/${this.state._id}`}}>
                 <button>

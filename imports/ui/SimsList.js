@@ -37,7 +37,7 @@ export default class SimsList extends React.Component {
             return iframes.map((iframe,index)=>{
 
                 return (
-                    <div key = {index} className = 'sim'>\
+                    <div key = {index} className = 'sim'>
                         <Rnd size={{ width: iframe.w,  height: iframe.h }}
                             position={{ x: iframe.x, y: iframe.y }}
                             onDragStop={(e, d) => {

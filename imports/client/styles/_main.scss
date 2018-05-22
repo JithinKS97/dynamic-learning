@@ -1,16 +1,23 @@
 .drawing-board-canvas{
-  z-index: 1;
+  z-index: 0;
 }
 
 .ReactModal__Overlay--after-open{
-  z-index:2;
+  z-index:3;
 }
 
 .sim{
-  z-index:3;
+  z-index:1;
+}
+
+.drawing-board-canvas-wrapper {
+  z-index:2
+  ;
 }
 
 #container {
   width:400px;
   height:400px;
+  background:black
 }
+

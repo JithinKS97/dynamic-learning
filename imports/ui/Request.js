@@ -143,10 +143,18 @@ export default class Request extends React.Component {
         this.update()
     }
     
-    pushSim(iframe) {
+    pushSim(src, w, h) {
         const { slides, currSlide }  = this.state
 
-        slides[currSlide].iframes.push(iframe)
+        const toPush = {
+            src,
+            w,
+            h,
+            x:0,
+            y:0
+        }
+
+        slides[currSlide].iframes.push(toPush)
         this.setState({
             slides
         })
@@ -193,16 +201,16 @@ export default class Request extends React.Component {
 
                 {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
 
-                {this.state.show?<Upload isOpen = {true} methodName = {(name, iframe, callback)=>{
+                {this.state.show?<Upload isOpen = {true} methodName = {(name, src, w, h, callback)=>{
 
-                    this.pushSim(iframe)
+                    this.pushSim(src,w,h)
                     callback();
 
                 }}/>:null}
 
                 <Link to = {`/createlessonplan/${this.state._id}`}><button>Back</button></Link>
                 
-                <SimsList delete = {this.deleteSim.bind(this)} {...this.state}/>
+                <SimsList saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
 
             </div>
         )  
