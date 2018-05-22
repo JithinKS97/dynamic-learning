@@ -3,6 +3,7 @@ import { Sims } from '../api/sims'
 import { Tracker } from 'meteor/tracker'
 import Modal from 'react-modal'
 import {Meteor} from 'meteor/meteor'
+import SimContainer from './SimContainer'
 
 export default class AddSim extends React.Component {
 
@@ -20,7 +21,7 @@ export default class AddSim extends React.Component {
         this.state = {
             sims: [],
             isOpen: false,
-            src:''
+            sim:null
         }
         this.simsList.bind(this)
         this.showSim.bind(this)
@@ -52,7 +53,7 @@ export default class AddSim extends React.Component {
 
         /*To avoid the unnecessary re-rendering*/
 
-        if(this.state.src === nextState.src)
+        if(this.state.sim === nextState.sim)
             return false
         else
             return true
@@ -68,9 +69,14 @@ export default class AddSim extends React.Component {
 
         if(this.state.sims) {
             return this.state.sims.map((sim)=>{
+                
                 return (
                     <div key = {sim._id}>
-                        <button onClick = {()=>{this.setState({src:sim.iframe})}} key = {sim._id}>
+                        <button onClick = {()=>{
+
+                            this.setState({sim})
+
+                            }} key = {sim._id}>
                             {sim.name}
                         </button>                     
                     </div>
@@ -83,11 +89,10 @@ export default class AddSim extends React.Component {
 
         /* If there is an src in the state, an iframe is rendered */
 
-        if(this.state.src) {
+        if(this.state.sim) {
             return (
-                <div>
-                    <iframe src = {this.state.src}></iframe>
-                </div>
+
+                <SimContainer {...this.state.sim}/>
             )
         }
     }
@@ -115,7 +120,7 @@ export default class AddSim extends React.Component {
                        field is not empty.
                     */
 
-                    if(this.state.src) {
+                    if(this.state.sim) {
 
                         /* The slides and the current slides are obtained from the props
                            To the slides, the iframe of selected simulation is pushed and 
@@ -129,20 +134,13 @@ export default class AddSim extends React.Component {
 
                         const { slides, currSlide } = this.props
 
-                        const sim = {
-                            src: this.state.src,
-                            x: 0,
-                            y: 0,
-                            w: 640,
-                            h: 360
-                        }
 
-                        slides[currSlide].iframes.push(sim)
+                        slides[currSlide].iframes.push(this.state.sim)
                         this.props.saveChanges(slides)
 
                         this.setState({
                             isOpen:false,
-                            src:''
+                            sim:null
                         })
                     }
 
@@ -157,7 +155,7 @@ export default class AddSim extends React.Component {
 
                     this.setState( {
                             isOpen:false,
-                            src:''
+                            sim:null
                         }
                     )
                 }}>Cancel</button>

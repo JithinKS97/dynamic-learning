@@ -6,6 +6,17 @@ export default class SimsList extends React.Component {
 
     constructor(props) {
         super(props)
+
+        this.state = {
+            width:640,
+            height:360
+        }
+        
+        
+    }
+
+    componentDidMount() {
+
     }
 
     renderSims() {
@@ -37,13 +48,27 @@ export default class SimsList extends React.Component {
                              slides[currSlide].iframes[index].y = d.lastY
 
                              this.props.saveChanges(slides, undefined)
-                         }}                         
-                    >
-                    
+                         }}
+
+                         ref = 'hello'
                         
-                        <SimContainer src = {iframe.src}/>
-                        <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>
+                         onResize={(e, direction, ref, delta, position) => {
+
+                            this.setState({
+                              width: ref.offsetWidth,
+                              height: ref.offsetHeight,
+                              ...position,
+                            });
+                            
+                            slides[currSlide].iframes[index].w = ref.offsetWidth
+                            slides[currSlide].iframes[index].h = ref.offsetHeight
+                            
+
+                          }}
+                    >                   
                         
+                        <SimContainer {...iframe} src = {iframe.src}/>
+                        <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>                        
                     
                     </Rnd>
                     </div>

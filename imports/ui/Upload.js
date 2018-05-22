@@ -18,7 +18,9 @@ export default class Upload extends React.Component {
         this.state = {
             src:'',
             error:'',
-            isOpen: false
+            isOpen: false,
+            w:null,
+            h:null
         }
         this.submitButton.bind(this)
     }
@@ -76,18 +78,30 @@ export default class Upload extends React.Component {
         if(this.state.src) {
             return (
                 <div>                    
-                    <p>Name of the simulation</p>
-                    <input ref='name' onChange = {()=>{this.setState({name:this.refs.name.value})}}/>              
+                    <p>Name of the simulation
+                    <input ref='name' onChange = {()=>{this.setState({name:this.refs.name.value})}}/>
+                    </p>
+                    <p>
+                    Width
+                    <input ref='width' onChange = {()=>{this.setState({w:this.refs.width.value})}}/>
+                    </p>
+                    <p>
+                    Height
+                    <input ref='height' onChange = {()=>{this.setState({h:this.refs.height.value})}}/>
+                    </p>               
                         
                             <button onClick = {(e)=>{
 
                             e.preventDefault()
-                            const iframe = this.state.src
+                            const src = this.state.src
+
+                            let w = this.refs.width.value
+                            let h = this.refs.height.value
                             let name = this.refs.name.value
 
                             if(name) {
                                 
-                                this.props.methodName(name, iframe,()=>{
+                                this.props.methodName(name, src, w, h, ()=>{
                                     alert('Uploaded succesfully')
                                     this.setState({
                                         src:'',
@@ -113,7 +127,7 @@ export default class Upload extends React.Component {
                         <h1>Submit simulation</h1>
                         <p>Enter the Iframe tag</p>
                         <input onChange={this.enteredLink.bind(this)} ref = 'sim'/>
-                        <SimContainer src = {this.state.src}/>
+                        <SimContainer {...this.state}/>
                         <div>{this.submitButton()}</div>
                     </form>
                     <button onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>   
