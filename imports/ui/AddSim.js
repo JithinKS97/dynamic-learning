@@ -5,6 +5,7 @@ import Modal from 'react-modal'
 import {Meteor} from 'meteor/meteor'
 import SimContainer from './SimContainer'
 
+
 export default class AddSim extends React.Component {
 
     /* This component is used for the selection of the simulation for
@@ -41,8 +42,8 @@ export default class AddSim extends React.Component {
             this.setState({
                 sims
             })
-        }) 
-    } 
+        })
+    }
 
 
     componentWillUnmount(nextState) {
@@ -62,8 +63,8 @@ export default class AddSim extends React.Component {
     simsList() {
 
         /* This is for displaying the simulations fetched. For each simulation, there
-           will be a button with the name of the simulation in it. If the button is 
-           pressed, the correspoing simulation's iframe src is set in the state, so 
+           will be a button with the name of the simulation in it. If the button is
+           pressed, the correspoing simulation's iframe src is set in the state, so
            that it is rendered.
         */
 
@@ -78,7 +79,7 @@ export default class AddSim extends React.Component {
 
                             }} key = {sim._id}>
                             {sim.name}
-                        </button>                     
+                        </button>
                     </div>
                 )
             })
@@ -100,7 +101,7 @@ export default class AddSim extends React.Component {
     render() {
 
         /* Simulation adding feature will be a modal that will be opened when the Add sim button
-           is pressed. The simulations are shown by the simsList() and the 
+           is pressed. The simulations are shown by the simsList() and the
            selected simulation is shown by the showSim().
         */
 
@@ -112,7 +113,7 @@ export default class AddSim extends React.Component {
 
                 {this.simsList()}
                 {this.showSim()}
-                
+
                 <button onClick = {()=>{
 
                     /* The simulation is added only if the input field is not empty.
@@ -123,7 +124,7 @@ export default class AddSim extends React.Component {
                     if(this.state.sim) {
 
                         /* The slides and the current slides are obtained from the props
-                           To the slides, the iframe of selected simulation is pushed and 
+                           To the slides, the iframe of selected simulation is pushed and
                            the changes are saved by calling the saveChanges function.
 
                            See the definition of saveChanges funciton in CreateLessonPlan
@@ -145,11 +146,11 @@ export default class AddSim extends React.Component {
                     }
 
                     }}>Add
-                </button>               
+                </button>
 
                 <button onClick = {()=>{
 
-                    /* The Modal opening and closing is determined by the isOpen in 
+                    /* The Modal opening and closing is determined by the isOpen in
                        the state.
                     */
 

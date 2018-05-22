@@ -1,1 +1,20 @@
-@import './components/page-content'
+@import './components/page-content';
+
+.drawing-board-canvas{
+  z-index: 1;
+}
+
+.ReactModal__Overlay--after-open{
+  z-index:2;
+}
+
+//
+// .sim{
+//   width: 100%;
+//   height: 100%;
+// }
+//
+// .sim iframe{
+//   height: 100%;
+//   width: 100%;
+// }

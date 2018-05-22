@@ -21,7 +21,7 @@ export default class SimsList extends React.Component {
 
     renderSims() {
 
-        /* This component displays a list of simulations. 
+        /* This component displays a list of simulations.
            The props contatin the current slides and the slides.
 
            The iframes of the current slide are onbained and rendered.
@@ -35,7 +35,7 @@ export default class SimsList extends React.Component {
 
             const { iframes } = slides[currSlide]
             return iframes.map((iframe,index)=>{
-                
+
                 return (
                     <div key = {index} className = 'sim'>
 
@@ -49,6 +49,7 @@ export default class SimsList extends React.Component {
 
                              this.props.saveChanges(slides, undefined)
                          }}
+<<<<<<< HEAD
 
                          ref = 'hello'
                         
@@ -70,11 +71,27 @@ export default class SimsList extends React.Component {
                         <SimContainer {...iframe} src = {iframe.src}/>
                         <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>                        
                     
+=======
+                         onResize={(e, direction, ref, delta, position) => {
+                            this.setState({
+                              width: ref.offsetWidth,
+                              height: ref.offsetHeight,
+                              ...position
+                            });
+                          }}
+                    >
+
+
+                        <SimContainer src = {iframe.src}/>
+                        <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>
+
+
+>>>>>>> c3b04d0d011d8af9125d5ed38d2a3febda69d501
                     </Rnd>
                     </div>
                 )
             })
-        }        
+        }
     }
 
     render() {

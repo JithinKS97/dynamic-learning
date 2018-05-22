@@ -6,29 +6,33 @@ import SimsList from './SimsList'
 import List from './List'
 import AddSim from './AddSim'
 import { Link } from 'react-router-dom'
- 
+
 
 export default class CreateLessonPlan extends React.Component {
-    
+
     constructor(props) {
 
-        /* This Component is intended for the creation of a lessonplan. 
+        /* This Component is intended for the creation of a lessonplan.
            The teachers can create slides. On each slides, there will be
            note and array of simulations. The changes need to be saved explicitly
            by clicking the save button for updating the database.
 
            currSlide is for keeping track of the current slide, Each element in slides
-           will consist the note and the array of iframe srcs. _id will carry the id of 
+           will consist the note and the array of iframe srcs. _id will carry the id of
            the current lessonplan.
         */
 
-        super(props)
-        
+        super(props);
+
+        this.isInteractEnabled=false;
+        this.undoArray= [];
+        this.curPosition= [];
+
         this.state = {
             currSlide:0,
             slides: [],
-            _id: '',
-        }
+            _id: ''
+        };
 
         /* In pushSlide and saveChanges, this keyword is used. For binding the this
            to the Component.
@@ -57,7 +61,7 @@ export default class CreateLessonPlan extends React.Component {
           object in the DrawingBoardCmp. This function is passed as the prop to the
           DrawingBoardCmp. It is executed in the componentDidMount where
           drawingboard is initialized, which is passed as db. The reference is
-          retrieved here and used in this component.           
+          retrieved here and used in this component.
         */
 
         this.db = db
@@ -65,16 +69,18 @@ export default class CreateLessonPlan extends React.Component {
 
 
     componentDidMount() {
-
+      this.isInteractEnabled=false;
+      this.undoArray= [];
+      this.curPosition= [];
         /* board:reset and board:stopDrawing are events associated with the drawing
            board. They are triggered whenever the we press the reset button or stop
-           the drawing. Whenever these events are triggered, the changed method is 
+           the drawing. Whenever these events are triggered, the changed method is
            called. See the definition below.
 
-           Tracker autorun is used because we are retrieving the Requests data 
+           Tracker autorun is used because we are retrieving the Requests data
            here.
         */
-
+       document.getElementsByClassName('drawing-board-canvas')[0].style['z-index'] = 2;
        Meteor.subscribe('lessonplans')
 
         this.db.ev.bind('board:reset', this.changed.bind(this));
@@ -83,7 +89,7 @@ export default class CreateLessonPlan extends React.Component {
         document.addEventListener("keydown", this.escFunction.bind(this), false);
 
         this.simTracker = Tracker.autorun(()=>{
-            
+
 
             /*The obtained lessonplan is spreaded and set to the state.
 
@@ -95,19 +101,27 @@ export default class CreateLessonPlan extends React.Component {
            const { _id } = this.props.match.params
 
            const lessonplan = LessonPlans.findOne(_id)
-
+           console.log(lessonplan);
             if(lessonplan) {
+              if (this.undoArray.length == 0 && lessonplan.slides[0].note != ''){
+                this.undoArray = lessonplan.slides.map((slide) => {
+                  this.curPosition.push(0);
+                  return [slide.note];
+                });
+              }
 
-                this.setState({                                                
-                    ...lessonplan   
+                this.setState({
+                    ...lessonplan
                 },() => {
                     if(this.state.slides[0].note === '') {
                         this.db.reset({ webStorage: false, history: true, background: true })
+                        console.log(this.undoArray, this.curPosition);
                     }
                     else {
                         this.db.setImg(this.state.slides[this.state.currSlide].note)
+                        console.log(this.undoArray, this.curPosition);
                     }
-                })   
+                })
             }
         })
     }
@@ -139,11 +153,21 @@ export default class CreateLessonPlan extends React.Component {
             updated and stored back to the state.
         */
         const {currSlide, slides} = this.state
-        
+
         const note = this.db.getImg()
         slides[currSlide].note = note
+
+        if(this.undoArray[currSlide]){
+          this.undoArray[currSlide].push(note);
+          this.curPosition[currSlide]++;
+        }
+        else{
+          this.undoArray.push([note]);
+          this.curPosition.push(0);
+        }
+
+        console.log(this.undoArray,this.curPosition);
         this.setState({slides})
-        
     }
 
 
@@ -154,14 +178,14 @@ export default class CreateLessonPlan extends React.Component {
 
             If the current slide is the last slide, we cannot move forward.
 
-            If the current slide is not the last slide, current slide no. is incremented and 
+            If the current slide is not the last slide, current slide no. is incremented and
             and the notes of that particular slide is set to the board.
         */
 
         this.db.initHistory()
 
         let {currSlide, slides} = this.state
-  
+
         if(currSlide === slides.length-1) {
             return
         }
@@ -171,8 +195,8 @@ export default class CreateLessonPlan extends React.Component {
         }
     }
 
-    addNewSlide(e) {        
-        
+    addNewSlide(e) {
+
         let {currSlide, slides} = this.state
 
         this.pushSlide(slides)
@@ -259,12 +283,12 @@ export default class CreateLessonPlan extends React.Component {
             },()=>{
                 this.db.setImg(this.state.slides[this.state.currSlide].note)
             })
-        }        
+        }
         else if(currSlide == undefined) {
             this.setState({
                 slides
             })
-        }        
+        }
         else {
             this.setState({
                 slides,
@@ -284,17 +308,22 @@ export default class CreateLessonPlan extends React.Component {
         */
 
         if(slides.length!=1) {
-            slides.splice(index, 1)    
-            let { currSlide } = this.state   
+            slides.splice(index, 1)
+            let { currSlide } = this.state
+            this.undoArray.splice(index,1);
+            this.curPosition.splice(index,1);
+            console.log(this.curPosition, this.undoArray);
             if(index == 0) {
                 currSlide = 0
-            }    
+            }
             if(currSlide == slides.length)
                 currSlide = slides.length-1
             this.saveChanges(slides, currSlide)
         }
-        else
-            this.reset()                            
+        else{
+          this.undoArray=[], this.curPosition=[];
+          this.reset()
+        }
     }
 
     deleteSim(slides, iframeArray, index) {
@@ -303,16 +332,37 @@ export default class CreateLessonPlan extends React.Component {
            simulation. The simulation is deleted from the iframes array of the
            current slide and the changes are saved.
         */
-        
+
         iframeArray.splice(index,1)
         slides[this.state.currSlide].iframes = iframeArray
         this.saveChanges(slides)
     }
 
+    interact(){
+      this.isInteractEnabled = !this.isInteractEnabled;
+      if(this.isInteractEnabled)
+        document.getElementsByClassName('drawing-board-canvas')[0].style['pointer-events'] = 'none';
+      else
+        document.getElementsByClassName('drawing-board-canvas')[0].style['pointer-events'] = 'unset';
+    }
+
+    undo(e){
+      this.curPosition[this.state.currSlide]--;
+      const slides = this.state.slides;
+      slides[this.state.currSlide].note = this.undoArray[this.state.currSlide][this.curPosition[this.state.currSlide]];
+      this.db.setImg(this.undoArray[this.state.currSlide][this.curPosition[this.state.currSlide]]);
+      this.undoArray[this.state.currSlide].pop()
+      console.log(this.undoArray, this.curPosition);
+      this.setState({
+        slides
+      });
+    }
+
+
     render() {
 
         return(
-        <div>    
+        <div>
             <div className = 'page-content'>
 
                 <div className = 'page-content__sidebar__left'>
@@ -325,21 +375,26 @@ export default class CreateLessonPlan extends React.Component {
                     {<DrawingBoardCmp getDB = {this.getDB.bind(this)} ref = 'd'/>}                                              </div>
 
                 <div className = 'page-content__sidebar__right'>
-                    <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>   
+                    <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                    <button onClick = {this.interact.bind(this)}>Interact</button>
+                    <br/>
                     <button onClick = {this.reset.bind(this)}>Reset</button>
-                    <br/>             
+                    <br/>
                     <button onClick = {this.save.bind(this)}>Save</button>
-                    <br/>                   
-                    <Link to = '/lessonplans'><button>Back</button></Link> 
-                    <br/> 
+                    <br/>
+                    <Link to = '/lessonplans'><button>Back</button></Link>
+                    <br/>
                     <Link to={{ pathname: `/request/${this.state._id}`}}>
                      <button>
                         Request new simulations
                     </button>
                     </Link>
-      
+                    <br/>
+                    {(this.curPosition[this.state.currSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
+                    <br/>
+                    {/* {(this.curPosition[this.state.currSlide] == this.undoArray[this.state.currSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
                 </div>
-                
+
             </div>
             <SimsList saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
         </div>
