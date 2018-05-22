@@ -7,8 +7,8 @@ export default class DrawingBoardCmp extends React.Component {
     componentDidMount() {
 
         this.b = new DrawingBoard.Board('container', {
-            background: false,
-            color: "#000000",
+            background: true,
+            color: "#ffffff",
             size: 5,
             controls: ['Color',
               { DrawingMode: { filler: false } },
@@ -21,8 +21,6 @@ export default class DrawingBoardCmp extends React.Component {
           this.props.getDB(this.b) //This function passs the reference to drawing board
                                    //object to the CreateLessonPlan component
     }
-
-
     render() {
         return(<div id="container"></div>)
     }

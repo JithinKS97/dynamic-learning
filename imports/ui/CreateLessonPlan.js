@@ -332,7 +332,7 @@ export default class CreateLessonPlan extends React.Component {
            simulation. The simulation is deleted from the iframes array of the
            current slide and the changes are saved.
         */
-
+       
         iframeArray.splice(index,1)
         slides[this.state.currSlide].iframes = iframeArray
         this.saveChanges(slides)
@@ -363,39 +363,27 @@ export default class CreateLessonPlan extends React.Component {
 
         return(
         <div>
-            <div className = 'page-content'>
+            {<DrawingBoardCmp getDB = {this.getDB.bind(this)} ref = 'd'/>}          
+            <h1>{this.state.currSlide}</h1>
+            <button onClick = {this.addNewSlide.bind(this)}>+</button>
+            <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>                                                           
 
-                <div className = 'page-content__sidebar__left'>
-                    <h1>{this.state.currSlide}</h1>
-                    <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                    <button onClick = {this.addNewSlide.bind(this)}>+</button>
-                </div>
+            <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
-                <div className = 'page-content__main'>
-                    {<DrawingBoardCmp getDB = {this.getDB.bind(this)} ref = 'd'/>}                                              </div>
+            <button onClick = {this.interact.bind(this)}>Interact</button>
+            <button onClick = {this.reset.bind(this)}>Reset</button>  
+            <button onClick = {this.save.bind(this)}>Save</button>
+            <Link to = '/lessonplans'><button>Back</button></Link>
+             <Link to={{ pathname: `/request/${this.state._id}`}}>
+                <button>
+                Request new simulations
+            </button>
+            </Link>
 
-                <div className = 'page-content__sidebar__right'>
-                    <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-                    <button onClick = {this.interact.bind(this)}>Interact</button>
-                    <br/>
-                    <button onClick = {this.reset.bind(this)}>Reset</button>
-                    <br/>
-                    <button onClick = {this.save.bind(this)}>Save</button>
-                    <br/>
-                    <Link to = '/lessonplans'><button>Back</button></Link>
-                    <br/>
-                    <Link to={{ pathname: `/request/${this.state._id}`}}>
-                     <button>
-                        Request new simulations
-                    </button>
-                    </Link>
-                    <br/>
-                    {(this.curPosition[this.state.currSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
-                    <br/>
-                    {/* {(this.curPosition[this.state.currSlide] == this.undoArray[this.state.currSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
-                </div>
+            {(this.curPosition[this.state.currSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
 
-            </div>
+            {/* {(this.curPosition[this.state.currSlide] == this.undoArray[this.state.currSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
+
             <SimsList saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
         </div>
         )

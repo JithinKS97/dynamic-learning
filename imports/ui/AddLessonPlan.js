@@ -39,7 +39,6 @@ const AddLessonPlans = ()=>{
 
                 if(name) {
 
-
                     LessonPlans.insert({
                         name,
                         slides,

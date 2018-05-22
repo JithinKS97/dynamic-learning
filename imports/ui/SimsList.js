@@ -37,57 +37,36 @@ export default class SimsList extends React.Component {
             return iframes.map((iframe,index)=>{
 
                 return (
-                    <div key = {index} className = 'sim'>
+                    <div key = {index} className = 'sim'>\
+                        <Rnd size={{ width: iframe.w,  height: iframe.h }}
+                            position={{ x: iframe.x, y: iframe.y }}
+                            onDragStop={(e, d) => {
 
+                                slides[currSlide].iframes[index].x = d.lastX
+                                slides[currSlide].iframes[index].y = d.lastY
 
-                    <Rnd size={{ width: iframe.w,  height: iframe.h }}
-                         position={{ x: iframe.x, y: iframe.y }}
-                         onDragStop={(e, d) => {
-
-                             slides[currSlide].iframes[index].x = d.lastX
-                             slides[currSlide].iframes[index].y = d.lastY
-
-                             this.props.saveChanges(slides, undefined)
-                         }}
-<<<<<<< HEAD
-
-                         ref = 'hello'
-                        
-                         onResize={(e, direction, ref, delta, position) => {
-
-                            this.setState({
-                              width: ref.offsetWidth,
-                              height: ref.offsetHeight,
-                              ...position,
-                            });
+                                this.props.saveChanges(slides, undefined)
+                            }}
                             
-                            slides[currSlide].iframes[index].w = ref.offsetWidth
-                            slides[currSlide].iframes[index].h = ref.offsetHeight
+                            onResize={(e, direction, ref, delta, position) => {
+
+                                this.setState({
+                                width: ref.offsetWidth,
+                                height: ref.offsetHeight,
+                                ...position,
+                                });
+                                
+                                slides[currSlide].iframes[index].w = ref.offsetWidth
+                                slides[currSlide].iframes[index].h = ref.offsetHeight
+                                
+
+                            }}
+                        >                   
                             
-
-                          }}
-                    >                   
+                            <SimContainer {...iframe} src = {iframe.src}/>
+                            <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>                        
                         
-                        <SimContainer {...iframe} src = {iframe.src}/>
-                        <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>                        
-                    
-=======
-                         onResize={(e, direction, ref, delta, position) => {
-                            this.setState({
-                              width: ref.offsetWidth,
-                              height: ref.offsetHeight,
-                              ...position
-                            });
-                          }}
-                    >
-
-
-                        <SimContainer src = {iframe.src}/>
-                        <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>
-
-
->>>>>>> c3b04d0d011d8af9125d5ed38d2a3febda69d501
-                    </Rnd>
+                        </Rnd>
                     </div>
                 )
             })
