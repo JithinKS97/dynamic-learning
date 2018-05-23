@@ -17,19 +17,22 @@ export default class CreateLessonPlan extends React.Component {
            note and array of simulations. The changes need to be saved explicitly
            by clicking the save button for updating the database.
 
-           currSlide is for keeping track of the current slide, Each element in slides
+           curSlide is for keeping track of the current slide, Each element in slides
            will consist the note and the array of iframe srcs. _id will carry the id of
            the current lessonplan.
         */
 
         super(props);
 
+        /*When isInteractEnabled is true, the pointer events of the canvs are de activated
+          so that we can interact with the simulations.
+        */
         this.isInteractEnabled=false;
         this.undoArray= [];
         this.curPosition= [];
 
         this.state = {
-            currSlide:0,
+            curSlide:0,
             slides: [],
             _id: ''
         };
@@ -116,7 +119,7 @@ export default class CreateLessonPlan extends React.Component {
                         this.db.reset({ webStorage: false, history: true, background: true })
                     }
                     else {
-                        this.db.setImg(this.state.slides[this.state.currSlide].note)
+                        this.db.setImg(this.state.slides[this.state.curSlide].note)
                     }
                 })
             }
@@ -137,7 +140,7 @@ export default class CreateLessonPlan extends React.Component {
         else
             return true
 
-        if(this.state.currSlide === this.state.currSlide)
+        if(this.state.curSlide === this.state.curSlide)
             return false
         else
             return true
@@ -149,14 +152,14 @@ export default class CreateLessonPlan extends React.Component {
             Here we retrieve the current slide no. and note from the states. The notes are
             updated and stored back to the state.
         */
-        const {currSlide, slides} = this.state
+        const {curSlide, slides} = this.state
 
         const note = this.db.getImg()
-        slides[currSlide].note = note
+        slides[curSlide].note = note
 
-        if(this.undoArray[currSlide]){
-          this.undoArray[currSlide].push(note);
-          this.curPosition[currSlide]++;
+        if(this.undoArray[curSlide]){
+          this.undoArray[curSlide].push(note);
+          this.curPosition[curSlide]++;
         }
         else{
           this.undoArray.push([note]);
@@ -165,7 +168,6 @@ export default class CreateLessonPlan extends React.Component {
 
         this.setState({slides})
     }
-
 
     next() {
 
@@ -180,25 +182,25 @@ export default class CreateLessonPlan extends React.Component {
 
         this.db.initHistory()
 
-        let {currSlide, slides} = this.state
+        let {curSlide, slides} = this.state
 
-        if(currSlide === slides.length-1) {
+        if(curSlide === slides.length-1) {
             return
         }
         else {
-            currSlide++
-            this.saveChanges(slides, currSlide)
+            curSlide++
+            this.saveChanges(slides, curSlide)
         }
     }
 
     addNewSlide(e) {
 
-        let {currSlide, slides} = this.state
+        let {curSlide, slides} = this.state
 
         this.pushSlide(slides)
-            currSlide = slides.length-1
+            curSlide = slides.length-1
             this.setState({
-                currSlide
+                curSlide
             },()=>{
                 this.db.reset({ webStorage: false, history: true, background: true })
         })
@@ -212,12 +214,12 @@ export default class CreateLessonPlan extends React.Component {
             slide is set to the board.
         */
 
-       let {currSlide, slides} = this.state
+       let {curSlide, slides} = this.state
 
-        if(currSlide!=0) {
+        if(curSlide!=0) {
             this.db.initHistory()
-            currSlide--
-            this.saveChanges(slides,currSlide)
+            curSlide--
+            this.saveChanges(slides,curSlide)
         }
     }
 
@@ -247,7 +249,7 @@ export default class CreateLessonPlan extends React.Component {
         */
 
         this.setState({
-            currSlide:0,
+            curSlide:0,
             slides:[]
         },()=>{
             const { slides } = this.state
@@ -266,7 +268,7 @@ export default class CreateLessonPlan extends React.Component {
         })
     }
 
-    saveChanges(slides, currSlide) {
+    saveChanges(slides, curSlide) {
 
         /* This function is used in multiple places to save the changes. Depending upon
            the change made, the changes are saved looking upon arguments given when the
@@ -275,12 +277,12 @@ export default class CreateLessonPlan extends React.Component {
 
         if(slides == undefined) {
             this.setState({
-                currSlide
+                curSlide
             },()=>{
-                this.db.setImg(this.state.slides[this.state.currSlide].note)
+                this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
-        else if(currSlide == undefined) {
+        else if(curSlide == undefined) {
             this.setState({
                 slides
             })
@@ -288,9 +290,9 @@ export default class CreateLessonPlan extends React.Component {
         else {
             this.setState({
                 slides,
-                currSlide
+                curSlide
             },()=>{
-                this.db.setImg(this.state.slides[this.state.currSlide].note)
+                this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
     }
@@ -305,15 +307,15 @@ export default class CreateLessonPlan extends React.Component {
 
         if(slides.length!=1) {
             slides.splice(index, 1)
-            let { currSlide } = this.state
+            let { curSlide } = this.state
             this.undoArray.splice(index,1);
             this.curPosition.splice(index,1);
             if(index == 0) {
-                currSlide = 0
+                curSlide = 0
             }
-            if(currSlide == slides.length)
-                currSlide = slides.length-1
-            this.saveChanges(slides, currSlide)
+            if(curSlide == slides.length)
+                curSlide = slides.length-1
+            this.saveChanges(slides, curSlide)
         }
         else{
           this.undoArray=[], this.curPosition=[];
@@ -329,7 +331,7 @@ export default class CreateLessonPlan extends React.Component {
         */
        
         iframeArray.splice(index,1)
-        slides[this.state.currSlide].iframes = iframeArray
+        slides[this.state.curSlide].iframes = iframeArray
         this.saveChanges(slides)
     }
 
@@ -344,11 +346,11 @@ export default class CreateLessonPlan extends React.Component {
     }
 
     undo(e){
-      this.curPosition[this.state.currSlide]--;
+      this.curPosition[this.state.curSlide]--;
       const slides = this.state.slides;
-      slides[this.state.currSlide].note = this.undoArray[this.state.currSlide][this.curPosition[this.state.currSlide]];
-      this.db.setImg(this.undoArray[this.state.currSlide][this.curPosition[this.state.currSlide]]);
-      this.undoArray[this.state.currSlide].pop()
+      slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]];
+      this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]);
+      this.undoArray[this.state.curSlide].pop()
       this.setState({
         slides
       });
@@ -360,7 +362,7 @@ export default class CreateLessonPlan extends React.Component {
         return(
         <div>
             {<DrawingBoardCmp getDB = {this.getDB.bind(this)} ref = 'd'/>}          
-            <h1>{this.state.currSlide}</h1>
+            <h1>{this.state.curSlide}</h1>
             <button onClick = {this.addNewSlide.bind(this)}>+</button>
             <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>                                                           
 
@@ -381,9 +383,9 @@ export default class CreateLessonPlan extends React.Component {
             </button>
             </Link>
 
-            {(this.curPosition[this.state.currSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
+            {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
 
-            {/* {(this.curPosition[this.state.currSlide] == this.undoArray[this.state.currSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
+            {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 
             <SimsList saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
         </div>

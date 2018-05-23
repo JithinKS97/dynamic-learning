@@ -29,11 +29,11 @@ export default class SimsList extends React.Component {
            On clicking the X button the delete function passed in the props is called.
         */
 
-        const { slides, currSlide } = this.props
+        const { slides, curSlide } = this.props
 
         if(slides.length!=0) {
 
-            const { iframes } = slides[currSlide]
+            const { iframes } = slides[curSlide]
             return iframes.map((iframe,index)=>{
 
                 return (
@@ -42,8 +42,8 @@ export default class SimsList extends React.Component {
                             position={{ x: iframe.x, y: iframe.y }}
                             onDragStop={(e, d) => {
 
-                                slides[currSlide].iframes[index].x = d.lastX
-                                slides[currSlide].iframes[index].y = d.lastY
+                                slides[curSlide].iframes[index].x = d.lastX
+                                slides[curSlide].iframes[index].y = d.lastY
 
                                 this.props.saveChanges(slides, undefined)
                             }}
@@ -56,8 +56,8 @@ export default class SimsList extends React.Component {
                                 ...position,
                                 });
                                 
-                                slides[currSlide].iframes[index].w = ref.offsetWidth
-                                slides[currSlide].iframes[index].h = ref.offsetHeight
+                                slides[curSlide].iframes[index].w = ref.offsetWidth
+                                slides[curSlide].iframes[index].h = ref.offsetHeight
                                 
 
                             }}

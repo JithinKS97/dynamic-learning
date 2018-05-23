@@ -13,10 +13,10 @@ export default class CommentForm extends React.Component {
 
         if(this.refs.comment.value) {
             slides = this.props.slides
-            currSlide = this.props.currSlide
+            curSlide = this.props.curSlide
             
             comment = this.refs.comment.value
-            slides[currSlide].comments.push(comment)
+            slides[curSlide].comments.push(comment)
 
             this.props.saveChanges(slides)
             this.refs.comment.value = ''

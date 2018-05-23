@@ -10,10 +10,10 @@ export default class CommentsList extends React.Component {
 
     showComments() {
         
-        const { slides, currSlide } = this.props
+        const { slides, curSlide } = this.props
 
         if(slides.length>0) {
-            comments = slides[currSlide].comments
+            comments = slides[curSlide].comments
             return comments.map((comment, index)=>{
                 return (
                     <CommentBox key = {index} comment = {comment} index = {index} {...this.props}/>

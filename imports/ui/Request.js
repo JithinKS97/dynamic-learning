@@ -17,7 +17,7 @@ export default class Request extends React.Component {
         this.state = {
             show:false,
             slides: [],
-            currSlide: 0
+            curSlide: 0
         }
         this.update.bind(this)
         this.pushSim.bind(this)
@@ -56,7 +56,7 @@ export default class Request extends React.Component {
         if(this.refs.title.value) {
 
             const { slides } = this.state
-            currSlide = slides.length
+            curSlide = slides.length
 
             if(this.state.show == false) {            
                 slides[0].title = this.refs.title.value
@@ -71,7 +71,7 @@ export default class Request extends React.Component {
                 slides.push(slide)
                 this.setState({
                     slides,
-                    currSlide
+                    curSlide
                 })
             }
             this.refs.title.value = ''
@@ -88,13 +88,13 @@ export default class Request extends React.Component {
 
         if(slides.length!=1) {
             slides.splice(index, 1)    
-            let { currSlide } = this.state   
+            let { curSlide } = this.state   
             if(index == 0) {
-                currSlide = 0
+                curSlide = 0
             }    
-            if(currSlide == slides.length)
-                currSlide = slides.length-1
-            this.saveChanges(slides, currSlide)
+            if(curSlide == slides.length)
+                curSlide = slides.length-1
+            this.saveChanges(slides, curSlide)
         }
         else
             this.reset()                            
@@ -113,7 +113,7 @@ export default class Request extends React.Component {
         slides.push(slide)
 
         this.setState({
-            currSlide:0,
+            curSlide:0,
             slides,
             title:'',
             show:false
@@ -122,14 +122,14 @@ export default class Request extends React.Component {
         })
     }
 
-    saveChanges(slides, currSlide) {
+    saveChanges(slides, curSlide) {
 
         if(slides == undefined) {
             this.setState({
-                currSlide
+                curSlide
             })
         }        
-        else if(currSlide == undefined) {
+        else if(curSlide == undefined) {
             this.setState({
                 slides
             })
@@ -137,14 +137,14 @@ export default class Request extends React.Component {
         else {
             this.setState({
                 slides,
-                currSlide
+                curSlide
             })
         }
         this.update()
     }
     
     pushSim(src, w, h) {
-        const { slides, currSlide }  = this.state
+        const { slides, curSlide }  = this.state
 
         const toPush = {
             src,
@@ -154,7 +154,7 @@ export default class Request extends React.Component {
             y:0
         }
 
-        slides[currSlide].iframes.push(toPush)
+        slides[curSlide].iframes.push(toPush)
         this.setState({
             slides
         })
@@ -169,15 +169,15 @@ export default class Request extends React.Component {
         */
         
         iframeArray.splice(index,1)
-        slides[this.state.currSlide].iframes = iframeArray
+        slides[this.state.curSlide].iframes = iframeArray
         this.saveChanges(slides)
     }
 
     deleteComment(index) {
         
-        const { slides, currSlide }  = this.state
+        const { slides, curSlide }  = this.state
 
-        slides[currSlide].comments.splice(index,1)
+        slides[curSlide].comments.splice(index,1)
         this.saveChanges(slides)
     }
 
@@ -193,7 +193,7 @@ export default class Request extends React.Component {
                     <button>New request</button>
                 </form>
                                 
-                <h1>{this.state.currSlide}</h1>
+                <h1>{this.state.curSlide}</h1>
 
                 {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
 
