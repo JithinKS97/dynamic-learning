@@ -12,11 +12,10 @@ export default class SimsList extends React.Component {
             height:360
         }
         
-        
+        this.SimContainer = React.createRef()        
     }
 
     componentDidMount() {
-
     }
 
     renderSims() {
@@ -38,6 +37,7 @@ export default class SimsList extends React.Component {
 
                 return (
                     <div key = {index} className = 'sim'>
+
                         <Rnd size={{ width: iframe.w,  height: iframe.h }}
                             position={{ x: iframe.x, y: iframe.y }}
                             onDragStop={(e, d) => {
@@ -59,11 +59,21 @@ export default class SimsList extends React.Component {
                                 slides[curSlide].iframes[index].w = ref.offsetWidth
                                 slides[curSlide].iframes[index].h = ref.offsetHeight
                                 
-
                             }}
-                        >                   
+
+                            disableDragging = {this.props.rnd?false:true}
+
+                            enableResizing = {this.props.rnd?{bottomRight:true}:false}
+
+                        >                                           
+                            <SimContainer 
+                                {...this.props} 
+                                index = {index} 
+                                {...iframe} 
+                                src = {iframe.src}
+                                saveAndLoad = {true}
+                            />
                             
-                            <SimContainer {...iframe} src = {iframe.src}/>
                             <button onClick = {()=>{this.props.delete(slides, iframes, index)}}>X</button>                        
                         
                         </Rnd>
@@ -74,6 +84,7 @@ export default class SimsList extends React.Component {
     }
 
     render() {
+
         return (
             <div>
                 {this.renderSims()}

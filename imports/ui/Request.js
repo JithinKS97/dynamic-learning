@@ -7,6 +7,7 @@ import CommentForm from './CommentForm'
 import CommentsList from './CommentsList'
 import {Tracker} from 'meteor/tracker'
 import { Link } from 'react-router-dom'
+import { Meteor } from 'meteor/meteor'
 
 export default class Request extends React.Component {
 
@@ -147,6 +148,7 @@ export default class Request extends React.Component {
         const { slides, curSlide }  = this.state
 
         const toPush = {
+            userId:Meteor.userId(),
             src,
             w,
             h,
@@ -210,7 +212,7 @@ export default class Request extends React.Component {
 
                 <Link to = {`/createlessonplan/${this.state._id}`}><button>Back</button></Link>
                 
-                <SimsList saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+                <SimsList rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
 
             </div>
         )  

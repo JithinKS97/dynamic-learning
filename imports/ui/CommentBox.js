@@ -4,7 +4,7 @@ const CommentBox = (props) => {
 
     return (
         <div>
-            {props.comment}
+            {props.comment.comment}
             <button onClick = {() =>{
                     props.deleteComment(props.index)
                 }

@@ -387,7 +387,7 @@ export default class CreateLessonPlan extends React.Component {
 
             {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 
-            <SimsList saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+            <SimsList rnd = {true} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
         </div>
         )
     }

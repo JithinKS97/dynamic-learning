@@ -1,6 +1,6 @@
 import React from 'react'
 import Upload from './Upload'
-import Meteor from 'meteor/meteor'
+import { Meteor } from 'meteor/meteor'
 import { Sims} from '../api/sims'
 
 
@@ -12,11 +12,11 @@ const UploadSim = () =>{
 
             const x = 0
             const y = 0
+            data = {}
 
-            Sims.insert({name,src,w,h, x, y},callback())
+            Sims.insert({userId:Meteor.userId(),name,src,w,h, x, y, data},callback())
         }}/>
     )
-
 }
 
 export default UploadSim
