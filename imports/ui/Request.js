@@ -54,28 +54,29 @@ export default class Request extends React.Component {
 
         e.preventDefault();
 
-        if(this.refs.title.value) {
+        if(this.title.value) {
 
             const { slides } = this.state
             curSlide = slides.length
 
             if(this.state.show == false) {            
-                slides[0].title = this.refs.title.value
+                slides[0].title = this.title.value
                 this.setState({slides, show:true})            
             }
             else {
                 slide = {
-                    title: this.refs.title.value,
+                    title: this.title.value,
                     comments: [],
                     iframes: []
                 }
                 slides.push(slide)
                 this.setState({
-                    slides,
-                    curSlide
+                   title, 
+                   slides,
+                   curSlide
                 })
             }
-            this.refs.title.value = ''
+            this.title.value = ''
             this.update()
         }
     }
@@ -191,7 +192,7 @@ export default class Request extends React.Component {
                 <h1>Request</h1>
 
                 <form onSubmit = {this.push.bind(this)}>
-                    <input ref = 'title'/>
+                    <input ref = {e => this.title = e}/>
                     <button>New request</button>
                 </form>
                                 

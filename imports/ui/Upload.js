@@ -23,6 +23,9 @@ export default class Upload extends React.Component {
             h:null
         }
         this.submitButton.bind(this)
+        this.name = React.createRef()
+        this.width = React.createRef()
+        this.height = React.createRef()
     }
 
     componentDidMount() {
@@ -32,7 +35,7 @@ export default class Upload extends React.Component {
     enteredLink(e) {
         
         e.preventDefault()
-        let link = this.refs.sim.value
+        let link = this.sim.value
         this.setState({
             error:link
         })
@@ -79,15 +82,15 @@ export default class Upload extends React.Component {
             return (
                 <div>                    
                     <p>Name of the simulation
-                    <input ref='name' onChange = {()=>{this.setState({name:this.refs.name.value})}}/>
+                    <input ref= {e => this.name = e} onChange = {()=>{this.setState({name:this.name.value})}}/>
                     </p>
                     <p>
                     Width
-                    <input ref='width' onChange = {()=>{this.setState({w:this.refs.width.value})}}/>
+                    <input ref= {e => this.width = e} onChange = {()=>{this.setState({w:this.width.value})}}/>
                     </p>
                     <p>
                     Height
-                    <input ref='height' onChange = {()=>{this.setState({h:this.refs.height.value})}}/>
+                    <input ref= {e => this.height = e} onChange = {()=>{this.setState({h:this.height.value})}}/>
                     </p>               
                         
                             <button onClick = {(e)=>{
@@ -95,9 +98,9 @@ export default class Upload extends React.Component {
                             e.preventDefault()
                             const src = this.state.src
 
-                            let w = this.refs.width.value
-                            let h = this.refs.height.value
-                            let name = this.refs.name.value
+                            let w = this.width.value
+                            let h = this.height.value
+                            let name = this.name.value
 
                             if(name) {
                                 
@@ -126,7 +129,7 @@ export default class Upload extends React.Component {
                     <form>
                         <h1>Submit simulation</h1>
                         <p>Enter the Iframe tag</p>
-                        <input onChange={this.enteredLink.bind(this)} ref = 'sim'/>
+                        <input onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
                         <SimContainer saveAndLoad = {false} {...this.state}/>
                         <div>{this.submitButton()}</div>
                     </form>

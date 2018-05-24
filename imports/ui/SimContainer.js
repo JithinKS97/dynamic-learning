@@ -13,14 +13,20 @@ export default class SimContainer extends React.Component{
         this.loadState.bind(this)
         this.resetState.bind(this)        
         this.manageData.bind(this)
+        
     }
 
-    componentDidMount() {           
+    componentDidMount() { 
+                
         window.addEventListener("message", this.manageData.bind(this), false);
+        if(this.props.saveData)
+            this.props.saveData(this.saveState.bind(this))
     }
 
-    saveState() {
+    saveState() {    
+
         this.iframe.current.contentWindow.postMessage({operation:'save'}, 'http://localhost:8080')
+
     }
 
     loadState() {
@@ -46,13 +52,13 @@ export default class SimContainer extends React.Component{
         this.props.saveChanges(slides, curSlide)        
     }
 
+
     render(){
         
         return(
 
             <div className = 'sim'>
-
-                {this.props.saveAndLoad?<button onClick = {this.saveState.bind(this)}>Save</button>:null}
+                 {this.props.saveAndLoad?<button onClick = {this.saveState.bind(this)}>State</button>:null}
                 {this.props.saveAndLoad?<button onClick = {this.loadState.bind(this)}>Load</button>:null}
                 {this.props.saveAndLoad?<button onClick = {this.resetState.bind(this)}>Reset</button>:null}
 

@@ -45,6 +45,9 @@ export default class CreateLessonPlan extends React.Component {
         this.saveChanges.bind(this)
 
         this.escFunction.bind(this)
+        this.saveData.bind(this)
+
+
     }
 
     escFunction(event){
@@ -70,6 +73,9 @@ export default class CreateLessonPlan extends React.Component {
         this.db = db
     }
 
+    saveData(saveData) {
+        this.saveData = saveData
+    }
 
     componentDidMount() {  
       this.isInteractEnabled=false;
@@ -266,6 +272,9 @@ export default class CreateLessonPlan extends React.Component {
         LessonPlans.update(_id, {$set:{slides}},()=>{
             alert('Saved succesfully')
         })
+
+        this.saveData()
+
     }
 
     saveChanges(slides, curSlide) {
@@ -361,7 +370,7 @@ export default class CreateLessonPlan extends React.Component {
 
         return(
         <div>
-            {<DrawingBoardCmp getDB = {this.getDB.bind(this)} ref = 'd'/>}          
+            {<DrawingBoardCmp getDB = {this.getDB.bind(this)}/>}          
             <h1>{this.state.curSlide}</h1>
             <button onClick = {this.addNewSlide.bind(this)}>+</button>
             <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>                                                           
@@ -387,7 +396,13 @@ export default class CreateLessonPlan extends React.Component {
 
             {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 
-            <SimsList rnd = {true} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+            <SimsList
+                rnd = {true} 
+                saveChanges = {this.saveChanges.bind(this)} 
+                delete = {this.deleteSim.bind(this)} 
+                {...this.state}
+                saveData = {this.saveData.bind(this)}
+            />
         </div>
         )
     }

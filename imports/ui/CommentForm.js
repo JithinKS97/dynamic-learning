@@ -8,20 +8,24 @@ export default class CommentForm extends React.Component {
         super(props)
     }
 
+    componentDidMount() {
+        this.comment = React.createRef()
+    }
+
     postComment(e) {
 
         e.preventDefault()
 
-        if(this.refs.comment.value) {
+        if(this.comment.value) {
             slides = this.props.slides
             curSlide = this.props.curSlide
             
-            comment = this.refs.comment.value
+            comment = this.comment.value
             
             slides[curSlide].comments.push({comment, userId:Meteor.userId(), time:Date.now()})
 
             this.props.saveChanges(slides)
-            this.refs.comment.value = ''
+            this.comment.value = ''
         }
     }
         
@@ -29,7 +33,7 @@ export default class CommentForm extends React.Component {
         return (
             <div>
                 <form onSubmit = {this.postComment.bind(this)}>
-                    <input ref = 'comment'/>
+                    <input ref = {e => this.comment = e}/>
                     <button>Submit</button>
                 </form>
             </div>

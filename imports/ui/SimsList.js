@@ -1,7 +1,7 @@
 import React from 'react'
 import SimContainer from './SimContainer'
 import Rnd from 'react-rnd'
-
+import {Tracker} from 'meteor/tracker'
 export default class SimsList extends React.Component {
 
     constructor(props) {
@@ -10,15 +10,19 @@ export default class SimsList extends React.Component {
         this.state = {
             width:640,
             height:360
-        }
-        
-        this.SimContainer = React.createRef()        
+        }               
     }
 
     componentDidMount() {
+        
+    }
+
+    componentDidUpdate() {
+        
     }
 
     renderSims() {
+
 
         /* This component displays a list of simulations.
            The props contatin the current slides and the slides.
@@ -66,7 +70,7 @@ export default class SimsList extends React.Component {
                             enableResizing = {this.props.rnd?{bottomRight:true}:false}
 
                         >                                           
-                            <SimContainer 
+                            <SimContainer
                                 {...this.props} 
                                 index = {index} 
                                 {...iframe} 
@@ -84,7 +88,7 @@ export default class SimsList extends React.Component {
     }
 
     render() {
-
+        
         return (
             <div>
                 {this.renderSims()}
