@@ -42,12 +42,8 @@ export default class CreateLessonPlan extends React.Component {
         */
 
         this.pushSlide.bind(this)
-        this.saveChanges.bind(this)
-
         this.escFunction.bind(this)
-        this.saveData.bind(this)
-
-
+        
     }
 
     escFunction(event){
@@ -71,10 +67,6 @@ export default class CreateLessonPlan extends React.Component {
         */
 
         this.db = db
-    }
-
-    saveData(saveData) {
-        this.saveData = saveData
     }
 
     componentDidMount() {  
@@ -273,8 +265,6 @@ export default class CreateLessonPlan extends React.Component {
             alert('Saved succesfully')
         })
 
-        this.saveData()
-
     }
 
     saveChanges(slides, curSlide) {
@@ -401,7 +391,6 @@ export default class CreateLessonPlan extends React.Component {
                 saveChanges = {this.saveChanges.bind(this)} 
                 delete = {this.deleteSim.bind(this)} 
                 {...this.state}
-                saveData = {this.saveData.bind(this)}
             />
         </div>
         )

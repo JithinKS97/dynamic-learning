@@ -5,82 +5,52 @@ import ReactDOM from 'react-dom'
 export default class SimContainer extends React.Component{
 
     constructor(props){
-        super(props)
 
+        super(props) 
         this.iframe = React.createRef()
-
-        this.manageData.bind(this)
-        
+        this.channel = new MessageChannel();  
+        this.post.bind(this)
+        this.channel.port1.onmessage = this.handleMessage.bind(this);
     }
 
-    componentDidMount() { 
-                
-        window.addEventListener("message", this.manageData.bind(this), false);
-        if(this.props.saveData)
-            this.props.saveData(this.saveState.bind(this))
+    componentDidMount() {   
+
+        this.otherWindow = this.iframe.current.contentWindow        
+        this.iframe.current.addEventListener("load", this.iframeLoaded.bind(this), false)
+              
     }
 
-    saveState() {   
-
-        if(this.iframe)
-            this.iframe.contentWindow.postMessage({operation:'save'}, 'http://localhost:8080')
+    iframeLoaded() {
+        this.otherWindow.postMessage('Hello from the main page!', '*', [this.channel.port2]);
     }
 
-    loadState() {
-
-        let { slides, curSlide, index } = this.props
-        if(this.iframe)
-            this.iframe.contentWindow.postMessage({operation:'load', data: slides[curSlide].iframes[index].data }, 'http://localhost:8080')
+    post() {      
+        this.otherWindow.postMessage('Hello from the main page!', '*');
     }
 
-    resetState() {
-        if(this.iframe)
-            this.iframe.contentWindow.postMessage({operation:'reset'}, 'http://localhost:8080')
+    handleMessage(e) {
+        console.log(e.data)
     }
-
-    manageData(event) {
-        //This is the data to be saved to the server
-
-        if(event.origin !== 'http://localhost:8080')
-            return
-
-        if(this.props && event.data) {            
-
-            let {slides, curSlide, index} = this.props
-
-            if(slides) {
-                
-                slides[curSlide].iframes[index].data = event.data
-                this.props.saveChanges(slides, undefined)
-            }
-
-        }
-
-       
-    }
-
 
     render(){
         
         return(
-
+            <div>
             <div className = 'sim'>
-
+                
                 {
                     this.props.src?
                         <iframe 
-                            ref = {e => this.iframe = e} 
+                            ref = {this.iframe} 
                             scrolling = 'no' 
                             height = {this.props.h+'px'} 
                             width = {this.props.w+'px'} 
-                            src={'http://localhost:8080'}>
+                            src={this.props.src}>
                         </iframe>:null
                 }
 
-                {this.props.saveAndLoad?<button onClick = {this.saveState.bind(this)}>Save</button>:null}
-                {this.props.saveAndLoad?<button onClick = {this.loadState.bind(this)}>Load</button>:null}
-                {this.props.saveAndLoad?<button onClick = {this.resetState.bind(this)}>Reset</button>:null}
-
+            </div>
+            <button onClick = {this.post.bind(this)}>Post</button>
             </div>
         )
     }
