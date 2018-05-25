@@ -21,11 +21,11 @@ export default class SimContainer extends React.Component{
     }
 
     iframeLoaded() {
-        this.otherWindow.postMessage('Hello from the main page!', '*', [this.channel.port2]);
+        this.otherWindow.postMessage('sendingPort', '*', [this.channel.port2]);
     }
 
     post() {      
-        this.otherWindow.postMessage('Hello from the main page!', '*');
+        this.otherWindow.postMessage('Hello from the webapp!', '*');
     }
 
     handleMessage(e) {
