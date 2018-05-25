@@ -9,27 +9,43 @@ export default class SimContainer extends React.Component{
         super(props) 
         this.iframe = React.createRef()
         this.channel = new MessageChannel();  
-        this.post.bind(this)
-        this.channel.port1.onmessage = this.handleMessage.bind(this);
+        this.load.bind(this)
+        this.save.bind(this)
+        this.channel.port1.onmessage = this.handleData.bind(this);
     }
 
-    componentDidMount() {   
+    componentDidMount() {
 
-        this.otherWindow = this.iframe.current.contentWindow        
         this.iframe.current.addEventListener("load", this.iframeLoaded.bind(this), false)
-              
+        if(this.props.getSave)
+            this.props.getSave(this.save.bind(this))
+
+
     }
 
     iframeLoaded() {
+        
+        this.otherWindow = this.iframe.current.contentWindow
         this.otherWindow.postMessage('sendingPort', '*', [this.channel.port2]);
     }
 
-    post() {      
-        this.otherWindow.postMessage('Hello from the webapp!', '*');
+    load() {
+
+        const {slides, curSlide, index} = this.props        
+        this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*');
     }
 
-    handleMessage(e) {
-        console.log(e.data)
+    save() {
+
+        this.otherWindow.postMessage({operation:'save'}, '*');
+    }
+
+    handleData(e) {
+
+        const {slides, curSlide, index} = this.props        
+        slides[curSlide].iframes[index].data = e.data
+        console.log(slides[curSlide].iframes[index].data)
+
     }
 
     render(){
@@ -50,7 +66,7 @@ export default class SimContainer extends React.Component{
                 }
 
             </div>
-            <button onClick = {this.post.bind(this)}>Post</button>
+            {this.props.preview?<button onClick = {this.load.bind(this)}>Load</button>:null}
             </div>
         )
     }

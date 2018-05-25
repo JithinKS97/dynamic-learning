@@ -93,7 +93,7 @@ export default class AddSim extends React.Component {
         if(this.state.sim) {
             return (
 
-                <SimContainer {...this.state.sim}/>
+                <SimContainer preview = {false} {...this.state.sim}/>
             )
         }
     }

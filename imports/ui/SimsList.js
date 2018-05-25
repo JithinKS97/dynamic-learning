@@ -71,6 +71,7 @@ export default class SimsList extends React.Component {
 
                         >                                           
                             <SimContainer
+                                preview = {true}
                                 {...this.props} 
                                 index = {index} 
                                 {...iframe} 
