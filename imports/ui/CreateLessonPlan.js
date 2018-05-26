@@ -42,11 +42,11 @@ export default class CreateLessonPlan extends React.Component {
         */
 
         this.pushSlide.bind(this)
-        this.escFunction.bind(this)
+        this.slideNav.bind(this)
         this.save.bind(this)      
     }
 
-    escFunction(event){
+    slideNav(event){
 
         if(event.keyCode ===  37) {
           this.previous()
@@ -89,7 +89,7 @@ export default class CreateLessonPlan extends React.Component {
         this.db.ev.bind('board:reset', this.changed.bind(this));
         this.db.ev.bind('board:stopDrawing', this.changed.bind(this));
 
-        document.addEventListener("keydown", this.escFunction.bind(this), false);
+        document.addEventListener("keydown", this.slideNav.bind(this), false);
 
         this.simTracker = Tracker.autorun(()=>{
 
@@ -298,13 +298,15 @@ export default class CreateLessonPlan extends React.Component {
         }
     }
 
-    deleteSlide(slides, index) {
+    deleteSlide(index) {
 
         /* This function decides what to do when the X button is pressed in the
            slide element. If there is only one element. it is not deleted,
            it is just reset. Otherwise, the slide is deleted and the current slide
            is set to the preceeding slide.
         */
+
+        const {slides} = this.state
 
         if(slides.length!=1) {
             slides.splice(index, 1)
@@ -324,15 +326,17 @@ export default class CreateLessonPlan extends React.Component {
         }
     }
 
-    deleteSim(slides, iframeArray, index) {
+    deleteSim(index) {
 
         /* This function decides what to do when cross button is pressed in the
            simulation. The simulation is deleted from the iframes array of the
            current slide and the changes are saved.
         */
-       
-        iframeArray.splice(index,1)
-        slides[this.state.curSlide].iframes = iframeArray
+
+        const {slides, curSlide} = this.state
+        const iframes = slides[curSlide].iframes       
+        iframes.splice(index,1)
+        slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
     }
 
@@ -389,7 +393,7 @@ export default class CreateLessonPlan extends React.Component {
             {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 
             <SimsList
-                rnd = {true} 
+                IsRndNeeded = {true} 
                 saveChanges = {this.saveChanges.bind(this)} 
                 delete = {this.deleteSim.bind(this)} 
                 {...this.state}

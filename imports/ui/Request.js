@@ -22,6 +22,8 @@ export default class Request extends React.Component {
         }
         this.update.bind(this)
         this.pushSim.bind(this)
+
+        this.title = React.createRef()
     }
 
     componentDidMount() {
@@ -57,6 +59,7 @@ export default class Request extends React.Component {
         if(this.title.value) {
 
             const { slides } = this.state
+            const title = this.title.value
             curSlide = slides.length
 
             if(this.state.show == false) {            
@@ -86,7 +89,9 @@ export default class Request extends React.Component {
         Requests.update(this.state._id, {$set:{slides}})
     }
 
-    deleteSlide(slides, index) {
+    deleteSlide(index) {
+
+        const { slides } = this.state
 
         if(slides.length!=1) {
             slides.splice(index, 1)    
@@ -99,7 +104,7 @@ export default class Request extends React.Component {
             this.saveChanges(slides, curSlide)
         }
         else
-            this.reset()                            
+            this.reset()                  
     }
 
     reset() {
@@ -164,15 +169,16 @@ export default class Request extends React.Component {
         this.update()
     }
 
-    deleteSim(slides, iframeArray, index) {
+    deleteSim(index) {
 
         /* This function decides what to do when cross button is pressed in the
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
         */
-        
-        iframeArray.splice(index,1)
-        slides[this.state.curSlide].iframes = iframeArray
+        const { slides, curSlide }  = this.state
+        const iframes = slides[curSlide].iframes        
+        iframes.splice(index,1)
+        slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
     }
 
