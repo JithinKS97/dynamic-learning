@@ -93,7 +93,7 @@ export default class AddSim extends React.Component {
         if(this.state.sim) {
             return (
 
-                <SimContainer preview = {false} {...this.state.sim}/>
+                <SimContainer preview = {true} {...this.state.sim}/>
             )
         }
     }
@@ -135,8 +135,17 @@ export default class AddSim extends React.Component {
 
                         const { slides, curSlide } = this.props
 
+                        const toPush = {
+                            src:this.state.sim.src,
+                            w:this.state.sim.w,
+                            h:this.state.sim.h,
+                            x:0,
+                            y:0,
+                            data:{}
+                        }
 
-                        slides[curSlide].iframes.push(this.state.sim)
+                        slides[curSlide].iframes.push(toPush)
+
                         this.props.saveChanges(slides)
 
                         this.setState({

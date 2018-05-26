@@ -10,11 +10,7 @@ const UploadSim = () =>{
     return(
         <Upload methodName = {(name, src, w, h, callback)=>{
 
-            const x = 0
-            const y = 0
-            data = {}
-
-            Sims.insert({userId:Meteor.userId(),name,src,w,h, x, y, data},callback())
+            Sims.insert({userId:Meteor.userId(),name, src, w, h},callback())
         }}/>
     )
 }

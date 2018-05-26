@@ -13,8 +13,8 @@ export default class SimContainer extends React.Component{
     }
 
     componentDidMount() {
-
-        this.iframe.addEventListener('load', this.iframeLoaded.bind(this), false)
+        if(this.props.iframeLoaded == true)
+            this.iframe.addEventListener('load', this.iframeLoaded.bind(this), false)        
     }
 
     iframeLoaded() {

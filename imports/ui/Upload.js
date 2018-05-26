@@ -130,7 +130,7 @@ export default class Upload extends React.Component {
                         <h1>Submit simulation</h1>
                         <p>Enter the Iframe tag</p>
                         <input onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
-                        <SimContainer preview = {false} saveAndLoad = {false} {...this.state}/>
+                        <SimContainer iframeLoaded = {this.state.src?true:false} saveAndLoad = {false} {...this.state}/>
                         <div>{this.submitButton()}</div>
                     </form>
                     <button onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>   

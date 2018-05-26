@@ -8,8 +8,7 @@ export default class SimsList extends React.Component {
         super(props)
 
         this.state = {
-            width:640,
-            height:360
+
         }               
     }
 
@@ -71,7 +70,7 @@ export default class SimsList extends React.Component {
 
                         >                                           
                             <SimContainer
-                                preview = {true}
+                                iframeLoaded = {true}
                                 {...this.props} 
                                 index = {index} 
                                 {...iframe} 
