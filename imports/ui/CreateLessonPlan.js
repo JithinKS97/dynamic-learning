@@ -69,10 +69,6 @@ export default class CreateLessonPlan extends React.Component {
         this.db = db
     }
 
-    getSave(save) {
-        this.saveData = save
-    }
-
     componentDidMount() {  
 
 
@@ -395,7 +391,6 @@ export default class CreateLessonPlan extends React.Component {
             {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 
             <SimsList
-                getSave = {this.getSave.bind(this)}
                 rnd = {true} 
                 saveChanges = {this.saveChanges.bind(this)} 
                 delete = {this.deleteSim.bind(this)} 
