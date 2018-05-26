@@ -267,8 +267,6 @@ export default class CreateLessonPlan extends React.Component {
             alert('Saved succesfully')
         })
 
-        this.saveData()
-
     }
 
     saveChanges(slides, curSlide) {

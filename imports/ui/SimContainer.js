@@ -20,25 +20,31 @@ export default class SimContainer extends React.Component{
     iframeLoaded() {
 
         this.otherWindow = this.iframe.contentWindow
-        this.otherWindow.postMessage('sendingPort', '*', [this.channel.port2])
+        this.otherWindow.postMessage({operation:'sendingPort'}, '*', [this.channel.port2])
     }
 
     handleMessage(e) {
 
-        console.log(e.data)
+        let {slides, curSlide, index} = this.props
+
+        if(e.data.operation == 'save') {
+            console.log('data to be saved:',e.data.data)
+            slides[curSlide].iframes[index].data = e.data.data
+            this.props.saveChanges(slides, undefined)
+        }
+        else if(e.data.operation == 'load')
+        {
+            this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
+        }
     }
 
-    post() {
-        
-        this.otherWindow.postMessage('sendingMessage', '*')
-    }
+
 
     render(){
         
         return(
 
             <div className = 'sim'>
-                <button onClick = {this.post.bind(this)}>Post</button>
                 
                 {
                     this.props.src?
