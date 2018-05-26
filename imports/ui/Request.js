@@ -7,6 +7,7 @@ import CommentForm from './CommentForm'
 import CommentsList from './CommentsList'
 import {Tracker} from 'meteor/tracker'
 import { Link } from 'react-router-dom'
+import { Meteor } from 'meteor/meteor'
 
 export default class Request extends React.Component {
 
@@ -21,6 +22,8 @@ export default class Request extends React.Component {
         }
         this.update.bind(this)
         this.pushSim.bind(this)
+
+        this.title = React.createRef()
     }
 
     componentDidMount() {
@@ -53,28 +56,30 @@ export default class Request extends React.Component {
 
         e.preventDefault();
 
-        if(this.refs.title.value) {
+        if(this.title.value) {
 
             const { slides } = this.state
+            const title = this.title.value
             curSlide = slides.length
 
             if(this.state.show == false) {            
-                slides[0].title = this.refs.title.value
+                slides[0].title = this.title.value
                 this.setState({slides, show:true})            
             }
             else {
                 slide = {
-                    title: this.refs.title.value,
+                    title: this.title.value,
                     comments: [],
                     iframes: []
                 }
                 slides.push(slide)
                 this.setState({
-                    slides,
-                    curSlide
+                   title, 
+                   slides,
+                   curSlide
                 })
             }
-            this.refs.title.value = ''
+            this.title.value = ''
             this.update()
         }
     }
@@ -84,7 +89,9 @@ export default class Request extends React.Component {
         Requests.update(this.state._id, {$set:{slides}})
     }
 
-    deleteSlide(slides, index) {
+    deleteSlide(index) {
+
+        const { slides } = this.state
 
         if(slides.length!=1) {
             slides.splice(index, 1)    
@@ -97,7 +104,7 @@ export default class Request extends React.Component {
             this.saveChanges(slides, curSlide)
         }
         else
-            this.reset()                            
+            this.reset()                  
     }
 
     reset() {
@@ -147,6 +154,7 @@ export default class Request extends React.Component {
         const { slides, curSlide }  = this.state
 
         const toPush = {
+            userId:Meteor.userId(),
             src,
             w,
             h,
@@ -161,15 +169,16 @@ export default class Request extends React.Component {
         this.update()
     }
 
-    deleteSim(slides, iframeArray, index) {
+    deleteSim(index) {
 
         /* This function decides what to do when cross button is pressed in the
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
         */
-        
-        iframeArray.splice(index,1)
-        slides[this.state.curSlide].iframes = iframeArray
+        const { slides, curSlide }  = this.state
+        const iframes = slides[curSlide].iframes        
+        iframes.splice(index,1)
+        slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
     }
 
@@ -189,7 +198,7 @@ export default class Request extends React.Component {
                 <h1>Request</h1>
 
                 <form onSubmit = {this.push.bind(this)}>
-                    <input ref = 'title'/>
+                    <input ref = {e => this.title = e}/>
                     <button>New request</button>
                 </form>
                                 
@@ -210,7 +219,7 @@ export default class Request extends React.Component {
 
                 <Link to = {`/createlessonplan/${this.state._id}`}><button>Back</button></Link>
                 
-                <SimsList saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+                <SimsList rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
 
             </div>
         )  

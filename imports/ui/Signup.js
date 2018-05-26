@@ -16,6 +16,7 @@ export default class Signup extends React.Component {
 
         const email = this.refs.email.value.trim()
         const password = this.refs.password.value.trim()
+        const username = this.refs.username.value.trim()
 
         if(password.length<9) {
             this.setState({
@@ -24,7 +25,7 @@ export default class Signup extends React.Component {
             return
         }
 
-        Accounts.createUser({email,password},(err) => {
+        Accounts.createUser({email,username,password},(err) => {
             if(err) {
                 this.setState({
                     error:err.reason
@@ -47,6 +48,7 @@ export default class Signup extends React.Component {
             
                 <form onSubmit = {this.onSubmit.bind(this)} noValidate>
                     <input type='email' ref='email' name='email' placeholder='Email'/>
+                    <input type='username' ref='username' name='username' placeholder='username'/>
                     <input type='password' ref='password' name='password' placeholder='Password'/>
                     <button>Create Account</button>
                 </form>

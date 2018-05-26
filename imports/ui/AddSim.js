@@ -9,7 +9,8 @@ import SimContainer from './SimContainer'
 export default class AddSim extends React.Component {
 
     /* This component is used for the selection of the simulation for
-       the teachers. The simulations are fetched from the database.
+       the teachers to add to a slide. The simulations are fetched from 
+       the database.
 
        Here for prototyping, all the simulations are altogether fetched.
        But in the final version of the application, the simulations are
@@ -64,8 +65,8 @@ export default class AddSim extends React.Component {
 
         /* This is for displaying the simulations fetched. For each simulation, there
            will be a button with the name of the simulation in it. If the button is
-           pressed, the correspoing simulation's iframe src is set in the state, so
-           that it is rendered.
+           pressed, the correspoing simulation's data is set in the state, so
+           that it is rendered. sim contains src, width, height and the name of the simulation.
         */
 
         if(this.state.sims) {
@@ -88,12 +89,12 @@ export default class AddSim extends React.Component {
 
     showSim() {
 
-        /* If there is an src in the state, an iframe is rendered */
+        /* If there is a valid sim in the state, an iframe is rendered */
 
         if(this.state.sim) {
             return (
 
-                <SimContainer {...this.state.sim}/>
+                <SimContainer isPreview = {true} {...this.state.sim}/>
             )
         }
     }
@@ -116,9 +117,8 @@ export default class AddSim extends React.Component {
 
                 <button onClick = {()=>{
 
-                    /* The simulation is added only if the input field is not empty.
-                       That is state.src will take upon a value only if the input
-                       field is not empty.
+                    /* The simulation is added only if the valid simulation is set to the
+                       state.
                     */
 
                     if(this.state.sim) {
@@ -135,8 +135,17 @@ export default class AddSim extends React.Component {
 
                         const { slides, curSlide } = this.props
 
+                        const toPush = {
+                            src:this.state.sim.src,
+                            w:this.state.sim.w,
+                            h:this.state.sim.h,
+                            x:0,
+                            y:0,
+                            data:{}
+                        }
 
-                        slides[curSlide].iframes.push(this.state.sim)
+                        slides[curSlide].iframes.push(toPush)
+
                         this.props.saveChanges(slides)
 
                         this.setState({

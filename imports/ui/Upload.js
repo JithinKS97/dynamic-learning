@@ -23,6 +23,9 @@ export default class Upload extends React.Component {
             h:null
         }
         this.submitButton.bind(this)
+        this.name = React.createRef()
+        this.width = React.createRef()
+        this.height = React.createRef()
     }
 
     componentDidMount() {
@@ -32,13 +35,13 @@ export default class Upload extends React.Component {
     enteredLink(e) {
         
         e.preventDefault()
-        let link = this.refs.sim.value
+        let link = this.sim.value
         this.setState({
             error:link
         })
 
         /* The link.match checks if the iframe entered is valid by using regular
-           expression. THe src should be set only if the entered tag is valid.
+           expression. The src should be set only if the entered tag is valid.
         */
 
         const tag = link.match(`(?:<iframe[^>]*)(?:(?:\/>)|(?:>.*?<\/iframe>))`)
@@ -70,47 +73,44 @@ export default class Upload extends React.Component {
 
     submitButton() {
 
-        /* The iframe is uploaded to the collection in this function. Only if the
-           src is valid and a name is provided in the input field, insertions is
-           performed.
+        /* Here we read the name, width and height of the simulation. A method is
+           passed from the parent function which decides what to do with the uploaded
+           simulation. To the method, we pass these values.
         */
 
         if(this.state.src) {
             return (
                 <div>                    
-                    <p>Name of the simulation
-                    <input ref='name' onChange = {()=>{this.setState({name:this.refs.name.value})}}/>
-                    </p>
-                    <p>
+                    Name of the simulation
+                    <input ref= {e => this.name = e} onChange = {()=>{this.setState({name:this.name.value})}}/>
+                    
                     Width
-                    <input ref='width' onChange = {()=>{this.setState({w:this.refs.width.value})}}/>
-                    </p>
-                    <p>
+                    <input ref= {e => this.width = e} onChange = {()=>{this.setState({w:this.width.value})}}/>
+                    
                     Height
-                    <input ref='height' onChange = {()=>{this.setState({h:this.refs.height.value})}}/>
-                    </p>               
-                        
-                            <button onClick = {(e)=>{
+                    <input ref= {e => this.height = e} onChange = {()=>{this.setState({h:this.height.value})}}/>
+                                    
+                    <button onClick = {(e)=>{
 
-                            e.preventDefault()
-                            const src = this.state.src
+                        e.preventDefault()
+                        const src = this.state.src
 
-                            let w = this.refs.width.value
-                            let h = this.refs.height.value
-                            let name = this.refs.name.value
+                        let w = this.width.value
+                        let h = this.height.value
+                        let name = this.name.value
 
-                            if(name) {
-                                
-                                this.props.methodName(name, src, w, h, ()=>{
-                                    alert('Uploaded succesfully')
-                                    this.setState({
-                                        src:'',
-                                        error:'',
-                                        isOpen: false
-                                    })
+                        if(name) {
+                            
+                            this.props.methodName(name, src, w, h, ()=>{
+                                alert('Uploaded succesfully')
+                                this.setState({
+                                    src:'',
+                                    error:'',
+                                    isOpen: false
                                 })
-                            }                                                                        
-                            }}>Submit</button>                
+                            })
+                        }                                                                        
+                    }}>Submit</button>                
                 </div>
             )
         }
@@ -126,8 +126,8 @@ export default class Upload extends React.Component {
                     <form>
                         <h1>Submit simulation</h1>
                         <p>Enter the Iframe tag</p>
-                        <input onChange={this.enteredLink.bind(this)} ref = 'sim'/>
-                        <SimContainer {...this.state}/>
+                        <input onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
+                        <SimContainer isPreview = {true} {...this.state}/>
                         <div>{this.submitButton()}</div>
                     </form>
                     <button onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>   

@@ -30,7 +30,7 @@ export default class List extends React.Component {
                 return (                    
                     <div key = {index}>
                         <button onClick = {()=>{this.props.saveChanges(undefined, index)}}>{this.props.showTitle?slide.title:index}</button>    
-                        <button onClick = {()=>{this.props.delete(slides, index)}}>X</button>
+                        <button onClick = {()=>{this.props.delete(index)}}>X</button>
                     </div>
                 )
             })
