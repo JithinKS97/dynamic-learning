@@ -1,7 +1,7 @@
 import React from 'react'
-import LessonPlansList from './LessonPlansList'
-import TitleBar from './TitleBar'
-import AddLessonPlan from './AddLessonPlan'
+import LessonPlansList from '../components/LessonPlansList'
+import TitleBar from '../components/TitleBar'
+import AddLessonPlan from '../components/AddLessonPlan'
 import { Accounts } from 'meteor/accounts-base'
 
   

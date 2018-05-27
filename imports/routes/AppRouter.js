@@ -7,14 +7,14 @@ import createHistory from 'history/createBrowserHistory'
 import { PrivateRoute } from './PrivateRoute'
 import { PublicRoute } from './PublicRoute'
 
-import Login from '../ui/Login'
-import CreateLessonPlan from '../ui/CreateLessonPlan'
-import LessonPlans from '../ui/LessonPlans'
-import Signup from '../ui/Signup'
-import NotFound from '../ui/NotFound'
-import UploadSim from '../ui/UploadSim'
-import Request from '../ui/Request'
-import SandBox from '../ui/SandBox'
+import Login from '../ui/pages/Login'
+import CreateLessonPlan from '../ui/pages/CreateLessonPlan'
+import LessonPlans from '../ui/pages/LessonPlans'
+import Signup from '../ui/pages/Signup'
+import NotFound from '../ui/pages/NotFound'
+import UploadSim from '../ui/pages/UploadSim'
+import Request from '../ui/pages/Request'
+import SandBox from '../ui/pages/SandBox'
 
 const history = createHistory()
 const unAuthenticatedPages = ['/', '/signup']

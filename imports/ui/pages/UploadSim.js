@@ -1,7 +1,7 @@
 import React from 'react'
-import Upload from './Upload'
+import Upload from '../components/Upload'
 import { Meteor } from 'meteor/meteor'
-import { Sims} from '../api/sims'
+import { Sims} from '../../api/sims'
 
 
 

@@ -1,6 +1,6 @@
 import React from 'react'
-import { LessonPlans } from '../api/lessonplans'
-import { Requests } from '../api/requests'
+import { LessonPlans } from '../../api/lessonplans'
+import { Requests } from '../../api/requests'
 import {Meteor} from 'meteor/meteor'
 
 const AddLessonPlans = ()=>{

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sims } from '../api/sims'
+import { Sims } from '../../api/sims'
 import { Tracker } from 'meteor/tracker'
 import Modal from 'react-modal'
 import {Meteor} from 'meteor/meteor'

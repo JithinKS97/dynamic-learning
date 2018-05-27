@@ -1,10 +1,10 @@
 import React from 'react'
-import DrawingBoardCmp from './DrawingBoardCmp'
-import { Requests } from '../api/requests'
-import { LessonPlans } from '../api/lessonplans'
-import SimsList from './SimsList'
-import List from './List'
-import AddSim from './AddSim'
+import DrawingBoardCmp from '../components/DrawingBoardCmp'
+import { Requests } from '../../api/requests'
+import { LessonPlans } from '../../api/lessonplans'
+import SimsList from '../components/SimsList'
+import List from '../components/List'
+import AddSim from '../components/AddSim'
 import { Link } from 'react-router-dom'
 
 
