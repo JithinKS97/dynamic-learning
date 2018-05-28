@@ -1,12 +1,11 @@
 import React from 'react'
 import { Sims } from '../../api/sims'
-import { Tracker } from 'meteor/tracker'
 import Modal from 'react-modal'
-import {Meteor} from 'meteor/meteor'
+import { Meteor } from 'meteor/meteor'
 import SimContainer from './SimContainer'
+import { withTracker } from 'meteor/react-meteor-data'
 
-
-export default class AddSim extends React.Component {
+class AddSim extends React.Component {
 
     /* This component is used for the selection of the simulation for
        the teachers to add to a slide. The simulations are fetched from 
@@ -29,38 +28,6 @@ export default class AddSim extends React.Component {
         this.showSim.bind(this)
     }
 
-    componentDidMount() {
-
-        Meteor.subscribe('sims')
-
-        /* Since we need to render the component each time there is a
-           change in the Simulation collection, tracker autorun is used.
-        */
-
-        this.simTracker = Tracker.autorun(()=>{
-            const sims = Sims.find().fetch()
-
-            this.setState({
-                sims
-            })
-        })
-    }
-
-
-    componentWillUnmount(nextState) {
-        this.simTracker.stop()
-    }
-
-    shouldComponentUpdate(nextState) {
-
-        /*To avoid the unnecessary re-rendering*/
-
-        if(this.state.sim === nextState.sim)
-            return false
-        else
-            return true
-    }
-
     simsList() {
 
         /* This is for displaying the simulations fetched. For each simulation, there
@@ -69,8 +36,8 @@ export default class AddSim extends React.Component {
            that it is rendered. sim contains src, width, height and the name of the simulation.
         */
 
-        if(this.state.sims) {
-            return this.state.sims.map((sim)=>{
+        if(this.props.sims) {
+            return this.props.sims.map((sim)=>{
                 
                 return (
                     <div key = {sim._id}>
@@ -93,7 +60,6 @@ export default class AddSim extends React.Component {
 
         if(this.state.sim) {
             return (
-
                 <SimContainer isPreview = {true} {...this.state.sim}/>
             )
         }
@@ -174,3 +140,15 @@ export default class AddSim extends React.Component {
         )
     }
 }
+
+export default AddSimContainer = withTracker(()=>{
+
+    Meteor.subscribe('sims')
+    
+    const sims = Sims.find().fetch()
+
+    return {
+        sims
+    }
+
+})(AddSim)

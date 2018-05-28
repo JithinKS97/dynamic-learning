@@ -1,18 +1,12 @@
 import React from 'react'
 
+const List = (props) => {
 
-export default class List extends React.Component {
-
-    constructor(props) {
-        super(props)
-        this.renderSlides.bind(this)
-    }
-
-    renderSlides() {        
+    const renderSlides = () => {        
 
         /* This component is intended for rendering slides list*/
         
-        const slides = this.props.slides
+        const slides = props.slides
 
         if(slides.length!=0) {
 
@@ -29,20 +23,21 @@ export default class List extends React.Component {
 
                 return (                    
                     <div key = {index}>
-                        <button onClick = {()=>{this.props.saveChanges(undefined, index)}}>{this.props.showTitle?slide.title:index}</button>    
-                        <button onClick = {()=>{this.props.delete(index)}}>X</button>
+                        <button onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</button>    
+                        <button onClick = {()=>{props.delete(index)}}>X</button>
                     </div>
                 )
             })
         }        
     }
 
-    render() {
-        return (
-            <div>
-                {this.renderSlides()}
-            </div>
-        )
-    }
+
+    return (
+        <div>
+            {renderSlides()}
+        </div>
+    )
 }
+
+export default List
 

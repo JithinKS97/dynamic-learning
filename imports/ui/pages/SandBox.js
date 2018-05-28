@@ -1,18 +1,13 @@
 import React from 'react'
 
 export default class SandBox extends React.Component {
-
-    componentDidMount() {
-        
-    }
     
-    render() {  
-        
+    render() {       
         
 
         return(
             <div>
-               
+                
             </div>
         )
     }

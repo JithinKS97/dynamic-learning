@@ -2,25 +2,10 @@ import React from 'react'
 import SimContainer from './SimContainer'
 import Rnd from 'react-rnd'
 import {Tracker} from 'meteor/tracker'
-export default class SimsList extends React.Component {
 
-    constructor(props) {
-        super(props)
+const SimsList = (props) => {
 
-        this.state = {
-
-        }               
-    }
-
-    componentDidMount() {
-        
-    }
-
-    componentDidUpdate() {
-        
-    }
-
-    renderSims() {
+    const renderSims = () => {
 
 
         /* This component displays a list of simulations.
@@ -31,7 +16,7 @@ export default class SimsList extends React.Component {
            On clicking the X button the delete function passed in the props is called.
         */
 
-        const { slides, curSlide } = this.props
+        const { slides, curSlide } = props
 
         if(slides.length!=0) {
 
@@ -71,35 +56,30 @@ export default class SimsList extends React.Component {
                                 slides[curSlide].iframes[index].x = d.lastX
                                 slides[curSlide].iframes[index].y = d.lastY
 
-                                this.props.saveChanges(slides, undefined)
+                                props.saveChanges(slides, undefined)
                             }}
                             
                             onResize={(e, direction, ref, delta, position) => {
-
-                                this.setState({
-                                width: ref.offsetWidth,
-                                height: ref.offsetHeight,
-                                ...position,
-                                });
                                 
                                 slides[curSlide].iframes[index].w = ref.offsetWidth
                                 slides[curSlide].iframes[index].h = ref.offsetHeight
                                 
+                                props.saveChanges(slides, undefined)
                             }}
 
-                            disableDragging = {this.props.IsRndNeeded?false:true}
-                            enableResizing = {this.props.IsRndNeeded?{bottomRight:true}:false}
+                            disableDragging = {props.IsRndNeeded?false:true}
+                            enableResizing = {props.IsRndNeeded?{bottomRight:true}:false}
 
                         >                                           
                             <SimContainer
                                 isPreview = {false}
-                                {...this.props} 
+                                {...props} 
                                 index = {index} 
                                 {...iframe} 
                                 src = {iframe.src}
                             />
                             
-                            <button onClick = {()=>{this.props.delete(index)}}>X</button>                                                    
+                            <button onClick = {()=>{props.delete(index)}}>X</button>                                                    
                         
                         </Rnd>
                     </div>
@@ -108,12 +88,14 @@ export default class SimsList extends React.Component {
         }
     }
 
-    render() {
+
         
         return (
             <div>
-                {this.renderSims()}
+                {renderSims()}
             </div>
         )
-    }
+
 }
+
+export default SimsList

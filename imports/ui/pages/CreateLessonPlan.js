@@ -6,9 +6,12 @@ import SimsList from '../components/SimsList'
 import List from '../components/List'
 import AddSim from '../components/AddSim'
 import { Link } from 'react-router-dom'
+import { withTracker } from 'meteor/react-meteor-data'
+import { Meteor } from 'meteor/meteor'
+import { Redirect } from 'react-router-dom'
+ 
 
-
-export default class CreateLessonPlan extends React.Component {
+class CreateLessonPlan extends React.Component {
 
     constructor(props) {
 
@@ -34,7 +37,8 @@ export default class CreateLessonPlan extends React.Component {
         this.state = {
             curSlide:0,
             slides: [],
-            _id: ''
+            _id: '',
+            initiated:false
         };
 
         /* In pushSlide and saveChanges, this keyword is used. For binding the this
@@ -69,12 +73,12 @@ export default class CreateLessonPlan extends React.Component {
         this.db = db
     }
 
-    componentDidMount() {  
+    componentDidMount() { 
 
 
-      this.isInteractEnabled=false;
-      this.undoArray= [];
-      this.curPosition= [];
+        this.isInteractEnabled=false;
+        this.undoArray= [];
+        this.curPosition= [];
         /* board:reset and board:stopDrawing are events associated with the drawing
            board. They are triggered whenever the we press the reset button or stop
            the drawing. Whenever these events are triggered, the changed method is
@@ -83,69 +87,42 @@ export default class CreateLessonPlan extends React.Component {
            Tracker autorun is used because we are retrieving the Requests data
            here.
         */
-       document.getElementsByClassName('drawing-board-canvas')[0].style['z-index'] = 2;
-       Meteor.subscribe('lessonplans')
 
         this.db.ev.bind('board:reset', this.changed.bind(this));
         this.db.ev.bind('board:stopDrawing', this.changed.bind(this));
-
         document.addEventListener("keydown", this.slideNav.bind(this), false);
+    }
 
-        this.simTracker = Tracker.autorun(()=>{
+    componentDidUpdate() {
 
+        const { lessonplan, lessonplanExists } = this.props
 
-            /*The obtained lessonplan is spreaded and set to the state.
-
-              If the lessonplan in brand new, slides[0] will be empty string, we need to
-              initialize the first slide before doing any actions. So reset is called.
-
-              If notes are already there, the first slide is set to the drawing board.
-            */
-           const { _id } = this.props.match.params
-
-           const lessonplan = LessonPlans.findOne(_id)
-            if(lessonplan) {
-              if (this.undoArray.length == 0 && lessonplan.slides[0].note != ''){
+        if(lessonplanExists && this.state.initiated == false) {
+            if (this.undoArray.length == 0 && lessonplan.slides[0].note != ''){
                 this.undoArray = lessonplan.slides.map((slide) => {
-                  this.curPosition.push(0);
-                  return [slide.note];
+                    this.curPosition.push(0);
+                    return [slide.note];
                 });
-              }
-
-                this.setState({
-                    ...lessonplan
-                },() => {
-                    if(this.state.slides[0].note === '') {
-                        this.db.reset({ webStorage: false, history: true, background: true })
-                    }
-                    else {
-                        this.db.setImg(this.state.slides[this.state.curSlide].note)
-                    }
-                })
             }
-        })
+
+            this.setState({
+                ...lessonplan,
+                initiated:true
+            },() => {
+                
+                if(this.state.slides[0].note === '') {
+                    this.db.reset({ webStorage: false, history: true, background: true })
+                }
+                else {
+                    this.db.setImg(this.state.slides[this.state.curSlide].note)
+                }
+            })
+        }
+        else if(!lessonplanExists) {
+            console.log('loading')
+        }
     }
-
-    componentWillUnmount() {
-        this.simTracker.stop()
-        document.removeEventListener("keydown", this.escFunction, false);
-    }
-
-    shouldComponentUpdate(nextState) {
-
-        /*To avoid unnuecessary re-renderings*/
-
-        if(this.state.slides === nextState.slides)
-            return false
-        else
-            return true
-
-        if(this.state.curSlide === this.state.curSlide)
-            return false
-        else
-            return true
-    }
-
+    
     changed() {
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
@@ -166,7 +143,7 @@ export default class CreateLessonPlan extends React.Component {
           this.curPosition.push(0);
         }
 
-        this.setState({slides})
+        this.saveChanges(slides)
     }
 
     next() {
@@ -296,6 +273,7 @@ export default class CreateLessonPlan extends React.Component {
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
+
     }
 
     deleteSlide(index) {
@@ -351,41 +329,40 @@ export default class CreateLessonPlan extends React.Component {
     }
 
     undo(e){
-      this.curPosition[this.state.curSlide]--;
-      const slides = this.state.slides;
-      slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]];
-      this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]);
+      this.curPosition[this.state.curSlide]--
+      const slides = this.state.slides
+      slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
+      this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]])
       this.undoArray[this.state.curSlide].pop()
       this.setState({
         slides
-      });
+      })
     }
-
 
     render() {
 
         return(
-        <div>
+        <div>            
+
             {<DrawingBoardCmp getDB = {this.getDB.bind(this)}/>}          
             <h1>{this.state.curSlide}</h1>
             <button onClick = {this.addNewSlide.bind(this)}>+</button>
             <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>                                                           
 
             <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-
            
             <button onClick = {this.reset.bind(this)}>Reset</button>  
             <button onClick = {this.save.bind(this)}>Save</button>
 
-            <p>Interact
-                <input onChange={this.interact.bind(this)} type = 'checkbox'/>
-            </p>
+            Interact
+            <input onChange={this.interact.bind(this)} type = 'checkbox'/>     
 
-            <Link to = '/lessonplans'><button>Back</button></Link>
-             <Link to={{ pathname: `/request/${this.state._id}`}}>
-                <button>
-                Request new simulations
-            </button>
+            <Link to = '/lessonplans'>
+                <button>Back</button>
+            </Link>
+
+            <Link to={{ pathname: `/request/${this.state._id}`}}>
+                <button>Request new simulations</button>                 
             </Link>
 
             {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
@@ -402,3 +379,17 @@ export default class CreateLessonPlan extends React.Component {
         )
     }
 }
+
+export default CreateLessonPlanContainer = withTracker(({match})=>{
+
+    const lessonplansHandle = Meteor.subscribe('lessonplans')
+    const loading = !lessonplansHandle.ready()
+    const lessonplan = LessonPlans.findOne(match.params._id)
+    const lessonplanExists = !loading && !!lessonplan
+
+    return {
+        lessonplan,
+        lessonplanExists
+    }
+
+})(CreateLessonPlan)

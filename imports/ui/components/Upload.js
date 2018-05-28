@@ -23,9 +23,6 @@ export default class Upload extends React.Component {
             h:null
         }
         this.submitButton.bind(this)
-        this.name = React.createRef()
-        this.width = React.createRef()
-        this.height = React.createRef()
     }
 
     componentDidMount() {

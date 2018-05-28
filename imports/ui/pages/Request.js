@@ -8,8 +8,9 @@ import CommentsList from '../components/CommentsList'
 import {Tracker} from 'meteor/tracker'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
+import { withTracker } from 'meteor/react-meteor-data'
 
-export default class Request extends React.Component {
+class Request extends React.Component {
 
     constructor(props) {
 
@@ -18,39 +19,35 @@ export default class Request extends React.Component {
         this.state = {
             show:false,
             slides: [],
-            curSlide: 0
+            curSlide: 0,
+            initialized:false
         }
         this.update.bind(this)
         this.pushSim.bind(this)
-
-        this.title = React.createRef()
     }
 
     componentDidMount() {
-
-        Meteor.subscribe('requests')
-
-        this.requestsTracker = Tracker.autorun(()=>{
-
-            const {_id} = this.props.match.params
-            
-            Meteor.subscribe('requests')
-
-            const requests = Requests.findOne(_id)
-
-            if(requests) {
-                const show = !!requests.slides[0].title   
-                this.setState({
-                    ...requests,
-                    show
-                })
-            }          
-        })
+        this.push.bind(this)
     }
 
-    componentWillUnmount() {
-        this.requestsTracker.stop()
+    componentDidUpdate() {
+
+        const {requestExists, request} = this.props
+
+        if(this.state.initialized == false && requestExists) {
+            const show = !!request.slides[0].title   
+            this.setState({
+                ...request,
+                initialized:true,
+                show
+            })
+        }
+        else if(!requestExists) {
+            console.log('loading')
+        }    
+
     }
+
 
     push(e) {
 
@@ -225,3 +222,18 @@ export default class Request extends React.Component {
         )  
     }
 }
+
+export default RequestsContainer = withTracker(({match})=>{
+
+    const lessonplansHandle = Meteor.subscribe('requests')
+    const loading = !lessonplansHandle.ready()
+    const request = Requests.findOne(match.params._id)
+    const requestExists = !loading && !!request
+
+    return {
+        request,
+        requestExists,
+        loading
+    }
+
+})(Request)

@@ -7,7 +7,6 @@ export default class SimContainer extends React.Component{
     constructor(props){
 
         super(props) 
-        this.iframe = React.createRef()
 
         /* For the communication to the iframe document, we create a MessageChannel,
            port 1 is the port in this window. On recieveing a message here, we call

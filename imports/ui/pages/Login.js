@@ -9,8 +9,6 @@ export default class Login extends React.Component {
         this.state = {
             error: ''
         }
-        this.email = React.createRef()
-        this.password = React.createRef()
     }
 
     onSubmit(e) {

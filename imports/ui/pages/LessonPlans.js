@@ -5,20 +5,20 @@ import AddLessonPlan from '../components/AddLessonPlan'
 import { Accounts } from 'meteor/accounts-base'
 
   
-export default class LessonPlans extends React.Component{
+const LessonPlans = () => {
 
-    render(){
+    /* This Component renders the main LessonPlans dashboard of the teachers */
 
-        /* This Component renders the main LessonPlans dashboard of the teachers */
+    return (
+        <div>                
+            <h1>Lessonplans</h1>
+            <button onClick = {()=>{Accounts.logout()}}>Sign out</button>
+            <TitleBar/>
+            <LessonPlansList/>
+            <AddLessonPlan/>
+        </div>
+    )
 
-        return (
-            <div>                
-                <h1>Lessonplans</h1>
-                <button onClick = {()=>{Accounts.logout()}}>Sign out</button>
-                <TitleBar/>
-                <LessonPlansList/>
-                <AddLessonPlan/>
-            </div>
-        )
-    }
 }
+
+export default LessonPlans
