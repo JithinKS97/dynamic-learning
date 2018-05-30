@@ -103,7 +103,10 @@ export default class Upload extends React.Component {
                                 this.setState({
                                     src:'',
                                     error:'',
-                                    isOpen: false
+                                    isOpen: false,
+                                    name:null,
+                                    w:null,
+                                    h:null
                                 })
                             })
                         }                                                                        

@@ -36,22 +36,20 @@ class AddSim extends React.Component {
            that it is rendered. sim contains src, width, height and the name of the simulation.
         */
 
-        if(this.props.sims) {
-            return this.props.sims.map((sim)=>{
-                
-                return (
-                    <div key = {sim._id}>
-                        <button onClick = {()=>{
+        return this.props.sims.map((sim)=>{
+            
+            return (
+                <div key = {sim._id}>
+                    <button onClick = {()=>{
 
-                            this.setState({sim})
+                        this.setState({sim})
 
-                            }} key = {sim._id}>
-                            {sim.name}
-                        </button>
-                    </div>
-                )
-            })
-        }
+                        }} key = {sim._id}>
+                        {sim.name}
+                    </button>
+                </div>
+            )
+        })
     }
 
     showSim() {
@@ -101,7 +99,7 @@ class AddSim extends React.Component {
 
                         const { slides, curSlide } = this.props
 
-                        const toPush = {
+                        const sim = {
                             src:this.state.sim.src,
                             w:this.state.sim.w,
                             h:this.state.sim.h,
@@ -110,7 +108,7 @@ class AddSim extends React.Component {
                             data:{}
                         }
 
-                        slides[curSlide].iframes.push(toPush)
+                        slides[curSlide].iframes.push(sim)
 
                         this.props.saveChanges(slides)
 
@@ -146,9 +144,10 @@ export default AddSimContainer = withTracker(()=>{
     Meteor.subscribe('sims')
     
     const sims = Sims.find().fetch()
+    const simExists = !!sims
 
     return {
-        sims
+        sims:simExists?sims:[]
     }
 
 })(AddSim)

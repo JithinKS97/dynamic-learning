@@ -18,7 +18,7 @@ import SandBox from '../ui/pages/SandBox'
 
 const history = createHistory()
 const unAuthenticatedPages = ['/', '/signup']
-const authenticatedPages = ['/lessonplans', '/drawingboard','/createlessonplan','/simupload','/request','/sandbox']
+const authenticatedPages = ['/lessonplans', '/drawingboard','/createlessonplan','/simupload','/request','/sandbox,']
 
 export const onAuthChange = (isAuthenticated) => {
   const IsUnauthenticatedPage = unAuthenticatedPages.includes(location.pathname)
@@ -34,16 +34,16 @@ export const onAuthChange = (isAuthenticated) => {
 export const AppRouter = (
     <Router history={history}>
         <div>
-        <Switch>
-        <PublicRoute exact path='/' component = {Login}></PublicRoute>
-        <PublicRoute path='/signup' component = {Signup}></PublicRoute>
-        <PrivateRoute path='/lessonplans' component = {LessonPlans}></PrivateRoute>
-        <PrivateRoute path='/uploadsim' component = {UploadSim}></PrivateRoute>
-        <PrivateRoute path='/request/:_id' component = {Request}></PrivateRoute>
-        <PrivateRoute path='/sandbox' component = {SandBox}></PrivateRoute>
-        <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
-        <Route path = '*' component = {NotFound}></Route>
-        </Switch>
+            <Switch>
+                <PublicRoute exact path='/' component = {Login}></PublicRoute>
+                <PublicRoute path='/signup' component = {Signup}></PublicRoute>
+                <PrivateRoute path='/lessonplans' component = {LessonPlans}></PrivateRoute>
+                <PrivateRoute path='/uploadsim' component = {UploadSim}></PrivateRoute>
+                <PrivateRoute path='/request/:_id' component = {Request}></PrivateRoute>
+                <PrivateRoute path='/sandbox' component = {SandBox}></PrivateRoute>
+                <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
+                <Route path = '*' component = {NotFound}></Route>
+            </Switch>
         </div>
     </Router>
 )

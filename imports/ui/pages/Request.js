@@ -5,7 +5,6 @@ import Upload from '../components/Upload'
 import { Requests } from '../../api/requests'
 import CommentForm from '../components/CommentForm'
 import CommentsList from '../components/CommentsList'
-import {Tracker} from 'meteor/tracker'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data'
@@ -35,6 +34,16 @@ class Request extends React.Component {
         const {requestExists, request} = this.props
 
         if(this.state.initialized == false && requestExists) {
+
+            if(request.slides.length == 0)
+            {
+                request.slides[0] = {
+                    title:'',
+                    comments:[],
+                    iframes:[]
+                }
+            }
+
             const show = !!request.slides[0].title   
             this.setState({
                 ...request,
@@ -47,7 +56,6 @@ class Request extends React.Component {
         }    
 
     }
-
 
     push(e) {
 
@@ -182,15 +190,15 @@ class Request extends React.Component {
     deleteComment(index) {
         
         const { slides, curSlide }  = this.state
-
         slides[curSlide].comments.splice(index,1)
         this.saveChanges(slides)
     }
 
     render() {
 
-    return (
-            <div>
+        return (
+
+            <div style = {{visibility:this.state.initialized?'visible':'hidden'}}>   
                                 
                 <h1>Request</h1>
 
@@ -216,10 +224,11 @@ class Request extends React.Component {
 
                 <Link to = {`/createlessonplan/${this.state._id}`}><button>Back</button></Link>
                 
-                <SimsList rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+                <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
 
             </div>
-        )  
+
+        )
     }
 }
 

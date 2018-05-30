@@ -6,6 +6,7 @@ import { Sims } from '../imports/api/sims'
 import '../imports/startup/simple-schema-configuration.js'
 
 Meteor.startup(() => {
-  
+    
+
 });
 

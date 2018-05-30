@@ -14,9 +14,8 @@ export default class CommentForm extends React.Component {
     }
 
     postComment(e) {
-
+        
         e.preventDefault()
-        console.log(this.comment)
 
         if(this.comment.value) {
             slides = this.props.slides

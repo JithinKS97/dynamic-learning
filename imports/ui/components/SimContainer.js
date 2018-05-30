@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Link from 'react-router-dom'
 
 
 export default class SimContainer extends React.Component{
@@ -15,6 +16,7 @@ export default class SimContainer extends React.Component{
 
         this.channel = new MessageChannel()
         this.channel.port1.onmessage = this.handleMessage.bind(this)
+        console.log(this.props)
     }
 
     componentDidMount() {
@@ -56,6 +58,9 @@ export default class SimContainer extends React.Component{
             {
                 this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
             }
+            else if(e.data.operation == 'dom') {
+                console.log(e.data.data)
+            }
         }
     }
 
@@ -66,16 +71,21 @@ export default class SimContainer extends React.Component{
         return(
 
             <div className = 'sim'>
-                
+                                
                 {
                     this.props.src?
-                        <iframe 
-                            ref = {e => this.iframe = e} 
-                            scrolling = 'no' 
-                            height = {this.props.h+'px'} 
-                            width = {this.props.w+'px'} 
-                            src={this.props.src}>
-                        </iframe>:null
+                        <div>
+
+                            <iframe 
+                                ref = {e => this.iframe = e} 
+                                scrolling = 'no' 
+                                height = {this.props.h+'px'} 
+                                width = {this.props.w+'px'} 
+                                src={this.props.src}>
+                            </iframe>
+                            
+                        </div>                        
+                        :null
                 }
 
             </div>

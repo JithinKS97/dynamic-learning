@@ -1,6 +1,5 @@
 import React from 'react'
 import DrawingBoardCmp from '../components/DrawingBoardCmp'
-import { Requests } from '../../api/requests'
 import { LessonPlans } from '../../api/lessonplans'
 import SimsList from '../components/SimsList'
 import List from '../components/List'
@@ -8,7 +7,6 @@ import AddSim from '../components/AddSim'
 import { Link } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
-import { Redirect } from 'react-router-dom'
  
 
 class CreateLessonPlan extends React.Component {
@@ -16,18 +14,17 @@ class CreateLessonPlan extends React.Component {
     constructor(props) {
 
         /* This Component is intended for the creation of a lessonplan.
-           The teachers can create slides. On each slides, there will be
+           The teachers can create slides. On each slides, there will be a
            note and array of simulations. The changes need to be saved explicitly
            by clicking the save button for updating the database.
 
-           curSlide is for keeping track of the current slide, Each element in slides
-           will consist the note and the array of iframe srcs. _id will carry the id of
-           the current lessonplan.
+           curSlide is for keeping track of the current slide. _id is the id of the lessonplan
+           document.
         */
 
         super(props);
 
-        /*When isInteractEnabled is true, the pointer events of the canvs are de activated
+        /*When isInteractEnabled is true, the pointer events of the canvas are de activated
           so that we can interact with the simulations.
         */
         this.isInteractEnabled=false;
@@ -38,12 +35,8 @@ class CreateLessonPlan extends React.Component {
             curSlide:0,
             slides: [],
             _id: '',
-            initiated:false
+            initialized:false
         };
-
-        /* In pushSlide and saveChanges, this keyword is used. For binding the this
-           to the Component.
-        */
 
         this.pushSlide.bind(this)
         this.slideNav.bind(this)
@@ -60,22 +53,9 @@ class CreateLessonPlan extends React.Component {
         }
     }
 
-
-    getDB(db) {
-
-        /*This function is intended for getting the reference to the drawing board
-          object in the DrawingBoardCmp. This function is passed as the prop to the
-          DrawingBoardCmp. It is executed in the componentDidMount where
-          drawingboard is initialized, which is passed as db. The reference is
-          retrieved here and used in this component.
-        */
-
-        this.db = db
-    }
-
     componentDidMount() { 
 
-
+        this.db = this.drawingBoard.b
         this.isInteractEnabled=false;
         this.undoArray= [];
         this.curPosition= [];
@@ -97,8 +77,8 @@ class CreateLessonPlan extends React.Component {
 
         const { lessonplan, lessonplanExists } = this.props
 
-        if(lessonplanExists && this.state.initiated == false) {
-            if (this.undoArray.length == 0 && lessonplan.slides[0].note != ''){
+        if(lessonplanExists && this.state.initialized == false) {
+            if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
                 this.undoArray = lessonplan.slides.map((slide) => {
                     this.curPosition.push(0);
                     return [slide.note];
@@ -107,10 +87,10 @@ class CreateLessonPlan extends React.Component {
 
             this.setState({
                 ...lessonplan,
-                initiated:true
+                initialized:true
             },() => {
                 
-                if(this.state.slides[0].note === '') {
+                if(this.state.slides.length == 0) {
                     this.db.reset({ webStorage: false, history: true, background: true })
                 }
                 else {
@@ -341,41 +321,42 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
-        return(
-        <div>            
+        return (
+            
+            <div style = {{visibility:this.state.initialized?'visible':'hidden'}}>            
 
-            {<DrawingBoardCmp getDB = {this.getDB.bind(this)}/>}          
-            <h1>{this.state.curSlide}</h1>
-            <button onClick = {this.addNewSlide.bind(this)}>+</button>
-            <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>                                                           
+                {<DrawingBoardCmp ref = {e => this.drawingBoard = e}/>}          
+                <h1>{this.state.curSlide}</h1>
+                <button onClick = {this.addNewSlide.bind(this)}>+</button>
+                <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>                                                           
 
-            <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-           
-            <button onClick = {this.reset.bind(this)}>Reset</button>  
-            <button onClick = {this.save.bind(this)}>Save</button>
+                <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+            
+                <button onClick = {this.reset.bind(this)}>Reset</button>  
+                <button onClick = {this.save.bind(this)}>Save</button>
 
-            Interact
-            <input onChange={this.interact.bind(this)} type = 'checkbox'/>     
+                Interact
+                <input onChange={this.interact.bind(this)} type = 'checkbox'/>     
 
-            <Link to = '/lessonplans'>
-                <button>Back</button>
-            </Link>
+                <Link to = '/lessonplans'>
+                    <button>Back</button>
+                </Link>
 
-            <Link to={{ pathname: `/request/${this.state._id}`}}>
-                <button>Request new simulations</button>                 
-            </Link>
+                <Link to={{ pathname: `/request/${this.state._id}`}}>
+                    <button>Request new simulations</button>                 
+                </Link>
 
-            {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
+                {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
 
-            {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
+                {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 
-            <SimsList
-                IsRndNeeded = {true} 
-                saveChanges = {this.saveChanges.bind(this)} 
-                delete = {this.deleteSim.bind(this)} 
-                {...this.state}
-            />
-        </div>
+                <SimsList
+                    isRndRequired = {true} 
+                    saveChanges = {this.saveChanges.bind(this)} 
+                    delete = {this.deleteSim.bind(this)} 
+                    {...this.state}
+                />
+            </div>
         )
     }
 }
