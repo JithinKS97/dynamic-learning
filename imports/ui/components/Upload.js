@@ -97,8 +97,9 @@ export default class Upload extends React.Component {
                         let name = this.name.value
 
                         if(name) {
-                            
-                            this.props.methodName(name, src, w, h, ()=>{
+
+                            Meteor.call(this.props.methodName, name, src, w, h, (err) => {
+
                                 alert('Uploaded succesfully')
                                 this.setState({
                                     src:'',

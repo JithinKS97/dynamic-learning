@@ -23,8 +23,9 @@ const LessonPlan = (props)=>{
             </Link>
 
             <button onClick = {() => {
-                LessonPlans.remove(props._id)
-                Requests.remove(props._id)
+                
+                Meteor.call('lessonplans.remove', props._id)
+
             }}>X</button>
 
         </div>

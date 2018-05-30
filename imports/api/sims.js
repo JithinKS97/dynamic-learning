@@ -9,3 +9,11 @@ if(Meteor.isServer) {
         return Sims.find()
     })
 }
+
+Meteor.methods({
+
+    'sims.insert'(name, src, w, h) {
+        Sims.insert({userId:Meteor.userId(),name, src, w, h})
+    }
+    
+})

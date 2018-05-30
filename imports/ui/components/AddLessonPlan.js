@@ -24,18 +24,7 @@ const AddLessonPlans = ()=>{
                 */
 
                 if(name) {
-
-                    LessonPlans.insert({
-                        
-                        name,
-                        slides,
-                        userId:Meteor.userId()
-                    },(err, docs)=>{
-
-                        slides = []
-
-                        Requests.insert({_id:docs, slides})
-                    })
+                    Meteor.call('lessonplans.insert', name)                    
                 } 
 
                 e.target.lessonplan.value = ''

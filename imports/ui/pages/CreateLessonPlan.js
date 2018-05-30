@@ -91,6 +91,8 @@ class CreateLessonPlan extends React.Component {
             },() => {
                 
                 if(this.state.slides.length == 0) {
+
+                    this.pushSlide(this.state.slides)
                     this.db.reset({ webStorage: false, history: true, background: true })
                 }
                 else {
@@ -220,8 +222,8 @@ class CreateLessonPlan extends React.Component {
 
         const {_id, slides} = this.state
 
-        LessonPlans.update(_id, {$set:{slides}},()=>{
-            alert('Saved succesfully')
+        Meteor.call('lessonplans.update', _id, slides,(err)=>{
+            alert('Saved successfully')
         })
 
     }

@@ -9,3 +9,9 @@ if(Meteor.isServer) {
         return Requests.find()
     })
 }
+
+Meteor.methods({
+    'requests.update'(_id, slides) {
+        Requests.update(_id, {$set:{slides}})
+    }
+})

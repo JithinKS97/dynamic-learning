@@ -91,7 +91,9 @@ class Request extends React.Component {
 
     update() {
         const { slides }  = this.state
-        Requests.update(this.state._id, {$set:{slides}})
+
+        Meteor.call('requests.update',this.state._id, slides)
+
     }
 
     deleteSlide(index) {

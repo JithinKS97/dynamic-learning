@@ -16,7 +16,6 @@ export default class SimContainer extends React.Component{
 
         this.channel = new MessageChannel()
         this.channel.port1.onmessage = this.handleMessage.bind(this)
-        console.log(this.props)
     }
 
     componentDidMount() {
