@@ -19,11 +19,11 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized')
         }
 
-        LessonPlans.insert({
+        return LessonPlans.insert({
                         
             name,
             slides:[],
-            userId:Meteor.userId()
+            userId:this.userId
 
         },(err, docs)=>{
 
