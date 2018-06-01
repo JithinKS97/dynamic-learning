@@ -7,7 +7,7 @@ export const PublicRoute = ({ component: Component, ...rest }) => (
         Meteor.userId() ? (
           <Redirect
             to={{
-              pathname: "/lessonplans",
+              pathname: "/dashboard",
               state: { from: props.location }
             }}
           />

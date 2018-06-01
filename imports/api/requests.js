@@ -14,6 +14,11 @@ Meteor.methods({
 
     'requests.update'(_id, slides) {
         Requests.update(_id, {$set:{slides}})
+    },
+
+    'requests.title.update'(_id, requestTitle) {
+                
+        Requests.update(_id, {$set: {requestTitle}})
     }
     
 })

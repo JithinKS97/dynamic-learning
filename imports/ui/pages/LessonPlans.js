@@ -13,14 +13,14 @@ const LessonPlans = () => {
     return (
         <div>                
             <h1>Lessonplans</h1>
+            <Link to = 'dashboard'>Dashboard</Link>
             <button onClick = {()=>{Accounts.logout()}}>Sign out</button>
             <TitleBar/>
             <LessonPlansList/>
             <AddLessonPlan/>
-            <Link to = 'dashboard'>Dashboard</Link>
         </div>
     )
-
+    
 }
 
 export default LessonPlans

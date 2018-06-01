@@ -8,6 +8,7 @@ import CommentsList from '../components/CommentsList'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data'
+import Modal from 'react-modal'
 
 class Request extends React.Component {
 
@@ -90,7 +91,7 @@ class Request extends React.Component {
     }
 
     update() {
-        const { slides }  = this.state
+        const { slides, requestTitle }  = this.state
 
         Meteor.call('requests.update',this.state._id, slides)
 
@@ -196,16 +197,40 @@ class Request extends React.Component {
         this.saveChanges(slides)
     }
 
+    setTitle(e) {
+
+        e.preventDefault()
+
+        this.setState({
+            requestTitle:this.requestTitle.value
+        },()=>{
+            console.log(this.state.requestTitle)
+            Meteor.call('requests.title.update', this.state._id, this.state.requestTitle)
+        })
+
+    }
+
     render() {
 
         return (
 
             <div className = 'request' style = {{visibility:this.state.initialized?'visible':'hidden'}}> 
+                <Modal ariaHideApp={false} isOpen = {this.state.requestTitle?false:true}>
+                    <form onSubmit = {this.setTitle.bind(this)}>
+                        <input ref = {e => this.requestTitle = e}/>
+                        <button>Submit</button>
+                    </form>
+                </Modal>
 
                 <div className='request_slides'>
 
-                    <Link to = {`/createlessonplan/${this.state._id}`}>Back</Link>
-                    <h1>{this.state.curSlide}</h1>         
+                    <h1>{this.state.requestTitle}</h1>
+                    
+                    <button onClick = {()=>{
+                        console.log(history.back())
+                    }}>Back</button>
+
+                    <h1>{this.state.curSlide}</h1>
 
                     <form onSubmit = {this.push.bind(this)}>
                         <input ref = {e => this.title = e}/>
@@ -219,18 +244,16 @@ class Request extends React.Component {
                 <div className = 'request_comments'>
 
                     {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
-
                     {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
 
                 </div>
 
                 <div className = 'request_sims'>
 
-                    <Upload method = {this.pushSim.bind(this)}/>
-
+                    {this.state.show?<Upload method = {this.pushSim.bind(this)}/>:null}
                     <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
-                </div>
                     
+                </div>                  
                 
 
             </div>

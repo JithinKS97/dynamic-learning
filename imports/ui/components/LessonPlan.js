@@ -17,9 +17,7 @@ const LessonPlan = (props)=>{
     return (
         <div>
             <Link to={{ pathname: `/createlessonplan/${props._id}`}}>
-                <button>
                     {props.name}
-                </button>
             </Link>
 
             <button onClick = {() => {
