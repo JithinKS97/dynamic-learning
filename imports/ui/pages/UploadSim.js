@@ -10,7 +10,7 @@ const UploadSim = () =>{
     Meteor.subscribe('sims')
 
     return(
-        <Upload methodName = 'sims.insert' />
+        <Upload method = 'sims.insert' />
     )
 }
 

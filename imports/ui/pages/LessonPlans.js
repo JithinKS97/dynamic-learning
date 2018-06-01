@@ -3,6 +3,7 @@ import LessonPlansList from '../components/LessonPlansList'
 import TitleBar from '../components/TitleBar'
 import AddLessonPlan from '../components/AddLessonPlan'
 import { Accounts } from 'meteor/accounts-base'
+import { Link } from 'react-router-dom'
 
   
 const LessonPlans = () => {
@@ -16,6 +17,7 @@ const LessonPlans = () => {
             <TitleBar/>
             <LessonPlansList/>
             <AddLessonPlan/>
+            <Link to = 'dashboard'>Dashboard</Link>
         </div>
     )
 

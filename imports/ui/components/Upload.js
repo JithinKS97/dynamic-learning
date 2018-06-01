@@ -97,9 +97,20 @@ export default class Upload extends React.Component {
                         let name = this.name.value
 
                         if(name) {
+                            
+                            let uploaded = false;
+                            if(typeof this.props.method == 'string')
+                            {
+                                Meteor.call(this.props.methodName, name, src, w, h, (err) => {
 
-                            Meteor.call(this.props.methodName, name, src, w, h, (err) => {
-
+                                    uploaded = true
+                                })
+                            }
+                            else if(typeof this.props.method == 'function'){
+                                this.props.method(src, w, h)
+                                uploaded = true
+                            }
+                            if(uploaded == true) {
                                 alert('Uploaded succesfully')
                                 this.setState({
                                     src:'',
@@ -109,7 +120,7 @@ export default class Upload extends React.Component {
                                     w:null,
                                     h:null
                                 })
-                            })
+                            }                            
                         }                                                                        
                     }}>Submit</button>                
                 </div>

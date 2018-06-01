@@ -9,7 +9,6 @@ import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
 
 
-
 /* This Component is intended for the creation of a lessonplan.
    The teachers can create slides. On each slides, there will be a
    note and array of simulations. The changes need to be saved explicitly
@@ -325,10 +324,8 @@ class CreateLessonPlan extends React.Component {
 
             <div className = 'createLessonPlan' style = {{visibility:this.state.initialized?'visible':'hidden'}}>
                 
- 
-
                 <div className = 'slides'> 
-
+                    <h1>{this.state.curSlide}</h1>
                     <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                     <button onClick = {this.addNewSlide.bind(this)}>+</button>
 
@@ -352,11 +349,11 @@ class CreateLessonPlan extends React.Component {
                     <input onChange={this.interact.bind(this)} type = 'checkbox'/>
 
                     <Link to = '/lessonplans'>
-                        <button>Back</button>
+                        Back
                     </Link>
 
                     <Link to={{ pathname: `/request/${this.state._id}`}}>
-                        <button>Request new simulations</button>
+                        Request new simulations
                     </Link>
 
                     {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}

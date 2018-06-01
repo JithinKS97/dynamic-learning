@@ -11,7 +11,9 @@ if(Meteor.isServer) {
 }
 
 Meteor.methods({
+
     'requests.update'(_id, slides) {
         Requests.update(_id, {$set:{slides}})
     }
+    
 })

@@ -1,5 +1,5 @@
-import {validateNewUser} from './users'
-import {Meteor} from 'meteor/meteor'
+import { validateNewUser } from './users'
+import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai';  
 
 if(Meteor.isServer) {

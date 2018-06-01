@@ -200,33 +200,38 @@ class Request extends React.Component {
 
         return (
 
-            <div style = {{visibility:this.state.initialized?'visible':'hidden'}}>   
-                                
-                <h1>Request</h1>
+            <div className = 'request' style = {{visibility:this.state.initialized?'visible':'hidden'}}> 
 
-                <form onSubmit = {this.push.bind(this)}>
-                    <input ref = {e => this.title = e}/>
-                    <button>New request</button>
-                </form>
-                                
-                <h1>{this.state.curSlide}</h1>
+                <div className='request_slides'>
 
-                {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
+                    <Link to = {`/createlessonplan/${this.state._id}`}>Back</Link>
+                    <h1>{this.state.curSlide}</h1>         
 
-                {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
+                    <form onSubmit = {this.push.bind(this)}>
+                        <input ref = {e => this.title = e}/>
+                        <button>New request</button>
+                    </form>
 
-                {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
+                    {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
 
-                {this.state.show?<Upload isOpen = {true} methodName = {(name, src, w, h, callback)=>{
+                </div>
 
-                    this.pushSim(src,w,h)
-                    callback();
+                <div className = 'request_comments'>
 
-                }}/>:null}
+                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
 
-                <Link to = {`/createlessonplan/${this.state._id}`}><button>Back</button></Link>
+                    {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
+
+                </div>
+
+                <div className = 'request_sims'>
+
+                    <Upload method = {this.pushSim.bind(this)}/>
+
+                    <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+                </div>
+                    
                 
-                <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
 
             </div>
 

@@ -25,7 +25,7 @@ const SimsList = (props) => {
             iframes = slides[curSlide].iframes
 
             return iframes.map((iframe,index)=>{
-        
+
                 /*Rnd is the react component which is used for dragging and resizing 
                     of the iframes. For more information about it, look in the documentation
                     of React-Rnd. 
@@ -45,52 +45,66 @@ const SimsList = (props) => {
                     isPreview is a variable which specifies whether the iframe is just a preview 
                     or is it the real simulation used in the lessonplan. 
                 */
-
-                return (
-                    <div key = {index} className = 'sim'>                    
-
-                        <Rnd 
-                            
-                            size={{ width: iframe.w,  height: iframe.h}}
-                            position={{ x: iframe.x, y: iframe.y }}
-
-                            onDragStop={(e, d) => {
-
-                                slides[curSlide].iframes[index].x = d.lastX
-                                slides[curSlide].iframes[index].y = d.lastY
-
-                                props.saveChanges(slides, undefined)
-                            }}
-                            
-                            onResize={(e, direction, ref, delta, position) => {
+                if(props.isRndRequired) {
+                    
+                    return (
+                        <div key = {index} className = 'sim'>               
+    
+                            <Rnd 
                                 
-                                slides[curSlide].iframes[index].w = ref.offsetWidth
-                                slides[curSlide].iframes[index].h = ref.offsetHeight
+                                size={{ width: iframe.w,  height: iframe.h}}
+                                position={{ x: iframe.x, y: iframe.y }}
+    
+                                onDragStop={(e, d) => {
+    
+                                    slides[curSlide].iframes[index].x = d.lastX
+                                    slides[curSlide].iframes[index].y = d.lastY
+    
+                                    props.saveChanges(slides, undefined)
+                                }}
                                 
-                                props.saveChanges(slides, undefined)
-                            }}
-
-                            disableDragging = {props.isRndRequired?false:true}
-                            enableResizing = {props.isRndRequired?{bottomRight:true}:false}
-
-                        > 
-                            {/*The index is passed so that we can pass and retrieve
-                                data of this iframe. iframe is passed to set the
-                                height and with of the iframe.
-                            */}
-
+                                onResize={(e, direction, ref, delta, position) => {
+                                    
+                                    slides[curSlide].iframes[index].w = ref.offsetWidth
+                                    slides[curSlide].iframes[index].h = ref.offsetHeight
+                                    
+                                    props.saveChanges(slides, undefined)
+                                }}
+    
+                            > 
+                                {/*The index is passed so that we can pass and retrieve
+                                    data of this iframe. iframe is passed to set the
+                                    height and with of the iframe.
+                                */}
+    
+                                <SimContainer
+                                    isPreview = {false}
+                                    {...props} 
+                                    index = {index} 
+                                    src = {iframe.src}
+                                    {...iframe}
+                                />
+                                <button onClick = {()=>{props.delete(index)}}>X</button>                                                    
+                                
+                            </Rnd>
+                        </div>
+                    )
+                }
+                else {
+                    return (
+                        <div key = {index}>
                             <SimContainer
-                                isPreview = {false}
-                                {...props} 
-                                index = {index} 
-                                src = {iframe.src}
-                                {...iframe}
-                            />
-                            <button onClick = {()=>{props.delete(index)}}>X</button>                                                    
-                            
-                        </Rnd>
-                    </div>
-                )
+                                        isPreview = {false}
+                                        {...props} 
+                                        index = {index} 
+                                        src = {iframe.src}
+                                        {...iframe}
+                                    />
+                            <button onClick = {()=>{props.delete(index)}}>X</button>  
+                        </div>
+                    )
+                }
+                
             })
         }         
     }
