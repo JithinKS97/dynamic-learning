@@ -7,21 +7,22 @@ import AddSim from '../components/AddSim'
 import { Link } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
- 
+
+
+
+/* This Component is intended for the creation of a lessonplan.
+   The teachers can create slides. On each slides, there will be a
+   note and array of simulations. The changes need to be saved explicitly
+   by clicking the save button for updating the database.
+
+   curSlide is for keeping track of the current slide. _id is the id of the lessonplan
+   document.
+*/
+
 
 class CreateLessonPlan extends React.Component {
 
     constructor(props) {
-
-        /* This Component is intended for the creation of a lessonplan.
-           The teachers can create slides. On each slides, there will be a
-           note and array of simulations. The changes need to be saved explicitly
-           by clicking the save button for updating the database.
-
-           curSlide is for keeping track of the current slide. _id is the id of the lessonplan
-           document.
-        */
-
         super(props);
 
         /*When isInteractEnabled is true, the pointer events of the canvas are de activated
@@ -40,7 +41,7 @@ class CreateLessonPlan extends React.Component {
 
         this.pushSlide.bind(this)
         this.slideNav.bind(this)
-        this.save.bind(this)      
+        this.save.bind(this)
     }
 
     slideNav(event){
@@ -53,7 +54,7 @@ class CreateLessonPlan extends React.Component {
         }
     }
 
-    componentDidMount() { 
+    componentDidMount() {
 
         this.db = this.drawingBoard.b
         this.isInteractEnabled=false;
@@ -63,9 +64,6 @@ class CreateLessonPlan extends React.Component {
            board. They are triggered whenever the we press the reset button or stop
            the drawing. Whenever these events are triggered, the changed method is
            called. See the definition below.
-
-           Tracker autorun is used because we are retrieving the Requests data
-           here.
         */
 
         this.db.ev.bind('board:reset', this.changed.bind(this));
@@ -89,7 +87,7 @@ class CreateLessonPlan extends React.Component {
                 ...lessonplan,
                 initialized:true
             },() => {
-                
+
                 if(this.state.slides.length == 0) {
 
                     this.pushSlide(this.state.slides)
@@ -104,7 +102,7 @@ class CreateLessonPlan extends React.Component {
             console.log('loading')
         }
     }
-    
+
     changed() {
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
@@ -294,7 +292,7 @@ class CreateLessonPlan extends React.Component {
         */
 
         const {slides, curSlide} = this.state
-        const iframes = slides[curSlide].iframes       
+        const iframes = slides[curSlide].iframes
         iframes.splice(index,1)
         slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
@@ -324,38 +322,53 @@ class CreateLessonPlan extends React.Component {
     render() {
 
         return (
-            
-            <div style = {{visibility:this.state.initialized?'visible':'hidden'}}>            
 
-                {<DrawingBoardCmp ref = {e => this.drawingBoard = e}/>}          
-                <h1>{this.state.curSlide}</h1>
-                <button onClick = {this.addNewSlide.bind(this)}>+</button>
-                <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>                                                           
+            <div className = 'createLessonPlan' style = {{visibility:this.state.initialized?'visible':'hidden'}}>
+                
+ 
 
-                <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-            
-                <button onClick = {this.reset.bind(this)}>Reset</button>  
-                <button onClick = {this.save.bind(this)}>Save</button>
+                <div className = 'slides'> 
 
-                Interact
-                <input onChange={this.interact.bind(this)} type = 'checkbox'/>     
+                    <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                    <button onClick = {this.addNewSlide.bind(this)}>+</button>
 
-                <Link to = '/lessonplans'>
-                    <button>Back</button>
-                </Link>
+                </div>
 
-                <Link to={{ pathname: `/request/${this.state._id}`}}>
-                    <button>Request new simulations</button>                 
-                </Link>
+                <div className = 'board'>
 
-                {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
+                    <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>
 
-                {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
+                </div>
+
+
+                <div className='menu'>
+
+                    <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+
+                    <button onClick = {this.reset.bind(this)}>Reset</button>
+                    <button onClick = {this.save.bind(this)}>Save</button>
+
+                    Interact
+                    <input onChange={this.interact.bind(this)} type = 'checkbox'/>
+
+                    <Link to = '/lessonplans'>
+                        <button>Back</button>
+                    </Link>
+
+                    <Link to={{ pathname: `/request/${this.state._id}`}}>
+                        <button>Request new simulations</button>
+                    </Link>
+
+                    {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
+
+                    {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
+
+                </div>
 
                 <SimsList
-                    isRndRequired = {true} 
-                    saveChanges = {this.saveChanges.bind(this)} 
-                    delete = {this.deleteSim.bind(this)} 
+                    isRndRequired = {true}
+                    saveChanges = {this.saveChanges.bind(this)}
+                    delete = {this.deleteSim.bind(this)}
                     {...this.state}
                 />
             </div>

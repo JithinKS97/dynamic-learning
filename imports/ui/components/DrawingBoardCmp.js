@@ -20,6 +20,11 @@ export default class DrawingBoardCmp extends React.Component {
           
     }
     render() {
-        return(<div id="container"></div>)
+        return(<div style = {
+            {
+                background:'black',
+                height:window.innerHeight
+            }
+        } id="container"></div>)
     }
 }

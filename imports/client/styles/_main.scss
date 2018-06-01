@@ -1,4 +1,6 @@
-.ReactModal__Overlay--after-open{
+@import './createLessonPlan';
+
+.ReactModal__Overlay--after-open {
   z-index:3;
 }
 
@@ -9,10 +11,3 @@
 .drawing-board-canvas-wrapper {
   z-index:2;
 }
-
-#container {
-  width:400px;
-  height:400px;
-  background:black
-}
-
