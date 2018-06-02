@@ -1,6 +1,6 @@
 # Dynamic Learning
 
-This is dynamic leaening webapp built on meteor and react
+This is dynamic learning webapp built on meteor and react
 
 ## Authors
 
