@@ -13,7 +13,7 @@ const UploadSim = () =>{
         <div>
             <h1>Upload simulations</h1>
             <Link to = 'dashboard'>Dashboard</Link>
-            <Upload method = 'sims.insert' />
+            <Upload methodToRun = 'sims.insert' />
         </div>
     )
 }

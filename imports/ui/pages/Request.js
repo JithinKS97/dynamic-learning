@@ -264,7 +264,7 @@ class Request extends React.Component {
 
                 <div className = 'request_sims'>
 
-                    {this.state.show?<Upload method = {this.pushSim.bind(this)}/>:null}
+                    {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
                     <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
                     
                 </div>                  
