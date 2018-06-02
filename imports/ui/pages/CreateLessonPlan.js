@@ -340,23 +340,24 @@ class CreateLessonPlan extends React.Component {
 
                 <div className='menu'>
 
-                    <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                    <Link to = '/lessonplans'>
+                        Back
+                    </Link>
 
-                    <button onClick = {this.reset.bind(this)}>Reset</button>
                     <button onClick = {this.save.bind(this)}>Save</button>
 
                     Interact
                     <input onChange={this.interact.bind(this)} type = 'checkbox'/>
 
-                    <Link to = '/lessonplans'>
-                        Back
-                    </Link>
+                    <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
                     <Link to={{ pathname: `/request/${this.state._id}`}}>
                         Request new simulations
                     </Link>
 
                     {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
+
+                    <button onClick = {this.reset.bind(this)}>Reset</button>
 
                     {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 

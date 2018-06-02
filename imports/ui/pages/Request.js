@@ -99,20 +99,25 @@ class Request extends React.Component {
 
     deleteSlide(index) {
 
-        const { slides } = this.state
+        const isOwner = this.state.userId == Meteor.userId()
 
-        if(slides.length!=1) {
-            slides.splice(index, 1)    
-            let { curSlide } = this.state   
-            if(index == 0) {
-                curSlide = 0
-            }    
-            if(curSlide == slides.length)
-                curSlide = slides.length-1
-            this.saveChanges(slides, curSlide)
-        }
-        else
-            this.reset()                  
+        if(isOwner)
+        {
+            const { slides } = this.state
+
+            if(slides.length!=1) {
+                slides.splice(index, 1)    
+                let { curSlide } = this.state   
+                if(index == 0) {
+                    curSlide = 0
+                }    
+                if(curSlide == slides.length)
+                    curSlide = slides.length-1
+                this.saveChanges(slides, curSlide)
+            }
+            else
+                this.reset()  
+        }                
     }
 
     reset() {
@@ -183,11 +188,16 @@ class Request extends React.Component {
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
         */
-        const { slides, curSlide }  = this.state
-        const iframes = slides[curSlide].iframes        
-        iframes.splice(index,1)
-        slides[this.state.curSlide].iframes = iframes
-        this.saveChanges(slides)
+        const isOwner = this.state.userId == Meteor.userId()
+
+        if(isOwner) {
+            const { slides, curSlide }  = this.state
+            const iframes = slides[curSlide].iframes        
+            iframes.splice(index,1)
+            slides[this.state.curSlide].iframes = iframes
+            this.saveChanges(slides)
+        }
+        
     }
 
     deleteComment(index) {
@@ -212,30 +222,34 @@ class Request extends React.Component {
 
     render() {
 
+
+        const isOwner = this.state.userId == Meteor.userId()
+
         return (
 
-            <div className = 'request' style = {{visibility:this.state.initialized?'visible':'hidden'}}> 
-                <Modal ariaHideApp={false} isOpen = {this.state.requestTitle?false:true}>
+            <div className = 'request' style = {{visibility:this.state.initialized?'visible':'hidden'}}>
+
+                {isOwner?<Modal ariaHideApp={false} isOpen = {this.state.requestTitle?false:true}>
                     <form onSubmit = {this.setTitle.bind(this)}>
                         <input ref = {e => this.requestTitle = e}/>
                         <button>Submit</button>
                     </form>
-                </Modal>
+                </Modal>:null}
 
                 <div className='request_slides'>
 
                     <h1>{this.state.requestTitle}</h1>
                     
                     <button onClick = {()=>{
-                        console.log(history.back())
+                        history.back()
                     }}>Back</button>
 
                     <h1>{this.state.curSlide}</h1>
 
-                    <form onSubmit = {this.push.bind(this)}>
+                    {isOwner?<form onSubmit = {this.push.bind(this)}>
                         <input ref = {e => this.title = e}/>
                         <button>New request</button>
-                    </form>
+                    </form>:null}
 
                     {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
 

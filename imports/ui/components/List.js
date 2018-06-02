@@ -1,6 +1,9 @@
 import React from 'react'
+import { Meteor } from 'meteor/meteor'
 
 const List = (props) => {
+
+    const isOwner = Meteor.userId() == props.userId
 
     const renderSlides = () => {        
 
@@ -24,7 +27,7 @@ const List = (props) => {
                 return (                    
                     <div key = {index}>
                         <button onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</button>    
-                        <button onClick = {()=>{props.delete(index)}}>X</button>
+                        {isOwner?<button onClick = {()=>{props.delete(index)}}>X</button>:null}
                     </div>
                 )
             })

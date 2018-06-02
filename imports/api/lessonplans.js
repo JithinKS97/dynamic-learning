@@ -27,7 +27,7 @@ Meteor.methods({
 
         },(err, docs)=>{
 
-            Requests.insert({_id:docs, slides:[], requestTitle:''})
+            Requests.insert({userId:this.userId, _id:docs, slides:[], requestTitle:''})
 
         })
     },

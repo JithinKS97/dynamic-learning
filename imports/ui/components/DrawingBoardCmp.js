@@ -16,9 +16,13 @@ export default class DrawingBoardCmp extends React.Component {
               'Navigation',
             ],
             webStorage: false
-          });;
+          });
+
+          window.onresize = this.resize;
           
     }
+
+
     render() {
         return(<div style = {
             {

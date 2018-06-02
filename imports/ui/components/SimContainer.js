@@ -23,9 +23,11 @@ export default class SimContainer extends React.Component{
         /* If the iframe is loaded, we send the port to the other window, i.e the 
            window of the iframe.
         */
+
         if(this.props.src)
             this.iframe.addEventListener('load', this.iframeLoaded.bind(this), false)        
     }
+
 
     iframeLoaded() {
         

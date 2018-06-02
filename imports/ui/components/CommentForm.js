@@ -1,7 +1,6 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
 
-
 export default class CommentForm extends React.Component {
 
     constructor(props) {
@@ -21,7 +20,7 @@ export default class CommentForm extends React.Component {
             slides = this.props.slides
             curSlide = this.props.curSlide            
             comment = this.comment.value
-            slides[curSlide].comments.push({comment, userId:Meteor.userId(), time:Date.now()})
+            slides[curSlide].comments.push({comment, username:Meteor.user().username, userId:Meteor.userId(), time:Date.now()})
             this.props.saveChanges(slides)
             this.comment.value = ''
         }

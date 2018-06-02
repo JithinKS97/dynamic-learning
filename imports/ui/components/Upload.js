@@ -137,7 +137,7 @@ export default class Upload extends React.Component {
                 <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
                     <form>
                         <h1>Submit simulation</h1>
-                        <p>Enter the Iframe tag</p>
+                        <p>Enter the Iframe tag from p5 online text editor</p>
                         <input onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
                         <SimContainer isPreview = {true} {...this.state}/>
                         <div>{this.submitButton()}</div>

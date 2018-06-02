@@ -4,6 +4,7 @@ import Rnd from 'react-rnd'
 import {Tracker} from 'meteor/tracker'
 import {withTracker} from 'meteor/react-meteor-data'
 import {Link} from 'react-router-dom'
+import { Meteor } from 'meteor/meteor'
 
 const SimsList = (props) => {
 
@@ -91,6 +92,7 @@ const SimsList = (props) => {
                     )
                 }
                 else {
+                    console.log()
                     return (
                         <div key = {index}>
                             <SimContainer
@@ -100,7 +102,7 @@ const SimsList = (props) => {
                                         src = {iframe.src}
                                         {...iframe}
                                     />
-                            <button onClick = {()=>{props.delete(index)}}>X</button>  
+                            {iframe.userId == Meteor.userId()?<button onClick = {()=>{props.delete(index)}}>X</button>:null}  
                         </div>
                     )
                 }

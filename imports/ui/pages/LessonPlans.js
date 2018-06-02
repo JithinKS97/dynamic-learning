@@ -14,7 +14,6 @@ const LessonPlans = () => {
         <div>                
             <h1>Lessonplans</h1>
             <Link to = 'dashboard'>Dashboard</Link>
-            <button onClick = {()=>{Accounts.logout()}}>Sign out</button>
             <TitleBar/>
             <LessonPlansList/>
             <AddLessonPlan/>
