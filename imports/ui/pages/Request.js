@@ -233,6 +233,9 @@ class Request extends React.Component {
                     <form onSubmit = {this.setTitle.bind(this)}>
                         <input ref = {e => this.requestTitle = e}/>
                         <button>Submit</button>
+                        <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
+                            Back
+                        </Link>
                     </form>
                 </Modal>:null}
 

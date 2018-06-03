@@ -102,12 +102,13 @@ export default class Upload extends React.Component {
                             if(typeof this.props.methodToRun == 'string')
                             {   
                                 Meteor.call(this.props.methodToRun, name, src, w, h)
-                                uploaded = true
+                                uploaded = true                           
                                 
                             }
                             else if(typeof this.props.methodToRun == 'function'){
-                                this.props.methodType(src, w, h)
+                                this.props.methodToRun(src, w, h)
                                 uploaded = true
+                                
                             }
                             if(uploaded == true) {
                                 alert('Uploaded succesfully')

@@ -13,7 +13,7 @@ export default class DrawingBoardCmp extends React.Component {
             controls: ['Color',
               { DrawingMode: { filler: false } },
               { Size: { type: 'dropdown' } },
-              'Navigation',
+              { Navigation: { back: false, forward: false } },
             ],
             webStorage: false
           });

@@ -35,7 +35,12 @@ export default class SimContainer extends React.Component{
            to this window.
         */
         this.otherWindow = this.iframe.contentWindow
-        this.otherWindow.postMessage({operation:'sendingPort'}, '*', [this.channel.port2])
+
+        if(!this.props.isPreview) {
+            
+            this.otherWindow.postMessage({operation:'sendingPort'}, '*', [this.channel.port2])
+        }
+        
     }
 
     handleMessage(e) {

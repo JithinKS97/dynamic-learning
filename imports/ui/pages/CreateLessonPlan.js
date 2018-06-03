@@ -9,13 +9,12 @@ import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
 
 
-/* This Component is intended for the creation of a lessonplan.
-   The teachers can create slides. On each slides, there will be a
-   note and array of simulations. The changes need to be saved explicitly
-   by clicking the save button for updating the database.
+/* This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
+    is composed of an array of slides. Each slide will contain a note and array of simulations.
+    The changes need to be saved explicitly by clicking the save button for updating the database.
 
-   curSlide is for keeping track of the current slide. _id is the id of the lessonplan
-   document.
+    curSlide is for keeping track of the current slide. _id is the id of the lessonplan
+    document.
 */
 
 
@@ -71,6 +70,10 @@ class CreateLessonPlan extends React.Component {
     }
 
     componentDidUpdate() {
+
+        /*  If lessonplanExists is true, it means that we got the data from the server.
+            If initialized is true, it means that the state has been set with the data.
+        */
 
         const { lessonplan, lessonplanExists } = this.props
 
@@ -128,15 +131,12 @@ class CreateLessonPlan extends React.Component {
     next() {
 
         /*
-            The undo stack is cleared. The current slide no. and slides are retrieved.
 
             If the current slide is the last slide, we cannot move forward.
 
             If the current slide is not the last slide, current slide no. is incremented and
             and the notes of that particular slide is set to the board.
         */
-
-        this.db.initHistory()
 
         let {curSlide, slides} = this.state
 
@@ -173,7 +173,6 @@ class CreateLessonPlan extends React.Component {
        let {curSlide, slides} = this.state
 
         if(curSlide!=0) {
-            this.db.initHistory()
             curSlide--
             this.saveChanges(slides,curSlide)
         }
@@ -212,7 +211,6 @@ class CreateLessonPlan extends React.Component {
             this.pushSlide(slides)
             this.db.reset({ webStorage: false, history: true, background: true })
         })
-        this.db.initHistory()
     }
 
     save() {
@@ -362,7 +360,7 @@ class CreateLessonPlan extends React.Component {
                         Request new simulations
                     </Link>
 
-                    {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo</button> : <button onClick={this.undo.bind(this)}>Undo</button>}
+                    {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo drawing</button> : <button onClick={this.undo.bind(this)}>Undo drawing</button>}
 
                     <button onClick = {this.reset.bind(this)}>Reset</button>
 

@@ -1,7 +1,5 @@
 import { Router, Route, Link, Switch } from 'react-router-dom'
 import React from 'react'
-import { Tracker } from 'meteor/tracker'
-import { Redirect } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
 
 import { PrivateRoute } from './PrivateRoute'
@@ -21,7 +19,7 @@ import Requests from '../ui/pages/Requests'
 
 const history = createHistory()
 const unAuthenticatedPages = ['/', '/signup']
-const authenticatedPages = ['/lessonplans', '/drawingboard','/createlessonplan','/simupload','/request','/sandbox','/dashboard', 'requests']
+const authenticatedPages = ['/lessonplans','/createlessonplan','/simupload','/request','/sandbox','/dashboard', 'requests']
 
 export const onAuthChange = (isAuthenticated) => {
   const IsUnauthenticatedPage = unAuthenticatedPages.includes(location.pathname)
