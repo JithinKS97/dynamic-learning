@@ -333,6 +333,13 @@ class CreateLessonPlan extends React.Component {
 
                 <div className = 'board'>
 
+                    <SimsList
+                        isRndRequired = {true}
+                        saveChanges = {this.saveChanges.bind(this)}
+                        delete = {this.deleteSim.bind(this)}
+                        {...this.state}
+                    />
+
                     <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>
 
                 </div>
@@ -363,12 +370,6 @@ class CreateLessonPlan extends React.Component {
 
                 </div>
 
-                <SimsList
-                    isRndRequired = {true}
-                    saveChanges = {this.saveChanges.bind(this)}
-                    delete = {this.deleteSim.bind(this)}
-                    {...this.state}
-                />
             </div>
         )
     }

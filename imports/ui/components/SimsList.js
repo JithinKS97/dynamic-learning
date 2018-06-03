@@ -49,7 +49,7 @@ const SimsList = (props) => {
                 if(props.isRndRequired) {
                     
                     return (
-                        <div key = {index} className = 'sim'>               
+                        <div key = {index} className = 'sim-floating'>               
     
                             <Rnd 
                                 

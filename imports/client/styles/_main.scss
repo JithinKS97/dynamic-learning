@@ -5,10 +5,13 @@
   z-index:3;
 }
 
-.sim{
-  z-index:1;
-}
-
 .drawing-board-canvas-wrapper {
   z-index:2;
+}
+
+.sim-floating {
+  position: absolute;
+  z-index:1;
+  left:200px;
+  top:100px;
 }
