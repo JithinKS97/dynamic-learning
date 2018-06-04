@@ -1,6 +1,8 @@
 import { Mongo } from 'meteor/mongo'
 import { Meteor } from 'meteor/meteor'
 import { Requests} from './requests'
+import SimpleSchema from 'simpl-schema'
+import moment from 'moment'
  
 export const LessonPlans = new Mongo.Collection('lessonplans')
 
@@ -23,22 +25,74 @@ Meteor.methods({
                         
             name,
             slides:[],
-            userId:this.userId
+            userId:this.userId,
+            updatedAt: moment().valueOf()
 
         },(err, docs)=>{
 
-            Requests.insert({userId:this.userId, _id:docs, slides:[], requestTitle:''})
+            Requests.insert({
+                userId:this.userId, 
+                _id:docs, slides:[], 
+                requestTitle:'',
+                updatedAt: moment().valueOf()
+            })
 
         })
     },
 
     'lessonplans.remove'(_id) {
-        LessonPlans.remove(_id)
-        Requests.remove(_id)
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
+        new SimpleSchema({
+            _id: {
+                type: String,
+                min: 1
+            }
+        }).validate({_id})
+
+        LessonPlans.remove({_id, userId:this.userId})
+        Requests.remove({_id, userId:this.userId})
     },
 
     'lessonplans.update'(_id, slides) {
-        LessonPlans.update(_id, {$set:{slides}})
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
+        new SimpleSchema({
+
+            _id: {
+                type: String,
+                min:1
+            }
+
+        }).validate({_id})
+
+        new SimpleSchema({
+
+            note: {
+                type: String,
+                optional: true
+            },
+
+            iframes: {
+                type:Array,
+                optional: true
+            },
+
+            'iframes.$':Object,
+            'iframes.$.src':String,
+            'iframes.$.w':String,
+            'iframes.$.h':String,
+            'iframes.$.userId':String
+
+        }).validate(slides)
+        
+        LessonPlans.update({_id, userId:this.userId}, {$set:{slides, updatedAt: moment().valueOf()}})
     }
 })
 

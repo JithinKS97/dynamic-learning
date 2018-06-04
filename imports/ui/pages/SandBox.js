@@ -14,18 +14,28 @@ export default class SandBox extends React.Component {
     }
 
     screencastify.setAppId(6394026632151040)
+    
+    
   }
 
   componentDidMount() {
 
     that = this
-
+    
     screencastify.isAppConnected().then(function(isConnected) {
       that.setState({
         isConnected
       })
     });
 
+  }
+  
+  componentDidUpdate() {
+    screencastify.isAppConnected().then(function(isConnected) {
+      that.setState({
+        isConnected
+      })
+    });
   }
 
   record() {
@@ -69,14 +79,20 @@ export default class SandBox extends React.Component {
         console.log(file)
 
       });
-      
+
     }
+  }
+
+  connect() {
+    screencastify.connectApp();
+    console.log(screencastify)
   }
 
   render() {
     return (
       <div>
         <h2>{this.state.isConnected?'connected':'not connected'}</h2>
+        <button onClick = {this.connect.bind(this)}>Connect</button>
         <button onClick = {this.record.bind(this)}>Record</button>
         <button onClick = {this.getFile.bind(this)}>Get file</button>
       </div>
