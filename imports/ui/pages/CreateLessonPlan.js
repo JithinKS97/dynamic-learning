@@ -7,6 +7,7 @@ import AddSim from '../components/AddSim'
 import { Link } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
+import { Tracker } from 'meteor/tracker'
 
 
 /* This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
@@ -18,17 +19,18 @@ import { Meteor } from 'meteor/meteor'
 */
 
 
-class CreateLessonPlan extends React.Component {
+export default class CreateLessonPlan extends React.Component {
 
     constructor(props) {
-        super(props);
+        super(props)
 
         /*When isInteractEnabled is true, the pointer events of the canvas are de activated
           so that we can interact with the simulations.
         */
-        this.isInteractEnabled=false;
-        this.undoArray= [];
-        this.curPosition= [];
+        this.isInteractEnabled=false
+        this.undoArray= []
+        this.curPosition= []
+        this.lessonplanExists = false
 
         this.state = {
             curSlide:0,
@@ -67,42 +69,44 @@ class CreateLessonPlan extends React.Component {
         this.db.ev.bind('board:reset', this.changed.bind(this));
         this.db.ev.bind('board:stopDrawing', this.changed.bind(this));
         document.addEventListener("keydown", this.slideNav.bind(this), false);
+
+
+
+        this.lessonplansTracker = Tracker.autorun(()=>{
+
+            const lessonplansHandle = Meteor.subscribe('lessonplans')
+            const loading = !lessonplansHandle.ready()
+            const lessonplan = LessonPlans.findOne(this.props.match.params._id)
+            this.lessonplanExists = !loading && !!lessonplan
+
+            if(this.lessonplanExists) {
+                if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
+                    this.undoArray = lessonplan.slides.map((slide) => {
+                        this.curPosition.push(0);
+                        return [slide.note];
+                    });
+                }
+    
+                this.setState({
+                    ...lessonplan
+                },() => {
+    
+                    if(this.state.slides.length == 0) {
+    
+                        this.pushSlide(this.state.slides)
+                        this.db.reset({ webStorage: false, history: true, background: true })
+                    }
+                    else {
+                        this.db.setImg(this.state.slides[this.state.curSlide].note)
+                    }
+                })
+            }            
+        })
     }
 
-    componentDidUpdate() {
+    componentWillUnmount() {
 
-        /*  If lessonplanExists is true, it means that we got the data from the server.
-            If initialized is true, it means that the state has been set with the data.
-        */
-
-        const { lessonplan, lessonplanExists } = this.props
-
-        if(lessonplanExists && this.state.initialized == false) {
-            if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
-                this.undoArray = lessonplan.slides.map((slide) => {
-                    this.curPosition.push(0);
-                    return [slide.note];
-                });
-            }
-
-            this.setState({
-                ...lessonplan,
-                initialized:true
-            },() => {
-
-                if(this.state.slides.length == 0) {
-
-                    this.pushSlide(this.state.slides)
-                    this.db.reset({ webStorage: false, history: true, background: true })
-                }
-                else {
-                    this.db.setImg(this.state.slides[this.state.curSlide].note)
-                }
-            })
-        }
-        else if(!lessonplanExists) {
-            console.log('loading')
-        }
+        this.lessonplansTracker.stop()
     }
 
     changed() {
@@ -318,11 +322,15 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
+        
+
         return (
 
-            <div className = 'createLessonPlan' style = {{visibility:this.state.initialized?'visible':'hidden'}}>
-                
+            <div className = 'createLessonPlan'>
+
                 <div className = 'slides'> 
+
+                    <h1>{this.lessonplanExists?null:'Loading'}</h1>
                     <h1>{this.state.curSlide}</h1>
                     <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                     <button onClick = {this.addNewSlide.bind(this)}>+</button>
@@ -362,7 +370,14 @@ class CreateLessonPlan extends React.Component {
 
                     {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo drawing</button> : <button onClick={this.undo.bind(this)}>Undo drawing</button>}
 
-                    <button onClick = {this.reset.bind(this)}>Reset</button>
+                    <button onClick = {()=>{
+
+                        const confirmation = confirm('Are you sure you want to reset all?')
+
+                        if(confirmation == true)
+                            this.reset()
+
+                    }}>Reset</button>
 
                     {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
 
@@ -372,17 +387,3 @@ class CreateLessonPlan extends React.Component {
         )
     }
 }
-
-export default CreateLessonPlanContainer = withTracker(({match})=>{
-
-    const lessonplansHandle = Meteor.subscribe('lessonplans')
-    const loading = !lessonplansHandle.ready()
-    const lessonplan = LessonPlans.findOne(match.params._id)
-    const lessonplanExists = !loading && !!lessonplan
-
-    return {
-        lessonplan,
-        lessonplanExists
-    }
-
-})(CreateLessonPlan)

@@ -22,7 +22,11 @@ const LessonPlan = (props)=>{
 
             <button onClick = {() => {
                 
-                Meteor.call('lessonplans.remove', props._id)
+                const confirmation = confirm(`Are you sure want to delete the lessonplan ${props.name}?`);
+
+                if(confirmation == true) {
+                    Meteor.call('lessonplans.remove', props._id)                }
+                
 
             }}>X</button>
 

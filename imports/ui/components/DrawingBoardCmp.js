@@ -9,7 +9,9 @@ export default class DrawingBoardCmp extends React.Component {
         this.b = new DrawingBoard.Board('container', {
             background: true,
             color: "#ffffff",
-            size: 5,
+            size: 3,
+            fillTolerance: 100,
+	        fillHack: false,
             controls: ['Color',
               { DrawingMode: { filler: false } },
               { Size: { type: 'dropdown' } },

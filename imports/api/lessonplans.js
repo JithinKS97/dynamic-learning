@@ -22,6 +22,13 @@ Meteor.methods({
         }
 
         return LessonPlans.insert({
+
+
+            /* There will be a Request document for each Lessonplan document.
+                It is created along with Lessonplan document.
+                So it is given the same id as the Lessonplan document, docs is the
+                id of the inserted LessonPlan document.
+            */
                         
             name,
             slides:[],

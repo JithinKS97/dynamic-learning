@@ -9,8 +9,9 @@ import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data'
 import Modal from 'react-modal'
+import { Tracker } from 'meteor/tracker' 
 
-class Request extends React.Component {
+export default class Request extends React.Component {
 
     constructor(props) {
 
@@ -20,42 +21,47 @@ class Request extends React.Component {
             show:false,
             slides: [],
             curSlide: 0,
-            initialized:false
+            initialized:false,
         }
         this.update.bind(this)
         this.pushSim.bind(this)
+        this.requestExists = false
     }
 
     componentDidMount() {
+
+        this.requestsTracker = Tracker.autorun(()=>{
+
+            const requestsHandle = Meteor.subscribe('requests')
+            const loading = !requestsHandle.ready()
+            const request = Requests.findOne(this.props.match.params._id)
+            this.requestExists = !loading && !!request
+
+            if(this.requestExists) {
+            
+                if(request.slides.length == 0)
+                {
+                    request.slides[0] = {
+                        title:'',
+                        comments:[],
+                        iframes:[]
+                    }
+                }
+    
+                const show = !!request.slides[0].title   
+                this.setState({
+                    ...request,
+                    initialized:true,
+                    show
+                })
+            }
+        })
+
         this.push.bind(this)
     }
 
-    componentDidUpdate() {
-
-        const {requestExists, request} = this.props
-
-        if(this.state.initialized == false && requestExists) {
-
-            if(request.slides.length == 0)
-            {
-                request.slides[0] = {
-                    title:'',
-                    comments:[],
-                    iframes:[]
-                }
-            }
-
-            const show = !!request.slides[0].title   
-            this.setState({
-                ...request,
-                initialized:true,
-                show
-            })
-        }
-        else if(!requestExists) {
-            console.log('loading')
-        }    
-
+    componentWillUnmount() {
+        this.requestsTracker.stop()
     }
 
     push(e) {
@@ -136,9 +142,11 @@ class Request extends React.Component {
             curSlide:0,
             slides,
             title:'',
-            show:false
+            show:false,
+
         },()=>{
             this.update()
+            
         })
     }
 
@@ -214,7 +222,7 @@ class Request extends React.Component {
         this.setState({
             requestTitle:this.requestTitle.value
         },()=>{
-            console.log(this.state.requestTitle)
+            
             Meteor.call('requests.title.update', this.state._id, this.state.requestTitle)
         })
 
@@ -227,7 +235,8 @@ class Request extends React.Component {
 
         return (
 
-            <div className = 'request' style = {{visibility:this.state.initialized?'visible':'hidden'}}>
+            <div className = 'request'>
+
 
                 {isOwner?<Modal ariaHideApp={false} isOpen = {this.state.requestTitle?false:true}>
                     <form onSubmit = {this.setTitle.bind(this)}>
@@ -240,6 +249,21 @@ class Request extends React.Component {
                 </Modal>:null}
 
                 <div className='request_slides'>
+
+                    <h1>{this.requestExists?null:'Loading'}</h1>
+
+                    <button onClick = {()=>{
+                        
+                        const confirmation = confirm('Are you sure you want to delete all the requests?')
+
+                        if(confirmation)
+                        {
+                            Meteor.call('requests.reset', this.state._id)
+                            history.back()
+                        }                        
+                        
+
+                    }}>Remove Request</button>
 
                     <h1>{this.state.requestTitle}</h1>
                     
@@ -260,8 +284,8 @@ class Request extends React.Component {
 
                 <div className = 'request_comments'>
 
-                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
                     {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
+                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
 
                 </div>
 
@@ -278,18 +302,3 @@ class Request extends React.Component {
         )
     }
 }
-
-export default RequestsContainer = withTracker(({match})=>{
-
-    const lessonplansHandle = Meteor.subscribe('requests')
-    const loading = !lessonplansHandle.ready()
-    const request = Requests.findOne(match.params._id)
-    const requestExists = !loading && !!request
-
-    return {
-        request,
-        requestExists,
-        loading
-    }
-
-})(Request)

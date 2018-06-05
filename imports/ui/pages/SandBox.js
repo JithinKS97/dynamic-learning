@@ -1,5 +1,8 @@
 import React from 'react'
 import '../../api/castify-api'
+import { Videos } from '../../api/videos'
+import { Tracker } from 'meteor/tracker'
+import { Meteor } from 'meteor/meteor'
 
 export default class SandBox extends React.Component {
 
@@ -14,11 +17,12 @@ export default class SandBox extends React.Component {
     }
 
     screencastify.setAppId(6394026632151040)
-    
-    
+  
   }
 
   componentDidMount() {
+
+    Meteor.subscribe('videos')
 
     that = this
     
@@ -77,6 +81,7 @@ export default class SandBox extends React.Component {
 
         const file = fileInfo.file
         console.log(file)
+        
 
       });
 

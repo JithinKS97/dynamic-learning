@@ -13,18 +13,10 @@ const LessonPlansList = (props) => {
            is passed as prop to the LessonPlan component.
         */
 
-        if(props.lessonplans.length == 0) {
-            return (
-                <div>
-                    <p>Add your first lessonplan</p>
-                </div>  
-            )
-        }
-        else {
-            return props.lessonplans.map((lessonplan)=>{
-                return(<LessonPlan key = {lessonplan._id} name = {lessonplan.name} _id = {lessonplan._id}/>)
-            })
-        }       
+        return props.lessonplans.map((lessonplan)=>{
+            return(<LessonPlan key = {lessonplan._id} name = {lessonplan.name} _id = {lessonplan._id}/>)
+        })
+     
     }
        
 

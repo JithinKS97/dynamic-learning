@@ -85,7 +85,14 @@ const SimsList = (props) => {
                                     src = {iframe.src}
                                     {...iframe}
                                 />
-                                <button onClick = {()=>{props.delete(index)}}>X</button>                                                    
+                                <button onClick = {()=>{
+
+                                    const confirmation = confirm('Are you sure you want to remove this?')
+
+                                    if(confirmation == true)
+                                        props.delete(index)}
+
+                                }>X</button>                                                    
                                 
                             </Rnd>
                         </div>
@@ -102,7 +109,14 @@ const SimsList = (props) => {
                                         src = {iframe.src}
                                         {...iframe}
                                     />
-                            {iframe.userId == Meteor.userId()?<button onClick = {()=>{props.delete(index)}}>X</button>:null}  
+                            {iframe.userId == Meteor.userId()?<button onClick = {()=>{
+
+                                const confirmation = confirm('Are you sure you want to remove this?')
+
+                                if(confirmation == true)
+                                    props.delete(index)
+
+                            }}>X</button>:null}  
                         </div>
                     )
                 }

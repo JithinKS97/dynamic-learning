@@ -1,40 +1,60 @@
 import React from 'react'
 import { LessonPlans } from '../../api/lessonplans'
 import { Requests } from '../../api/requests'
-import {Meteor} from 'meteor/meteor'
+import { Meteor } from 'meteor/meteor'
+import Modal from 'react-modal'
 
-const AddLessonPlans = ()=>{
+export default class AddLessonPlans extends React.Component {
 
-    return (
-        
-        <div>
-            <form onSubmit = {(e)=>{
+    constructor(props) {
+        super(props)
 
-                e.preventDefault()
+        this.state = {
+            name:'',
+            isOpen:false
+        }
+    }
 
-                let slides = []
-                const name = e.target.lessonplan.value
-                
+    render() {
+        return (
+            
+            <div>
+                <button onClick = {()=>{
+                    this.setState({
+                        isOpen:true
+                    })
+                }}>Create new lessonplan</button>
 
-                /* There will be a Request document for each LessonPlan document.
-                   So the Request document is created along with LessonPlan document.
-                   It is given the same id as the Lessonplan document. docs is the
-                   id of the inserted LessonPlan document.
+                <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
+                <form onSubmit = {(e)=>{
 
-                */
+                    e.preventDefault()
 
-                if(name) {
-                    Meteor.call('lessonplans.insert', name)                    
-                } 
+                    Meteor.call('lessonplans.insert', this.state.name)                    
 
-                e.target.lessonplan.value = ''
+                    this.setState({
+                        name:'',
+                        isOpen:false
+                    })
 
-            }}>
-                <input type = 'text' name = 'lessonplan' placeholder = 'Name'/>
-                <button>Add</button>
-            </form>
-        </div>
-    )
+                }}>
+                    <input onChange = {()=>{
+                        this.setState({
+                            name: this.name.value
+                        })
+                    }} type = 'text' ref = {e => this.name = e} value = {this.state.name} placeholder = 'Name'/>
+
+                    {this.state.name?<button>Add</button>:<button disabled >Add</button>}
+                    
+                </form>
+                <button onClick = {()=>{
+                    this.setState({
+                        isOpen:false,
+                        name:''
+                    })
+                }}>Cancel</button>
+                </Modal>
+            </div>
+        )
+    }
 }
-
-export default AddLessonPlans

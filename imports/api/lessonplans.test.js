@@ -114,7 +114,7 @@ if(Meteor.isServer) {
             }).to.throw()
         })
         
-        it('should return a users lessonplans', function() {
+        it(`should return a user's lessonplan`, function() {
             const res = Meteor.server.publish_handlers.lessonplans.apply({userId:lessonplanOne.userId})
             const lessonplans = res.fetch()
             expect(lessonplans.length).to.equal(1)

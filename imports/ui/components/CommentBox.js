@@ -12,7 +12,10 @@ const CommentBox = (props) => {
             <p>{props.comment.username}</p>
             <p>{momentNow.fromNow()}</p>
             {props.comment.userId == Meteor.userId()?<button onClick = {() =>{
-                    props.deleteComment(props.index)
+
+                    const confirmation = confirm('Are you sure you want to delete your comment?')
+                    if(confirmation == true)
+                        props.deleteComment(props.index)
                 }
             }>X</button>:null}
         </div>

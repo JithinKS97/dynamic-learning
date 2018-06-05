@@ -75,6 +75,16 @@ Meteor.methods({
         Requests.update({_id}, {$set:{slides,  updatedAt: moment().valueOf()}})
     },
 
+    'requests.reset'(_id) {
+        
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
+        Requests.update({_id, userId:this.userId}, {$set: {requestTitle:'',slides:[], updatedAt: moment().valueOf()}})
+    }, 
+
     'requests.title.update'(_id, requestTitle) {
 
         if(!this.userId) {

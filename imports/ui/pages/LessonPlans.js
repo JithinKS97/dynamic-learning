@@ -11,12 +11,12 @@ const LessonPlans = () => {
     /* This Component renders the main LessonPlans dashboard of the teachers */
 
     return (
-        <div>                
+        <div>
+            <TitleBar/>                
             <h1>Lessonplans</h1>
             <Link to = 'dashboard'>Dashboard</Link>
-            <TitleBar/>
-            <LessonPlansList/>
             <AddLessonPlan/>
+            <LessonPlansList/>
         </div>
     )
     

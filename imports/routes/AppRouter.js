@@ -26,9 +26,9 @@ export const onAuthChange = (isAuthenticated) => {
   const IsAuthenticatedPage = authenticatedPages.includes(location.pathname)
   
   if(IsUnauthenticatedPage && isAuthenticated) {
-      history.replace('/dashboard')
+    history.replace('/dashboard')
   } else if(IsAuthenticatedPage && !isAuthenticated) {
-      history.replace('/')
+    history.replace('/')
   }
 }
 
