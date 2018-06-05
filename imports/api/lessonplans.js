@@ -79,6 +79,7 @@ Meteor.methods({
 
         }).validate({_id})
 
+
         new SimpleSchema({
 
             note: {
@@ -88,16 +89,10 @@ Meteor.methods({
 
             iframes: {
                 type:Array,
-                optional: true
+                optional: true,
             },
 
-            'iframes.$':Object,
-            'iframes.$.src':String,
-            'iframes.$.w':String,
-            'iframes.$.h':String,
-            'iframes.$.x':Number,
-            'iframes.$.y':Number,
-            'iframes.$.data':{type:Object, blackbox:true}
+            'iframes.$':{type:Object, blackbox:true}
 
 
         }).validate(slides)

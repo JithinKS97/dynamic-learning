@@ -13,7 +13,7 @@ if(Meteor.isServer) {
             _id:'testLessonPlanId1',
             name:'first lessonplan',
             userId:'testUserId1',
-            slides:[{note:'sampleData', iframes:[{userId:'testUserId1', src:'sample1', w:'50', h:'50'}]}],
+            slides:[{note:'sampleData', iframes:[{data:{},src:'sample1', w:'50', h:'50'}]}],
             updatedAt:0
         }
 
@@ -21,7 +21,7 @@ if(Meteor.isServer) {
             _id:'testLessonPlanId2',
             name:'another lessonplan',
             userId:'testUserId2',
-            slides:[{note:'sampleData', iframes:[{userId:'testUserId2', src:'sample1', w:'50', h:'50'}]}],
+            slides:[{note:'sampleData', iframes:[{data:{}, src:'sample1', w:'50', h:'50'}]}],
             updatedAt:0
         }    
     
@@ -69,20 +69,20 @@ if(Meteor.isServer) {
 
         it('should update lessonplan', function() {
 
-            const slides = [{note:'updatedData',iframes:[{userId:lessonplanOne.userId, src:'sample1', w:'50', h:'50'}, {userId:lessonplanOne.userId, src:'sample2', w:'100', h:'100'}]}]
+            // const slides = [{note:'updatedData',iframes:[{data: {newData:''},src:'sample1', w:'50', h:'50'}, {data: {newData:''},src:'sample2', w:'100', h:'100'}]}]
+                const slides = [{note:'updatedData', iframes:[{data: {}, src:'sample1', w:'50', h:'50'}]}]
+                Meteor.server.method_handlers['lessonplans.update'].apply({userId:lessonplanOne.userId}, [lessonplanOne._id, slides])
+                const lessonplan = LessonPlans.findOne(lessonplanOne._id)
+                expect(lessonplan.updatedAt).to.be.greaterThan(0)
 
-            Meteor.server.method_handlers['lessonplans.update'].apply({userId:lessonplanOne.userId}, [lessonplanOne._id, slides])
-            const lessonplan = LessonPlans.findOne(lessonplanOne._id)
-            expect(lessonplan.updatedAt).to.be.greaterThan(0)
-
-            expect(lessonplan).to.deep.include({slides, name:lessonplanOne.name})
+                expect(lessonplan).to.deep.include({slides, name:lessonplanOne.name})
             
         })
 
         it('should throw error if extra updates provided', function() {
 
             expect(()=>{
-                const slides = [{note:'updatedData',extra:'', iframes:[{userId:lessonplanOne.userId, src:'sample1', w:'50', h:'50'}, {userId:lessonplanOne.userId, src:'sample2', w:'100', h:'100'}]}]
+                const slides = [{note:'updatedData',extra:'', iframes:[{src:'sample1', w:'50', h:'50'}, {src:'sample2', w:'100', h:'100'}]}]
 
                 Meteor.server.method_handlers['lessonplans.update'].apply({userId:lessonplanOne.userId}, [lessonplanOne._id, slides])
                 const lessonplan = LessonPlans.findOne(lessonplanOne._id)
@@ -93,7 +93,7 @@ if(Meteor.isServer) {
 
         it('should not update if user was not creator', function() {
 
-            const slides = [{note:'updatedData',iframes:[{userId:lessonplanOne.userId, src:'sample1', w:'50', h:'50'}, {userId:lessonplanOne.userId, src:'sample2', w:'100', h:'100'}]}]
+            const slides = [{note:'updatedData',iframes:[{data:{},src:'sample1', w:'50', h:'50'}, {data:{}, src:'sample2', w:'100', h:'100'}]}]
 
             Meteor.server.method_handlers['lessonplans.update'].apply({userId:'invalidId'}, [lessonplanOne._id, slides])
             const lessonplan = LessonPlans.findOne(lessonplanOne._id)
