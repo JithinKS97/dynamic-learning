@@ -79,9 +79,7 @@ export default class SandBox extends React.Component {
 
       screencastify.getFile(this.state.id).then(function(fileInfo) {
 
-        const file = fileInfo.file
-        console.log(file)
-        
+        const file = fileInfo.file        
 
       });
 
