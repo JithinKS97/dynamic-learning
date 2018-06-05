@@ -252,18 +252,18 @@ export default class Request extends React.Component {
 
                     <h1>{this.requestExists?null:'Loading'}</h1>
 
-                    <button onClick = {()=>{
+                    {isOwner?<button onClick = {()=>{
                         
                         const confirmation = confirm('Are you sure you want to delete all the requests?')
 
-                        if(confirmation)
+                        if(confirmation && isOwner)
                         {
                             Meteor.call('requests.reset', this.state._id)
                             history.back()
                         }                        
                         
 
-                    }}>Remove Request</button>
+                    }}>Remove Request</button>:null}
 
                     <h1>{this.state.requestTitle}</h1>
                     

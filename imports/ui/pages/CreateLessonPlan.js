@@ -353,9 +353,7 @@ export default class CreateLessonPlan extends React.Component {
 
                 <div className='menu'>
 
-                    <Link to = '/lessonplans'>
-                        Back
-                    </Link>
+                    <Link to = '/lessonplans'>Back</Link>
 
                     <button onClick = {this.save.bind(this)}>Save</button>
 
@@ -364,9 +362,7 @@ export default class CreateLessonPlan extends React.Component {
 
                     <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
-                    <Link to={{ pathname: `/request/${this.state._id}`}}>
-                        Request new simulations
-                    </Link>
+                    <Link to={{ pathname: `/request/${this.state._id}`}}>Request new simulations</Link>
 
                     {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo drawing</button> : <button onClick={this.undo.bind(this)}>Undo drawing</button>}
 
