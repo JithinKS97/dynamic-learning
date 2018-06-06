@@ -42,7 +42,13 @@ Meteor.methods({
                 optional: true
             },
 
-            'iframes.$':{type:Object, blackbox:true},
+            'iframes.$':Object,
+            'iframes.$.userId':String,
+            'iframes.$.src':String,
+            'iframes.$.w':String,
+            'iframes.$.h':String,
+            'iframes.$.x':Number,
+            'iframes.$.y':Number,
 
             comments: {
                 type:Array,

@@ -1,105 +1,151 @@
 import React from 'react'
-import '../../api/castify-api'
-import { Videos } from '../../api/videos'
-import { Tracker } from 'meteor/tracker'
-import { Meteor } from 'meteor/meteor'
+import Immutable from'immutable'
 
-export default class SandBox extends React.Component {
+export default class Sandbox extends React.Component {
 
   constructor(props) {
 
     super(props)
 
-    this.record.bind(this)
     this.state = {
-      isConnected:null,
-      id:null
+      isDrawing:false,
+      ppts: new Immutable.List()
     }
-
-    screencastify.setAppId(6394026632151040)
-  
   }
 
   componentDidMount() {
 
-    Meteor.subscribe('videos')
+    this.mouse = {x:0, y:0}
 
-    that = this
-    
-    screencastify.isAppConnected().then(function(isConnected) {
-      that.setState({
-        isConnected
-      })
-    });
+    const container_style = getComputedStyle(this.container)
+
+    this.canvas.width = parseInt(container_style.getPropertyValue('width'))
+    this.canvas.height = parseInt(container_style.getPropertyValue('height'))
+
+
+    this.ctx = this.canvas.getContext('2d')
+
+    this.ctx.lineWidth = 1;
+    this.ctx.lineJoin = 'round'
+    this.ctx.lineCap = 'round'
+    this.ctx.strokeStyle = 'white'
+    this.ctx.shadowBlur = this.ctx.lineWidth*1.1
+    this.ctx.shadowColor = this.ctx.strokeStyle
+
+    this.pts = []
+
+    this.draw.bind(this)
 
   }
   
-  componentDidUpdate() {
-    screencastify.isAppConnected().then(function(isConnected) {
-      that.setState({
-        isConnected
-      })
-    });
+  onMouseDown() {
+
+    this.setState({
+      isDrawing:true
+    })
   }
 
-  record() {
-    
-    const that = this
+  onMouseUp() {
 
-    const recorder = new screencastify.Recorder();
-    recorder.start({
-      recordConfig: {  // optional
-        captureSource: 'desktop',  // for window picker, use 'screen' for screen picker
-        audio: {
-          mic: true,
-          system: false
-        }
-      },
-      shareUrl: 'http://localhost:3000',  // URL of your page that handles shared files.
-      payload: 'optional arbitrary string'  // Can be retrieved in share handler.
-    }).then(function() {
-
-      screencastify.onSharedFiles = function(fileIds) {
-
-        that.setState({
-          id:fileIds[0]
-        })
-
-        return true
-  
+    this.setState(prevState => {
+      return {
+        ppts: prevState.ppts.clear(),
+        isDrawing:false
       }
-      
-    });
+    })
 
+    this.pts = []
   }
 
-  getFile() {
+  onMouseMove(mouseEvent) {
 
-    if(this.state.id) {
+    if(this.state.isDrawing) {
 
-      screencastify.getFile(this.state.id).then(function(fileInfo) {
+      const boundingRect = this.container.getBoundingClientRect();
+      
+      this.mouse.x = mouseEvent.clientX - boundingRect.left
+      this.mouse.y = mouseEvent.clientY - boundingRect.top
 
-        const file = fileInfo.file        
+      const point = new Immutable.Map({
+        x: mouseEvent.clientX - boundingRect.left,
+        y: mouseEvent.clientY - boundingRect.top,
+      })
 
-      });
+      this.setState(prevState => {
+        return {
+          ppts: prevState.ppts.push(point),
+        }
+      })
 
+      this.pts.push({x:this.mouse.x, y:this.mouse.y})
+
+      this.draw()
     }
   }
 
-  connect() {
-    screencastify.connectApp();
-    console.log(screencastify)
+  draw() {
+
+    const { ppts } = this.state
+
+    this.ctx.beginPath()
+    const pts = ppts.get(0)
+
+    if(pts) {
+      this.ctx.moveTo(pts.get('x'), pts.get('y'))
+    }
+
+    ppts.map((pts, index) => {
+
+      if(index>0 && index<ppts.size-2) {
+
+        const next_pts = ppts.get(index)
+
+        const c = (pts.get('x') + next_pts.get('x')) / 2
+        const d = (pts.get('y') + next_pts.get('y')) / 2
+  
+        this.ctx.quadraticCurveTo(pts.get('x'), pts.get('y'), c, d)
+    
+      }
+
+    })
+
+
+    // this.pts.map( (pt, index) => {
+      
+    //   if(index>0 && index<this.pts.length-2) {
+
+    //     let c = (this.pts[index].x + this.pts[index + 1].x) / 2
+    //     let d = (this.pts[index].y + this.pts[index + 1].y) / 2
+    
+    //     this.ctx.quadraticCurveTo(this.pts[index].x, this.pts[index].y, c, d)
+      
+    //   }
+    //   else if(index == this.pts.length-2)
+    //     this.ctx.quadraticCurveTo(this.pts[index].x, this.pts[index].y, this.pts[index+1].x, this.pts[index+1].y)
+
+    // })
+
+    this.ctx.stroke()
   }
 
   render() {
-    return (
-      <div>
-        <h2>{this.state.isConnected?'connected':'not connected'}</h2>
-        <button onClick = {this.connect.bind(this)}>Connect</button>
-        <button onClick = {this.record.bind(this)}>Record</button>
-        <button onClick = {this.getFile.bind(this)}>Get file</button>
+    return(
+      <div 
+        
+        ref = {e => this.container = e} 
+        style = {{width:'640px', 
+        height:'360px', 
+        backgroundColor:'black'}}
+
+      >
+        <canvas
+          onMouseDown  = {this.onMouseDown.bind(this)}
+          onMouseUp = {this.onMouseUp.bind(this)}
+          onMouseMove = {this.onMouseMove.bind(this)}
+          ref = {e => this.canvas = e}
+        />
+
       </div>
     )
   }
-
 }

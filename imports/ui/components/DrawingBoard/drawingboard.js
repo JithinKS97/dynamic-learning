@@ -414,6 +414,8 @@
     
             this.ctx.lineCap = "round";
             this.ctx.lineJoin = "round";
+      
+            
             // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
     
             if (opts.webStorage) this.saveWebStorage();
@@ -704,6 +706,7 @@
          */
     
         setMode: function(newMode, silent) {
+
             silent = silent || false;
             newMode = newMode || 'pencil';
     
@@ -748,12 +751,14 @@
                 this.ev.bind('board:mode', setStrokeStyle);
             } else
                 this.ctx.strokeStyle = this.color;
+
         },
     
         /**
          * Fills an area with the current stroke color.
          */
         fill: function(e) {
+
             if (this.getImg() === this.blankCanvas) {
                 this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
                 this.ctx.fillStyle = this.color;
@@ -861,6 +866,7 @@
         },
     
         draw: function() {
+            
             //if the pencil size is big (>10), the small crosshair makes a friend: a circle of the size of the pencil
             //todo: have the circle works on every browser - it currently should be added only when CSS pointer-events are supported
             //we assume that if requestAnimationFrame is supported, pointer-events is too, but this is terribad.
@@ -874,6 +880,7 @@
             }
     
             if (this.isDrawing) {
+
                 var currentMid = this._getMidInputCoords(this.coords.current);
                 this.ctx.beginPath();
                 this.ctx.moveTo(currentMid.x, currentMid.y);
