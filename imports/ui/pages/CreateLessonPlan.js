@@ -353,18 +353,18 @@ export default class CreateLessonPlan extends React.Component {
                 <div className='menu'>
                     <div className='menu__container'>
 
+                            <label className = 'checkbox'>
+                                <input className = 'checkbox__box' onChange={this.interact.bind(this)} type = 'checkbox'/>
+                                Interact
+                            </label>
+
                             <Link class = 'button button--link' to = '/dashboard/lessonplans'>Back</Link>
 
                             <button class = 'button' onClick = {this.save.bind(this)}>Save</button>
 
-                            Interact
-                            <input onChange={this.interact.bind(this)} type = 'checkbox'/>
-
-                            <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-
                             <Link className = 'button button--link' to={{ pathname: `/request/${this.state._id}`}}>Request</Link>
 
-                            {(this.curPosition[this.state.curSlide] == 0) ? <button class = 'button' disabled>Undo</button> : <button class = 'button' onClick={this.undo.bind(this)}>Undo drawing</button>}
+                            {(this.curPosition[this.state.curSlide] == 0) ? <button class = 'button' disabled>Undo</button> : <button class = 'button' onClick={this.undo.bind(this)}>Undo</button>}
 
                             <button className = 'button' onClick = {()=>{
 
@@ -374,6 +374,8 @@ export default class CreateLessonPlan extends React.Component {
                                     this.reset()
 
                             }}>Reset</button>
+
+                            <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
                             {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
                     </div>
