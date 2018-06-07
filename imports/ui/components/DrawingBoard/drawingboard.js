@@ -866,6 +866,7 @@
         },
     
         draw: function() {
+
             
             //if the pencil size is big (>10), the small crosshair makes a friend: a circle of the size of the pencil
             //todo: have the circle works on every browser - it currently should be added only when CSS pointer-events are supported

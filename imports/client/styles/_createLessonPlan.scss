@@ -1,19 +1,45 @@
 .createLessonPlan {
+
     display: flex;
     flex-direction: row;
+    overflow-y: hidden;
 }
   
 .menu {
+    
+    flex:0.1;
+    margin:$space;
+    background:$light-grey;
+    border:1px solid $grey;
+}
+
+.menu__container {
+
     display:flex;
     flex-direction: column;
-    flex:0.1;
+    padding:$space;
 }
 
 .board {
+
     flex:0.8;
     height:100%;
+    
 }
 
+.board__container {
+    padding:$space 0;
+}
+
+
 .slides {
-    flex:0.1;  
+
+    flex:0.1;
+    margin:$space;
+    background:$light-grey;
+    border:1px solid $grey;
+}
+
+.slides__container {
+    padding:$space;
 }

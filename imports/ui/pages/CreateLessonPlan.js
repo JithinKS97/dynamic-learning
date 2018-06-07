@@ -328,56 +328,56 @@ export default class CreateLessonPlan extends React.Component {
 
             <div className = 'createLessonPlan'>
 
-                <div className = 'slides'> 
-
-                    <h1>{this.lessonplanExists?null:'Loading'}</h1>
-                    <h1>{this.state.curSlide}</h1>
-                    <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                    <button onClick = {this.addNewSlide.bind(this)}>+</button>
-
+                <div className = 'slides'>
+                    <div className = 'slides__container'>
+                        <h1>{this.lessonplanExists?null:'Loading'}</h1>
+                        <h1>{this.state.curSlide}</h1>
+                        <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                        <button onClick = {this.addNewSlide.bind(this)}>+</button>
+                    </div>
                 </div>
 
                 <div className = 'board'>
+                    <div className = 'board__container'>
+                        <SimsList
+                            isRndRequired = {true}
+                            saveChanges = {this.saveChanges.bind(this)}
+                            delete = {this.deleteSim.bind(this)}
+                            {...this.state}
+                        />
 
-                    <SimsList
-                        isRndRequired = {true}
-                        saveChanges = {this.saveChanges.bind(this)}
-                        delete = {this.deleteSim.bind(this)}
-                        {...this.state}
-                    />
-
-                    <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>
-
+                        <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>
+                    </div>
                 </div>
-
-
+                    
                 <div className='menu'>
+                    <div className='menu__container'>
 
-                    <Link to = '/lessonplans'>Back</Link>
+                            <Link class = 'button button--link' to = '/dashboard/lessonplans'>Back</Link>
 
-                    <button onClick = {this.save.bind(this)}>Save</button>
+                            <button class = 'button' onClick = {this.save.bind(this)}>Save</button>
 
-                    Interact
-                    <input onChange={this.interact.bind(this)} type = 'checkbox'/>
+                            Interact
+                            <input onChange={this.interact.bind(this)} type = 'checkbox'/>
 
-                    <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                            <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
-                    <Link to={{ pathname: `/request/${this.state._id}`}}>Request new simulations</Link>
+                            <Link className = 'button button--link' to={{ pathname: `/request/${this.state._id}`}}>Request</Link>
 
-                    {(this.curPosition[this.state.curSlide] == 0) ? <button disabled>Undo drawing</button> : <button onClick={this.undo.bind(this)}>Undo drawing</button>}
+                            {(this.curPosition[this.state.curSlide] == 0) ? <button class = 'button' disabled>Undo</button> : <button class = 'button' onClick={this.undo.bind(this)}>Undo drawing</button>}
 
-                    <button onClick = {()=>{
+                            <button className = 'button' onClick = {()=>{
 
-                        const confirmation = confirm('Are you sure you want to reset all?')
+                                const confirmation = confirm('Are you sure you want to reset all?')
 
-                        if(confirmation == true)
-                            this.reset()
+                                if(confirmation == true)
+                                    this.reset()
 
-                    }}>Reset</button>
+                            }}>Reset</button>
 
-                    {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
-
-                </div>
+                            {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
+                    </div>
+                 </div>
 
             </div>
         )

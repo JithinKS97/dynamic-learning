@@ -84,7 +84,7 @@ Meteor.methods({
 
             note: {
                 type: String,
-                optional: true
+                optional:true
             },
 
             iframes: {

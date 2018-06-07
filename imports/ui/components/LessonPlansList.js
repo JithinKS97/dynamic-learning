@@ -21,9 +21,9 @@ const LessonPlansList = (props) => {
        
 
     return (
-        <div>
+        <ul className = 'list__bordered-button list__bordered-button-grey' >
             {renderLessonPlans()}
-        </div>
+        </ul>
     )
 
 }

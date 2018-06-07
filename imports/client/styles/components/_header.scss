@@ -1,0 +1,18 @@
+.header {
+    background: $header-bg;
+    color:white;
+}
+
+.header__content {
+    display: flex;
+    height: $header-height;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: $space;
+    max-width: $site-max-width;
+}
+
+.header__title {
+    margin:0;
+    text-transform: none;
+}

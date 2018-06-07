@@ -72,7 +72,7 @@ class AddSim extends React.Component {
 
         return(
             <div>
-                <button onClick = {()=>this.setState({isOpen:true})}>Add sim</button>
+                <button style = {{width:'100%'}} className = 'button' onClick = {()=>this.setState({isOpen:true})}>Add sim</button>
                 <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
                     <h1>Select simulation</h1>
 

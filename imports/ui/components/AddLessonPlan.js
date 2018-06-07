@@ -19,11 +19,11 @@ export default class AddLessonPlans extends React.Component {
         return (
             
             <div>
-                <button onClick = {()=>{
+                <button className = 'button' onClick = {()=>{
                     this.setState({
                         isOpen:true
                     })
-                }}>Create new lessonplan</button>
+                }}>+ New Lessonplan</button>
 
                 <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
                 <form onSubmit = {(e)=>{

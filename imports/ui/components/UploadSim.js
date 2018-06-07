@@ -11,8 +11,6 @@ const UploadSim = () =>{
 
     return(
         <div>
-            <h1>Upload simulations</h1>
-            <Link to = 'dashboard'>Dashboard</Link>
             <Upload methodToRun = 'sims.insert' />
         </div>
     )

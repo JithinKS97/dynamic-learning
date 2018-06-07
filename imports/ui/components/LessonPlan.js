@@ -15,7 +15,8 @@ const LessonPlan = (props)=>{
     */
 
     return (
-        <div>
+        <li  >
+
             <Link to={{ pathname: `/createlessonplan/${props._id}`}}>
                     {props.name}
             </Link>
@@ -30,7 +31,7 @@ const LessonPlan = (props)=>{
 
             }}>X</button>
 
-        </div>
+        </li>
     )
 }
 

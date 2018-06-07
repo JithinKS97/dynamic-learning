@@ -133,7 +133,7 @@ export default class Upload extends React.Component {
         
         return(
             <div>
-                <button onClick = {()=>this.setState({isOpen:true})}>Add Simulation</button>        
+                <button className = 'button' onClick = {()=>this.setState({isOpen:true})}> + Add Simulation</button>        
                 <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
                     <form>
                         <h1>Submit simulation</h1>
