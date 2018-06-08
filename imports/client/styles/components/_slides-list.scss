@@ -1,0 +1,26 @@
+.slides-list__container {
+    display: flex;
+    justify-content: space-between;    
+}
+
+.slides-list__button {
+
+    flex-grow:0.85;
+    padding:$space;
+    background-color: white;
+    border:1px solid $dark-grey;
+}
+
+.slides-list__delete{
+    flex-grow:0.15;
+    background-color: $grey;
+    border:1px solid $dark-grey;; 
+}
+
+.slides-list__add {
+    
+    background-color: $grey;
+    padding:$space;
+    margin:$space;
+    border: 1px solid $dark-grey;
+}

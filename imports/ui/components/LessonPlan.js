@@ -15,13 +15,13 @@ const LessonPlan = (props)=>{
     */
 
     return (
-        <li  >
+        <li className = 'slides-list__container'>
 
-            <Link to={{ pathname: `/createlessonplan/${props._id}`}}>
+            <Link className = 'slides-list__button' to={{ pathname: `/createlessonplan/${props._id}`}}>
                     {props.name}
             </Link>
 
-            <button onClick = {() => {
+            <button className = 'slides-list__delete' onClick = {() => {
                 
                 const confirmation = confirm(`Are you sure want to delete the lessonplan ${props.name}?`);
 

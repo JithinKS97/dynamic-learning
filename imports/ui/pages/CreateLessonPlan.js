@@ -247,6 +247,7 @@ export default class CreateLessonPlan extends React.Component {
             })
         }
         else {
+
             this.setState({
                 slides,
                 curSlide
@@ -261,13 +262,13 @@ export default class CreateLessonPlan extends React.Component {
 
         /* This function decides what to do when the X button is pressed in the
            slide element. If there is only one element. it is not deleted,
-           it is just reset. Otherwise, the slide is deleted and the current slide
-           is set to the preceeding slide.
+           it is just reset. Otherwise, the slide is deleted and the current slide is set.
         */
 
         const {slides} = this.state
 
         if(slides.length!=1) {
+
             slides.splice(index, 1)
             let { curSlide } = this.state
             this.undoArray.splice(index,1);
@@ -329,12 +330,10 @@ export default class CreateLessonPlan extends React.Component {
             <div className = 'createLessonPlan'>
 
                 <div className = 'slides'>
-                    <div className = 'slides__container'>
-                        <h1>{this.lessonplanExists?null:'Loading'}</h1>
-                        <h1>{this.state.curSlide}</h1>
-                        <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                        <button onClick = {this.addNewSlide.bind(this)}>+</button>
-                    </div>
+                    <h1>{this.lessonplanExists?null:'Loading'}</h1>
+                    <h1>{this.state.curSlide}</h1>
+                    <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                    <button className = 'slides-list__add' onClick = {this.addNewSlide.bind(this)}>+</button>
                 </div>
 
                 <div className = 'board'>
@@ -358,13 +357,13 @@ export default class CreateLessonPlan extends React.Component {
                                 Interact
                             </label>
 
-                            <Link class = 'button button--link' to = '/dashboard/lessonplans'>Back</Link>
+                            <Link className = 'button button--link' to = '/dashboard/lessonplans'>Back</Link>
 
-                            <button class = 'button' onClick = {this.save.bind(this)}>Save</button>
+                            <button className = 'button' onClick = {this.save.bind(this)}>Save</button>
 
                             <Link className = 'button button--link' to={{ pathname: `/request/${this.state._id}`}}>Request</Link>
 
-                            {(this.curPosition[this.state.curSlide] == 0) ? <button class = 'button' disabled>Undo</button> : <button class = 'button' onClick={this.undo.bind(this)}>Undo</button>}
+                            {(this.curPosition[this.state.curSlide] == 0) ? <button className = 'button' disabled>Undo</button> : <button className = 'button' onClick={this.undo.bind(this)}>Undo</button>}
 
                             <button className = 'button' onClick = {()=>{
 

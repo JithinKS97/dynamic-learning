@@ -25,9 +25,11 @@ const List = (props) => {
                 */
 
                 return (                    
-                    <div key = {index}>
-                        <button onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</button>    
-                        {isOwner?<button onClick = {()=>{
+                    <div className = 'slides-list__container' key = {index}>
+
+                        <button className = 'slides-list__button' onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</button>  
+
+                        {isOwner?<button className = 'slides-list__delete' onClick = {()=>{
 
                             const confirmation = confirm('Are you sure you want to delete?')
                             
@@ -35,6 +37,7 @@ const List = (props) => {
                                 props.delete(index)
 
                         }}>X</button>:null}
+
                     </div>
                 )
             })

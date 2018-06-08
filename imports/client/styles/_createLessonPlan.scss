@@ -33,13 +33,9 @@
 
 
 .slides {
-
+    text-align: center;
     flex:0.1;
     margin:$space;
     background:$light-grey;
     border:1px solid $grey;
-}
-
-.slides__container {
-    padding:$space;
 }
