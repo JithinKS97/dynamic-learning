@@ -2,7 +2,7 @@
 
     display: flex;
     flex-direction: row;
-    overflow-y: hidden;
+    height:100vh;
 }
   
 .menu {
@@ -18,17 +18,17 @@
     display:flex;
     flex-direction: column;
     padding:$space;
+
 }
 
 .board {
 
     flex:0.8;
-    height:100%;
     
 }
 
 .board__container {
-    padding:$space 0;
+    padding:$space 0;  
 }
 
 
@@ -38,4 +38,9 @@
     margin:$space;
     background:$light-grey;
     border:1px solid $grey;
+}
+
+#container {
+    background-color: black;
+    height: calc(100vh - #{$control-height});
 }

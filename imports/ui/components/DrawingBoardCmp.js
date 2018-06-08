@@ -1,6 +1,5 @@
 import React from 'react'
 import './DrawingBoard/drawingboard.js'
-import './DrawingBoard/drawingboard.scss'
 
 export default class DrawingBoardCmp extends React.Component {
 
@@ -24,11 +23,6 @@ export default class DrawingBoardCmp extends React.Component {
 
 
     render() {
-        return(<div style = {
-            {
-                background:'black',
-                height:window.innerHeight
-            }
-        } id="container"></div>)
+        return(<div id="container"></div>)
     }
 }

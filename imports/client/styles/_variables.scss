@@ -36,4 +36,7 @@ $item-border: darken($item-bg, 8%);
 //Page Content
 $page-content-sidebar-width: 30rem;
 $page-content-main-width:calc(#{$site-max-width} - #{$page-content-sidebar-width});
-$page-content-height: calc(100vh - #{$header-height})
+$page-content-height: calc(100vh - #{$header-height});
+
+//Drawingboard
+$control-height: 28px;
