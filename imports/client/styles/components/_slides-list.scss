@@ -5,14 +5,14 @@
 
 .slides-list__button {
 
-    flex-grow:0.85;
+    flex-grow:1;
     padding:$space;
     background-color: white;
     border:1px solid $dark-grey;
 }
 
 .slides-list__delete{
-    flex-grow:0.15;
+    width: 40px;
     background-color: $grey;
     border:1px solid $dark-grey;; 
 }
