@@ -36,10 +36,10 @@ class AddSim extends React.Component {
            that it is rendered. sim contains src, width, height and the name of the simulation.
         */
 
-        return this.props.sims.map((sim)=>{
+        return this.props.sims.map((sim, i)=>{
             
             return (
-                <div >
+                <div key =  {i}>
                     <button style = {{width: '100%'}} className = 'slides-list__button' onClick = {()=>{
 
                         this.setState({sim})
