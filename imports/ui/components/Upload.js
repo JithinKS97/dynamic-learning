@@ -77,17 +77,19 @@ export default class Upload extends React.Component {
 
         if(this.state.src) {
             return (
-                <div>                    
-                    Name of the simulation
-                    <input ref= {e => this.name = e} onChange = {()=>{this.setState({name:this.name.value})}}/>
+                <div style = {{display: 'flex', flexDirection:'column'}}>
+
+                        Name
+                        <input ref= {e => this.name = e} onChange = {()=>{this.setState({name:this.name.value})}}/>
                     
-                    Width
-                    <input ref= {e => this.width = e} onChange = {()=>{this.setState({w:this.width.value})}}/>
-                    
-                    Height
-                    <input ref= {e => this.height = e} onChange = {()=>{this.setState({h:this.height.value})}}/>
-                                    
-                    <button onClick = {(e)=>{
+                        Width
+                        <input ref= {e => this.width = e} onChange = {()=>{this.setState({w:this.width.value})}}/>
+                 
+                  
+                        Height
+                        <input ref= {e => this.height = e} onChange = {()=>{this.setState({h:this.height.value})}}/>
+                              
+                    <button className = 'button' onClick = {(e)=>{
 
                         e.preventDefault()
                         const src = this.state.src
@@ -134,15 +136,21 @@ export default class Upload extends React.Component {
         return(
             <div>
                 <button className = 'button' onClick = {()=>this.setState({isOpen:true})}> + Add Simulation</button>        
-                <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
+                <Modal 
+                    isOpen = {this.state.isOpen} 
+                    ariaHideApp={false}
+                    className = 'boxed-view__box'
+                    overlayClassName = 'boxed-view boxed-view--modal'
+                >
                     <form>
                         <h1>Submit simulation</h1>
                         <p>Enter the Iframe tag from p5 online text editor</p>
-                        <input onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
+                        <input style = {{width:'100%'}} onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
                         <SimContainer isPreview = {true} {...this.state}/>
                         <div>{this.submitButton()}</div>
+                        <button style = {{width:'100%'}} type = 'button' className = 'button' onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>
                     </form>
-                    <button onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>   
+                      
                 </Modal>
             </div>
         )

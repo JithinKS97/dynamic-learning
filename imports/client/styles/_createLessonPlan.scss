@@ -3,13 +3,14 @@
     display: flex;
     flex-direction: row;
     height:100vh;
+    background: $dark-white;
 }
   
 .menu {
     
     flex:0.1;
     margin:$space;
-    background:$light-grey;
+    background: $white;
     border:1px solid $grey;
 }
 
@@ -36,7 +37,7 @@
     text-align: center;
     flex:0.1;
     margin:$space;
-    background:$light-grey;
+    background:$white;
     border:1px solid $grey;
 }
 

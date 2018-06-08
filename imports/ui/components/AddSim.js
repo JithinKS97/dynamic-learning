@@ -39,8 +39,8 @@ class AddSim extends React.Component {
         return this.props.sims.map((sim)=>{
             
             return (
-                <div key = {sim._id}>
-                    <button onClick = {()=>{
+                <div >
+                    <button style = {{width: '100%'}} className = 'slides-list__button' onClick = {()=>{
 
                         this.setState({sim})
 
@@ -71,68 +71,79 @@ class AddSim extends React.Component {
         */
 
         return(
-            <div>
+            <div >
                 <button style = {{width:'100%'}} className = 'button' onClick = {()=>this.setState({isOpen:true})}>Add sim</button>
-                <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
+                <Modal 
+                
+                    isOpen = {this.state.isOpen} ariaHideApp={false}
+                    className = 'boxed-view__box'
+                    overlayClassName = 'boxed-view boxed-view--modal'
+                    
+                >
                     <h1>Select simulation</h1>
-
+        
                     {this.simsList()}
+         
                     {this.showSim()}
 
-                    <button onClick = {()=>{
+                    <div style = {{display:'flex', flexDirection:'column'}}>
 
-                        /* The simulation is added only if the valid simulation is set to the
-                        state.
-                        */
-
-                        if(this.state.sim) {
-
-                            /* The slides and the current slides are obtained from the props
-                            To the slides, the iframe of selected simulation is pushed and
-                            the changes are saved by calling the saveChanges function.
-
-                            See the definition of saveChanges funciton in CreateLessonPlan
-                            Component.
-
-                            Finally the Modal is closed after the insertion of the simulation.
+                        <button className = 'button' onClick = {()=>{
+                            
+                            /* The simulation is added only if the valid simulation is set to the
+                            state.
                             */
 
-                            const { slides, curSlide } = this.props
+                            if(this.state.sim) {
 
-                            const sim = {
-                                src:this.state.sim.src,
-                                w:this.state.sim.w,
-                                h:this.state.sim.h,
-                                x:0,
-                                y:0,
-                                data:{}
+                                /* The slides and the current slides are obtained from the props
+                                To the slides, the iframe of selected simulation is pushed and
+                                the changes are saved by calling the saveChanges function.
+
+                                See the definition of saveChanges funciton in CreateLessonPlan
+                                Component.
+
+                                Finally the Modal is closed after the insertion of the simulation.
+                                */
+
+                                const { slides, curSlide } = this.props
+
+                                const sim = {
+                                    src:this.state.sim.src,
+                                    w:this.state.sim.w,
+                                    h:this.state.sim.h,
+                                    x:0,
+                                    y:0,
+                                    data:{}
+                                }
+
+                                slides[curSlide].iframes.push(sim)
+
+                                this.props.saveChanges(slides)
+
+                                this.setState({
+                                    isOpen:false,
+                                    sim:null
+                                })
                             }
 
-                            slides[curSlide].iframes.push(sim)
+                            }}>Add
+                        </button>
 
-                            this.props.saveChanges(slides)
+                        <button className = 'button' onClick = {()=>{
+                            
+                            /* The Modal opening and closing is determined by the isOpen in
+                            the state.
+                            */
 
-                            this.setState({
-                                isOpen:false,
-                                sim:null
-                            })
-                        }
+                            this.setState( {
+                                    isOpen:false,
+                                    sim:null
+                                }
+                            )
+                        }}>Cancel</button>
 
-                        }}>Add
-                    </button>
-
-                    <button onClick = {()=>{
-
-                        /* The Modal opening and closing is determined by the isOpen in
-                        the state.
-                        */
-
-                        this.setState( {
-                                isOpen:false,
-                                sim:null
-                            }
-                        )
-                    }}>Cancel</button>
+                    </div>
                 </Modal>
             </div>
         )

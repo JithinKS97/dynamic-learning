@@ -27,7 +27,7 @@ li {
     list-style-type: none;
 }
 
-input[type=text],input[type=username], input[type=password], input[type=email] {
+input {
     border: 1px solid $input-border;
     font-size:$base-font-size;
     margin-bottom: $space;

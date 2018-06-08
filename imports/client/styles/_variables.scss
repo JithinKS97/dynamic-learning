@@ -1,8 +1,10 @@
 //Colors
-$light-grey:#f9f9f9;
-$grey: #dddddd;
 $brand-primary: #5b4681;
-$dark-grey: #eeeeee;
+$dark-grey:#aaaaaa;
+$grey: #d0d0d0;
+$light-grey:#e8e8e8;
+$white: #fdfdfd;
+$dark-white: #f8f8f8;
 
 //Spacing
 $space: 1.4rem;
@@ -18,20 +20,20 @@ $input-spacing: 1rem;
 
 //Boxed view
 $boxed-view-overlay-bg: $grey;
-$boxed-view-bg: white;
+$boxed-view-bg: $white;
 
 //Button
 $button-bg:$brand-primary;
-$button-color:white;
+$button-color:$white;
 
 //Header
 $header-bg: $brand-primary;
-$header-color: white;
+$header-color: $white;
 $header-height: 6rem;
 
-//Item
-$item-bg: $light-grey;
-$item-border: darken($item-bg, 8%);
+//Slides List Item
+$slides-item-border-width: 8px;
+$slides-item-selected-border-color: $brand-primary;
 
 //Page Content
 $page-content-sidebar-width: 30rem;

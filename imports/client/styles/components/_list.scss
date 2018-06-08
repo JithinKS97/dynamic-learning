@@ -1,8 +1,14 @@
 .list-item li {
 
     background-color: $light-grey;
-    border: 1px solid $grey;
+    border: none;
     padding:$space;
     margin-bottom: $space;
+    cursor: pointer;  
+    transition: background-color 0.3s ease;
+}
+
+.list-item :hover li {
+    background-color: $grey;
     cursor: pointer;  
 }

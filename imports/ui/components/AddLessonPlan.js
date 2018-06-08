@@ -47,7 +47,7 @@ export default class AddLessonPlans extends React.Component {
                     {this.state.name?<button>Add</button>:<button disabled >Add</button>}
                     
                 </form>
-                <button onClick = {()=>{
+                <button className = 'button' onClick = {()=>{
                     this.setState({
                         isOpen:false,
                         name:''

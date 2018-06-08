@@ -321,19 +321,19 @@ export default class CreateLessonPlan extends React.Component {
       })
     }
 
-    render() {
-
-        
+    render() {        
 
         return (
 
             <div className = 'createLessonPlan'>
 
+                
                 <div className = 'slides'>
+
                     <h1>{this.lessonplanExists?null:'Loading'}</h1>
+                    <button className = 'button slides-list__header' onClick = {this.addNewSlide.bind(this)}>Create Slide</button>
                     <h1>{this.state.curSlide}</h1>
                     <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                    <button className = 'slides-list__add' onClick = {this.addNewSlide.bind(this)}>+</button>
                 </div>
 
                 <div className = 'board'>
@@ -379,7 +379,6 @@ export default class CreateLessonPlan extends React.Component {
                             {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
                     </div>
                  </div>
-
             </div>
         )
     }
