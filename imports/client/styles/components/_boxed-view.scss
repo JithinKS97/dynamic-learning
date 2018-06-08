@@ -25,6 +25,8 @@
 }
 
 .boxed-view--modal {
+    display:'flex';
+    flex-direction:'column';
     background-color: fade-out($boxed-view-overlay-bg, 0.3);
     position: fixed;
     top:0;

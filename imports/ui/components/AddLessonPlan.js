@@ -25,7 +25,14 @@ export default class AddLessonPlans extends React.Component {
                     })
                 }}>+ New Lessonplan</button>
 
-                <Modal isOpen = {this.state.isOpen} ariaHideApp={false}>
+                <Modal
+                    className = 'boxed-view__box'
+                    overlayClassName = 'boxed-view boxed-view--modal'
+                    isOpen = {this.state.isOpen} ariaHideApp={false}
+                >
+
+               
+
                 <form onSubmit = {(e)=>{
 
                     e.preventDefault()
@@ -38,13 +45,14 @@ export default class AddLessonPlans extends React.Component {
                     })
 
                 }}>
+                    
                     <input onChange = {()=>{
                         this.setState({
                             name: this.name.value
                         })
                     }} type = 'text' ref = {e => this.name = e} value = {this.state.name} placeholder = 'Name'/>
 
-                    {this.state.name?<button>Add</button>:<button disabled >Add</button>}
+                    {this.state.name?<button style = {{marginLeft:'1.6rem'}} className = 'button'>Add</button>:<button  style = {{marginLeft:'1.6rem'}}  className = 'button' disabled >Add</button>}
                     
                 </form>
                 <button className = 'button' onClick = {()=>{
@@ -53,6 +61,8 @@ export default class AddLessonPlans extends React.Component {
                         name:''
                     })
                 }}>Cancel</button>
+                
+               
                 </Modal>
             </div>
         )
