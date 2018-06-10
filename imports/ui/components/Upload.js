@@ -50,7 +50,7 @@ export default class Upload extends React.Component {
 
             const src = validTag.match(`src\s*=\s*"\s*(.*)\s*">`)
             if(src) {
-                validSrc = src[1]
+                const validSrc = src[1]
                 this.setState({
                     src:validSrc
                 })
@@ -85,7 +85,6 @@ export default class Upload extends React.Component {
                         Width
                         <input ref= {e => this.width = e} onChange = {()=>{this.setState({w:this.width.value})}}/>
                  
-                  
                         Height
                         <input ref= {e => this.height = e} onChange = {()=>{this.setState({h:this.height.value})}}/>
                               
@@ -98,7 +97,7 @@ export default class Upload extends React.Component {
                         let h = this.height.value
                         let name = this.name.value
 
-                        if(name) {
+                        if(name && w && h) {
                             
                             let uploaded = false;
                             if(typeof this.props.methodToRun == 'string')
@@ -146,7 +145,9 @@ export default class Upload extends React.Component {
                         <h1>Submit simulation</h1>
                         <p>Enter the Iframe tag from p5 online text editor</p>
                         <input style = {{width:'100%'}} onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
-                        <SimContainer isPreview = {true} {...this.state}/>
+                        {this.state.src?<div style = {{width:'100%', height:'200px', overflow:'scroll'}}>
+                            <SimContainer isPreview = {true} {...this.state}/>
+                        </div>:null}
                         <div>{this.submitButton()}</div>
                         <button style = {{width:'100%'}} type = 'button' className = 'button' onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>
                     </form>

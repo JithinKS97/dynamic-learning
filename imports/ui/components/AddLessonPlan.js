@@ -45,7 +45,7 @@ export default class AddLessonPlans extends React.Component {
                     })
 
                 }}>
-                    
+                    <h1>Title</h1>
                     <input onChange = {()=>{
                         this.setState({
                             name: this.name.value

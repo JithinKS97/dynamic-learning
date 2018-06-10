@@ -22,6 +22,7 @@ import { Tracker } from 'meteor/tracker'
 export default class CreateLessonPlan extends React.Component {
 
     constructor(props) {
+
         super(props)
 
         /*When isInteractEnabled is true, the pointer events of the canvas are de activated

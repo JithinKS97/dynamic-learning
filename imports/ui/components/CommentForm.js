@@ -17,9 +17,9 @@ export default class CommentForm extends React.Component {
         e.preventDefault()
 
         if(this.comment.value) {
-            slides = this.props.slides
-            curSlide = this.props.curSlide            
-            comment = this.comment.value
+            const slides = this.props.slides
+            const curSlide = this.props.curSlide            
+            const comment = this.comment.value
             slides[curSlide].comments.push({comment, username:Meteor.user().username, userId:Meteor.userId(), time:Date.now()})
             this.props.saveChanges(slides)
             this.comment.value = ''
@@ -31,8 +31,9 @@ export default class CommentForm extends React.Component {
         return (
             <div>
                 <form onSubmit = {this.postComment.bind(this)}>
-                    <input ref = {e => this.comment = e}/>
-                    <button onClick = {this.postComment.bind(this)}>Submit</button>
+                    <input placeholder = 'Comment' style = {{width:'100%'}} ref = {e => this.comment = e}/>
+                    <br/>
+                    <button className = 'button' onClick = {this.postComment.bind(this)}>Submit</button>
                 </form>
             </div>
         )

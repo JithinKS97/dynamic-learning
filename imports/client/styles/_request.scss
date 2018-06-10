@@ -1,15 +1,60 @@
 .request {
+
     display:flex;
+    flex-direction: row;
+    height:100vh;
+    background: $dark-white;
 }
 
 .request_comments {
-    flex:1;
+
+    width:35%;
+    margin: $space;
+}
+
+.request_comments_container {
+
+    padding: $space;
+    background-color: $white;
+    border: 1px solid $grey;
+    height: 100%;
+    overflow-y:auto;
+
 }
 
 .request_slides {
-    flex:1;
+
+    width:25%;
+    margin: $space 0;
+    margin-left: $space;
+   
+}
+
+.request_slides_container {
+
+    padding: $space;
+    background-color: $white;
+    border: 1px solid $grey; 
+    height: 100%;
+    overflow-y:auto;
 }
 
 .request_sims {
-    flex:1;
+    
+    width:40%;
+    margin: $space 0;
+    margin-right: $space;
+    
 }
+
+.request_sims_container {
+    
+    padding: $space;
+    background-color: $white;
+    border: 1px solid $grey;
+    height: 100%;
+    overflow: auto;
+    overflow-y:auto;
+    
+}
+

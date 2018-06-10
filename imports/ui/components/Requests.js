@@ -5,7 +5,6 @@ import RequestsList from '../components/RequestsList'
 
 const Requests = () => {
     
-    console.log('requests')
     return(
         <div>
             <RequestsList/>

@@ -107,6 +107,7 @@ class AddSim extends React.Component {
                                 */
 
                                 const { slides, curSlide } = this.props
+                                
 
                                 const sim = {
                                     src:this.state.sim.src,

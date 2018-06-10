@@ -5,10 +5,18 @@ import {Tracker} from 'meteor/tracker'
 import {withTracker} from 'meteor/react-meteor-data'
 import {Link} from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
+import { timingSafeEqual } from 'crypto';
 
-const SimsList = (props) => {
+export default class simsList extends React.Component {
 
-    const renderSims = () => {
+    constructor(props) {
+
+        super(props)
+        this.renderSims.bind(this)
+      }
+
+
+    renderSims() {
 
 
         /* This component displays a list of simulations.
@@ -18,13 +26,14 @@ const SimsList = (props) => {
 
            On clicking the X button the delete function passed in the props is called.
         */  
-        const {slides, curSlide} = props
+        const {slides, curSlide} = this.props
         
 
         if(slides.length!=0) {
 
-            iframes = slides[curSlide].iframes
-
+            const iframes = slides[curSlide].iframes
+            
+            
             return iframes.map((iframe,index)=>{
 
                 /*Rnd is the react component which is used for dragging and resizing 
@@ -46,13 +55,18 @@ const SimsList = (props) => {
                     isPreview is a variable which specifies whether the iframe is just a preview 
                     or is it the real simulation used in the lessonplan. 
                 */
-                if(props.isRndRequired) {
-                    
+
+
+                if(this.props.isRndRequired) {                    
+
                     return (
+                        
                         <div key = {index} className = 'sim-floating'>               
     
                             <Rnd 
-                                
+                               
+                                bounds = '.drawing-board-canvas'
+                                dragHandleClassName = '.sim-handle'
                                 size={{ width: iframe.w,  height: iframe.h}}
                                 position={{ x: iframe.x, y: iframe.y }}
     
@@ -61,15 +75,15 @@ const SimsList = (props) => {
                                     slides[curSlide].iframes[index].x = d.lastX
                                     slides[curSlide].iframes[index].y = d.lastY
     
-                                    props.saveChanges(slides, undefined)
+                                    this.props.saveChanges(slides, undefined)
                                 }}
                                 
+
                                 onResize={(e, direction, ref, delta, position) => {
-                                    
+                                  
                                     slides[curSlide].iframes[index].w = ref.offsetWidth
                                     slides[curSlide].iframes[index].h = ref.offsetHeight
-                                    
-                                    props.saveChanges(slides, undefined)
+                                    this.props.saveChanges(slides, undefined)
                                 }}
     
                             > 
@@ -77,23 +91,26 @@ const SimsList = (props) => {
                                     data of this iframe. iframe is passed to set the
                                     height and with of the iframe.
                                 */}
-    
+                                <div style ={{display:'flex', flexDirection:'row'}}>
                                 <SimContainer
                                     isPreview = {false}
-                                    {...props} 
+                                    {...this.props} 
                                     index = {index} 
                                     src = {iframe.src}
                                     {...iframe}
                                 />
-                                <button onClick = {()=>{
+                                <nav>
+                                    <button style ={{padding: '0.4rem'}} onClick = {()=>{
+                                        
+                                        const confirmation = confirm('Are you sure you want to remove this?')
 
-                                    const confirmation = confirm('Are you sure you want to remove this?')
+                                        if(confirmation == true)
+                                            this.props.delete(index)}
 
-                                    if(confirmation == true)
-                                        props.delete(index)}
-
-                                }>X</button>                                                    
-                                
+                                    }>X</button>
+                                    <h4 className = 'sim-handle' style = {{color:'white', cursor:'move'}}>Move</h4>                                                   
+                                </nav>
+                                </div>
                             </Rnd>
                         </div>
                     )
@@ -101,36 +118,43 @@ const SimsList = (props) => {
                 else {
                     console.log()
                     return (
-                        <div key = {index}>
-                            <SimContainer
-                                        isPreview = {false}
-                                        {...props} 
-                                        index = {index} 
-                                        src = {iframe.src}
-                                        {...iframe}
-                                    />
-                            {iframe.userId == Meteor.userId()?<button onClick = {()=>{
+                        <div style = {{width:'100%', overflow:'scroll', height: '300px', width:'inherit'}}>
+                            <div key = {index}>
+                            {iframe.userId == Meteor.userId()?<button className = 'button' style = {{float:'right'}}onClick = {()=>{
 
                                 const confirmation = confirm('Are you sure you want to remove this?')
 
                                 if(confirmation == true)
-                                    props.delete(index)
+                                    this.props.delete(index)
 
-                            }}>X</button>:null}  
+                                }}>X</button>:null}  
+                                <SimContainer
+                                            isPreview = {false}
+                                            {...this.props} 
+                                            index = {index} 
+                                            src = {iframe.src}
+                                            {...iframe}
+                                        />
+                                
+                            </div>
                         </div>
                     )
-                }
-                
+                }               
+
             })
+
         }         
     }
-        
-    return (
-        <div>
-            {renderSims()}
-        </div>
-    )
+    render() {
+
+
+
+        return (
+            <div>
+                {this.renderSims()}
+            </div>
+        )
+    }    
+
 
 }
-
-export default SimsList

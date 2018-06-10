@@ -20,26 +20,12 @@ export default class SimContainer extends React.Component{
 
     componentDidMount() {
         
-        /* If the iframe is loaded, we send the port to the other window, i.e the 
-           window of the iframe.
-        */
-
-        if(this.props.src)
-            this.iframe.addEventListener('load', this.iframeLoaded.bind(this), false)        
+        
     }
 
 
     iframeLoaded() {
-        
-        /* The 2nd port is send to the iframe window which we use for sending message
-           to this window.
-        */
-        this.otherWindow = this.iframe.contentWindow
-
-        if(!this.props.isPreview) {
-            
-            this.otherWindow.postMessage({operation:'sendingPort'}, '*', [this.channel.port2])
-        }
+  
         
     }
 

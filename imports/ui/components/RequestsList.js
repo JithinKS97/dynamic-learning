@@ -10,11 +10,13 @@ const RequestsList = (props) => {
 
             if(request.requestTitle) {
                 return (
-                    <div key = {index}>
-                        <Link to={{ pathname: `/request/${request._id}`}} >
-                            {request.requestTitle}
+                    
+                        <Link key = {index} to={{ pathname: `/request/${request._id}`}} >
+                            <div className = 'slides-list__button' >
+                                {request.requestTitle}
+                            </div>
                         </Link>
-                    </div>
+                    
                 )
             }
             
@@ -22,9 +24,9 @@ const RequestsList = (props) => {
     }
 
     return(
-        <div>
+        <ul className  = 'slides-list_container'>
             {renderRequests()}
-        </div>
+        </ul>
     )
 
 

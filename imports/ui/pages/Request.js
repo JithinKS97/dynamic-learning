@@ -72,14 +72,14 @@ export default class Request extends React.Component {
 
             const { slides } = this.state
             const title = this.title.value
-            curSlide = slides.length
+            const curSlide = slides.length
 
             if(this.state.show == false) {            
                 slides[0].title = this.title.value
                 this.setState({slides, show:true})            
             }
             else {
-                slide = {
+                const slide = {
                     title: this.title.value,
                     comments: [],
                     iframes: []
@@ -238,62 +238,74 @@ export default class Request extends React.Component {
             <div className = 'request'>
 
 
-                {isOwner?<Modal ariaHideApp={false} isOpen = {this.state.requestTitle?false:true}>
+                {isOwner?<Modal 
+                            ariaHideApp={false} 
+                            isOpen = {this.state.requestTitle?false:true}
+                            className = 'boxed-view__box'
+                            overlayClassName = 'boxed-view boxed-view--modal'
+                        >
+                    <h1>Title</h1>
                     <form onSubmit = {this.setTitle.bind(this)}>
                         <input ref = {e => this.requestTitle = e}/>
-                        <button>Submit</button>
-                        <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
+                        <button style = {{marginLeft:'1.6rem'}} className = 'button'>Submit</button>
+                        <br/>
+                        <Link className = 'button button--link' to={{ pathname: `/createlessonplan/${this.state._id}`}}>
                             Back
                         </Link>
                     </form>
                 </Modal>:null}
 
+                
                 <div className='request_slides'>
+                    <div className = 'request_slides_container'>    
+                        <h1>{this.requestExists?null:'Loading'}</h1>
 
-                    <h1>{this.requestExists?null:'Loading'}</h1>
 
-                    {isOwner?<button onClick = {()=>{
-                        
-                        const confirmation = confirm('Are you sure you want to delete all the requests?')
+                         <h1>{this.state.requestTitle}</h1>
 
-                        if(confirmation && isOwner)
-                        {
-                            Meteor.call('requests.reset', this.state._id)
+                         <button className = 'button' onClick = {()=>{
                             history.back()
-                        }                        
+                        }}>Back</button>
+
+                        {isOwner?<button style = {{marginLeft: '1.6rem'}} className = 'button' onClick = {()=>{
+                            
+                            const confirmation = confirm('Are you sure you want to delete all the requests?')
+
+                            if(confirmation && isOwner)
+                            {
+                                Meteor.call('requests.reset', this.state._id)
+                                history.back()
+                            }                        
+                            
+
+                        }}>Remove Requests</button>:null}
                         
 
-                    }}>Remove Request</button>:null}
+                        {isOwner?<form onSubmit = {this.push.bind(this)}>
+                            
+                            <input style = {{width:'100%'}} placeholder = 'Title' ref = {e => this.title = e}/>
+                            <br/>
+                            <button className = 'button' >New request</button>
 
-                    <h1>{this.state.requestTitle}</h1>
-                    
-                    <button onClick = {()=>{
-                        history.back()
-                    }}>Back</button>
+                        </form>:null}
 
-                    <h1>{this.state.curSlide}</h1>
-
-                    {isOwner?<form onSubmit = {this.push.bind(this)}>
-                        <input ref = {e => this.title = e}/>
-                        <button>New request</button>
-                    </form>:null}
-
-                    {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
-
+                        {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
+                    </div>
                 </div>
-
+                        
                 <div className = 'request_comments'>
-
+                <div className = 'request_comments_container'>
                     {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
-                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:null}
-
+                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
+                    <p style = {{fontSize: '3rem', color:'grey', fontStyle:'italic', border:'auto'}}>Create a new Request to get started</p>}
+                </div>
                 </div>
 
                 <div className = 'request_sims'>
-
+                    <div className = 'request_sims_container' >
                     {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
                     <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
-                    
+                    </div>
                 </div>                  
                 
 
