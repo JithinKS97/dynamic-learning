@@ -100,7 +100,7 @@ export default class simsList extends React.Component {
                                     {...iframe}
                                 />
                                 <nav>
-                                    <button style ={{padding: '0.4rem'}} onClick = {()=>{
+                                    <button className = 'button' style ={{padding: '0.4rem'}} onClick = {()=>{
                                         
                                         const confirmation = confirm('Are you sure you want to remove this?')
 

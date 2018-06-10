@@ -283,7 +283,7 @@ export default class Request extends React.Component {
 
                         {isOwner?<form onSubmit = {this.push.bind(this)}>
                             
-                            <input style = {{width:'100%'}} placeholder = 'Title' ref = {e => this.title = e}/>
+                            <input style = {{width:'100%'}} placeholder = 'Create a new request to get started' ref = {e => this.title = e}/>
                             <br/>
                             <button className = 'button' >New request</button>
 
@@ -297,7 +297,7 @@ export default class Request extends React.Component {
                 <div className = 'request_comments_container'>
                     {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
                     {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
-                    <p style = {{fontSize: '3rem', color:'grey', fontStyle:'italic', border:'auto'}}>Create a new Request to get started</p>}
+                    null}
                 </div>
                 </div>
 
