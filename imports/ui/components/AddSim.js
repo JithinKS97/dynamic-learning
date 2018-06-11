@@ -58,7 +58,9 @@ class AddSim extends React.Component {
 
         if(this.state.sim) {
             return (
-                <SimContainer isPreview = {true} {...this.state.sim}/>
+                <div style = {{width:'100%', height:'200px', overflow:'scroll'}}>
+                    <SimContainer isPreview = {true} {...this.state.sim}/>
+                </div>
             )
         }
     }
