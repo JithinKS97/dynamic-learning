@@ -41,7 +41,7 @@ export default class Upload extends React.Component {
            expression. The src should be set only if the entered tag is valid.
         */
 
-        const tag = link.match(`(?:<iframe[^>]*)(?:(?:\/>)|(?:>.*?<\/iframe>))`)
+        const tag = link.match(`<iframe.+?src="https://alpha.editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
         
         if(tag) {
             const validTag = tag[0]
@@ -143,7 +143,7 @@ export default class Upload extends React.Component {
                 >
                     <form>
                         <h1>Submit simulation</h1>
-                        <p>Enter the Iframe tag from p5 online text editor</p>
+                        <p>Enter the Iframe tag from p5 online text editor (Served over https)</p>
                         <input style = {{width:'100%'}} onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
                         {this.state.src?<div style = {{width:'100%', height:'200px', overflow:'scroll'}}>
                             <SimContainer isPreview = {true} {...this.state}/>

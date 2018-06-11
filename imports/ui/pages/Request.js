@@ -283,7 +283,7 @@ export default class Request extends React.Component {
 
                         {isOwner?<form onSubmit = {this.push.bind(this)}>
                             
-                            <input style = {{width:'100%'}} placeholder = 'Create a new request to get started' ref = {e => this.title = e}/>
+                            <input style = {{width:'100%'}} placeholder = 'Create a new request' ref = {e => this.title = e}/>
                             <br/>
                             <button className = 'button' >New request</button>
 

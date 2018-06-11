@@ -9,7 +9,7 @@ const CommentBox = (props) => {
     return (
         <div className = 'comment'>
 
-            {props.comment.userId == Meteor.userId()?<button className = 'button' style = {{float:'right'}} onClick = {() =>{
+            {props.comment.userId == Meteor.userId()?<button className = 'button' style = {{float:'right', padding:'0.5rem', margin:0}} onClick = {() =>{
 
                 const confirmation = confirm('Are you sure you want to delete your comment?')
                 if(confirmation == true)
@@ -18,8 +18,8 @@ const CommentBox = (props) => {
             }>X</button>:null}
 
             <p>{props.comment.comment}</p>
-            <p>{props.comment.username}</p>
-            <p>{momentNow.fromNow()}</p>
+            <p style = {{color:'grey', padding:0, marginBottom: '0.6rem', fontSize:'1.4rem'}}>{props.comment.username}</p>
+            <p style = {{color:'grey', padding:0, margin:0, fontSize:'1.4rem'}}>{momentNow.fromNow()}</p>
         </div>
     )
 } 

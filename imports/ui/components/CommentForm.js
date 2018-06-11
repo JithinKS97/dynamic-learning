@@ -31,7 +31,7 @@ export default class CommentForm extends React.Component {
         return (
             <div>
                 <form onSubmit = {this.postComment.bind(this)}>
-                    <input placeholder = 'Comment' style = {{width:'100%'}} ref = {e => this.comment = e}/>
+                    <textarea placeholder = 'Comment' style = {{width:'100%',height:'10rem', marginBottom:'1.6rem', padding:'1.6rem', resize:'none'}} ref = {e => this.comment = e}/>
                     <br/>
                     <button className = 'button' onClick = {this.postComment.bind(this)}>Submit</button>
                 </form>
