@@ -1,276 +1,130 @@
-import React, { Component } from 'react';
-import SortableTree, { addNodeUnderParent, removeNodeAtPath } from 'react-sortable-tree';
-import { Meteor } from 'meteor/meteor'
+import React from 'react'
+import '../../api/castify-api'
+import { Videos } from '../../api/videos'
 import { Tracker } from 'meteor/tracker'
-import 'react-sortable-tree/style.css';
-import { Directories } from '../../api/directories'
-import {LessonPlans} from '../../api/lessonplans'
+import { Meteor } from 'meteor/meteor'
 
 
-/*This component displays the lessonplan files in nested tree structure.
-    You will be able to create directories and add lessonplans to it.
-    Deletion of a directory will result in the deletion of all the directories in it
-    along with the deletion of all the lessonplans in all of the nested directories 
-    and the main directory.
-*/
 
-export default class Tree extends Component {
+export default class SandBox extends React.Component {
 
   constructor(props) {
+
     super(props)
 
+    this.record.bind(this)
     this.state = {
-        
-      treeData: []
+      isConnected: null,
+      id: null,
+      src: ''
     }
 
-    this.removeOutsideFiles.bind(this)
+    screencastify.setAppId(6394026632151040)
+    this.getFile.bind(this)
+  
   }
 
   componentDidMount() {
 
-      Meteor.subscribe('directories')
-      Meteor.subscribe('lessonplans')
+    Meteor.subscribe('videos')
 
-      this.directoryTracker = Tracker.autorun(()=>{
-        
-        const data = Directories.findOne(Meteor.userId())
-        const lessonplans = LessonPlans.find().fetch()
-
-        /* Here we fetch two things, all the lessonplans and all directory data */
-        
-        if(data) {
-
-            const treeData = []       
-
-            /*The treeData is retrieved and the lessonplan objects which are outside the
-                file structure is obtained as file objects.
-            */
-
-            treeData.push(...data.directories)
-            treeData.push(...this.getFileObjects(lessonplans)) 
-
-            this.setState({
-                treeData
-            })
-
-        }     
-    })
-  }
-
-  componentWillUnmount() {
-    this.directoryTracker.stop()
-  }
-
-  getFileObjects(lessonplans) {
-
-    /* If the lessonplan is not added into the file structure yet. It is made into
-        an object which contains its _id, title. The resulting array will contain
-        null values as elements.
-    */
-
-    const structs = lessonplans.map(lessonplan => {
-
-        if(lessonplan.isAdded == false)
-            return {
-                _id: lessonplan._id,
-                title: lessonplan.name,
-                isFile: true
-            }
-        else return null
-
-    })
-
-    /* The null values are filtered out from the array*/
-
-    return structs.filter(struct=>{
-        if(struct)
-            return struct
-    })
-
+    that = this
+    
+    screencastify.isAppConnected().then(function(isConnected) {
+      that.setState({
+        isConnected
+      })
+    });
 
   }
+  
+  componentDidUpdate() {
+    screencastify.isAppConnected().then(function(isConnected) {
+      that.setState({
+        isConnected
+      })
+    });
+  }
 
-  addNewDirectory(e) {   
-
-    e.preventDefault()
-
-    /* New directory is created here.*/
-
-    const newDirectory = {
-
-        title: this.directoryName.value,
-        children: [],
-        isFile:false
-    }
-
-    if(this.directoryName.value) {
-
-        this.setState(prevState => {
-            return {
-                treeData: prevState.treeData.concat(newDirectory)
-            }
-        },()=>{
+  record() {
     
-            const outSideFilesRemoved = this.removeOutsideFiles()
-    
-            Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
-    
+    const that = this
+
+    const recorder = new screencastify.Recorder();
+    recorder.start({
+      recordConfig: {  // optional
+        captureSource: 'desktop',  // for window picker, use 'screen' for screen picker
+        audio: {
+          mic: true,
+          system: false
+        }
+      },
+      shareUrl: 'http://localhost:3000',  // URL of your page that handles shared files.
+      payload: 'optional arbitrary string'  // Can be retrieved in share handler.
+    }).then(function() {
+
+      screencastify.onSharedFiles = function(fileIds) {
+
+        that.setState({
+          id:fileIds[0]
         })
-    }   
 
-    this.directoryName.value = ''
-
+        return true
+  
+      }
+      
+    });
 
   }
 
-  removeOutsideFiles() {
+  getFile() {
 
-    const {treeData} = this.state
+    const that = this
 
-    /* The files which are not yet added to the directory are removed and then
-        the database is updated
-    */
+    if(this.state.id) {
 
-    return treeData.filter(data => {
+      screencastify.getFile(that.state.id).then(function(fileInfo) {
 
-        if(typeof data == 'array') {
-            return data
-        }
-        else {
-            if(!data.isFile)
-                return data
-        }
-    })
+        const file = fileInfo.file
+
+        const ms = new MediaSource()
+        ms.addEventListener('webkitsourceopen', onSourceOpen.bind(ms), false)
+
+        const video = document.querySelector('video')
+
+      })
+
+    }
+  }
+
+
+  connect() {
+    screencastify.connectApp();
+    console.log(screencastify)
+  }
+
+  fire() {
+
+    
+    console.log(video)
 
   }
 
   render() {
-
-    const getNodeKey = ({ treeIndex }) => treeIndex;
-    
-    const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
-
-        /* To prevent a file to be added as a child of a file 
-            and to prevent a directory to be added as a child of a file.
-        */
-  
-        if (node.isFile && nextParent && nextParent.isFile) {
-          return false;
-        }
-  
-        if (!node.isFile && nextParent && nextParent.isFile) {
-            return false;
-        }
-  
-        return true;
-    }
-
-    const removeLessonPlan = node => {
-
-        /* The deletion takes place recursively.
-            If the node is a file, using the id in it, it is removed
-            from the database.
-
-            If the node has no children, returned otherwise
-            we recursively move to the children nodes.
-        */
-
-        if(node.isFile) {
-
-            Meteor.call('lessonplans.remove', node._id)
-            return
-            
-        }
-
-        if(node.children.length == 0) {
-            return
-        }
-        else {
-            node.children.map(child => {
-                removeLessonPlan(child)
-            })
-        }        
-
-    }
-
     return (
-        
+      <div>
+        <h2>{this.state.isConnected?'connected':'not connected'}</h2>
+        <button onClick = {this.connect.bind(this)}>Connect</button>
+        <button onClick = {this.record.bind(this)}>Record</button>
+        <button onClick = {this.getFile.bind(this)}>Get file</button>
+        <button onClick = {this.fire.bind(this)}>Fire</button>
 
-      <div style={{ height: 400 }}>
+        <br/>
 
-        <form onSubmit = {this.addNewDirectory.bind(this)}>
-            <input ref = {e => this.directoryName = e}/>
-            <button>New directory</button>
-        </form>
+        <video controls autoPlay></video>
 
-        <SortableTree
-
-            canDrop={canDrop}
-
-            treeData={this.state.treeData}
-
-            onChange={treeData => this.setState({ treeData })}
-
-            onMoveNode = { args => {
-
-                    if(args.node.isFile) {
-
-                        /*When a file is moved within the directory structure, we check
-                            whether it has come to the root directory. If args.nextParentNode
-                            is null, it is outsude, otherwise it is inside.
-                        */
-
-                        if(args.nextParentNode) {
-
-                            Meteor.call('lessonplans.directoryChange', args.node._id, true)
-                        }
-                        else {
-
-                            Meteor.call('lessonplans.directoryChange', args.node._id, false)
-                        }
-                    }
-                    
-                    const outSideFilesRemoved = this.removeOutsideFiles()
-
-                    Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)               
-                }             
-            }
-
-            generateNodeProps={({ node, path }) => ({
-                buttons: [
-
-                  <button
-                    onClick={() =>{
-
-                      if(!node.isFile) {
-                        removeLessonPlan(node)
-                      }
-                      else {
-                        Meteor.call('lessonplans.remove', node._id)
-                      }
-                        
-                      this.setState(state => ({                          
-                        treeData: removeNodeAtPath({
-                          treeData: state.treeData,
-                          path,
-                          getNodeKey,
-                        }),
-                      }),()=>{
-
-                        const outSideFilesRemoved = this.removeOutsideFiles()
-                
-                        Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
-
-                      })}
-                    }
-                  >
-                    Remove
-                  </button>
-                ]
-              })}
-        />
       </div>
-    );
+    )
   }
+
 }

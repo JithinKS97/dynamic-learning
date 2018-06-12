@@ -1,6 +1,5 @@
 import React from 'react'
-import LessonPlansList from '../components/LessonPlansList'
-import AddLessonPlan from '../components/AddLessonPlan'
+import LessonPlansDirectories from './LessonPlansDirectories'
   
 const LessonPlans = () => {
 
@@ -8,8 +7,7 @@ const LessonPlans = () => {
 
     return (
         <div>              
-            <AddLessonPlan/>
-            <LessonPlansList/>
+            <LessonPlansDirectories/>
         </div>
     )
     
