@@ -23,7 +23,7 @@ export default class DrawingBoardCmp extends React.Component {
     }
 
     componentWillUnmount() {
-        window.onresize = null;
+        window.onresize = null
     }
 
     onresize() {

@@ -21,6 +21,7 @@
     "react-rnd": "^7.4.0",
     "react-router-dom": "^4.2.2",
     "react-sortable-tree": "^2.1.2",
+    "react-sortable-tree-theme-minimal": "0.0.13",
     "simpl-schema": "^1.5.0"
   },
   "devDependencies": {

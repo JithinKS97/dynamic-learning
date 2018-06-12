@@ -6,6 +6,7 @@ import 'react-sortable-tree/style.css';
 import { Directories } from '../../api/directories'
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
+import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
  
 
 /*This component displays the lessonplan files in nested tree structure.
@@ -234,6 +235,8 @@ export default class LessonPlansDirectories extends Component {
 
         <SortableTree
 
+            theme={FileExplorerTheme}
+            
             canDrop={canDrop}
 
             treeData={this.state.treeData}
@@ -268,14 +271,16 @@ export default class LessonPlansDirectories extends Component {
             generateNodeProps={({ node, path }) => ({
                 buttons: [
 
-                  <button style = {{visibility:node.isFile?'visible':'hidden'}}>
+                  <button
+                  className = 'button-nested'
+                    style = {{visibility:node.isFile?'visible':'hidden'}}>
                     <Link to ={{ pathname: `/createlessonplan/${node._id}`}}>
                         Open
                     </Link>
                   </button>,
 
                   <button
-
+                    className = 'button-nested'
                     onClick={() =>{
 
                       const input = confirm('Are you sure you want to perform this deletion?')
