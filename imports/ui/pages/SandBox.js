@@ -6,6 +6,14 @@ import 'react-sortable-tree/style.css';
 import { Directories } from '../../api/directories'
 import {LessonPlans} from '../../api/lessonplans'
 
+
+/*This component displays the lessonplan files in nested tree structure.
+    You will be able to create directories and add lessonplans to it.
+    Deletion of a directory will result in the deletion of all the directories in it
+    along with the deletion of all the lessonplans in all of the nested directories 
+    and the main directory.
+*/
+
 export default class Tree extends Component {
 
   constructor(props) {
@@ -15,6 +23,8 @@ export default class Tree extends Component {
         
       treeData: []
     }
+
+    this.removeOutsideFiles.bind(this)
   }
 
   componentDidMount() {
@@ -27,12 +37,17 @@ export default class Tree extends Component {
         const data = Directories.findOne(Meteor.userId())
         const lessonplans = LessonPlans.find().fetch()
 
+        /* Here we fetch two things, all the lessonplans and all directory data */
         
         if(data) {
 
             const treeData = []       
 
-             treeData.push(...data.directories)
+            /*The treeData is retrieved and the lessonplan objects which are outside the
+                file structure is obtained as file objects.
+            */
+
+            treeData.push(...data.directories)
             treeData.push(...this.getFileObjects(lessonplans)) 
 
             this.setState({
@@ -49,18 +64,24 @@ export default class Tree extends Component {
 
   getFileObjects(lessonplans) {
 
+    /* If the lessonplan is not added into the file structure yet. It is made into
+        an object which contains its _id, title. The resulting array will contain
+        null values as elements.
+    */
+
     const structs = lessonplans.map(lessonplan => {
 
         if(lessonplan.isAdded == false)
             return {
                 _id: lessonplan._id,
                 title: lessonplan.name,
-                isFile: true,
-                children:null
+                isFile: true
             }
         else return null
 
     })
+
+    /* The null values are filtered out from the array*/
 
     return structs.filter(struct=>{
         if(struct)
@@ -74,39 +95,53 @@ export default class Tree extends Component {
 
     e.preventDefault()
 
+    /* New directory is created here.*/
+
     const newDirectory = {
-        _id: Math.random().toString(36).substr(2, 16),
+
         title: this.directoryName.value,
         children: [],
         isFile:false
     }
 
-    this.setState(prevState => {
-        return {
-            treeData: prevState.treeData.concat(newDirectory)
-        }
-    },()=>{
+    if(this.directoryName.value) {
 
-        const {treeData} = this.state
-
-        const outSideFilesRemoved = treeData.filter(data => {
-
-            if(typeof data == 'array') {
-                return data
+        this.setState(prevState => {
+            return {
+                treeData: prevState.treeData.concat(newDirectory)
             }
-            else {
-                if(!data.isFile)
-                    return data
-            }   
-
+        },()=>{
+    
+            const outSideFilesRemoved = this.removeOutsideFiles()
+    
+            Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
+    
         })
-
-        Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
-
-    })
+    }   
 
     this.directoryName.value = ''
 
+
+  }
+
+  removeOutsideFiles() {
+
+    const {treeData} = this.state
+
+    /* The files which are not yet added to the directory are removed and then
+        the database is updated
+    */
+
+    return treeData.filter(data => {
+
+        if(typeof data == 'array') {
+            return data
+        }
+        else {
+            if(!data.isFile)
+                return data
+        }
+    })
 
   }
 
@@ -115,6 +150,10 @@ export default class Tree extends Component {
     const getNodeKey = ({ treeIndex }) => treeIndex;
     
     const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
+
+        /* To prevent a file to be added as a child of a file 
+            and to prevent a directory to be added as a child of a file.
+        */
   
         if (node.isFile && nextParent && nextParent.isFile) {
           return false;
@@ -129,9 +168,16 @@ export default class Tree extends Component {
 
     const removeLessonPlan = node => {
 
+        /* The deletion takes place recursively.
+            If the node is a file, using the id in it, it is removed
+            from the database.
+
+            If the node has no children, returned otherwise
+            we recursively move to the children nodes.
+        */
+
         if(node.isFile) {
 
-            console.log(`lessonplan ${node.title} removed`)
             Meteor.call('lessonplans.remove', node._id)
             return
             
@@ -168,9 +214,12 @@ export default class Tree extends Component {
 
             onMoveNode = { args => {
 
-                    console.log(args)
-
                     if(args.node.isFile) {
+
+                        /*When a file is moved within the directory structure, we check
+                            whether it has come to the root directory. If args.nextParentNode
+                            is null, it is outsude, otherwise it is inside.
+                        */
 
                         if(args.nextParentNode) {
 
@@ -182,19 +231,7 @@ export default class Tree extends Component {
                         }
                     }
                     
-                    const {treeData} = this.state
-
-                    const outSideFilesRemoved = treeData.filter(data => {
-
-                        if(typeof data == 'array') {
-                            return data
-                        }
-                        else {
-                            if(!data.isFile)
-                                return data
-                        }   
-
-                    })
+                    const outSideFilesRemoved = this.removeOutsideFiles()
 
                     Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)               
                 }             
@@ -221,19 +258,7 @@ export default class Tree extends Component {
                         }),
                       }),()=>{
 
-                        const {treeData} = this.state
-
-                        const outSideFilesRemoved = treeData.filter(data => {
-                
-                            if(typeof data == 'array') {
-                                return data
-                            }
-                            else {
-                                if(!data.isFile)
-                                    return data
-                            }   
-                
-                        })
+                        const outSideFilesRemoved = this.removeOutsideFiles()
                 
                         Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
 
