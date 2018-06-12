@@ -76,6 +76,20 @@ export default class simsList extends React.Component {
                                     slides[curSlide].iframes[index].y = d.lastY
     
                                     this.props.saveChanges(slides, undefined)
+
+                                    
+                                }}
+
+                                enableResizing = {{
+                                    
+                                    bottom: false,
+                                    bottomLeft: false,
+                                    bottomRight: true,
+                                    left: false,
+                                    right: false,
+                                    top: false,
+                                    topLeft: false,
+                                    topRight: false
                                 }}
                                 
 

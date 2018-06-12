@@ -211,15 +211,15 @@ export default class LessonPlansDirectories extends Component {
 
       <div style={{ height: 400 }}>
 
-            <input ref = {e => this.input = e}/>
+            <input placeholder = 'Title...' ref = {e => this.input = e}/>
 
             <button
-
+                
                 onClick = {this.addNewLessonPlan.bind(this)} 
                 style = {{marginLeft:'1.6rem'}} 
                 className = 'button'>
                 
-                New LessonPlan
+                Create LessonPlan
 
             </button>
 
@@ -229,9 +229,21 @@ export default class LessonPlansDirectories extends Component {
                 style = {{marginLeft:'1.6rem'}} 
                 className = 'button'>
                 
-                New directory
+                Create directory
 
             </button>
+        
+            {this.state.treeData.length==0?
+                <p style = {{ 
+
+                    fontSize:'2rem',
+                    paddingTop:'2rem', 
+                    color:'grey', 
+                    fontStyle:'italic'}}
+                
+                >Create a new directory or lessonplan to get started !!!</p>:
+                null
+            }
 
         <SortableTree
 
@@ -267,6 +279,8 @@ export default class LessonPlansDirectories extends Component {
                     Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)               
                 }             
             }
+
+            
 
             generateNodeProps={({ node, path }) => ({
                 buttons: [

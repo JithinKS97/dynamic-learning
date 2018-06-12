@@ -9,6 +9,7 @@ export default class DrawingBoardCmp extends React.Component {
             background: true,
             color: "#ffffff",
             size: 3,
+            eraserColor:'transparent',
             fillTolerance: 100,
 	        fillHack: false,
             controls: ['Color',

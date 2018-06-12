@@ -362,7 +362,7 @@
         color: "#000000",
         size: 1,
         background: "#fff",
-        eraserColor: "#000",
+        eraserColor: 'rgba(255,255,255, 1)',
         fillTolerance: 100,
         fillHack: true, //try to prevent issues with anti-aliasing with a little hack by default
         webStorage: 'session',
