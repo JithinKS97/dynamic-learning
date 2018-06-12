@@ -20,6 +20,7 @@
     "react-modal": "^3.4.4",
     "react-rnd": "^7.4.0",
     "react-router-dom": "^4.2.2",
+    "react-sortable-tree": "^2.1.2",
     "simpl-schema": "^1.5.0"
   },
   "devDependencies": {

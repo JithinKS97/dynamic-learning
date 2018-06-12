@@ -1,8 +1,6 @@
 import React from 'react'
 import Upload from '../components/Upload'
 import { Meteor } from 'meteor/meteor'
-import { Sims} from '../../api/sims'
-import { Link } from 'react-router-dom'
 
 
 const UploadSim = () =>{

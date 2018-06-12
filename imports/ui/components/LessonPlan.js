@@ -1,7 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { LessonPlans } from '../../api/lessonplans'
-import { Requests } from '../../api/requests'
 
 const LessonPlan = (props)=>{
 

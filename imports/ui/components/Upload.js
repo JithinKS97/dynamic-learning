@@ -1,5 +1,4 @@
 import React from 'react'
-import { Sims } from  '../../api/sims'
 import { Meteor } from 'meteor/meteor'
 import SimContainer from './SimContainer'
 import Modal from 'react-modal'

@@ -5,7 +5,6 @@ import SimsList from '../components/SimsList'
 import List from '../components/List'
 import AddSim from '../components/AddSim'
 import { Link } from 'react-router-dom'
-import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
 

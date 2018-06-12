@@ -10,7 +10,7 @@ import { Link, Route } from 'react-router-dom'
  
 const Dashboard = ({match}) => {
 
-    const renderOption = () =>{
+    const renderOption = () => {
 
        const option = match.params.option
 

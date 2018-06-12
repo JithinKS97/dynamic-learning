@@ -7,7 +7,6 @@ import CommentForm from '../components/CommentForm'
 import CommentsList from '../components/CommentsList'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
-import { withTracker } from 'meteor/react-meteor-data'
 import Modal from 'react-modal'
 import { Tracker } from 'meteor/tracker' 
 

@@ -1,9 +1,6 @@
 import React from 'react'
 import LessonPlansList from '../components/LessonPlansList'
 import AddLessonPlan from '../components/AddLessonPlan'
-import { Accounts } from 'meteor/accounts-base'
-import { Link } from 'react-router-dom'
-
   
 const LessonPlans = () => {
 

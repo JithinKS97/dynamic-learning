@@ -33,11 +33,13 @@ Meteor.methods({
             name,
             slides:[],
             userId:this.userId,
-            updatedAt: moment().valueOf()
+            updatedAt: moment().valueOf(),
+            isAdded:false
 
         },(err, docs)=>{
 
             Requests.insert({
+
                 userId:this.userId, 
                 _id:docs, slides:[], 
                 requestTitle:'',
@@ -62,6 +64,10 @@ Meteor.methods({
 
         LessonPlans.remove({_id, userId:this.userId})
         Requests.remove({_id, userId:this.userId})
+    },
+
+    'lessonplans.directoryChange'(_id, isAdded) {
+        LessonPlans.update({_id}, {$set:{isAdded}})
     },
 
     'lessonplans.update'(_id, slides) {

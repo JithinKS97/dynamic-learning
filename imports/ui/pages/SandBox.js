@@ -1,130 +1,191 @@
-import React from 'react'
-import '../../api/castify-api'
-import { Videos } from '../../api/videos'
-import { Tracker } from 'meteor/tracker'
+import React, { Component } from 'react';
+import SortableTree, { addNodeUnderParent, removeNodeAtPath } from 'react-sortable-tree';
 import { Meteor } from 'meteor/meteor'
+import { Tracker } from 'meteor/tracker'
+import 'react-sortable-tree/style.css';
+import { Directories } from '../../api/directories'
+import {LessonPlans} from '../../api/lessonplans'
 
-
-
-export default class SandBox extends React.Component {
+export default class Tree extends Component {
 
   constructor(props) {
-
     super(props)
 
-    this.record.bind(this)
     this.state = {
-      isConnected: null,
-      id: null,
-      src: ''
+        
+      treeData: []
     }
-
-    screencastify.setAppId(6394026632151040)
-    this.getFile.bind(this)
-  
   }
 
   componentDidMount() {
 
-    Meteor.subscribe('videos')
+      Meteor.subscribe('directories')
+      Meteor.subscribe('lessonplans')
 
-    that = this
-    
-    screencastify.isAppConnected().then(function(isConnected) {
-      that.setState({
-        isConnected
-      })
-    });
+      this.directoryTracker = Tracker.autorun(()=>{
+        
+        const data = Directories.findOne(Meteor.userId())
+        const lessonplans = LessonPlans.find().fetch()
 
-  }
-  
-  componentDidUpdate() {
-    screencastify.isAppConnected().then(function(isConnected) {
-      that.setState({
-        isConnected
-      })
-    });
-  }
+        
+        if(data) {
 
-  record() {
-    
-    const that = this
+            const treeData = []
+            
 
-    const recorder = new screencastify.Recorder();
-    recorder.start({
-      recordConfig: {  // optional
-        captureSource: 'desktop',  // for window picker, use 'screen' for screen picker
-        audio: {
-          mic: true,
-          system: false
+
+            treeData.push(...data.directories)
+            treeData.push(...this.getFileObjects(lessonplans))
+
+ 
+
+            this.setState({
+                treeData
+            })
         }
-      },
-      shareUrl: 'http://localhost:3000',  // URL of your page that handles shared files.
-      payload: 'optional arbitrary string'  // Can be retrieved in share handler.
-    }).then(function() {
 
-      screencastify.onSharedFiles = function(fileIds) {
+        
 
-        that.setState({
-          id:fileIds[0]
+      })
+
+  }
+
+  componentWillUnmount() {
+    this.directoryTracker.stop()
+  }
+
+  getFileObjects(lessonplans) {
+
+    const structs = lessonplans.map(lessonplan => {
+
+        if(lessonplan.isAdded == false)
+            return {
+                _id: lessonplan._id,
+                title: lessonplan.name,
+                isFile: true
+            }
+        else return null
+
+    })
+
+    return structs.filter(struct=>{
+        if(struct)
+            return struct
+    })
+
+
+  }
+
+  addNewDirectory(e) {   
+
+    e.preventDefault()
+
+    const newDirectory = {
+        _id: Math.random().toString(36).substr(2, 16),
+        title: this.directoryName.value,
+        children: [],
+        isFile:false
+    }
+
+    this.setState(prevState => {
+        return {
+            treeData: prevState.treeData.concat(newDirectory)
+        }
+    },()=>{
+
+        const {treeData} = this.state
+
+        const hello = treeData.filter(data => {
+
+            if(typeof data == 'array') {
+                return data
+            }
+            else {
+                if(!data.isFile)
+                    return data
+            }   
+
         })
 
-        return true
-  
-      }
-      
-    });
+        Meteor.call('directories.update', Meteor.userId(), hello)
 
-  }
+    })
 
-  getFile() {
+    this.directoryName.value = ''
 
-    const that = this
-
-    if(this.state.id) {
-
-      screencastify.getFile(that.state.id).then(function(fileInfo) {
-
-        const file = fileInfo.file
-
-        const ms = new MediaSource()
-        ms.addEventListener('webkitsourceopen', onSourceOpen.bind(ms), false)
-
-        const video = document.querySelector('video')
-
-      })
-
-    }
-  }
-
-
-  connect() {
-    screencastify.connectApp();
-    console.log(screencastify)
-  }
-
-  fire() {
-
-    
-    console.log(video)
 
   }
 
   render() {
+
+    const getNodeKey = ({ treeIndex }) => treeIndex;
+
+    
+    const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
+  
+        if (node.isFile && nextParent && nextParent.isFile) {
+          return false;
+        }
+  
+        if (!node.isFile && nextParent && nextParent.isFile) {
+            return false;
+        }
+  
+        return true;
+      }
+
     return (
-      <div>
-        <h2>{this.state.isConnected?'connected':'not connected'}</h2>
-        <button onClick = {this.connect.bind(this)}>Connect</button>
-        <button onClick = {this.record.bind(this)}>Record</button>
-        <button onClick = {this.getFile.bind(this)}>Get file</button>
-        <button onClick = {this.fire.bind(this)}>Fire</button>
+      <div style={{ height: 400 }}>
 
-        <br/>
+        <form onSubmit = {this.addNewDirectory.bind(this)}>
+            <input ref = {e => this.directoryName = e}/>
+            <button>New directory</button>
+        </form>
 
-        <video controls autoPlay></video>
+        <SortableTree
 
+            canDrop={canDrop}
+
+            treeData={this.state.treeData}
+
+            onChange={treeData => this.setState({ treeData })}
+
+            onMoveNode = { args => {
+
+                    console.log(args)
+
+                    if(args.node.isFile) {
+
+                        if(args.nextParentNode) {
+
+                            Meteor.call('lessonplans.directoryChange', args.node._id, true)
+                        }
+                        else {
+
+                            Meteor.call('lessonplans.directoryChange', args.node._id, false)
+                        }
+                    }
+                    
+                    const {treeData} = this.state
+
+                    const hello = treeData.filter(data => {
+
+                        if(typeof data == 'array') {
+                            return data
+                        }
+                        else {
+                            if(!data.isFile)
+                                return data
+                        }   
+
+                    })
+
+                    Meteor.call('directories.update', Meteor.userId(), hello)               
+                }             
+            }
+
+        />
       </div>
-    )
+    );
   }
-
 }

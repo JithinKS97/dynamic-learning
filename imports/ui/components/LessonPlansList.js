@@ -1,6 +1,5 @@
 import React from 'react'
 import { LessonPlans } from '../../api/lessonplans'
-import {Tracker} from 'meteor/tracker'
 import LessonPlan from './LessonPlan'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data'

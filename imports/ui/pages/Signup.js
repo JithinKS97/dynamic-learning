@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Accounts } from 'meteor/accounts-base'
+import { Meteor } from 'meteor/meteor'
 
 export default class Signup extends React.Component {
 
@@ -34,8 +35,11 @@ export default class Signup extends React.Component {
                 })
             }
             else {
+
+                Meteor.call('directories.insert', Meteor.userId())
+
                 this.setState({
-                    error: ''
+                    error: ''                   
                 })
             }
         })
@@ -45,7 +49,7 @@ export default class Signup extends React.Component {
         return (
             <div className = 'boxed-view'>
                 <div className = 'boxed-view__box'>
-                    <h1 className >Sign up</h1>
+                    <h1>Sign up</h1>
 
                     {this.state.error ? <p>{this.state.error}</p> : undefined}
                 
