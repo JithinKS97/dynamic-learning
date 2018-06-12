@@ -30,24 +30,17 @@ export default class Tree extends Component {
         
         if(data) {
 
-            const treeData = []
-            
+            const treeData = []       
 
-
-            treeData.push(...data.directories)
-            treeData.push(...this.getFileObjects(lessonplans))
-
- 
+             treeData.push(...data.directories)
+            treeData.push(...this.getFileObjects(lessonplans)) 
 
             this.setState({
                 treeData
             })
-        }
 
-        
-
-      })
-
+        }     
+    })
   }
 
   componentWillUnmount() {
@@ -62,7 +55,8 @@ export default class Tree extends Component {
             return {
                 _id: lessonplan._id,
                 title: lessonplan.name,
-                isFile: true
+                isFile: true,
+                children:null
             }
         else return null
 
@@ -95,7 +89,7 @@ export default class Tree extends Component {
 
         const {treeData} = this.state
 
-        const hello = treeData.filter(data => {
+        const outSideFilesRemoved = treeData.filter(data => {
 
             if(typeof data == 'array') {
                 return data
@@ -107,7 +101,7 @@ export default class Tree extends Component {
 
         })
 
-        Meteor.call('directories.update', Meteor.userId(), hello)
+        Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
 
     })
 
@@ -119,7 +113,6 @@ export default class Tree extends Component {
   render() {
 
     const getNodeKey = ({ treeIndex }) => treeIndex;
-
     
     const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
   
@@ -132,9 +125,32 @@ export default class Tree extends Component {
         }
   
         return true;
-      }
+    }
+
+    const removeLessonPlan = node => {
+
+        if(node.isFile) {
+
+            console.log(`lessonplan ${node.title} removed`)
+            Meteor.call('lessonplans.remove', node._id)
+            return
+            
+        }
+
+        if(node.children.length == 0) {
+            return
+        }
+        else {
+            node.children.map(child => {
+                removeLessonPlan(child)
+            })
+        }        
+
+    }
 
     return (
+        
+
       <div style={{ height: 400 }}>
 
         <form onSubmit = {this.addNewDirectory.bind(this)}>
@@ -168,7 +184,7 @@ export default class Tree extends Component {
                     
                     const {treeData} = this.state
 
-                    const hello = treeData.filter(data => {
+                    const outSideFilesRemoved = treeData.filter(data => {
 
                         if(typeof data == 'array') {
                             return data
@@ -180,10 +196,54 @@ export default class Tree extends Component {
 
                     })
 
-                    Meteor.call('directories.update', Meteor.userId(), hello)               
+                    Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)               
                 }             
             }
 
+            generateNodeProps={({ node, path }) => ({
+                buttons: [
+
+                  <button
+                    onClick={() =>{
+
+                      if(!node.isFile) {
+                        removeLessonPlan(node)
+                      }
+                      else {
+                        Meteor.call('lessonplans.remove', node._id)
+                      }
+                        
+                      this.setState(state => ({                          
+                        treeData: removeNodeAtPath({
+                          treeData: state.treeData,
+                          path,
+                          getNodeKey,
+                        }),
+                      }),()=>{
+
+                        const {treeData} = this.state
+
+                        const outSideFilesRemoved = treeData.filter(data => {
+                
+                            if(typeof data == 'array') {
+                                return data
+                            }
+                            else {
+                                if(!data.isFile)
+                                    return data
+                            }   
+                
+                        })
+                
+                        Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
+
+                      })}
+                    }
+                  >
+                    Remove
+                  </button>
+                ]
+              })}
         />
       </div>
     );
