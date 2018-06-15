@@ -4,6 +4,7 @@
 @import './drawingboard';
 @import './components/icon';
 @import './createLessonPlan';
+@import './components/sim';
 
 
 .drawing-board-canvas-wrapper {
@@ -13,17 +14,5 @@
 .drawing-board-canvas {
   width:'100%';
   height:'100%';
-}
-
-.sim-floating {
-  position: absolute;
-  z-index:1;
-  left:300px;
-  top:100px;
-}
-
-.drawing {
-  width: 100%;
-  height: 100%;
 }
 

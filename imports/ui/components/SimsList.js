@@ -17,9 +17,10 @@ export default class simsList extends React.Component {
 
         super(props)
         this.renderSims.bind(this)
-      }
+        this.opacity = 0
+    }
 
-
+    
     renderSims() {
 
 
@@ -118,7 +119,7 @@ export default class simsList extends React.Component {
                                     height and with of the iframe.
                                 */}
                                 <div style ={{display:'flex', flexDirection:'row'}}>
-                                
+
                                     <SimContainer
                                         isPreview = {false}
                                         {...this.props} 
@@ -126,9 +127,10 @@ export default class simsList extends React.Component {
                                         src = {iframe.src}
                                         {...iframe}
                                     />
-                                    <nav style = {{marginLeft:'0.5rem'}}>
+                                    <div className = 'sim-handle__container' style = {{marginLeft:'0.5rem'}}>
                                     
                                         <FaTrash
+                                            className = 'sim-handle__trash'
                                             onClick = {()=>{
                                             
                                                 const confirmation = confirm('Are you sure you want to remove this?')
@@ -136,13 +138,12 @@ export default class simsList extends React.Component {
                                                 if(confirmation == true)
                                                     this.props.delete(index)}
                                             }
-                                            color = 'white'
                                             size  = '20'                              
                                         />
                                     
-                                        <TiArrowMove className = 'icon__button' size = '22' className = 'sim-handle' color = 'white'/>
+                                        <TiArrowMove size = '22' className = 'sim-handle'/>
 
-                                    </nav>
+                                    </div>
 
                                 </div>
                             </Rnd>

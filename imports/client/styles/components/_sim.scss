@@ -1,0 +1,29 @@
+.sim-floating {
+
+  position: absolute;
+  z-index:1;
+  left:300px;
+  top:100px;
+}
+
+.sim-handle__trash {
+  color: #222222;
+  transition: 0.1s ease-in;
+}
+
+.sim-handle__trash:hover {
+
+  color: white;
+}
+
+
+.sim-handle {
+
+  color: #222222;
+  transition: 0.1s ease-in;
+}
+
+.sim-handle:hover {
+
+  color:white;
+}
