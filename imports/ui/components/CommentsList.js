@@ -1,4 +1,6 @@
 import React from 'react'
+import { Comment, Header} from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
 import CommentBox from './CommentBox'
 
 const CommentsList  = (props) => {
@@ -10,16 +12,22 @@ const CommentsList  = (props) => {
         if(slides.length>0) {
             comments = slides[curSlide].comments
             return comments.map((comment, index)=>{
-                return (
-                    <CommentBox key = {index} comment = {comment} index = {index} {...props}/>
-                )
+                return <CommentBox key = {index} comment = {comment} {...props}/>
+
             })
         }
     }
 
 
     return (
-        <div>{showComments()}</div>
+        <div>
+            <Comment.Group> 
+                <Header as='h3' dividing>
+                    Comments
+                </Header>
+                {showComments()}
+            </Comment.Group> 
+        </div>
     )
 
 }

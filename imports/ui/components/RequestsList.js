@@ -13,7 +13,7 @@ const RequestsList = (props) => {
                 return (
                     
                         <Link key = {index} to={{ pathname: `/request/${request._id}`}} >
-                            <div className = 'slides-list__button' >
+                            <div>
                                 {request.requestTitle}
                             </div>
                         </Link>
@@ -25,7 +25,7 @@ const RequestsList = (props) => {
     }
 
     return(
-        <ul className  = 'slides-list_container'>
+        <ul>
             {renderRequests()}
         </ul>
     )

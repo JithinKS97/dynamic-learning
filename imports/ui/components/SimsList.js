@@ -1,11 +1,12 @@
 import React from 'react'
 import SimContainer from './SimContainer'
 import Rnd from 'react-rnd'
-import {Tracker} from 'meteor/tracker'
-import {withTracker} from 'meteor/react-meteor-data'
-import {Link} from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
-import { timingSafeEqual } from 'crypto';
+
+
+import { Button } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+
 
 export default class simsList extends React.Component {
 
@@ -114,7 +115,7 @@ export default class simsList extends React.Component {
                                     {...iframe}
                                 />
                                 <nav>
-                                    <button className = 'button' style ={{padding: '0.4rem'}} onClick = {()=>{
+                                    <button onClick = {()=>{
                                         
                                         const confirmation = confirm('Are you sure you want to remove this?')
 
@@ -130,33 +131,30 @@ export default class simsList extends React.Component {
                     )
                 }
                 else {
-                    console.log()
+            
                     return (
-                        <div style = {{width:'100%', overflow:'scroll', height: '300px', width:'inherit'}}>
-                            <div key = {index}>
-                            {iframe.userId == Meteor.userId()?<button className = 'button' style = {{float:'right'}}onClick = {()=>{
+                   
+                        <div key = {index}>
+                            {iframe.userId == Meteor.userId()?<Button style = {{float:'right'}}onClick = {()=>{
 
                                 const confirmation = confirm('Are you sure you want to remove this?')
 
                                 if(confirmation == true)
                                     this.props.delete(index)
 
-                                }}>X</button>:null}  
+                                }}>X</Button>:null}  
                                 <SimContainer
-                                            isPreview = {false}
-                                            {...this.props} 
-                                            index = {index} 
-                                            src = {iframe.src}
-                                            {...iframe}
-                                        />
+                                    isPreview = {false}
+                                    {...this.props} 
+                                    index = {index} 
+                                    src = {iframe.src}
+                                    {...iframe}
+                                />
                                 
-                            </div>
                         </div>
                     )
                 }               
-
             })
-
         }         
     }
     render() {

@@ -2,25 +2,31 @@ import React from 'react'
 import { Meteor } from 'meteor/meteor'
 import moment from 'moment'
 
-const CommentBox = (props) => {
+import { Comment, Button } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+
+const CommentBox = (props,) => {
 
     momentNow = moment(props.comment.time)
 
     return (
-        <div className = 'comment'>
+        <Comment>
+            <Comment.Content>
 
-            {props.comment.userId == Meteor.userId()?<button className = 'button' style = {{float:'right', padding:'0.5rem', margin:0}} onClick = {() =>{
+                    {props.comment.userId == Meteor.userId()?<Button style = {{float:'right', padding:'0.5rem'}} onClick = {() =>{
 
-                const confirmation = confirm('Are you sure you want to delete your comment?')
-                if(confirmation == true)
-                    props.deleteComment(props.index)
-                }
-            }>X</button>:null}
-
-            <p>{props.comment.comment}</p>
-            <p style = {{color:'grey', padding:0, marginBottom: '0.6rem', fontSize:'1.4rem'}}>{props.comment.username}</p>
-            <p style = {{color:'grey', padding:0, margin:0, fontSize:'1.4rem'}}>{momentNow.fromNow()}</p>
-        </div>
+                        const confirmation = confirm('Are you sure you want to delete your comment?')
+                        if(confirmation == true)
+                            props.deleteComment(props.index)
+                        }
+                    }>X</Button>:null}
+                
+                <Comment.Author>{props.comment.username}</Comment.Author>
+                <Comment.Metadata>{momentNow.fromNow()}</Comment.Metadata>
+                <Comment.Text>{props.comment.comment} </Comment.Text>
+                
+            </Comment.Content>
+        </Comment>        
     )
 } 
 

@@ -1,44 +1,8 @@
-//Colors
-$brand-primary: #5b4681;
-$dark-grey:#aaaaaa;
-$grey: #d0d0d0;
-$light-grey:#e8e8e8;
-$white: #fdfdfd;
-$dark-white: #f8f8f8;
-
 //Spacing
 $space: 1.4rem;
-$large-space: 2.8rem;
-$site-max-width: 100rem;
 
 //Font sizes
 $base-font-size: 1.6rem;
-
-//Form inputs
-$input-border: $grey;
-$input-spacing: 1rem;
-
-//Boxed view
-$boxed-view-overlay-bg: $grey;
-$boxed-view-bg: $white;
-
-//Button
-$button-bg:$brand-primary;
-$button-color:$white;
-
-//Header
-$header-bg: $brand-primary;
-$header-color: $white;
-$header-height: 6rem;
-
-//Slides List Item
-$slides-item-border-width: 8px;
-$slides-item-selected-border-color: $brand-primary;
-
-//Page Content
-$page-content-sidebar-width: 30rem;
-$page-content-main-width:calc(#{$site-max-width} - #{$page-content-sidebar-width});
-$page-content-height: calc(100vh - #{$header-height});
 
 //Drawingboard
 $control-height: 28px;

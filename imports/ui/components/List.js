@@ -1,5 +1,6 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
+import { Menu, Button} from 'semantic-ui-react'
 
 const List = (props) => {
 
@@ -25,20 +26,22 @@ const List = (props) => {
                 */
 
                 return (                    
-                    <div className = 'slides-list__container' key = {index}>
+                    <Menu.Item 
+                    
+                         key = {index}                        
+                    >
+                        <Button onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</Button>
 
-                        <button className = 'slides-list__button' onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</button>  
-
-                        {isOwner?<button className = 'slides-list__delete' onClick = {()=>{
+                        {isOwner?<Button onClick = {()=>{
 
                             const confirmation = confirm('Are you sure you want to delete?')
                             
                             if(confirmation == true)
                                 props.delete(index)
 
-                        }}>X</button>:null}
+                        }}>X</Button>:null}
 
-                    </div>
+                    </Menu.Item>
                 )
             })
         }        
@@ -46,9 +49,9 @@ const List = (props) => {
 
 
     return (
-        <div>
+        <Menu icon vertical>
             {renderSlides()}
-        </div>
+        </Menu>
     )
 }
 

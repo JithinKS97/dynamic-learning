@@ -8,6 +8,9 @@ import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
 
+import { Grid, Menu, Button, Container} from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+
 
 /* This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
     is composed of an array of slides. Each slide will contain a note and array of simulations.
@@ -40,17 +43,35 @@ export default class CreateLessonPlan extends React.Component {
         };
 
         this.pushSlide.bind(this)
-        this.slideNav.bind(this)
         this.save.bind(this)
+        this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
-    slideNav(event){
+    handleKeyDown(event){
 
-        if(event.keyCode ===  37) {
+
+        if(event.key == 'z' || event.key == 'Z' ) {
+
           this.previous()
         }
-        if(event.keyCode ===  39) {
+        if(event.key == 'x' || event.key == 'X') {
+
           this.next()
+        }
+        if(event.key == 's' || event.key == 'S') {
+
+            this.save()
+        }
+
+        if((event.key == 'a' || event.key == 'A') && !this.curPosition[this.state.curSlide] == 0) {
+
+            this.undo()
+        }
+
+        if(event.key == 'd' || event.key == 'D') {
+           
+            this.interact()
+            
         }
     }
 
@@ -68,9 +89,8 @@ export default class CreateLessonPlan extends React.Component {
 
         this.db.ev.bind('board:reset', this.changed.bind(this));
         this.db.ev.bind('board:stopDrawing', this.changed.bind(this));
-        document.addEventListener("keydown", this.slideNav.bind(this), false);
 
-
+        window.addEventListener("keydown", this.handleKeyDown, false);
 
         this.lessonplansTracker = Tracker.autorun(()=>{
 
@@ -107,6 +127,7 @@ export default class CreateLessonPlan extends React.Component {
     componentWillUnmount() {
 
         this.lessonplansTracker.stop()
+        window.removeEventListener("keydown", this.handleKeyDown, false);
     }
 
     changed() {
@@ -311,6 +332,7 @@ export default class CreateLessonPlan extends React.Component {
     }
 
     undo(e){
+
       this.curPosition[this.state.curSlide]--
       const slides = this.state.slides
       slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
@@ -324,62 +346,64 @@ export default class CreateLessonPlan extends React.Component {
     render() {        
 
         return (
-
-            <div className = 'createLessonPlan'>
-
-                
-                <div className = 'slides'>
-
-                    <h1>{this.lessonplanExists?null:'Loading'}</h1>
-                    <button className = 'button slides-list__header' onClick = {this.addNewSlide.bind(this)}>Create Slide</button>
-                    <h1>{this.state.curSlide}</h1>
-                    <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                </div>
-
-                <div className = 'board'>
-                    <div className = 'board__container'>
-                        <SimsList
-                            isRndRequired = {true}
-                            saveChanges = {this.saveChanges.bind(this)}
-                            delete = {this.deleteSim.bind(this)}
-                            {...this.state}
-                        />
-
-                        <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>
-                    </div>
-                </div>
-                    
-                <div className='menu'>
-                    <div className='menu__container'>
-
-                            <label className = 'checkbox'>
-                                <input className = 'checkbox__box' onChange={this.interact.bind(this)} type = 'checkbox'/>
-                                Interact
-                            </label>
-
-                            <Link className = 'button button--link' to = '/dashboard/lessonplans'>Back</Link>
-
-                            <button className = 'button' onClick = {this.save.bind(this)}>Save</button>
-
-                            <Link className = 'button button--link' to={{ pathname: `/request/${this.state._id}`}}>Request</Link>
-
-                            {(this.curPosition[this.state.curSlide] == 0) ? <button className = 'button' disabled>Undo</button> : <button className = 'button' onClick={this.undo.bind(this)}>Undo</button>}
-
-                            <button className = 'button' onClick = {()=>{
-
-                                const confirmation = confirm('Are you sure you want to reset all?')
-
-                                if(confirmation == true)
-                                    this.reset()
-
-                            }}>Reset</button>
-
-                            <AddSim {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-
-                            {/* {(this.curPosition[this.state.curSlide] == this.undoArray[this.state.curSlide].length-1) ? <button disabled>Redo</button> : <button>Redo</button>} */}
-                    </div>
-                 </div>
+        
+        <div className = 'createLessonPlan'>            
+            
+            <div className = 'slides'>
+                <h1>{this.lessonplanExists?null:'Loading'}</h1>
+                <Button onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
+                <h1>{this.state.curSlide}</h1>
+                <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
             </div>
+
+            <div className = 'board'>
+                <SimsList
+                    isRndRequired = {true}
+                    saveChanges = {this.saveChanges.bind(this)}
+                    delete = {this.deleteSim.bind(this)}
+                    {...this.state}
+                />                   
+                <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>                   
+            </div>
+            
+            <div style = {{margin:'0.8rem'}} className = 'menu'>
+            
+                <AddSim ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                <Menu icon vertical>
+
+                    <Menu.Item link>
+                        <Link to = '/dashboard/lessonplans'>Back</Link>
+                    </Menu.Item>
+
+                    <Menu.Item link>
+                        <Link to={{ pathname: `/request/${this.state._id}`}}>Request</Link>
+                    </Menu.Item>
+
+                    <Menu.Item onClick = {()=>{
+                        const confirmation = confirm('Are you sure you want to reset all?')
+                        if(confirmation == true)
+                        this.reset()
+                    }}>
+                        Reset
+                    </Menu.Item>
+                    
+                    <Menu.Item onClick = {()=>{this.addSim.addSim()}}>
+                        Add simulation
+                    </Menu.Item>
+
+                    <Menu.Item onClick = {()=>{this.undo()}}>
+                        Undo
+                    </Menu.Item>
+
+                    <Menu.Item onClick = {()=>{this.save()}}>
+                        Save
+                    </Menu.Item>
+
+                </Menu>
+                         
+            </div>
+        
+        </div>            
         )
     }
 }

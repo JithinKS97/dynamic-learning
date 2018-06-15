@@ -1,6 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
+
+import { Button, Form, Card } from 'semantic-ui-react'
+
+import 'semantic-ui-css/semantic.min.css';
  
 export default class Login extends React.Component {
 
@@ -36,19 +40,45 @@ export default class Login extends React.Component {
 
         return (
             <div className = 'boxed-view'>
-                <div className = 'boxed-view__box'>
-                    <h1>Dynamic Learning</h1>
-                    {this.state.error ? <p>{this.state.error}</p> : undefined}
+                <Card>
+                    <Card.Content>
+                        <Card.Header>Login</Card.Header>
+                    </Card.Content>
 
-                    <form className = 'boxed-view__form' onSubmit = {this.onSubmit.bind(this)} noValidate>
-                        <input type='email' ref= { e => this.email = e} name='email' placeholder='Email'/>
-                        <input type='password' ref= {e => this.password = e} name='password' placeholder='Password'/>
-                        <button className = 'button'>Sign in</button>
-                    </form>
+                    <Card.Content>
+                        <Form onSubmit = { this.onSubmit.bind(this) }>
+                            <Form.Field>
+                                <label>Email</label>
+                                <input type = 'email' ref = { e => this.email = e } placeholder='Email' />
+                            </Form.Field>
 
-                    <Link className = 'boxed-view__underline' to='/signup'>Don't have an account?</Link>
-                </div>
+                            <Form.Field>
+                                <label>Password</label>
+                                <input type = 'password' ref = { e => this.password = e } placeholder='Password' />
+                            </Form.Field>
+
+                            <Button type='submit'>Submit</Button>
+                        </Form>
+                    </Card.Content> 
+                    <Card.Content>
+                        <Link to = '/signup'>Don't have an account?</Link>
+                    </Card.Content> 
+
+                </Card>
             </div>
+          
         )
     }
 }
+
+
+{/* <h1>Dynamic Learning</h1>
+{this.state.error ? <p>{this.state.error}</p> : undefined}
+
+<Form onSubmit = {this.onSubmit.bind(this)} noValidate>
+    <Form.Field type='email' ref= { e => this.email = e} name='email' placeholder='Email'/>
+    <input type='password' ref= {e => this.password = e} name='password' placeholder='Password'/>
+    <Button>Sign in</Button>
+</Form>
+
+<Link to='/signup'>Don't have an account?</Link> */}

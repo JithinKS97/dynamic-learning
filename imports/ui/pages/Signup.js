@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom'
 import { Accounts } from 'meteor/accounts-base'
 import { Meteor } from 'meteor/meteor'
 
+import { Button, Form, Card } from 'semantic-ui-react'
+
+import 'semantic-ui-css/semantic.min.css';
+
 export default class Signup extends React.Component {
 
     constructor(props) {
@@ -15,9 +19,9 @@ export default class Signup extends React.Component {
     onSubmit(e) {
         e.preventDefault()
 
-        const email = this.refs.email.value.trim()
-        const password = this.refs.password.value.trim()
-        const username = this.refs.username.value.trim()
+        const email = this.email.value.trim()
+        const password = this.password.value.trim()
+        const username = this.username.value.trim()
 
         if(password.length<9) {
 
@@ -48,21 +52,37 @@ export default class Signup extends React.Component {
     render() {
         return (
             <div className = 'boxed-view'>
-                <div className = 'boxed-view__box'>
-                    <h1>Sign up</h1>
+                 <Card>
+                    <Card.Content>
+                        <Card.Header>Signup</Card.Header>
+                    </Card.Content>
 
-                    {this.state.error ? <p>{this.state.error}</p> : undefined}
-                
-                    <form className = 'boxed-view__form' onSubmit = {this.onSubmit.bind(this)} noValidate>
-                        <input type='username' ref='username' name='username' placeholder='Username'/>
-                        <input type='email' ref='email' name='email' placeholder='Email'/>
-                        <input type='password' ref='password' name='password' placeholder='Password'/>
-                        <button className = 'button'>Create Account</button>
-                    </form>
+                    <Card.Content>
 
-                    <Link className = 'link' to='/'>Already have an account?</Link>
+                        {this.state.error ? <p>{this.state.error}</p> : undefined}
                     
-                </div>
+                        <Form onSubmit = {this.onSubmit.bind(this)} noValidate>
+                            <Form.Field>
+                                <label>Username</label>
+                                <input ref= { e => this.username = e } placeholder='Username'/>
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Email</label>
+                                <input type='email' ref= { e => this.email = e } placeholder='Email'/>
+                            </Form.Field>    
+                            <Form.Field>
+                                <label>Password</label>
+                                <input type='password' ref= { e => this.password = e } placeholder='Password'/>
+                            </Form.Field>
+                            <Button>Create Account</Button>
+                        </Form>
+
+                    </Card.Content>
+
+                    <Card.Content>
+                        <Link className = 'link' to='/'>Already have an account?</Link>
+                    </Card.Content>
+                </Card>
             </div>
         );
     }

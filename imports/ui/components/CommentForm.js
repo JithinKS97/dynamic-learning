@@ -1,6 +1,10 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
 
+import { Form, Button } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+
+
 export default class CommentForm extends React.Component {
 
     constructor(props) {
@@ -12,9 +16,9 @@ export default class CommentForm extends React.Component {
         this.postComment.bind(this)
     }
 
-    postComment(e) {
+    postComment(e, {value}) {
         
-        e.preventDefault()
+        console.log()
 
         if(this.comment.value) {
             const slides = this.props.slides
@@ -29,13 +33,16 @@ export default class CommentForm extends React.Component {
         
     render() {
         return (
-            <div>
-                <form onSubmit = {this.postComment.bind(this)}>
-                    <textarea placeholder = 'Comment' style = {{width:'100%',height:'10rem', marginBottom:'1.6rem', padding:'1.6rem', resize:'none'}} ref = {e => this.comment = e}/>
-                    <br/>
-                    <button className = 'button' onClick = {this.postComment.bind(this)}>Submit</button>
-                </form>
-            </div>
+       
+                <Form onSubmit = {this.postComment.bind(this)}>
+                    <Form.Field>
+                        <textarea rows = '4' placeholder = 'Comment' ref = {e => this.comment = e}/>
+                    </Form.Field>
+                    <Form.Field>
+                        <Button type = 'submit'>Submit</Button>
+                    </Form.Field>
+                </Form>
+     
         )
     }
 }

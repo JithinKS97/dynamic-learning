@@ -1,167 +1,125 @@
 import React from 'react'
-import { Sims } from '../../api/sims'
-import Modal from 'react-modal'
-import { Meteor } from 'meteor/meteor'
+
+import SimsDirectories from './SimsDirectories'
+
+import { Button, Grid, Modal } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+
 import SimContainer from './SimContainer'
-import { withTracker } from 'meteor/react-meteor-data'
 
-class AddSim extends React.Component {
+export default class AddSim extends React.Component {
 
-    /* This component is used for the selection of the simulation for
-       the teachers to add to a slide. The simulations are fetched from 
-       the database.
 
-       Here for prototyping, all the simulations are altogether fetched.
-       But in the final version of the application, the simulations are
-       not altogether fetched, but according the realtime search of the
-       user.
-    */
 
     constructor(props) {
         super(props)
         this.state = {
-            sims: [],
             isOpen: false,
-            sim:null
+            node:null
         }
-        this.simsList.bind(this)
-        this.showSim.bind(this)
+
     }
 
-    simsList() {
+    addSim() {
+        
+        this.setState({isOpen:true})
+    }
 
-        /* This is for displaying the simulations fetched. For each simulation, there
-           will be a button with the name of the simulation in it. If the button is
-           pressed, the correspoing simulation's data is set in the state, so
-           that it is rendered. sim contains src, width, height and the name of the simulation.
-        */
-
-        return this.props.sims.map((sim, i)=>{
-            
-            return (
-                <div key =  {i}>
-                    <button style = {{width: '100%'}} className = 'slides-list__button' onClick = {()=>{
-
-                        this.setState({sim})
-
-                        }} key = {sim._id}>
-                        {sim.name}
-                    </button>
-                </div>
-            )
+    handleOpen() {
+        this.setState({
+            isOpen: true
         })
     }
 
-    showSim() {
+    handleClose() {
+        this.setState({
+            isOpen: false
+        })
+    }
 
-        /* If there is a valid sim in the state, an iframe is rendered */
+    getNode(node) {
+        this.setState({
+            node
+        },()=>{
+            console.log(this.state.node)
+        })
+    }
 
-        if(this.state.sim) {
-            return (
-                <div style = {{width:'100%', height:'200px', overflow:'scroll'}}>
-                    <SimContainer isPreview = {true} {...this.state.sim}/>
-                </div>
-            )
+    addToLesson() {
+
+        if(this.state.node) {
+
+            console.log(this.state.node)
+
+            const { slides, curSlide } = this.props
+                                
+
+            const sim = {
+                src:this.state.node.src,
+                w:this.state.node.w,
+                h:this.state.node.h,
+                x:0,
+                y:0,
+                data:{}
+            }
+
+            slides[curSlide].iframes.push(sim)
+
+            this.props.saveChanges(slides)
+
+            this.setState({
+                isOpen:false,
+                node:null
+            })
+
         }
+
     }
 
     render() {
 
-        /* Simulation adding feature will be a modal that will be opened when the Add sim button
-           is pressed. The simulations are shown by the simsList() and the
-           selected simulation is shown by the showSim().
-        */
 
         return(
-            <div >
-                <button style = {{width:'100%'}} className = 'button' onClick = {()=>this.setState({isOpen:true})}>Add sim</button>
-                <Modal 
-                
-                    isOpen = {this.state.isOpen} ariaHideApp={false}
-                    className = 'boxed-view__box'
-                    overlayClassName = 'boxed-view boxed-view--modal'
+            <div>
+
+                <Modal                
                     
+                    open={this.state.isOpen}
+                    onClose={this.handleClose}
+                    size='large'      
+                                       
                 >
-                    <h1>Select simulation</h1>
-        
-                    {this.simsList()}
-         
-                    {this.showSim()}
 
-                    <div style = {{display:'flex', flexDirection:'column'}}>
 
-                        <button className = 'button' onClick = {()=>{
-                            
-                            /* The simulation is added only if the valid simulation is set to the
-                            state.
-                            */
+                    <Modal.Header>My simulations</Modal.Header>
 
-                            if(this.state.sim) {
+                    <Modal.Content>
+                        <Modal.Description>
+                            <Grid columns={2} divided>
 
-                                /* The slides and the current slides are obtained from the props
-                                To the slides, the iframe of selected simulation is pushed and
-                                the changes are saved by calling the saveChanges function.
+                                <Grid.Column >
+                                    <SimsDirectories isPreview = {true} getNode = {this.getNode.bind(this)} ref = {e => this.simDirectories = e}/>
+                                </Grid.Column>
 
-                                See the definition of saveChanges funciton in CreateLessonPlan
-                                Component.
-
-                                Finally the Modal is closed after the insertion of the simulation.
-                                */
-
-                                const { slides, curSlide } = this.props
+                                <Grid.Column style = {{overflow:'auto'}}>
+                                    <SimContainer {...this.state.node}/>
+                                    {this.state.node?<Button onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
+                                </Grid.Column>
                                 
+                            </Grid>
+            
 
-                                const sim = {
-                                    src:this.state.sim.src,
-                                    w:this.state.sim.w,
-                                    h:this.state.sim.h,
-                                    x:0,
-                                    y:0,
-                                    data:{}
-                                }
-
-                                slides[curSlide].iframes.push(sim)
-
-                                this.props.saveChanges(slides)
-
+                            <Button onClick = {()=>{
+                                this.handleClose()
                                 this.setState({
-                                    isOpen:false,
-                                    sim:null
+                                    node:null
                                 })
-                            }
+                            }}>Close</Button>
+                        </Modal.Description>
+                    </Modal.Content>
 
-                            }}>Add
-                        </button>
-
-                        <button className = 'button' onClick = {()=>{
-                            
-                            /* The Modal opening and closing is determined by the isOpen in
-                            the state.
-                            */
-
-                            this.setState( {
-                                    isOpen:false,
-                                    sim:null
-                                }
-                            )
-                        }}>Cancel</button>
-
-                    </div>
                 </Modal>
             </div>
         )
     }
 }
-
-export default AddSimContainer = withTracker(()=>{
-
-    Meteor.subscribe('sims')
-    
-    const sims = Sims.find().fetch()
-    const simExists = !!sims
-
-    return {
-        sims:simExists?sims:[]
-    }
-
-})(AddSim)

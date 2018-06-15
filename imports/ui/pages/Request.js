@@ -8,7 +8,11 @@ import CommentsList from '../components/CommentsList'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import Modal from 'react-modal'
-import { Tracker } from 'meteor/tracker' 
+import { Tracker } from 'meteor/tracker'
+
+
+import { Grid, Button, Form} from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
 
 export default class Request extends React.Component {
 
@@ -191,7 +195,7 @@ export default class Request extends React.Component {
 
     deleteSim(index) {
 
-        /* This function decides what to do when cross button is pressed in the
+        /* This function decides what to do when cross Button is pressed in the
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
         */
@@ -234,39 +238,20 @@ export default class Request extends React.Component {
 
         return (
 
-            <div className = 'request'>
+            <div>
+                <Grid columns={3} divided>
+                    <Grid.Row>
+                        <Grid.Column>
 
+                            {this.requestExists?null:<h1>Loading</h1>}
 
-                {isOwner?<Modal 
-                            ariaHideApp={false} 
-                            isOpen = {this.state.requestTitle?false:true}
-                            className = 'boxed-view__box'
-                            overlayClassName = 'boxed-view boxed-view--modal'
-                        >
-                    <h1>Title</h1>
-                    <form onSubmit = {this.setTitle.bind(this)}>
-                        <input ref = {e => this.requestTitle = e}/>
-                        <button style = {{marginLeft:'1.6rem'}} className = 'button'>Submit</button>
-                        <br/>
-                        <Link className = 'button button--link' to={{ pathname: `/createlessonplan/${this.state._id}`}}>
-                            Back
-                        </Link>
-                    </form>
-                </Modal>:null}
+                            <h1>{this.state.requestTitle}</h1>
 
-                
-                <div className='request_slides'>
-                    <div className = 'request_slides_container'>    
-                        <h1>{this.requestExists?null:'Loading'}</h1>
-
-
-                         <h1>{this.state.requestTitle}</h1>
-
-                         <button className = 'button' onClick = {()=>{
+                            <Button onClick = {()=>{
                             history.back()
-                        }}>Back</button>
+                            }}>Back</Button>
 
-                        {isOwner?<button style = {{marginLeft: '1.6rem'}} className = 'button' onClick = {()=>{
+                            {isOwner?<Button onClick = {()=>{
                             
                             const confirmation = confirm('Are you sure you want to delete all the requests?')
 
@@ -277,36 +262,56 @@ export default class Request extends React.Component {
                             }                        
                             
 
-                        }}>Remove Requests</button>:null}
-                        
+                            }}>Delete this request</Button>:null}
 
-                        {isOwner?<form onSubmit = {this.push.bind(this)}>
+
+                            {isOwner?
                             
-                            <input style = {{width:'100%'}} placeholder = 'Create a new request' ref = {e => this.title = e}/>
-                            <br/>
-                            <button className = 'button' >New request</button>
+                                <Form onSubmit = {this.push.bind(this)}>
+                                
+                                    <Form.Field>
+                                        <input placeholder = 'Title for the new topic' ref = {e => this.title = e}/>
+                                    </Form.Field>
 
-                        </form>:null}
+                                    <Form.Field>
+                                        <Button >Create new topic</Button>
+                                    </Form.Field>
 
-                        {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
-                    </div>
-                </div>
-                        
-                <div className = 'request_comments'>
-                <div className = 'request_comments_container'>
-                    {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
-                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
-                    null}
-                </div>
-                </div>
+                                </Form>:
 
-                <div className = 'request_sims'>
-                    <div className = 'request_sims_container' >
-                    {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
-                    <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
-                    </div>
-                </div>                  
-                
+                            null}
+
+                            {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
+                        </Grid.Column>
+                        <Grid.Column>
+                            {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
+                            {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
+                            null}
+                        </Grid.Column>
+                        <Grid.Column>
+                            
+                            {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
+                            <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+                      
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+
+
+                {isOwner?<Modal 
+                            ariaHideApp={false} 
+                            isOpen = {this.state.requestTitle?false:true}
+                        >
+                    <h1>Title</h1>
+                    <form onSubmit = {this.setTitle.bind(this)}>
+                        <input ref = {e => this.requestTitle = e}/>
+                        <Button>Submit</Button>
+                        <br/>
+                        <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
+                            Back
+                        </Link>
+                    </form>
+                </Modal>:null}               
 
             </div>
 

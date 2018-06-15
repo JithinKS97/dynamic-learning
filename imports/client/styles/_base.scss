@@ -13,27 +13,3 @@ body {
     font-size: $base-font-size;
 }
 
-h1 {
-    font-weight: 300;
-    margin-bottom: $space;
-}
-
-a {
-    color:black;
-    text-decoration: none;
-}
-
-li {
-    list-style-type: none;
-}
-
-input {
-    border: 1px solid $input-border;
-    font-size:$base-font-size;
-    margin-bottom: $space;
-    padding: $input-spacing;
-}
-
-p {
-    margin-bottom: $space;
-}

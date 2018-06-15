@@ -1,14 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
 
 const SideBar = () => {
 
     return (
-        <div className = 'page-content__sidebar__container'>
-            <ul className = 'list-item'>
-                <Link to = 'lessonplans'><li>Create lessons</li></Link>
-                <Link to = 'requests'><li>Help make simulations</li></Link>
-                <Link  to = 'uploadsim'><li>Upload simulations</li></Link>
+        <div>
+            <ul>
+                
+                <Menu vertical>
+                    <Menu.Item link><Link to = 'lessonplans'>Create lessonplans</Link></Menu.Item>
+                    <Menu.Item link><Link to = 'requests'>Help make simulations</Link></Menu.Item>
+                    <Menu.Item link><Link  to = 'uploadsim'>Upload simulations</Link></Menu.Item>   
+                </Menu>
+   
             </ul>
         </div>
     )

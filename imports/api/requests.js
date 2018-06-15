@@ -21,57 +21,6 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized')
         }
 
-        new SimpleSchema({
-
-            _id: {
-                type: String,
-                min:1
-            }
-
-        }).validate({_id})
-
-        new SimpleSchema({
-
-            title: {
-                type:String,
-                optional: true
-            },
-
-            iframes: {
-                type:Array,
-                optional: true
-            },
-
-            'iframes.$':Object,
-            'iframes.$.userId':String,
-            'iframes.$.src':String,
-            'iframes.$.w':String,
-            'iframes.$.h':String,
-            'iframes.$.x':Number,
-            'iframes.$.y':Number,
-
-            comments: {
-                type:Array,
-                optional: true
-            },
-
-            'comments.$':Object,
-            'comments.$.comment':String,
-            'comments.$.username':String,
-            'comments.$.userId':String,
-            'comments.$.time':Number
-
-        }).validate(slides)
-
-        new SimpleSchema({
-
-            _id: {
-                type: String,
-                min:1
-            }
-
-        }).validate({_id})
-
         Requests.update({_id}, {$set:{slides,  updatedAt: moment().valueOf()}})
     },
 

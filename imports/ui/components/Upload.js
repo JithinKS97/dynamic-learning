@@ -1,7 +1,11 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
 import SimContainer from './SimContainer'
-import Modal from 'react-modal'
+
+
+import { Button, Modal, Form, TextArea} from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+import Rnd from 'react-rnd'
  
 
 export default class Upload extends React.Component {
@@ -17,30 +21,28 @@ export default class Upload extends React.Component {
         this.state = {
             src:'',
             error:'',
-            isOpen: false,
-            w:null,
-            h:null
+            modalOpen: false
         }
-        this.submitButton.bind(this)
     }
 
     componentDidMount() {
         Meteor.subscribe('sims')
     }
     
-    enteredLink(e) {
+    onEnter(e) {
         
         e.preventDefault()
-        let link = this.sim.value
+        let entry = this.src.value
         this.setState({
-            error:link
+            error:entry
         })
+
 
         /* The link.match checks if the iframe entered is valid by using regular
            expression. The src should be set only if the entered tag is valid.
         */
 
-        const tag = link.match(`<iframe.+?src="https://alpha.editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
+        const tag = entry.match(`<iframe.+?src="https://alpha.editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
         
         if(tag) {
             const validTag = tag[0]
@@ -67,92 +69,110 @@ export default class Upload extends React.Component {
         }
     }
 
-    submitButton() {
+    onSubmit(e) {
 
-        /* Here we read the name, width and height of the simulation. A method is
-           passed from the parent function which decides what to do with the uploaded
-           simulation. To the method, we pass these values.
-        */
+        e.preventDefault()
 
-        if(this.state.src) {
-            return (
-                <div style = {{display: 'flex', flexDirection:'column'}}>
+        const {src} = this.state
+        const w = '300px'
+        const h = '200px'
+        const name = this.name.value
 
-                        Name
-                        <input ref= {e => this.name = e} onChange = {()=>{this.setState({name:this.name.value})}}/>
-                    
-                        Width
-                        <input ref= {e => this.width = e} onChange = {()=>{this.setState({w:this.width.value})}}/>
-                 
-                        Height
-                        <input ref= {e => this.height = e} onChange = {()=>{this.setState({h:this.height.value})}}/>
-                              
-                    <button className = 'button' onClick = {(e)=>{
+        console.log(this.state)
 
-                        e.preventDefault()
-                        const src = this.state.src
 
-                        let w = this.width.value
-                        let h = this.height.value
-                        let name = this.name.value
+        if(src && name ) {           
 
-                        if(name && w && h) {
-                            
-                            let uploaded = false;
-                            if(typeof this.props.methodToRun == 'string')
-                            {   
-                                Meteor.call(this.props.methodToRun, name, src, w, h)
-                                uploaded = true                           
-                                
-                            }
-                            else if(typeof this.props.methodToRun == 'function'){
-                                this.props.methodToRun(src, w, h)
-                                uploaded = true
-                                
-                            }
-                            if(uploaded == true) {
-                                alert('Uploaded succesfully')
-                                this.setState({
-                                    src:'',
-                                    error:'',
-                                    isOpen: false,
-                                    name:null,
-                                    w:null,
-                                    h:null
-                                })
-                            }                            
-                        }                                                                        
-                    }}>Submit</button>                
-                </div>
-            )
+            let uploaded = false;
+
+            if(typeof this.props.methodToRun == 'string')
+            {
+                   
+                Meteor.call(this.props.methodToRun, name, src, w, h)
+                uploaded = true                             
+            }
+            else if(typeof this.props.methodToRun == 'function'){
+
+                this.props.methodToRun(src, w, h)
+                uploaded = true                
+            }
+            if(uploaded == true) {
+                alert('Uploaded succesfully')
+                this.setState({
+                    src:'',
+                    error:'',
+                    modalOpen: false,
+                    name:null,
+                    w:null,
+                    h:null
+                }) 
+            }
+            this.handleClose()      
         }
-        else return null
     }
+
+    handleOpen = () => this.setState({ modalOpen: true })
+    handleClose = () => this.setState({ 
+        modalOpen: false,
+        src:'',
+        error:'',
+        modalOpen: false,
+        name:null,
+        w:null,
+        h:null 
+    })
+
     
     render() {
-        
-        return(
-            <div>
-                <button className = 'button' onClick = {()=>this.setState({isOpen:true})}> + Add Simulation</button>        
-                <Modal 
-                    isOpen = {this.state.isOpen} 
-                    ariaHideApp={false}
-                    className = 'boxed-view__box'
-                    overlayClassName = 'boxed-view boxed-view--modal'
+
+        return(                    
+                <Modal
+                            
+                    closeOnRootNodeClick={false}
+                    style = {{height:'auto', width:'auto', minWidth: '36rem'}}
+                    trigger = {this.props.isPreview?null:<Button onClick={this.handleOpen} >Add simulation</Button>}
+                    open={this.state.modalOpen}
+                    onClose={this.handleClose}
+                    size='tiny'
+
                 >
-                    <form>
-                        <h1>Submit simulation</h1>
-                        <p>Enter the Iframe tag from p5 online text editor (Served over https)</p>
-                        <input style = {{width:'100%'}} onChange={this.enteredLink.bind(this)} ref = {e => this.sim = e}/>
-                        {this.state.src?<div style = {{width:'100%', height:'200px', overflow:'scroll'}}>
-                            <SimContainer isPreview = {true} {...this.state}/>
-                        </div>:null}
-                        <div>{this.submitButton()}</div>
-                        <button style = {{width:'100%'}} type = 'button' className = 'button' onClick = {()=>this.setState({isOpen:false, src:''})}>Cancel</button>
-                    </form>
+                   <Modal.Header>Add simulation</Modal.Header>
+
+                   <Modal.Content>
+
+                            <Form>
+                                <Form.Field>
+                                    <label>Enter iframe tag from p5 online text editor</label>
+                                    <input ref = { e => this.src = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
+                                </Form.Field>                            
+                            </Form>
+
+                                {this.state.src?
+                                    <Form onSubmit = {this.onSubmit.bind(this)} style = {{marginTop:'0.8rem'}}>
+                                        <Form.Field>
+                                            <label>Preview</label>                                            
+                                            <SimContainer ref = { e => this.simContainer = e} {...this.state}/>                                           
+                                        </Form.Field>
+                                        
+                                        <Form.Field>
+                                            <label>Name</label>
+                                            <input placeholder = 'Name' ref = {e => this.name = e}/>
+                                        </Form.Field>
+                                        
+                                        <Form.Field> 
+                                            <Button>Submit</Button>                                         
+                                        </Form.Field>                                        
+                                    </Form>
+                                    :null
+                                }
+                               
+
+                                <Button style = {{marginTop: '0.8rem'}} onClick = {this.handleClose.bind(this)}>Close</Button>                                          
+
+    
+                    </Modal.Content>
                       
                 </Modal>
-            </div>
         )
     }
 }

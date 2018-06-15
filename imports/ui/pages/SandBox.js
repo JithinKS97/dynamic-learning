@@ -1,7 +1,5 @@
 import React from 'react'
 import '../../api/castify-api'
-import { Videos } from '../../api/videos'
-import { Tracker } from 'meteor/tracker'
 import { Meteor } from 'meteor/meteor'
 
 

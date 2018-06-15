@@ -6,7 +6,14 @@ import 'react-sortable-tree/style.css';
 import { Directories } from '../../api/directories'
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
-import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
+
+import { Button, Modal, Form} from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+
+import FaTrash from 'react-icons/lib/fa/trash'
+import FaEdit from 'react-icons/lib/io/edit'
+
+import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
  
 
 /*This component displays the lessonplan files in nested tree structure.
@@ -23,7 +30,9 @@ export default class LessonPlansDirectories extends Component {
 
     this.state = {
         
-      treeData: []
+      treeData: [],
+      modalOpen: false,
+      modal2Open:false
     }
 
     this.removeOutsideFiles.bind(this)
@@ -49,7 +58,7 @@ export default class LessonPlansDirectories extends Component {
                 file structure is obtained as file objects.
             */
 
-            treeData.push(...data.directories)
+            treeData.push(...data.lessonPlanDirectories)
             treeData.push(...this.getFileObjects(lessonplans)) 
 
             this.setState({
@@ -93,35 +102,37 @@ export default class LessonPlansDirectories extends Component {
 
   }
 
-  addNewDirectory(e) {   
+  addNewFolder(e) {   
 
     e.preventDefault()
-
+    
     /* New directory is created here.*/
+
+    if(!this.folderName.value)
+        return
+
+    this.handle2Close()
 
     const newDirectory = {
 
-        title: this.input.value,
+        title: this.folderName.value,
         children: [],
         isFile:false
     }
 
-    if(this.input.value) {
+    this.setState(prevState => {
+        return {
+            treeData: prevState.treeData.concat(newDirectory)
+        }
+    },()=>{
 
-        this.setState(prevState => {
-            return {
-                treeData: prevState.treeData.concat(newDirectory)
-            }
-        },()=>{
-    
-            const outSideFilesRemoved = this.removeOutsideFiles()
-    
-            Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
-    
-        })
-    }   
+        const outSideFilesRemoved = this.removeOutsideFiles()
 
-    this.input.value = ''
+        Meteor.call('lessonPlanDirectories.update', Meteor.userId(), outSideFilesRemoved)
+
+    })  
+
+    this.folderName.value = ''
 
 
   }
@@ -149,15 +160,25 @@ export default class LessonPlansDirectories extends Component {
 
   addNewLessonPlan() {
 
-    if(this.input.value) {
+    if(!this.lessonPlanName.value)
+        return
 
-        Meteor.call('lessonplans.insert', this.input.value) 
-    }
-    this.input.value = ''
+    this.handleClose()
+
+    Meteor.call('lessonplans.insert', this.lessonPlanName.value) 
+
+    this.lessonPlanName.value = ''
 
   }
 
+  handleOpen = () => this.setState({ modalOpen: true })
+  handleClose = () => this.setState({ modalOpen: false })
+
+  handle2Open = () => this.setState({ modal2Open: true })
+  handle2Close = () => this.setState({ modal2Open: false })
+
   render() {
+
 
     const getNodeKey = ({ treeIndex }) => treeIndex;
     
@@ -206,130 +227,168 @@ export default class LessonPlansDirectories extends Component {
 
     }
 
-    return (
-        
+    return ( 
 
-      <div style={{ height: 400 }}>
+        <div>   
 
-            <input placeholder = 'Title...' ref = {e => this.input = e}/>
+             <Modal 
 
-            <button
-                
-                onClick = {this.addNewLessonPlan.bind(this)} 
-                style = {{marginLeft:'1.6rem'}} 
-                className = 'button'>
-                
-                Create LessonPlan
+                trigger = {<Button onClick={this.handleOpen} >Create new lessonplan</Button>}
+                open={this.state.modalOpen}
+                onClose={this.handleClose}
+                size='tiny'            
+             >
+                <Modal.Header>Lessonplan details</Modal.Header>
 
-            </button>
+                <Modal.Content>
+                    <Modal.Description>
 
-            <button 
+                        <Form onSubmit = {this.addNewLessonPlan.bind(this)}>
 
-                onClick = {this.addNewDirectory.bind(this)} 
-                style = {{marginLeft:'1.6rem'}} 
-                className = 'button'>
-                
-                Create directory
+                            <Form.Field>
+                                <label>Name</label>
+                                <input ref = { e => this.lessonPlanName = e } placeholder='Name' />
+                            </Form.Field>
+                      
+                            <Button type='submit'>
+                                Submit
+                            </Button>
 
-            </button>
-        
-            {this.state.treeData.length==0?
-                <p style = {{ 
-
-                    fontSize:'2rem',
-                    paddingTop:'2rem', 
-                    color:'grey', 
-                    fontStyle:'italic'}}
-                
-                >Create a new directory or lessonplan to get started !!!</p>:
-                null
-            }
-
-        <SortableTree
-
-            theme={FileExplorerTheme}
-            
-            canDrop={canDrop}
-
-            treeData={this.state.treeData}
-
-            onChange={treeData => this.setState({ treeData })}
-
-            onMoveNode = { args => {
-
-                    if(args.node.isFile) {
-
-                        /*When a file is moved within the directory structure, we check
-                            whether it has come to the root directory. If args.nextParentNode
-                            is null, it is outsude, otherwise it is inside.
-                        */
-
-                        if(args.nextParentNode) {
-
-                            Meteor.call('lessonplans.directoryChange', args.node._id, true)
-                        }
-                        else {
-
-                            Meteor.call('lessonplans.directoryChange', args.node._id, false)
-                        }
-                    }
+                            <Button onClick = {this.handleClose}>
+                                Close
+                            </Button>
+                       
+                        </Form>
+                    </Modal.Description>
                     
-                    const outSideFilesRemoved = this.removeOutsideFiles()
+                </Modal.Content>              
 
-                    Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)               
-                }             
-            }
+            </Modal>
 
-            
 
-            generateNodeProps={({ node, path }) => ({
-                buttons: [
+             <Modal 
 
-                  <button
-                  className = 'button-nested'
-                    style = {{visibility:node.isFile?'visible':'hidden'}}>
-                    <Link to ={{ pathname: `/createlessonplan/${node._id}`}}>
-                        Open
-                    </Link>
-                  </button>,
+                trigger = {<Button onClick={this.handle2Open} >Create a folder</Button>}
+                open={this.state.modal2Open}
+                onClose={this.handle2Close}
+                size='tiny'            
+                >
+                <Modal.Header>New folder</Modal.Header>
 
-                  <button
-                    className = 'button-nested'
-                    onClick={() =>{
+                <Modal.Content>
+                    <Modal.Description>
 
-                      const input = confirm('Are you sure you want to perform this deletion?')
-                      if(!input)
-                        return
+                        <Form onSubmit = {this.addNewFolder.bind(this)}>
 
-                      if(!node.isFile) {
-                        removeLessonPlan(node)
-                      }
-                      else {
+                            <Form.Field>
+                                <label>Name</label>
+                                <input ref = { e => this.folderName = e } placeholder='Name' />
+                            </Form.Field>
+                    
+                            <Button type='submit'>
+                                Submit
+                            </Button>
 
-                        Meteor.call('lessonplans.remove', node._id)
-                      }
-                        
-                      this.setState(state => ({                          
-                        treeData: removeNodeAtPath({
-                          treeData: state.treeData,
-                          path,
-                          getNodeKey,
-                        }),
-                      }),()=>{
+                            <Button onClick = {this.handle2Close}>
+                                Close
+                            </Button>
+                    
+                        </Form>
+                    </Modal.Description>
+                    
+                </Modal.Content>              
 
-                        const outSideFilesRemoved = this.removeOutsideFiles()
+                </Modal>
+
+            <div style={{ height: 400, padding:'1.6rem' }}>        
                 
-                        Meteor.call('directories.update', Meteor.userId(), outSideFilesRemoved)
+                <SortableTree 
+                
+                    theme={FileExplorerTheme}    
+                    canDrop={canDrop}                    
+                    treeData={this.state.treeData}
+                    onChange={treeData => this.setState({ treeData })}
+                    onMoveNode = { args => {
 
-                      })}
+                            if(args.node.isFile) {
+
+                                /*When a file is moved within the directory structure, we check
+                                    whether it has come to the root directory. If args.nextParentNode
+                                    is null, it is outsude, otherwise it is inside.
+                                */
+
+                                if(args.nextParentNode) {
+
+                                    Meteor.call('lessonplans.directoryChange', args.node._id, true)
+                                }
+                                else {
+
+                                    Meteor.call('lessonplans.directoryChange', args.node._id, false)
+                                }
+                            }
+                            
+                            const outSideFilesRemoved = this.removeOutsideFiles()
+
+                            Meteor.call('lessonPlanDirectories.update', Meteor.userId(), outSideFilesRemoved)               
+                        }             
                     }
-                  >
-                    Remove
-                  </button>
-                ]
-              })}
-        />
-      </div>
-    );
+
+                    generateNodeProps={({ node, path }) => ({
+                        buttons: [
+
+                        <button
+                            
+                            className = 'icon__button'
+                            style = {{visibility:node.isFile?'visible':'hidden'}}>
+
+                            <Link to ={{ pathname: `/createlessonplan/${node._id}`}}>
+                               <FaEdit size={17} color="black" />
+                            </Link>
+
+                        </button>,
+
+                        <button
+                        
+                            className = 'icon__button'
+                            onClick={() =>{
+
+                            const input = confirm('Are you sure you want to perform this deletion?')
+                            if(!input)
+                                return
+
+                            if(!node.isFile) {
+                                removeLessonPlan(node)
+                            }
+                            else {
+
+                                Meteor.call('lessonplans.remove', node._id)
+                            }
+                                
+                            this.setState(state => ({                          
+                                treeData: removeNodeAtPath({
+                                treeData: state.treeData,
+                                path,
+                                getNodeKey,
+                                }),
+                            }),()=>{
+
+                                const outSideFilesRemoved = this.removeOutsideFiles()
+                        
+                                Meteor.call('lessonPlanDirectories.update', Meteor.userId(), outSideFilesRemoved)
+
+                            })}
+                            }
+                        >
+                            <FaTrash size={17} color="black"/>
+
+                        </button>
+                        ]
+                    })}
+                />
+
+            </div>
+
+        </div>
+    )
   }
 }

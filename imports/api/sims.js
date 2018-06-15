@@ -6,18 +6,30 @@ export const Sims = new Mongo.Collection('sims')
 if(Meteor.isServer) {
 
     Meteor.publish('sims',function(){
-        return Sims.find()
+        return Sims.find({userId:this.userId})
     })
 }
 
 Meteor.methods({
 
-    'sims.insert'(name, src, w, h) {
+    'sims.insert'(name, src, w, hn) {
 
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
+        Sims.insert({ userId:this.userId,
+            name, 
+            src, 
+            w, 
+            h,
+            isAdded:false
+        })
+    },
 
-        return Sims.insert({userId:this.userId,name, src, w, h})
-    }    
+    'sims.directoryChange'(_id, isAdded) {
+        Sims.update({_id}, {$set:{isAdded}})
+    }, 
+
+    
+    'sims.remove'(_id) {
+
+        Sims.remove({_id, userId:this.userId})
+    }
 })

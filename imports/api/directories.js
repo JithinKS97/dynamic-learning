@@ -6,7 +6,7 @@ export const Directories = new Mongo.Collection('directories')
 if(Meteor.isServer) {
 
     Meteor.publish('directories',function(){
-        return Directories.find()
+        return Directories.find({_id:this.userId})
     })
 }
 
@@ -17,15 +17,21 @@ Meteor.methods({
         Directories.insert({
 
             _id:this.userId,
-            directories:[]
+            lessonPlanDirectories:[],
+            simDirectories:[]
         })
 
     },
 
-    'directories.update'(_id, directories) {
+    'lessonPlanDirectories.update'(_id, lessonPlanDirectories) {
 
-        Directories.update({_id}, {$set:{directories}})
+        Directories.update({_id}, {$set:{lessonPlanDirectories}})
 
+    },
+
+    'simDirectories.update' (_id, simDirectories) {
+
+        Directories.update({_id}, {$set:{simDirectories}})
     }
 
 })
