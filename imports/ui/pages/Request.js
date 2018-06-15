@@ -7,11 +7,10 @@ import CommentForm from '../components/CommentForm'
 import CommentsList from '../components/CommentsList'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
-import Modal from 'react-modal'
 import { Tracker } from 'meteor/tracker'
 
 
-import { Grid, Button, Form} from 'semantic-ui-react'
+import { Grid, Button, Form, Modal} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 export default class Request extends React.Component {
@@ -298,19 +297,40 @@ export default class Request extends React.Component {
                 </Grid>
 
 
-                {isOwner?<Modal 
-                            ariaHideApp={false} 
-                            isOpen = {this.state.requestTitle?false:true}
-                        >
-                    <h1>Title</h1>
-                    <form onSubmit = {this.setTitle.bind(this)}>
-                        <input ref = {e => this.requestTitle = e}/>
-                        <Button>Submit</Button>
-                        <br/>
-                        <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
-                            Back
-                        </Link>
-                    </form>
+                {isOwner?
+
+                <Modal
+                    open = {this.state.requestTitle?false:true}
+                    size = 'tiny'
+                >
+
+                    <Modal.Header>Preview</Modal.Header>
+
+                    <Modal.Content>
+
+                            <Modal.Description> 
+
+                                <Form onSubmit = {this.setTitle.bind(this)}>
+                                    <Form.Field>
+                                        <label>Enter the title</label>
+                                        <input ref = {e => this.requestTitle = e}/>
+                                    </Form.Field>
+
+                                    <Form.Field>
+                                        <Button>Submit</Button>
+                                    </Form.Field>
+
+                                    <Form.Field>
+                                        <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
+                                            Back
+                                        </Link>
+                                    </Form.Field>
+                                </Form>
+
+                            </Modal.Description>
+
+                        </Modal.Content> 
+
                 </Modal>:null}               
 
             </div>

@@ -8,7 +8,7 @@ import { Accounts } from 'meteor/accounts-base'
 import SimContainer from '../components/SimContainer'
 
 
-import { Grid, Header, Button, Modal } from 'semantic-ui-react'
+import { Grid, Button, Modal } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
  
 export default class Dashboard extends React.Component {
@@ -51,8 +51,7 @@ export default class Dashboard extends React.Component {
     render() {
         return(
             <div>
-                <div style = {{padding:'1.6rem'}}>
-
+            
                     <Modal                
                         style = {{overflow:'auto'}}
                         open={this.state.node}
@@ -75,7 +74,6 @@ export default class Dashboard extends React.Component {
                         </Modal.Content>             
 
                     </Modal>
-                </div>
 
                 <Button onClick = {()=>{Accounts.logout()}}>Log out</Button>   
                 <Grid columns={3} divided>
