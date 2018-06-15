@@ -56,6 +56,7 @@ export default class SimContainer extends React.Component{
                         <div>
 
                             <iframe 
+                                className = 'iframe'
                                 ref = {e => this.iframe = e} 
                                 scrolling = 'no' 
                                 height = {this.props.h+'px'} 
