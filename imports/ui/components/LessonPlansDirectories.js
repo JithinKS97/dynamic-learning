@@ -69,9 +69,6 @@ export default class LessonPlansDirectories extends Component {
     })
   }
 
-  componentWillUnmount() {
-    this.directoryTracker.stop()
-  }
 
   getFileObjects(lessonplans) {
 

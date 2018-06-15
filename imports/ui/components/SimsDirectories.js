@@ -61,10 +61,6 @@ export default class SimsDirectories extends React.Component {
 
     }
 
-    componentWillUnmount() {
-        
-        this.simsTracker.stop()
-    }
 
     getFileObjects(sims) {
 
