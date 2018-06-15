@@ -73,8 +73,16 @@ export default class simsList extends React.Component {
                                 dragHandleClassName = '.sim-handle'
                                 size={{ width: iframe.w,  height: iframe.h}}
                                 position={{ x: iframe.x, y: iframe.y }}
+
+                                onDragStart={()=>{
+                                    
+                                    document.getElementsByClassName('sim')[0].style['pointer-events'] = 'none'
+
+                                }}
     
                                 onDragStop={(e, d) => {
+
+                                    document.getElementsByClassName('sim')[0].style['pointer-events'] = 'unset'
     
                                     slides[curSlide].iframes[index].x = d.lastX
                                     slides[curSlide].iframes[index].y = d.lastY
@@ -110,29 +118,31 @@ export default class simsList extends React.Component {
                                     height and with of the iframe.
                                 */}
                                 <div style ={{display:'flex', flexDirection:'row'}}>
-                                <SimContainer
-                                    isPreview = {false}
-                                    {...this.props} 
-                                    index = {index} 
-                                    src = {iframe.src}
-                                    {...iframe}
-                                />
-                                <nav style = {{marginLeft:'0.5rem'}}>
-                                    <FaTrash
-                                        onClick = {()=>{
-                                        
-                                            const confirmation = confirm('Are you sure you want to remove this?')
-    
-                                            if(confirmation == true)
-                                                this.props.delete(index)}
-                                        }
-                                        color = 'white'
-                                        size  = '20'                              
+                                
+                                    <SimContainer
+                                        isPreview = {false}
+                                        {...this.props} 
+                                        index = {index} 
+                                        src = {iframe.src}
+                                        {...iframe}
                                     />
-                                 
-                                    <TiArrowMove className = 'icon__button' size = '22' className = 'sim-handle' color = 'white'/>
+                                    <nav style = {{marginLeft:'0.5rem'}}>
+                                    
+                                        <FaTrash
+                                            onClick = {()=>{
+                                            
+                                                const confirmation = confirm('Are you sure you want to remove this?')
+        
+                                                if(confirmation == true)
+                                                    this.props.delete(index)}
+                                            }
+                                            color = 'white'
+                                            size  = '20'                              
+                                        />
+                                    
+                                        <TiArrowMove className = 'icon__button' size = '22' className = 'sim-handle' color = 'white'/>
 
-                                </nav>
+                                    </nav>
 
                                 </div>
                             </Rnd>
