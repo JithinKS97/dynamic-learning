@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
 
-import { Grid, Menu, Button, Container} from 'semantic-ui-react'
+import { Checkbox, Menu, Button} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 
@@ -322,6 +322,9 @@ export default class CreateLessonPlan extends React.Component {
     }
 
     interact(){
+
+        console.log('hello')
+
       this.isInteractEnabled = !this.isInteractEnabled;
       if(this.isInteractEnabled) {
         document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
@@ -369,7 +372,13 @@ export default class CreateLessonPlan extends React.Component {
             <div style = {{margin:'0.8rem'}} className = 'menu'>
             
                 <AddSim ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-                <Menu icon vertical>
+                
+                <Menu icon vertical>                
+
+                   <Menu.Item link>                     
+
+                        <Checkbox label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
+                    </Menu.Item>        
 
                     <Menu.Item link>
                         <Link to = '/dashboard/lessonplans'>Back</Link>
