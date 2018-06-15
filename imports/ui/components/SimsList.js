@@ -4,11 +4,11 @@ import Rnd from 'react-rnd'
 import { Meteor } from 'meteor/meteor'
 
 
-import { Button } from 'semantic-ui-react'
+
 import 'semantic-ui-css/semantic.min.css';
 
 import TiArrowMove from 'react-icons/lib/ti/arrow-move'
-import FaTrash from 'react-icons/lib/fa/trash'
+import FaClose from 'react-icons/lib/fa/close'
 
 
 export default class simsList extends React.Component {
@@ -129,7 +129,7 @@ export default class simsList extends React.Component {
                                     />
                                     <div className = 'sim-handle__container' style = {{marginLeft:'0.5rem'}}>
                                     
-                                        <FaTrash
+                                        <FaClose
                                             className = 'sim-handle__trash'
                                             onClick = {()=>{
                                             
@@ -167,7 +167,7 @@ export default class simsList extends React.Component {
                                             if(confirmation == true)
                                                 this.props.delete(index)
 
-                                        }}><FaTrash/>
+                                        }}><FaClose/>
                                     
                                     </button>:
                                 
