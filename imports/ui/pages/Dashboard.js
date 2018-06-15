@@ -60,18 +60,15 @@ export default class Dashboard extends React.Component {
                     >
                         <Modal.Header>Preview</Modal.Header>
 
-                        <Modal.Content>
-                            <Modal.Description>
+                        <Modal.Content>                          
+                            <SimContainer {...this.state.node}/>                
+                        </Modal.Content>
 
-                                    <SimContainer {...this.state.node}/>
-                        
-                                    <Button onClick = {this.handleClose}>
-                                        Close
-                                    </Button>
-                
-                            </Modal.Description>
-                            
-                        </Modal.Content>             
+                         <Modal.Content>                          
+                            <Button onClick = {this.handleClose}>
+                                Close
+                            </Button>               
+                        </Modal.Content>           
 
                     </Modal>
 
