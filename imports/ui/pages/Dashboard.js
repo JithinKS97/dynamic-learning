@@ -54,7 +54,7 @@ export default class Dashboard extends React.Component {
             
                     <Modal                
                         style = {{overflow:'auto'}}
-                        open={this.state.node}
+                        open={!!this.state.node}
                         onClose={this.handleClose}
                         size='tiny'            
                     >
