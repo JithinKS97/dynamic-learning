@@ -298,7 +298,7 @@ export default class SimsDirectories extends React.Component {
                             
                             }} 
                             >
-                            <IoEye size={17} color="black"/>
+                            <IoEye size={22} color="black"/>
                           </button>,
         
                           <button

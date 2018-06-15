@@ -142,7 +142,7 @@ export default class Upload extends React.Component {
 
                             <Form>
                                 <Form.Field>
-                                    <label>Enter iframe tag from p5 online text editor</label>
+                                    <label>Enter iframe tag from p5 online text editor ( Served through https )</label>
                                     <input ref = { e => this.src = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
                                 </Form.Field>                            
                             </Form>

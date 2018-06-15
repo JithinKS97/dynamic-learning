@@ -96,8 +96,8 @@ export default class AddSim extends React.Component {
                     <Modal.Content>
                         <Modal.Description>
                             <Grid columns={2} divided>
-
-                                <Grid.Column >
+                                
+                                <Grid.Column>
                                     <SimsDirectories isPreview = {true} getNode = {this.getNode.bind(this)} ref = {e => this.simDirectories = e}/>
                                 </Grid.Column>
 
