@@ -12,8 +12,6 @@ import 'semantic-ui-css/semantic.min.css';
 
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/io/edit'
-
-import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
  
 
 /*This component displays the lessonplan files in nested tree structure.
@@ -69,6 +67,9 @@ export default class LessonPlansDirectories extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.directoryTracker.stop()
+  }
 
   getFileObjects(lessonplans) {
 
@@ -300,8 +301,7 @@ export default class LessonPlansDirectories extends Component {
             <div style={{ height: 400, padding:'1.6rem' }}>        
                 
                 <SortableTree 
-                
-                    theme={FileExplorerTheme}    
+             
                     canDrop={canDrop}                    
                     treeData={this.state.treeData}
                     onChange={treeData => this.setState({ treeData })}
