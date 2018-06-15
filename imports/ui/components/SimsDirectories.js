@@ -13,6 +13,8 @@ import FaTrash from 'react-icons/lib/fa/trash'
 import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
+import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+
 export default class SimsDirectories extends React.Component {
 
     constructor(props) {
@@ -246,7 +248,7 @@ export default class SimsDirectories extends React.Component {
                 <div style={{ height: 400, padding:'1.6rem' }}>
 
                     <SortableTree
-
+                        theme={FileExplorerTheme}
                         treeData={this.state.treeData}
                         onChange={treeData => this.setState({ treeData })}
                         canDrop={canDrop}
