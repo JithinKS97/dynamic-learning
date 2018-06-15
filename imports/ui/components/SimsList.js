@@ -8,6 +8,7 @@ import { Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import TiArrowMove from 'react-icons/lib/ti/arrow-move'
+import FaTrash from 'react-icons/lib/fa/trash'
 
 
 export default class simsList extends React.Component {
@@ -116,19 +117,23 @@ export default class simsList extends React.Component {
                                     src = {iframe.src}
                                     {...iframe}
                                 />
-                                <nav>
-                                    <button onClick = {()=>{
+                                <nav style = {{marginLeft:'0.5rem'}}>
+                                    <FaTrash
+                                        onClick = {()=>{
                                         
-                                        const confirmation = confirm('Are you sure you want to remove this?')
+                                            const confirmation = confirm('Are you sure you want to remove this?')
+    
+                                            if(confirmation == true)
+                                                this.props.delete(index)}
+                                        }
+                                        color = 'white'
+                                        size  = '20'                              
+                                    />
+                                 
+                                    <TiArrowMove className = 'icon__button' size = '22' className = 'sim-handle' color = 'white'/>
 
-                                        if(confirmation == true)
-                                            this.props.delete(index)}
-
-                                    }>X</button>
-
-                                    <TiArrowMove/>  
-                                                                                   
                                 </nav>
+
                                 </div>
                             </Rnd>
                         </div>
@@ -139,14 +144,23 @@ export default class simsList extends React.Component {
                     return (
                    
                         <div key = {index}>
-                            {iframe.userId == Meteor.userId()?<Button style = {{float:'right'}}onClick = {()=>{
+                            {iframe.userId == Meteor.userId()?
+                            
+                                    <button                                   
+                                    
+                                        style = {{float:'right'}}
+                                        className = 'icon__button'                                        
+                                        onClick = {()=>{
 
-                                const confirmation = confirm('Are you sure you want to remove this?')
+                                            const confirmation = confirm('Are you sure you want to remove this?')
+                                            if(confirmation == true)
+                                                this.props.delete(index)
 
-                                if(confirmation == true)
-                                    this.props.delete(index)
-
-                                }}>X</Button>:null}  
+                                        }}><FaTrash/>
+                                    
+                                    </button>:
+                                
+                                null}  
                                 <SimContainer
                                     isPreview = {false}
                                     {...this.props} 
