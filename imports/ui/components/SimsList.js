@@ -7,6 +7,8 @@ import { Meteor } from 'meteor/meteor'
 import { Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
+import TiArrowMove from 'react-icons/lib/ti/arrow-move'
+
 
 export default class simsList extends React.Component {
 
@@ -123,7 +125,9 @@ export default class simsList extends React.Component {
                                             this.props.delete(index)}
 
                                     }>X</button>
-                                    <h4 className = 'sim-handle' style = {{color:'white', cursor:'move'}}>Move</h4>                                                   
+
+                                    <TiArrowMove/>  
+                                                                                   
                                 </nav>
                                 </div>
                             </Rnd>

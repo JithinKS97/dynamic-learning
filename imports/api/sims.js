@@ -12,7 +12,7 @@ if(Meteor.isServer) {
 
 Meteor.methods({
 
-    'sims.insert'(name, src, w, hn) {
+    'sims.insert'(name, src, w, h) {
 
         Sims.insert({ userId:this.userId,
             name, 
