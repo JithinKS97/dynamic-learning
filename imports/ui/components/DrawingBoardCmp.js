@@ -8,7 +8,7 @@ export default class DrawingBoardCmp extends React.Component {
         this.b = new DrawingBoard.Board('container', {
             background: true,
             color: "#ffffff",
-            size: 3,
+            size: 2,
             eraserColor:'transparent',
             fillTolerance: 100,
 	        fillHack: false,
