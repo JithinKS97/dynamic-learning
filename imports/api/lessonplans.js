@@ -41,7 +41,8 @@ Meteor.methods({
             Requests.insert({
 
                 userId:this.userId, 
-                _id:docs, slides:[], 
+                _id:docs, 
+                slides:[], 
                 requestTitle:'',
                 updatedAt: moment().valueOf()
             })

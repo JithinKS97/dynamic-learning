@@ -159,7 +159,7 @@ export default class simsList extends React.Component {
                             
                                     <button                                   
                                     
-                                        style = {{float:'right'}}
+                                        style = {{float:'right', paddingRight:'1.6rem'}}
                                         className = 'icon__button'                                        
                                         onClick = {()=>{
 

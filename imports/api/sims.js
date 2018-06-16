@@ -10,11 +10,17 @@ if(Meteor.isServer) {
     })
 }
 
-Meteor.methods({
+Meteor.methods({    
 
     'sims.insert'(name, src, w, h) {
 
-        Sims.insert({ userId:this.userId,
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
+        return Sims.insert({ 
+            
+            userId:this.userId,
             name, 
             src, 
             w, 

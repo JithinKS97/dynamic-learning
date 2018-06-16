@@ -9,7 +9,7 @@ const SideBar = () => {
         <div>
             <ul>
                 
-                <Menu vertical>
+                <Menu vertical >
                     <Menu.Item link><Link to = 'lessonplans'>Create lessonplans</Link></Menu.Item>                    
                     <Menu.Item link><Link  to = 'uploadsim'>Upload simulations</Link></Menu.Item>
                     <Menu.Item link><Link to = 'requests'>Help make simulations</Link></Menu.Item>   

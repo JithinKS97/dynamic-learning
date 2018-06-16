@@ -1244,9 +1244,9 @@
     
         defaults: {
             type: "auto",
-            dropdownValues: [1, 2, 3, 4, 5, 20, 40, 50],
+            dropdownValues: [1, 2, 3, 4, 5, 10, 25, 45],
             min: 1,
-            max: 50
+            max: 45
         },
     
         types: ['dropdown', 'range'],

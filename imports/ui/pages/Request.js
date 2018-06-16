@@ -7,13 +7,13 @@ import CommentForm from '../components/CommentForm'
 import CommentsList from '../components/CommentsList'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
-import { Tracker } from 'meteor/tracker'
+import { withTracker } from 'meteor/react-meteor-data';
 
 
-import { Grid, Button, Form, Modal} from 'semantic-ui-react'
+import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
-export default class Request extends React.Component {
+class Request extends React.Component {
 
     constructor(props) {
 
@@ -23,47 +23,38 @@ export default class Request extends React.Component {
             show:false,
             slides: [],
             curSlide: 0,
-            initialized:false,
+            initialized:false
         }
         this.update.bind(this)
         this.pushSim.bind(this)
         this.requestExists = false
-    }
-
-    componentDidMount() {
-
-        this.requestsTracker = Tracker.autorun(()=>{
-
-            const requestsHandle = Meteor.subscribe('requests')
-            const loading = !requestsHandle.ready()
-            const request = Requests.findOne(this.props.match.params._id)
-            this.requestExists = !loading && !!request
-
-            if(this.requestExists) {
-            
-                if(request.slides.length == 0)
-                {
-                    request.slides[0] = {
-                        title:'',
-                        comments:[],
-                        iframes:[]
-                    }
-                }
-    
-                const show = !!request.slides[0].title   
-                this.setState({
-                    ...request,
-                    initialized:true,
-                    show
-                })
-            }
-        })
-
         this.push.bind(this)
     }
 
-    componentWillUnmount() {
-        this.requestsTracker.stop()
+    componentDidUpdate() {
+
+        if(!this.state.initialized && this.props.requestExists) {
+
+            const request = this.props.request
+
+            if(request.slides.length == 0)
+            {
+                request.slides[0] = {
+                    title:'',
+                    comments:[],
+                    iframes:[]
+                }
+            }
+
+            const show = !!request.slides[0].title  
+
+            this.setState({
+                ...request,
+                initialized:true,
+                show
+            })
+        }
+
     }
 
     push(e) {
@@ -237,104 +228,134 @@ export default class Request extends React.Component {
 
         return (
 
-            <div>
-                <Grid columns={3} divided>
-                    <Grid.Row>
-                        <Grid.Column>
+            <Segment>
+            
+                <Dimmer active = {!this.state.initialized}>
+                    <Loader />
+                </Dimmer>
 
-                            {this.requestExists?null:<h1>Loading</h1>}
+                <div>
+                    <Grid style = {{height:'100vh'}}  columns={3} divided>
+                        <Grid.Row>
+                            <Grid.Column style = {{overflow:'auto'}}>
+                                <Container style = {{padding:'1.6rem'}}>
+                                    <Container style = {{margin:'1.6rem'}}>                              
+                                                                
+                                        <h1>{this.state.requestTitle}</h1>
 
-                            <h1>{this.state.requestTitle}</h1>
+                                        <Button onClick = {()=>{
+                                        history.back()
+                                        }}>Back</Button>
 
-                            <Button onClick = {()=>{
-                            history.back()
-                            }}>Back</Button>
+                                        {isOwner?<Button onClick = {()=>{
+                                        
+                                        const confirmation = confirm('Are you sure you want to delete all the requests?')
 
-                            {isOwner?<Button onClick = {()=>{
-                            
-                            const confirmation = confirm('Are you sure you want to delete all the requests?')
+                                        if(confirmation && isOwner)
+                                        {
+                                            Meteor.call('requests.reset', this.state._id)
+                                            history.back()
+                                        }                        
+                                        
 
-                            if(confirmation && isOwner)
-                            {
-                                Meteor.call('requests.reset', this.state._id)
-                                history.back()
-                            }                        
-                            
+                                        }}>Delete this request</Button>:null}
 
-                            }}>Delete this request</Button>:null}
+                                    </Container>
+
+                                    {isOwner?
+                                    
+                                        <Form onSubmit = {this.push.bind(this)}>
+                                        
+                                            <Form.Field>
+                                                <input placeholder = 'Title for the new topic' ref = {e => this.title = e}/>
+                                            </Form.Field>
+
+                                            <Form.Field>
+                                                <Button >Create new topic</Button>
+                                            </Form.Field>
+
+                                        </Form>:
+
+                                    null}
+
+                                    {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
+                                </Container>
+                            </Grid.Column>
+                            <Grid.Column style = {{overflow:'auto', padding:'1.6rem'}}>
+                        
+                                    {this.state.show?<CommentsList  deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
+                                    <br/>
+                                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
+                                    null}
+                        
+                            </Grid.Column>
+                            <Grid.Column style = {{overflow:'auto', padding:'1.6rem'}}>
+                                <div style = {{marginBottom:'1.6rem'}}>
+                                    {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
+                                </div>    
+                                    
+                                    <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+                                    
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
 
 
-                            {isOwner?
-                            
-                                <Form onSubmit = {this.push.bind(this)}>
-                                
-                                    <Form.Field>
-                                        <input placeholder = 'Title for the new topic' ref = {e => this.title = e}/>
-                                    </Form.Field>
+                    {isOwner?
 
-                                    <Form.Field>
-                                        <Button >Create new topic</Button>
-                                    </Form.Field>
+                    <Modal
+                        open = {this.state.requestTitle?false:true}
+                        size = 'tiny'
+                    >
 
-                                </Form>:
+                        <Modal.Header>Preview</Modal.Header>
 
-                            null}
+                        <Modal.Content>
 
-                            {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
-                        </Grid.Column>
-                        <Grid.Column>
-                            {this.state.show?<CommentsList deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
-                            {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
-                            null}
-                        </Grid.Column>
-                        <Grid.Column>
-                            
-                            {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
-                            <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
-                      
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
+                                <Modal.Description> 
 
+                                    <Form onSubmit = {this.setTitle.bind(this)}>
+                                        <Form.Field>
+                                            <label>Enter the title</label>
+                                            <input ref = {e => this.requestTitle = e}/>
+                                        </Form.Field>
 
-                {isOwner?
+                                        <Form.Field>
+                                            <Button>Submit</Button>
+                                        </Form.Field>
 
-                <Modal
-                    open = {this.state.requestTitle?false:true}
-                    size = 'tiny'
-                >
+                                        <Form.Field>
+                                            <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
+                                                Back
+                                            </Link>
+                                        </Form.Field>
+                                    </Form>
 
-                    <Modal.Header>Preview</Modal.Header>
+                                </Modal.Description>
 
-                    <Modal.Content>
+                            </Modal.Content> 
 
-                            <Modal.Description> 
+                    </Modal>:null}               
 
-                                <Form onSubmit = {this.setTitle.bind(this)}>
-                                    <Form.Field>
-                                        <label>Enter the title</label>
-                                        <input ref = {e => this.requestTitle = e}/>
-                                    </Form.Field>
-
-                                    <Form.Field>
-                                        <Button>Submit</Button>
-                                    </Form.Field>
-
-                                    <Form.Field>
-                                        <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
-                                            Back
-                                        </Link>
-                                    </Form.Field>
-                                </Form>
-
-                            </Modal.Description>
-
-                        </Modal.Content> 
-
-                </Modal>:null}               
-
-            </div>
+                </div>
+            
+            </Segment>
 
         )
     }
 }
+
+export default RequestContainer = withTracker(({ match }) => {
+
+    const requestsHandle = Meteor.subscribe('requests')
+    const loading = !requestsHandle.ready()
+    const request = Requests.findOne(match.params._id)
+    const requestExists = !loading && !!request
+
+    return {
+
+        requestExists,
+        request: requestExists? request : []
+    }
+
+})(Request)

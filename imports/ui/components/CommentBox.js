@@ -10,7 +10,7 @@ const CommentBox = (props,) => {
     momentNow = moment(props.comment.time)
 
     return (
-        <Comment>
+        <Comment style = {{padding:'0.8rem', backgroundColor:'#eeeeee'}}>
             <Comment.Content>
 
                     {props.comment.userId == Meteor.userId()?<Button style = {{float:'right', padding:'0.5rem'}} onClick = {() =>{
@@ -20,10 +20,10 @@ const CommentBox = (props,) => {
                             props.deleteComment(props.index)
                         }
                     }>X</Button>:null}
-                
-                <Comment.Author>{props.comment.username}</Comment.Author>
-                <Comment.Metadata>{momentNow.fromNow()}</Comment.Metadata>
-                <Comment.Text>{props.comment.comment} </Comment.Text>
+
+                <p>{props.comment.comment} </p>
+                <p>{momentNow.fromNow()}</p> 
+                <p>{props.comment.username}</p>                              
                 
             </Comment.Content>
         </Comment>        

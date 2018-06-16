@@ -61,7 +61,8 @@ export default class Dashboard extends React.Component {
                         <Modal.Header>Preview</Modal.Header>
 
                         <Modal.Content>                          
-                            <SimContainer {...this.state.node}/>                
+                            <SimContainer {...this.state.node}/>
+                            {this.state.node?<h4>{this.state.node.title}</h4>:null}               
                         </Modal.Content>
 
                          <Modal.Content>                          

@@ -32,20 +32,23 @@ if(Meteor.isServer) {
             LessonPlans.insert(lessonplanTwo)
         })
 
-        it('should insert a lessonplan and its request if authenticated', function() {
-
-            const userId = lessonplanOne.userId                          
-            const _id = Meteor.server.method_handlers['lessonplans.insert'].apply({userId})
-            
-            expect(LessonPlans.findOne({_id, userId})).to.exist
-            expect(Requests.findOne({_id, userId})).to.exist
-        })
-
         it('should not insert a lessonplan if not authenticated', function() {
 
             expect(()=>{                        
                 Meteor.server.method_handlers['lessonplans.insert']()  
             }).to.throw()            
+        })
+
+        it('should insert a lessonplan and its request if authenticated', function() {
+
+            const userId = lessonplanOne.userId                          
+            const _id = Meteor.server.method_handlers['lessonplans.insert'].apply({userId})
+
+            console.log(LessonPlans.findOne({_id, userId}))
+            console.log(Requests.findOne({_id, userId}))
+
+            expect(LessonPlans.findOne({_id, userId})).to.exist
+            expect(Requests.findOne({_id, userId})).to.exist 
         })
 
         it('should remove lessonplan and its request if authenticated', function(){
