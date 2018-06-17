@@ -356,7 +356,7 @@ class CreateLessonPlan extends React.Component {
     render() {        
 
         return (
-        <Segment>
+        <Segment style = {{padding:0, margin:0}}>
             
             <Dimmer active = {!this.state.initialized}>
                 <Loader />
@@ -380,7 +380,7 @@ class CreateLessonPlan extends React.Component {
                     <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>                   
                 </div>
                 
-                <div style = {{margin:'0.8rem'}} className = 'menu'>
+                <div style = {{marginLeft:'0.8rem'}} className = 'menu'>
                 
                     <AddSim ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
                     
