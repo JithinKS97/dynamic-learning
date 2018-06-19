@@ -25,7 +25,9 @@ export default class SimsDirectories extends React.Component {
             treeData: [],
             node:null,
             modelOpen:false
-          };
+          }
+
+        this.addFiles.bind(this)
 
     }
 
@@ -39,18 +41,9 @@ export default class SimsDirectories extends React.Component {
             const data = Directories.findOne()
             const sims = Sims.find().fetch()
 
+            if(data && sims) {
 
-
-            if(data) {
-
-                const treeData = []       
-
-                /*The treeData is retrieved and the lessonplan objects which are outside the
-                    file structure is obtained as file objects.
-                */
-    
-                treeData.push(...data.simDirectories)
-                treeData.push(...this.getFileObjects(sims)) 
+                const treeData = this.addFiles(data.simDirectories, sims)
 
                 this.setState({
                     treeData
@@ -61,11 +54,100 @@ export default class SimsDirectories extends React.Component {
 
     }
 
-    componentWillUnmount() {
+    
+    addFiles(treeData, sims) {
+   
+
+        const addFiles = (treeData) => {
+
+            return treeData.map(node => {
+
+                if(!node.isFile) {
+
+                    if(node.children.length>0)
+                        addFiles(node.children)
+                    
+                    const children = this.filesWithParent_id(this.getFileObjects(sims), node._id)
+                    
+                    node.children.push(...children)
+                    
+                    return node
+                }
+            })
+        }
         
-        this.simsTracker.stop()
+        treeData = addFiles(treeData)
+
+        const children = this.filesWithParent_id(this.getFileObjects(sims), null)
+
+        treeData.push(...children)
+        treeData.isFile = false
+
+        return treeData
+    }
+    
+    filesWithParent_id(sims, parent_id) {
+
+        return sims.map(sim => {
+
+            if(sim.parent_id == parent_id)
+                return sim
+
+        }).filter(sim => {
+            if(sim)
+                return sim
+        })
+
     }
 
+    removeFiles(treeData) {
+    
+
+        const removeFiles = (treeData) => {
+
+            return treeData.map( node => {
+            
+                if(!node.isFile) {
+
+                    if(node.children.length>0) {
+
+                        removeFiles(node.children)
+                        node.children = this.removeFilesOf(node.children)
+                        
+                    }
+                    
+                    return node
+                }
+
+            })
+        }
+            
+        treeData= removeFiles(treeData)
+
+        treeData = treeData.filter( node => {
+
+            if(node)
+                return node
+        })
+
+        return treeData
+
+    }
+
+    removeFilesOf(children) {
+
+
+        return children.filter( child => {
+
+            if(!child.isFile) {
+                return child
+            }
+
+        })
+
+    }
+
+    
     getFileObjects(sims) {
 
         /* If the lessonplan is not added into the file structure yet. It is made into
@@ -73,30 +155,26 @@ export default class SimsDirectories extends React.Component {
             null values as elements.
         */
     
-        const structs = sims.map(sim => {
-    
-            if(sim.isAdded == false)
+        return sims.map(sim => {    
+      
                 return {
                     _id: sim._id,
                     title: sim.name,
                     isFile: true,
                     src:sim.src,
                     w:sim.w,
-                    h:sim.h
-                }
-            else return null
-    
-        })
-    
-        /* The null values are filtered out from the array*/
-    
-        return structs.filter(struct=>{
-            if(struct)
-                return struct
-        })
-    
-    
+                    h:sim.h,
+                    parent_id: sim.parent_id
+                }   
+            })   
       }
+
+    componentWillUnmount() {
+        
+        this.simsTracker.stop()
+    }
+
+
 
     addNewFolder(e) {   
 
@@ -108,7 +186,8 @@ export default class SimsDirectories extends React.Component {
     
             title: this.folderName.value,
             children: [],
-            isFile:false
+            isFile:false,
+            _id: Math.random().toString(36).substr(2, 16)
         }
     
         if(!this.folderName.value)
@@ -120,8 +199,8 @@ export default class SimsDirectories extends React.Component {
             }
         },()=>{
 
-            const outSideFilesRemoved = this.removeOutsideFiles()
-            Meteor.call('simDirectories.update', Meteor.userId(), outSideFilesRemoved)
+            const treeData = this.removeFiles(this.state.treeData)
+            Meteor.call('simDirectories.update', Meteor.userId(), treeData)
 
         })
       
@@ -150,6 +229,8 @@ export default class SimsDirectories extends React.Component {
         })
     
     }
+
+
 
     handleOpen = () => this.setState({ modalOpen: true })
     handleClose = () => this.setState({ modalOpen: false })   
@@ -248,7 +329,7 @@ export default class SimsDirectories extends React.Component {
                 <div style={{ height: 400, padding:'1.6rem' }}>
 
                     <SortableTree
-                        theme={FileExplorerTheme}
+                        theme = {FileExplorerTheme}
                         treeData={this.state.treeData}
                         onChange={treeData => this.setState({ treeData })}
                         canDrop={canDrop}
@@ -264,17 +345,18 @@ export default class SimsDirectories extends React.Component {
                                 if(args.nextParentNode) {
 
         
-                                    Meteor.call('sims.directoryChange', args.node._id, true)
+                                    Meteor.call('sims.directoryChange', args.node._id, args.nextParentNode._id)
                                 }
                                 else {
                                     
 
-                                    Meteor.call('sims.directoryChange', args.node._id, false)
+                                    Meteor.call('sims.directoryChange', args.node._id, null)
                                 }
                             }
                             
-                            const outSideFilesRemoved = this.removeOutsideFiles()
-                            Meteor.call('simDirectories.update', Meteor.userId(), outSideFilesRemoved)
+                            const treeData = this.removeFiles(this.state.treeData)
+                        
+                            Meteor.call('simDirectories.update', Meteor.userId(), treeData)
          
                         }
                     }
@@ -327,9 +409,9 @@ export default class SimsDirectories extends React.Component {
                                 }),
                               }),()=>{
         
-                                const outSideFilesRemoved = this.removeOutsideFiles()
+                                const treeData = this.removeFiles(this.state.treeData)
                         
-                                Meteor.call('simDirectories.update', Meteor.userId(), outSideFilesRemoved)
+                                Meteor.call('simDirectories.update', Meteor.userId(), treeData)
         
                               })}
                             }
