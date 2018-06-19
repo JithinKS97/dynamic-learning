@@ -8,6 +8,11 @@ if(Meteor.isServer) {
     Meteor.publish('sims',function(){
         return Sims.find({userId:this.userId})
     })
+
+    Meteor.publish('sims.public',function(){
+        
+        return Sims.find({isPublic:true})
+    })
 }
 
 Meteor.methods({    
@@ -25,13 +30,18 @@ Meteor.methods({
             src, 
             w, 
             h,
-            isAdded:false
+            isAdded:false,
+            isPublic:false
         })
     },
 
     'sims.directoryChange'(_id, isAdded) {
         Sims.update({_id}, {$set:{isAdded}})
-    }, 
+    },
+
+    'sims.visibilityChange'(_id, isPublic) {
+        Sims.update({_id}, {$set:{isPublic}})
+    },
 
     
     'sims.remove'(_id) {

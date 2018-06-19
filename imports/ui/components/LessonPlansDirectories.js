@@ -11,7 +11,7 @@ import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import FaTrash from 'react-icons/lib/fa/trash'
-import FaEdit from 'react-icons/lib/io/edit'
+import FaEdit from 'react-icons/lib/fa/edit'
 
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
  

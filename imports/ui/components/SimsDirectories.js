@@ -37,7 +37,7 @@ export default class SimsDirectories extends React.Component {
         this.simsTracker = Tracker.autorun(()=>{
 
             const data = Directories.findOne()
-            const sims = Sims.find().fetch()
+            const sims = Sims.find({userId: Meteor.userId()}).fetch()
 
 
 

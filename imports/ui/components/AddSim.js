@@ -22,6 +22,7 @@ export default class AddSim extends React.Component {
     }
 
     componentDidMount() {
+        
         Meteor.subscribe('sims.public')
     }
 
@@ -92,7 +93,7 @@ export default class AddSim extends React.Component {
                     
                     open={this.state.isOpen}
                     onClose={this.handleClose}
-                    size='large'      
+                    size='fullscreen'      
                                        
                 >
 
