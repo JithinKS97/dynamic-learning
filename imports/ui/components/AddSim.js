@@ -17,6 +17,7 @@ export default class AddSim extends React.Component {
             isOpen: false,
             node:null
         }
+        this.handleOpen.bind(this)
 
     }
 

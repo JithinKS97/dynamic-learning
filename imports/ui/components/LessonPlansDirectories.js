@@ -50,9 +50,16 @@ export default class LessonPlansDirectories extends Component {
 
         /* Here we fetch two things, all the lessonplans and all directory data */
         
-        if(data && lessonplans) {
+        if(data) {
 
-            const treeData = this.addFiles(data.lessonPlanDirectories, lessonplans)
+            const treeData = []       
+
+            /*The treeData is retrieved and the lessonplan objects which are outside the
+                file structure is obtained as file objects.
+            */
+
+            treeData.push(...data.lessonPlanDirectories)
+            treeData.push(...this.getFileObjects(lessonplans)) 
 
             this.setState({
                 treeData
@@ -61,99 +68,6 @@ export default class LessonPlansDirectories extends Component {
         }     
     })
   }
-
-  addFiles(treeData, lessonplans) {
-   
-
-    const addFiles = (treeData) => {
-
-        return treeData.map(node => {
-
-            if(!node.isFile) {
-
-                if(node.children.length>0)
-                    addFiles(node.children)
-                
-                const children = this.filesWithParent_id(this.getFileObjects(lessonplans), node._id)
-                
-                node.children.push(...children)
-                
-                return node
-            }
-        })
-    }
-    
-    treeData = addFiles(treeData)
-
-    const children = this.filesWithParent_id(this.getFileObjects(lessonplans), null)
-
-    treeData.push(...children)
-    treeData.isFile = false
-
-    return treeData
-}
-
-    
-filesWithParent_id(lessonplans, parent_id) {
-
-    return lessonplans.map(lessonplan => {
-
-        if(lessonplan.parent_id == parent_id)
-            return lessonplan
-
-    }).filter(lessonplan => {
-        if(lessonplan)
-            return lessonplan
-    })
-
-}
-
-removeFiles(treeData) {
-    
-
-    const removeFiles = (treeData) => {
-
-        return treeData.map( node => {
-        
-            if(!node.isFile) {
-
-                if(node.children.length>0) {
-
-                    removeFiles(node.children)
-                    node.children = this.removeFilesOf(node.children)
-                    
-                }
-                
-                return node
-            }
-
-        })
-    }
-        
-    treeData= removeFiles(treeData)
-
-    treeData = treeData.filter( node => {
-
-        if(node)
-            return node
-    })
-
-    return treeData
-
-}
-
-removeFilesOf(children) {
-
-
-    return children.filter( child => {
-
-        if(!child.isFile) {
-            return child
-        }
-
-    })
-
-}
 
   componentWillUnmount() {
     this.directoryTracker.stop()
@@ -166,18 +80,25 @@ removeFilesOf(children) {
         null values as elements.
     */
 
-    return lessonplans.map(lessonplan => {
+    const structs = lessonplans.map(lessonplan => {
 
-     
+        if(lessonplan.isAdded == false)
             return {
                 _id: lessonplan._id,
                 title: lessonplan.name,
-                isFile: true,
-                parent_id: lessonplan.parent_id
+                isFile: true
             }
-    
+        else return null
 
     })
+
+    /* The null values are filtered out from the array*/
+
+    return structs.filter(struct=>{
+        if(struct)
+            return struct
+    })
+
 
   }
 
@@ -196,8 +117,7 @@ removeFilesOf(children) {
 
         title: this.folderName.value,
         children: [],
-        isFile:false,
-        _id: Math.random().toString(36).substr(2, 16)
+        isFile:false
     }
 
     this.setState(prevState => {
@@ -206,9 +126,9 @@ removeFilesOf(children) {
         }
     },()=>{
 
-        const treeData = this.removeFiles(this.state.treeData)
+        const outSideFilesRemoved = this.removeOutsideFiles()
 
-        Meteor.call('lessonPlanDirectories.update', Meteor.userId(), treeData) 
+        Meteor.call('lessonPlanDirectories.update', Meteor.userId(), outSideFilesRemoved)
 
     })  
 
@@ -284,7 +204,6 @@ removeFilesOf(children) {
         /* The deletion takes place recursively.
             If the node is a file, using the id in it, it is removed
             from the database.
-
             If the node has no children, returned otherwise
             we recursively move to the children nodes.
         */
@@ -383,7 +302,7 @@ removeFilesOf(children) {
             <div style={{ height: 400, padding:'1.6rem' }}>        
                 
                 <SortableTree 
-                    theme = {FileExplorerTheme}
+                    theme={FileExplorerTheme}
                     canDrop={canDrop}                    
                     treeData={this.state.treeData}
                     onChange={treeData => this.setState({ treeData })}
@@ -398,17 +317,17 @@ removeFilesOf(children) {
 
                                 if(args.nextParentNode) {
 
-                                    Meteor.call('lessonplans.directoryChange', args.node._id, args.nextParentNode._id)
+                                    Meteor.call('lessonplans.directoryChange', args.node._id, true)
                                 }
                                 else {
 
-                                    Meteor.call('lessonplans.directoryChange', args.node._id, null)
+                                    Meteor.call('lessonplans.directoryChange', args.node._id, false)
                                 }
                             }
                             
-                            const treeData = this.removeFiles(this.state.treeData)
+                            const outSideFilesRemoved = this.removeOutsideFiles()
 
-                            Meteor.call('lessonPlanDirectories.update', Meteor.userId(), treeData)               
+                            Meteor.call('lessonPlanDirectories.update', Meteor.userId(), outSideFilesRemoved)               
                         }             
                     }
 
@@ -451,9 +370,9 @@ removeFilesOf(children) {
                                 }),
                             }),()=>{
 
-                                const treeData = this.removeFiles(this.state.treeData)
-
-                                Meteor.call('lessonPlanDirectories.update', Meteor.userId(), treeData)  
+                                const outSideFilesRemoved = this.removeOutsideFiles()
+                        
+                                Meteor.call('lessonPlanDirectories.update', Meteor.userId(), outSideFilesRemoved)
 
                             })}
                             }

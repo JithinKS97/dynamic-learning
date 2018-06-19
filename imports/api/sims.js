@@ -25,12 +25,12 @@ Meteor.methods({
             src, 
             w, 
             h,
-            parent_id:null
+            isAdded:false
         })
     },
 
-    'sims.directoryChange'(_id, parent_id) {
-        Sims.update({_id}, {$set:{parent_id}})
+    'sims.directoryChange'(_id, isAdded) {
+        Sims.update({_id}, {$set:{isAdded}})
     }, 
 
     

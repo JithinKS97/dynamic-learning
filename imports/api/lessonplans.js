@@ -34,7 +34,7 @@ Meteor.methods({
             slides:[],
             userId:this.userId,
             updatedAt: moment().valueOf(),
-            parent_id:null
+            isAdded:false
 
         },(err, docs)=>{
 
@@ -67,8 +67,8 @@ Meteor.methods({
         Requests.remove({_id, userId:this.userId})
     },
 
-    'lessonplans.directoryChange'(_id, parent_id) {
-        LessonPlans.update({_id}, {$set:{parent_id}})
+    'lessonplans.directoryChange'(_id, isAdded) {
+        LessonPlans.update({_id}, {$set:{isAdded}})
     },
 
     'lessonplans.update'(_id, slides) {
