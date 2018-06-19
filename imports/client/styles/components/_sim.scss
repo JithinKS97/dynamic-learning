@@ -7,25 +7,25 @@
 }
 
 .sim-handle__trash {
-  color: #333333;
+  color: rgba(255,255,255,0);
   transition: 0.1s ease-in;
 }
 
 .sim-handle__trash:hover {
 
-  color: white;
+  color: #444444;
 }
 
 
 .sim-handle {
 
-  color: #333333;
+  color: rgba(255,255,255,0);
   transition: 0.1s ease-in;
 }
 
 .sim-handle:hover {
 
-  color:white;
+  color:#444444;
 }
 
 .iframe {

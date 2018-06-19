@@ -5,7 +5,7 @@ import RequestsList from '../components/RequestsList'
 import SimsDirectories from '../components/SimsDirectories'
 import SideBar from '../components/SideBar'
 import { Accounts } from 'meteor/accounts-base'
-import SimContainer from '../components/SimContainer'
+import SimPreview from '../components/SimPreview'
 
 
 import { Grid, Button, Modal } from 'semantic-ui-react'
@@ -52,8 +52,9 @@ export default class Dashboard extends React.Component {
         return(
             <div>
             
-                    <Modal                
-                        style = {{overflow:'auto'}}
+                    <Modal
+                        closeOnRootNodeClick={false}                
+                        style = {{width:'auto'}}
                         open={!!this.state.node}
                         onClose={this.handleClose}
                         size='tiny'            
@@ -61,7 +62,7 @@ export default class Dashboard extends React.Component {
                         <Modal.Header>Preview</Modal.Header>
 
                         <Modal.Content>                          
-                            <SimContainer {...this.state.node}/>
+                            <SimPreview {...this.state.node}/>
                             {this.state.node?<h4>{this.state.node.title}</h4>:null}               
                         </Modal.Content>
 

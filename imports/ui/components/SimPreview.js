@@ -8,8 +8,8 @@ export default class SimPreview extends React.Component {
         super(props)
 
         this.state = {
-            h:200,
-            w:300
+            h:360,
+            w:640
         }
     }
 

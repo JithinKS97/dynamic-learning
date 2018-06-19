@@ -5,7 +5,7 @@ import SimsDirectories from './SimsDirectories'
 import { Button, Grid, Modal } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
-import SimContainer from './SimContainer'
+import SimPreview from './SimPreview'
 
 export default class AddSim extends React.Component {
 
@@ -18,6 +18,10 @@ export default class AddSim extends React.Component {
             node:null
         }
 
+    }
+
+    componentDidMount() {
+        Meteor.subscribe('sims.public')
     }
 
     addSim() {
@@ -38,10 +42,11 @@ export default class AddSim extends React.Component {
     }
 
     getNode(node) {
+
+        
+
         this.setState({
             node
-        },()=>{
-            console.log(this.state.node)
         })
     }
 
@@ -94,28 +99,36 @@ export default class AddSim extends React.Component {
                     <Modal.Header>My simulations</Modal.Header>
 
                     <Modal.Content>
+
                         <Modal.Description>
-                            <Grid columns={2} divided>
+                            <Grid
+                                style = {{paddingBottom:'1.6rem'}} 
+                                columns={2} 
+                                divided
+                            >
                                 
-                                <Grid.Column>
-                                    <SimsDirectories isPreview = {true} getNode = {this.getNode.bind(this)} ref = {e => this.simDirectories = e}/>
+                                <Grid.Column width = {8}>
+                                    <SimsDirectories isPreview = {true} getNode = {this.getNode.bind(this)} ref = {e => this.simDirectories = e}/>    
                                 </Grid.Column>
 
                                 <Grid.Column style = {{overflow:'auto'}}>
-                                    <SimContainer {...this.state.node}/>
-                                    {this.state.node?<Button onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
+                                    <SimPreview  {...this.state.node}/>                 
                                 </Grid.Column>
-                                
-                            </Grid>
-            
 
-                            <Button onClick = {()=>{
-                                this.handleClose()
-                                this.setState({
-                                    node:null
-                                })
-                            }}>Close</Button>
-                        </Modal.Description>
+                                <Button
+
+                                        onClick = {()=>{                                        
+                                        this.setState({
+                                            node:this.handleClose()
+                                    
+                                        })
+                                }}>Close</Button>
+
+                                {this.state.node?<Button onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
+                                
+                            </Grid>       
+                            
+                           </Modal.Description>
                     </Modal.Content>
 
                 </Modal>

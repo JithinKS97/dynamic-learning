@@ -1,6 +1,6 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
-import SimContainer from './SimContainer'
+import SimPreview from './SimPreview'
 
 
 import { Button, Modal, Form, TextArea} from 'semantic-ui-react'
@@ -151,7 +151,7 @@ export default class Upload extends React.Component {
                                     <Form onSubmit = {this.onSubmit.bind(this)} style = {{marginTop:'0.8rem'}}>
                                         <Form.Field>
                                             <label>Preview</label>                                            
-                                            <SimContainer ref = { e => this.simContainer = e} {...this.state}/>                                           
+                                            <SimPreview {...this.state}/>                                           
                                         </Form.Field>
                                         
                                         <Form.Field>
@@ -160,14 +160,15 @@ export default class Upload extends React.Component {
                                         </Form.Field>
                                         
                                         <Form.Field> 
-                                            <Button>Submit</Button>                                         
+                                            <Button>Submit</Button> 
+                                            <Button style = {{marginTop: '0.8rem'}} onClick = {this.handleClose.bind(this)}>Close</Button>                                        
                                         </Form.Field>                                        
                                     </Form>
                                     :null
                                 }
                                
 
-                                <Button style = {{marginTop: '0.8rem'}} onClick = {this.handleClose.bind(this)}>Close</Button>                                          
+                                                                         
 
     
                     </Modal.Content>
