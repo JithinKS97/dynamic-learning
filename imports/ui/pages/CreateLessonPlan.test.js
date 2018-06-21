@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor'
 import React from'react'
-import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { Router, Route } from 'react-router-dom'
 

@@ -50,7 +50,9 @@ export default class SimsDirectories extends React.Component {
                 */
     
                 treeData.push(...data.simDirectories)
-                treeData.push(...this.getFileObjects(sims)) 
+                treeData.push(...this.getFileObjects(sims))
+
+
 
                 this.setState({
                     treeData
@@ -78,11 +80,9 @@ export default class SimsDirectories extends React.Component {
             if(sim.isAdded == false)
                 return {
                     _id: sim._id,
-                    title: sim.name,
                     isFile: true,
-                    src:sim.src,
-                    w:sim.w,
-                    h:sim.h
+                    title: sim.name
+                    
                 }
             else return null
     
@@ -93,8 +93,7 @@ export default class SimsDirectories extends React.Component {
         return structs.filter(struct=>{
             if(struct)
                 return struct
-        })
-    
+        })  
     
       }
 
@@ -153,9 +152,33 @@ export default class SimsDirectories extends React.Component {
 
     handleOpen = () => this.setState({ modalOpen: true })
     handleClose = () => this.setState({ modalOpen: false })   
+
+    map({
+        treeData,
+        getNodeKey,
+        callback,
+        ignoreCollapsed = true,
+      }) {
+        if (!treeData || treeData.length < 1) {
+          return [];
+        }
+      
+        return mapDescendants({
+          callback,
+          getNodeKey,
+          ignoreCollapsed,
+          isPseudoRoot: true,
+          node: { children: treeData },
+          currentIndex: -1,
+          path: [],
+          lowerSiblingCounts: [],
+        }).node.children;
+      }
     
     
     render() {
+
+
 
         const getNodeKey = ({ treeIndex }) => treeIndex;    
 
@@ -204,6 +227,8 @@ export default class SimsDirectories extends React.Component {
     
         }
 
+       
+
      
         
         return(
@@ -248,6 +273,7 @@ export default class SimsDirectories extends React.Component {
                 <div style={{ height: 400, padding:'1.6rem' }}>
 
                     <SortableTree
+                        canDrag = {this.props.isPreview?false:true}
                         theme={FileExplorerTheme}
                         treeData={this.state.treeData}
                         onChange={treeData => this.setState({ treeData })}

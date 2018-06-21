@@ -38,7 +38,7 @@ export default class Dashboard extends React.Component {
         },()=>{
             const sim = Sims.findOne({_id:node._id})
             this.setState({
-                
+                node:sim,
                 isPublic: sim.isPublic
             })
             

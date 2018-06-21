@@ -2,10 +2,13 @@ import React from 'react'
 
 import SimsDirectories from './SimsDirectories'
 
-import { Button, Grid, Modal } from 'semantic-ui-react'
+import { Button, Grid, Modal, Tab } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import SimPreview from './SimPreview'
+
+import SimPool from './SimPool'
+
 
 export default class AddSim extends React.Component {
 
@@ -83,7 +86,19 @@ export default class AddSim extends React.Component {
 
     }
 
+    getNode(node) {
+
+        this.setState({
+            node
+        })
+    }
+
     render() {
+
+        const panes = [
+            { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> },
+            { menuItem: 'Simulation Pool', render: () => <Tab.Pane><SimPool getNode = {this.getNode.bind(this)}/></Tab.Pane> },
+          ]
 
 
         return(
@@ -110,7 +125,7 @@ export default class AddSim extends React.Component {
                             >
                                 
                                 <Grid.Column width = {8}>
-                                    <SimsDirectories isPreview = {true} getNode = {this.getNode.bind(this)} ref = {e => this.simDirectories = e}/>    
+                                   <Tab panes={panes}/>   
                                 </Grid.Column>
 
                                 <Grid.Column style = {{overflow:'auto'}}>
