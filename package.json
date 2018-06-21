@@ -15,6 +15,7 @@
     "react": "^16.4.0",
     "react-addons-pure-render-mixin": "^15.6.2",
     "react-addons-test-utils": "^15.6.2",
+    "react-contenteditable": "^2.1.0",
     "react-dom": "^16.4.0",
     "react-icons": "^2.2.7",
     "react-meteor-data": "^0.2.11",

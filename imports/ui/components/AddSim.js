@@ -113,7 +113,9 @@ export default class AddSim extends React.Component {
                 >
 
 
-                    <Modal.Header>My simulations</Modal.Header>
+                    <Modal.Header>
+                        Simulations
+                    </Modal.Header>
 
                     <Modal.Content>
 
@@ -128,7 +130,7 @@ export default class AddSim extends React.Component {
                                    <Tab panes={panes}/>   
                                 </Grid.Column>
 
-                                <Grid.Column style = {{overflow:'auto'}}>
+                                <Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
                                     <SimPreview  {...this.state.node}/>                 
                                 </Grid.Column>
 

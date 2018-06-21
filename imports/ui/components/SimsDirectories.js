@@ -6,8 +6,9 @@ import 'react-sortable-tree/style.css';
 import { Tracker } from 'meteor/tracker'
 import { Sims } from '../../api/sims'
 
-import IoEye from 'react-icons/lib/io/eye'
 import FaTrash from 'react-icons/lib/fa/trash'
+
+import TiFolderOpen from 'react-icons/lib/ti/folder-open'
 
 import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
@@ -181,6 +182,8 @@ export default class SimsDirectories extends React.Component {
                         onChange={treeData => this.setState({ treeData })}
                         canDrop={canDrop}
                         onMoveNode = { args => {
+
+                            console.log(args)
                             
                             if(args.nextParentNode) {
                                 Meteor.call('sims.folder.visibilityChange', args.nextParentNode._id, true)
@@ -213,7 +216,7 @@ export default class SimsDirectories extends React.Component {
                             
                             }} 
                             >
-                            <IoEye size={22} color="black"/>
+                            <TiFolderOpen size={22} color="black"/>
                           </button>,
         
                           <button

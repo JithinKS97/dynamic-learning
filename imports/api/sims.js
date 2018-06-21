@@ -75,5 +75,10 @@ Meteor.methods({
     'sims.remove'(_id) {
 
         Sims.remove({_id, userId:this.userId})
+    },
+
+    'sims.titleChange'(_id, title) {
+
+        Sims.update({_id}, {$set:{title}})
     }
 })
