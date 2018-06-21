@@ -6,6 +6,7 @@ export const Sims = new Mongo.Collection('sims')
 if(Meteor.isServer) {
 
     Meteor.publish('sims',function(){
+        
         return Sims.find({userId:this.userId})
     })
 
@@ -17,32 +18,59 @@ if(Meteor.isServer) {
 
 Meteor.methods({    
 
-    'sims.insert'(name, src, w, h) {
+    'sims.insert'(title, src, w, h) {
 
         if(!this.userId) {
+
             throw new Meteor.Error('not-authorized')
         }
 
         return Sims.insert({ 
             
             userId:this.userId,
-            name, 
+            title, 
             src, 
             w, 
             h,
-            isAdded:false,
-            isPublic:false
+            isFile:true,
+            isPublic:false,
+            parent_id:'0'
         })
     },
 
-    'sims.directoryChange'(_id, isAdded) {
-        Sims.update({_id}, {$set:{isAdded}})
+    'sims.folder.insert'(title) {
+
+        if(!this.userId) {
+
+            throw new Meteor.Error('not-authorized')
+        }
+
+        Sims.insert({ 
+            
+            userId:this.userId,
+            title,
+            isFile:false,
+            parent_id:'0',
+            children:[],
+            expanded:false
+
+        })
+    },
+
+    'sims.folderChange'(_id, parent_id) {
+
+        Sims.update({_id}, {$set:{parent_id}})
     },
 
     'sims.visibilityChange'(_id, isPublic) {
+        
         Sims.update({_id}, {$set:{isPublic}})
     },
 
+    'sims.folder.visibilityChange'(_id, expanded) {
+
+        Sims.update({_id}, {$set:{expanded}})
+    },
     
     'sims.remove'(_id) {
 

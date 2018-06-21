@@ -15,7 +15,7 @@ if(Meteor.isServer) {
 
 Meteor.methods({
 
-    'lessonplans.insert'(name) {
+    'lessonplans.insert'(title) {
 
         if(!this.userId) {
             throw new Meteor.Error('not-authorized')
@@ -30,11 +30,13 @@ Meteor.methods({
                 id of the inserted LessonPlan document.
             */
                         
-            name,
+            title,
             slides:[],
             userId:this.userId,
             updatedAt: moment().valueOf(),
-            isAdded:false
+            isFile:true,
+            isPublic:false,
+            parent_id:'0'
 
         },(err, docs)=>{
 
@@ -46,6 +48,24 @@ Meteor.methods({
                 requestTitle:'',
                 updatedAt: moment().valueOf()
             })
+
+        })
+    },
+
+    'lessonplans.folder.insert'(title) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
+        LessonPlans.insert({ 
+            
+            userId:this.userId,
+            title,
+            isFile:false,
+            parent_id:'0',
+            children:[],
+            expanded:false
 
         })
     },
@@ -67,13 +87,20 @@ Meteor.methods({
         Requests.remove({_id, userId:this.userId})
     },
 
-    'lessonplans.directoryChange'(_id, isAdded) {
-        LessonPlans.update({_id}, {$set:{isAdded}})
+    'lessonplans.directoryChange'(_id, parent_id) {
+        
+        LessonPlans.update({_id}, {$set:{parent_id}})
+    },
+
+    'lessonplans.folder.visibilityChange'(_id, expanded) {
+
+        LessonPlans.update({_id}, {$set:{expanded}})
     },
 
     'lessonplans.update'(_id, slides) {
 
         if(!this.userId) {
+
             throw new Meteor.Error('not-authorized')
         }
 
