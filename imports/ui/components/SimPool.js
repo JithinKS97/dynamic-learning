@@ -43,7 +43,7 @@ export default class SimPool extends React.Component {
                     })
                 }}>
                     <List.Content>    
-                        {sim.name}
+                        {sim.title}
                     </List.Content>
                 </List.Item>
             )
