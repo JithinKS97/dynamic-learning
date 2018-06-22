@@ -135,7 +135,7 @@ export default class AddSim extends React.Component {
                             >
                                 
                                 <Grid.Column width = {8}>
-                                   <Tab panes={panes}/>   
+                                   <Tab onTabChange = {()=>{this.setState({node:null})}} panes={panes}/>   
                                 </Grid.Column>
 
                                 {this.state.node?<Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>

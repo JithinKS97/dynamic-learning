@@ -119,8 +119,8 @@ export default class Dashboard extends React.Component {
                     >
                         <Modal.Header>
                             Preview
-                            <Button style = {{float:'right'}} onClick = {this.handleClose}>
-                                Close
+                            <Button className = 'close-button' onClick = {this.handleClose}>
+                                X
                             </Button> 
                         </Modal.Header>
 
