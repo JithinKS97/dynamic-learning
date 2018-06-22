@@ -144,11 +144,7 @@ export default class Dashboard extends React.Component {
 
                             }} label = 'public'/> 
 
-                        </Modal.Content>
-
-                         <Modal.Content>                          
-                                          
-                        </Modal.Content>           
+                        </Modal.Content>         
 
                     </Modal>
 

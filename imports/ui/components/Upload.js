@@ -136,7 +136,12 @@ export default class Upload extends React.Component {
                     size='tiny'
 
                 >
-                   <Modal.Header>Add simulation</Modal.Header>
+                   <Modal.Header>
+                       Add simulation
+                       <Button className = 'close-button' onClick = {this.handleClose}>
+                            X
+                        </Button>
+                    </Modal.Header>
 
                    <Modal.Content>
 

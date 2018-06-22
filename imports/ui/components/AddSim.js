@@ -96,8 +96,8 @@ export default class AddSim extends React.Component {
     render() {
 
         const panes = [
-            { menuItem: 'Simulation Pool', render: () => <Tab.Pane><SimPool getNode = {this.getNode.bind(this)}/></Tab.Pane> },
-            { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> }
+            { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> },
+            { menuItem: 'Simulation Pool', render: () => <Tab.Pane style = {{height:'429px'}}><SimPool getNode = {this.getNode.bind(this)}/></Tab.Pane> },
           ]
 
 
@@ -108,13 +108,21 @@ export default class AddSim extends React.Component {
                     
                     open={this.state.isOpen}
                     onClose={this.handleClose}
-                    size='fullscreen'      
+                    size='large'      
                                        
                 >
 
 
                     <Modal.Header>
                         Simulations
+                        <Button
+                            className = 'close-button'
+                            onClick = {()=>{                                        
+                            this.setState({
+                                node:this.handleClose()
+                        
+                            })
+                        }}>X</Button>
                     </Modal.Header>
 
                     <Modal.Content>
@@ -130,20 +138,13 @@ export default class AddSim extends React.Component {
                                    <Tab panes={panes}/>   
                                 </Grid.Column>
 
-                                <Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
+                                {this.state.node?<Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
                                     <SimPreview  {...this.state.node}/>                 
-                                </Grid.Column>
+                                </Grid.Column>:null}
 
-                                <Button
-                                        style = {{marginLeft:'0.8rem'}}
-                                        onClick = {()=>{                                        
-                                        this.setState({
-                                            node:this.handleClose()
-                                    
-                                        })
-                                }}>Close</Button>
 
-                                {this.state.node?<Button onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
+
+                                {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 
                             </Grid>       
                             

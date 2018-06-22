@@ -144,7 +144,12 @@ export default class SimsDirectories extends React.Component {
                     onClose={this.handleClose}
                     size='tiny'            
                     >
-                    <Modal.Header>New folder</Modal.Header>
+                    <Modal.Header>
+                        New folder
+                        <Button className = 'close-button' onClick = {this.handleClose}>
+                            X
+                        </Button>
+                    </Modal.Header>
 
                     <Modal.Content>
                         <Modal.Description>
@@ -160,9 +165,7 @@ export default class SimsDirectories extends React.Component {
                                     Submit
                                 </Button>
                                 
-                                <Button onClick = {this.handleClose}>
-                                    Close
-                                </Button>
+                                
 
                             </Form>
                         </Modal.Description>
@@ -173,7 +176,7 @@ export default class SimsDirectories extends React.Component {
 
                 <div style={{ height: 400, padding:'1.6rem' }}>
 
-                    {!!!Meteor.userId()?<p>You need to login to add your own simulations</p>:null}
+                    
 
                     <SortableTree
                         onVisibilityToggle = {({treeData, node, expanded}) => {

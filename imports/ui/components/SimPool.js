@@ -54,7 +54,7 @@ export default class SimPool extends React.Component {
     render() {
 
         return(
-            <List selection verticalAlign='middle'>
+            <List style = {{width:'100%', height:'100%'}}  selection verticalAlign='middle'>
                 {this.displaySims()}
             </List>
         )

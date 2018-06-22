@@ -167,7 +167,12 @@ export default class LessonPlansDirectories extends Component {
                 onClose={this.handleClose}
                 size='tiny'            
              >
-                <Modal.Header>Lessonplan details</Modal.Header>
+                <Modal.Header>
+                    Lessonplan details
+                    <Button className = 'close-button' onClick = {this.handleClose}>
+                        X
+                    </Button>
+                </Modal.Header>
 
                 <Modal.Content>
                     <Modal.Description>
@@ -183,9 +188,7 @@ export default class LessonPlansDirectories extends Component {
                                 Submit
                             </Button>
 
-                            <Button onClick = {this.handleClose}>
-                                Close
-                            </Button>
+
                        
                         </Form>
                     </Modal.Description>
@@ -202,7 +205,13 @@ export default class LessonPlansDirectories extends Component {
                 onClose={this.handle2Close}
                 size='tiny'            
                 >
-                <Modal.Header>New folder</Modal.Header>
+                <Modal.Header>
+                    New folder
+                    <Button className = 'close-button' onClick = {this.handle2Close}>
+                        X
+                    </Button>                  
+
+                </Modal.Header>
 
                 <Modal.Content>
                     <Modal.Description>
@@ -218,10 +227,6 @@ export default class LessonPlansDirectories extends Component {
                                 Submit
                             </Button>
 
-                            <Button onClick = {this.handle2Close}>
-                                Close
-                            </Button>
-                    
                         </Form>
                     </Modal.Description>
                     
