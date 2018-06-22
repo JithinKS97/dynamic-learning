@@ -8,7 +8,8 @@ import { Sims } from '../../api/sims'
 
 import FaTrash from 'react-icons/lib/fa/trash'
 
-import TiFolderOpen from 'react-icons/lib/ti/folder-open'
+import FaPlayCircleO from 'react-icons/lib/fa/play-circle-o'
+
 
 import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
@@ -182,8 +183,6 @@ export default class SimsDirectories extends React.Component {
                         onChange={treeData => this.setState({ treeData })}
                         canDrop={canDrop}
                         onMoveNode = { args => {
-
-                            console.log(args)
                             
                             if(args.nextParentNode) {
                                 Meteor.call('sims.folder.visibilityChange', args.nextParentNode._id, true)
@@ -216,7 +215,7 @@ export default class SimsDirectories extends React.Component {
                             
                             }} 
                             >
-                            <TiFolderOpen size={22} color="black"/>
+                            <FaPlayCircleO size={22} color="black"/>
                           </button>,
         
                           <button

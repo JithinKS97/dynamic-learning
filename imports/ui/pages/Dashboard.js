@@ -88,18 +88,17 @@ export default class Dashboard extends React.Component {
     editTitle() {
 
         if(this.state.editable == false) {
-
+            
            this.setState({editable:true})
         }
         else {
 
-            if(this.title.value === '') 
+            if(this.title.value === '')
                 return
 
             Meteor.call('sims.titleChange', this.state.node._id, this.state.title)
             this.setState({editable:false})
         }
-        
     }
 
     render() {

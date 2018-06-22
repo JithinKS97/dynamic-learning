@@ -17,10 +17,9 @@ import Dashboard from '../ui/pages/Dashboard'
 
 
 const history = createHistory()
-const unAuthenticatedPages = ['/', '/signup']
+const unAuthenticatedPages = ['/', '/signup', '/createlessonplan']
 const authenticatedPages = [
     '/lessonplans',
-    '/createlessonplan',
     '/simupload',
     '/request',
     '/sandbox',
@@ -47,11 +46,12 @@ export const AppRouter = (
         <div>
             <Switch>
                 <PublicRoute exact path='/' component = {Login}></PublicRoute>
+                <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
+                <PublicRoute path='/createlessonplan' component = {CreateLessonPlan}></PublicRoute>
                 <PublicRoute path='/signup' component = {Signup}></PublicRoute>
                 <PrivateRoute path='/request/:_id' component = {Request}></PrivateRoute>
                 <PrivateRoute path='/sandbox' component = {SandBox}></PrivateRoute>
                 <PrivateRoute path='/dashboard/:option' component = {Dashboard}></PrivateRoute>
-                <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
                 <Route path = '*' component = {NotFound}></Route>
             </Switch>
         </div>

@@ -4,7 +4,7 @@ import { LessonPlans } from '../../api/lessonplans'
 import SimsList from '../components/SimsList'
 import List from '../components/List'
 import AddSim from '../components/AddSim'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 
 import { withTracker } from 'meteor/react-meteor-data';
@@ -40,7 +40,8 @@ class CreateLessonPlan extends React.Component {
             curSlide:0,
             slides: [],
             _id: '',
-            initialized:false
+            initialized:false,
+            redirectToRequest:null
         }
 
         this.pushSlide.bind(this)
@@ -247,6 +248,9 @@ class CreateLessonPlan extends React.Component {
 
     save() {
 
+        if(!Meteor.userId())
+            return
+
         const {_id, slides} = this.state
 
         Meteor.call('lessonplans.update', _id, slides,(err)=>{
@@ -261,6 +265,9 @@ class CreateLessonPlan extends React.Component {
            the change made, the changes are saved looking upon arguments given when the
            function was called.
         */
+
+
+
 
         if(slides == undefined) {
             this.setState({
@@ -330,8 +337,6 @@ class CreateLessonPlan extends React.Component {
 
     interact(){
 
-        console.log('hello')
-
       this.isInteractEnabled = !this.isInteractEnabled;
       if(this.isInteractEnabled) {
         document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
@@ -353,7 +358,21 @@ class CreateLessonPlan extends React.Component {
       })
     }
 
-    render() {        
+    headToRequestPage() {
+
+        if(!Meteor.userId())
+            return
+        else {
+            this.setState({redirectToRequest:true})
+        }
+    }
+
+    render() {
+
+        if(this.state.redirectToRequest) {
+
+            return <Redirect to = {`/request/${this.state._id}`}/>
+        }
 
         return (
         <Segment style = {{padding:0, margin:0}}>
@@ -394,8 +413,8 @@ class CreateLessonPlan extends React.Component {
                             <Link to = '/dashboard/lessonplans'>Back</Link>
                         </Menu.Item>
 
-                        <Menu.Item link>
-                            <Link to={{ pathname: `/request/${this.state._id}`}}>Request</Link>
+                        <Menu.Item onClick = {this.headToRequestPage.bind(this)}>
+                            Request
                         </Menu.Item>
 
                         <Menu.Item onClick = {()=>{
@@ -434,8 +453,18 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     
     const lessonplansHandle = Meteor.subscribe('lessonplans')
     const loading = !lessonplansHandle.ready()
-    const lessonplan = LessonPlans.findOne(match.params._id)
-    const lessonplanExists = !loading && !!lessonplan
+    let lessonplan, lessonplanExists
+
+    if(match.params._id === undefined)
+    {
+        lessonplanExists = true
+        const slides = []
+        lessonplan = {slides}
+    }
+    else {
+        lessonplan = LessonPlans.findOne(match.params._id)
+        lessonplanExists = !loading && !!lessonplan
+    }
 
 
     return {
