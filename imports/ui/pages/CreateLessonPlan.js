@@ -409,9 +409,9 @@ class CreateLessonPlan extends React.Component {
                             <Checkbox label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
                         </Menu.Item>        
 
-                        <Menu.Item link>
-                            <Link to = '/dashboard/lessonplans'>Back</Link>
-                        </Menu.Item>
+                        {Meteor.userId()?<Menu.Item link>
+                            <Link to = '/dashboard/lessonplans'>Dashboard</Link>
+                        </Menu.Item>:null}
 
                         <Menu.Item onClick = {this.headToRequestPage.bind(this)}>
                             Request
