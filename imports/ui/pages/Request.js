@@ -249,7 +249,7 @@ class Request extends React.Component {
 
                                         {isOwner?<Button onClick = {()=>{
                                         
-                                        const confirmation = confirm('Are you sure you want to delete all the requests?')
+                                        const confirmation = confirm('Are you sure you want to close this forum?')
 
                                         if(confirmation && isOwner)
                                         {
@@ -258,7 +258,7 @@ class Request extends React.Component {
                                         }                        
                                         
 
-                                        }}>Delete this request</Button>:null}
+                                        }}>Close this request forum</Button>:null}
 
                                     </Container>
 

@@ -58,7 +58,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized')
         }
 
-        LessonPlans.insert({ 
+        return LessonPlans.insert({ 
             
             userId:this.userId,
             title,

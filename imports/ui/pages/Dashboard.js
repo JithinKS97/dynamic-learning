@@ -36,7 +36,7 @@ export default class Dashboard extends React.Component {
 
     componentDidMount() {
 
-        Tracker.autorun(()=>{
+        this.simsTracker = Tracker.autorun(()=>{
 
             if(this.state.node) {
 
@@ -47,6 +47,11 @@ export default class Dashboard extends React.Component {
             }
                 
         })
+    }
+
+    componentWillUnmount() {
+
+        this.simsTracker.stop()
     }
 
 

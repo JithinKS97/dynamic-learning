@@ -96,8 +96,8 @@ export default class AddSim extends React.Component {
     render() {
 
         const panes = [
-            { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> },
             { menuItem: 'Simulation Pool', render: () => <Tab.Pane><SimPool getNode = {this.getNode.bind(this)}/></Tab.Pane> },
+            { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> }
           ]
 
 
@@ -135,7 +135,7 @@ export default class AddSim extends React.Component {
                                 </Grid.Column>
 
                                 <Button
-
+                                        style = {{marginLeft:'0.8rem'}}
                                         onClick = {()=>{                                        
                                         this.setState({
                                             node:this.handleClose()

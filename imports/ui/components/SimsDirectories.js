@@ -173,6 +173,8 @@ export default class SimsDirectories extends React.Component {
 
                 <div style={{ height: 400, padding:'1.6rem' }}>
 
+                    {!!!Meteor.userId()?<p>You need to login to add your own simulations</p>:null}
+
                     <SortableTree
                         onVisibilityToggle = {({treeData, node, expanded}) => {
                             Meteor.call('sims.folder.visibilityChange', node._id, expanded)

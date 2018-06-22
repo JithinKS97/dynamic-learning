@@ -11,8 +11,22 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            error: ''
+            error: '',
+            slides:null
         }
+    }
+
+    componentDidMount() {
+
+        if(!localStorage.getItem('slidesToSave'))
+            return
+
+        const slides = JSON.parse(localStorage.getItem('slidesToSave'))
+
+        this.setState({            
+            slides
+        })
+
     }
 
     onSubmit(e) {
@@ -29,8 +43,30 @@ export default class Login extends React.Component {
                 })
             }
             else {
+                
                 this.setState({
                     error :''
+                },()=>{
+
+                    if(!this.state.slides)
+                    {
+                        return
+                    }
+
+                    Meteor.call('lessonplans.insert', 'My New LessonPlan',(err, _id)=>{
+                        
+                        Meteor.call('lessonplans.update', _id, this.state.slides,()=>{
+
+                            localStorage.removeItem('slidesToSave');
+
+                            this.setState({
+                                slides:null
+                            })  
+                        })
+                    })
+
+                 
+
                 })
             }
         })

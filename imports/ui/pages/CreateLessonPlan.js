@@ -9,7 +9,7 @@ import { Meteor } from 'meteor/meteor'
 
 import { withTracker } from 'meteor/react-meteor-data';
 
-import { Checkbox, Menu, Button, Dimmer, Loader, Segment } from 'semantic-ui-react'
+import { Checkbox, Menu, Button, Dimmer, Loader, Segment, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 
@@ -37,11 +37,13 @@ class CreateLessonPlan extends React.Component {
         this.lessonplanExists = false
 
         this.state = {
+            title:null,
             curSlide:0,
             slides: [],
             _id: '',
             initialized:false,
-            redirectToRequest:null
+            createAccount:false,
+            redirectToLogin:false
         }
 
         this.pushSlide.bind(this)
@@ -248,15 +250,18 @@ class CreateLessonPlan extends React.Component {
 
     save() {
 
-        if(!Meteor.userId())
-            return
+        if(!Meteor.userId()) { 
 
-        const {_id, slides} = this.state
+            this.setState({createAccount:true})
+        }
+        else {
 
-        Meteor.call('lessonplans.update', _id, slides,(err)=>{
-            alert('Saved successfully')
-        })
+            const {_id, slides} = this.state
 
+            Meteor.call('lessonplans.update', _id, slides,(err)=>{
+                alert('Saved successfully')
+            })
+        }  
     }
 
     saveChanges(slides, curSlide) {
@@ -360,22 +365,49 @@ class CreateLessonPlan extends React.Component {
 
     headToRequestPage() {
 
-        if(!Meteor.userId())
-            return
+        if(!Meteor.userId()){
+
+            console.log('hello')
+            this.setState({createAccount:true})
+        }            
         else {
+
             this.setState({redirectToRequest:true})
         }
     }
 
     render() {
 
-        if(this.state.redirectToRequest) {
+        if(this.state.redirectToLogin) {
 
-            return <Redirect to = {`/request/${this.state._id}`}/>
+            return <Redirect to = {`/`}/>
         }
 
         return (
         <Segment style = {{padding:0, margin:0}}>
+
+            <Modal size= 'tiny' open = {this.state.createAccount}>
+                <Modal.Header>
+                    You need to login to save changes
+                    <Button style = {{float:'right'}} onClick = {()=>{
+                        this.setState({createAccount:false})
+                    }}>X</Button>
+                </Modal.Header>
+                <Modal.Content>
+                    <Modal.Description style = {{textAlign:'center'}}>
+                 
+                                <Button onClick = {()=>{
+                                    
+                                    localStorage.setItem('slidesToSave', JSON.stringify(this.state.slides))
+
+                                    this.setState({redirectToLogin:true})
+
+                                }} style = {{marginTop:'1.6rem'}}>Login</Button>
+                   
+          
+                    </Modal.Description>
+                </Modal.Content>
+            </Modal>
             
             <Dimmer active = {!this.state.initialized}>
                 <Loader />
@@ -413,9 +445,10 @@ class CreateLessonPlan extends React.Component {
                             <Link to = '/dashboard/lessonplans'>Dashboard</Link>
                         </Menu.Item>:null}
 
-                        <Menu.Item onClick = {this.headToRequestPage.bind(this)}>
-                            Request
-                        </Menu.Item>
+                        {!!Meteor.userId()?<Menu.Item link>
+                            <Link to = {`/request/${this.state._id}`}>Request</Link>
+                        </Menu.Item>:null}
+                        
 
                         <Menu.Item onClick = {()=>{
                             const confirmation = confirm('Are you sure you want to reset all?')
@@ -436,6 +469,15 @@ class CreateLessonPlan extends React.Component {
                         <Menu.Item onClick = {()=>{this.save()}}>
                             Save
                         </Menu.Item>
+
+                        {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
+
+                                localStorage.setItem('slidesToSave', JSON.stringify(this.state.slides))
+                                this.setState({redirectToLogin:true}
+                            )}}>
+                            Login
+                        </Menu.Item>:null}
+
 
                     </Menu>
                             
@@ -459,7 +501,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     {
         lessonplanExists = true
         const slides = []
-        lessonplan = {slides}
+        lessonplan = {slides, title:'default'}
     }
     else {
         lessonplan = LessonPlans.findOne(match.params._id)
