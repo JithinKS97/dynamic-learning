@@ -22,3 +22,4 @@ react-meteor-data
 meteortesting:mocha
 underscore@1.0.10
 semantic:ui
+session

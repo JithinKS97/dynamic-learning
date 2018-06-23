@@ -4,6 +4,7 @@ import { Accounts } from 'meteor/accounts-base'
 import { Meteor } from 'meteor/meteor'
 
 import { Button, Form, Card } from 'semantic-ui-react'
+import { Session } from 'meteor/session'
 
 import 'semantic-ui-css/semantic.min.css';
 
@@ -19,13 +20,11 @@ export default class Signup extends React.Component {
 
     componentDidMount() {
 
-        if(!localStorage.getItem('slidesToSave'))
-            return
-
-        const slides = JSON.parse(localStorage.getItem('slidesToSave'))
+        const state = Session.get('stateToSave')      
 
         this.setState({            
-            slides
+            slides:state.slides,
+            title:state.title
         })
 
     }
@@ -63,16 +62,11 @@ export default class Signup extends React.Component {
                         return
                     }
 
-                    Meteor.call('lessonplans.insert', 'My New LessonPlan',(err, _id)=>{
+                    Meteor.call('lessonplans.insert', this.state.title,(err, _id)=>{
 
-                        Meteor.call('lessonplans.update', _id, this.state.slides, ()=>{
+                        Meteor.call('lessonplans.update', _id, this.state.slides)
 
-                            localStorage.removeItem('slidesToSave');
-
-                            this.setState({
-                                slides:null
-                            }) 
-                        })
+                        Session.set('stateToSave', null)
                     })
 
                 })

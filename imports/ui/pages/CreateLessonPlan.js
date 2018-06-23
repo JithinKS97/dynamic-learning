@@ -7,6 +7,8 @@ import AddSim from '../components/AddSim'
 import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 
+import { Session } from 'meteor/session'
+
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { Checkbox, Menu, Button, Dimmer, Loader, Segment, Modal, Form} from 'semantic-ui-react'
@@ -62,12 +64,12 @@ class CreateLessonPlan extends React.Component {
 
           this.next()
         }
-        if(event.key == 's' || event.key == 'S') {
+        if((event.key == 's' || event.key == 'S') && !!this.state.title ) {
 
             this.save()
         }
 
-        if((event.key == 'a' || event.key == 'A') && !this.curPosition[this.state.curSlide] == 0) {
+        if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0) {
 
             this.undo()
         }
@@ -386,6 +388,40 @@ class CreateLessonPlan extends React.Component {
         return (
         <Segment style = {{padding:0, margin:0}}>
 
+            <Dimmer active = {!this.state.initialized}>
+                <Loader />
+            </Dimmer>
+
+            <Modal size = 'tiny' open = {!!!this.state.title}>
+                <Modal.Header>
+                    Enter the title for the lessonplan
+                </Modal.Header>
+                    
+                <Modal.Content>
+                    <Modal.Description>
+                        <Form onSubmit = {()=>{
+                            
+                            if(!this.title.value)
+                                return
+                            
+                            this.setState({
+
+                                title:this.title.value
+                            })
+
+                        }}>
+                            <Form.Field>
+                                <label>Title</label>
+                                <input ref = { e => this.title = e}/>
+                            </Form.Field>
+                            <Form.Field>
+                                <Button type = 'submit'>Submit</Button>
+                            </Form.Field>                            
+                        </Form>
+                    </Modal.Description>
+                </Modal.Content>
+            </Modal>
+
             <Modal size= 'tiny' open = {this.state.createAccount}>
                 <Modal.Header>
                     You need to login to save changes
@@ -398,7 +434,7 @@ class CreateLessonPlan extends React.Component {
                  
                                 <Button onClick = {()=>{
                                     
-                                    localStorage.setItem('slidesToSave', JSON.stringify(this.state.slides))
+                                    Session.set('stateToSave', this.state)
 
                                     this.setState({redirectToLogin:true})
 
@@ -409,9 +445,6 @@ class CreateLessonPlan extends React.Component {
                 </Modal.Content>
             </Modal>
             
-            <Dimmer active = {!this.state.initialized}>
-                <Loader />
-            </Dimmer>
 
             <div className = 'createLessonPlan'>            
 
@@ -472,7 +505,8 @@ class CreateLessonPlan extends React.Component {
 
                         {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
 
-                                localStorage.setItem('slidesToSave', JSON.stringify(this.state.slides))
+                                Session.set('stateToSave', this.state)
+
                                 this.setState({redirectToLogin:true}
                             )}}>
                             Login
@@ -501,7 +535,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     {
         lessonplanExists = true
         const slides = []
-        lessonplan = {slides, title:'default'}
+        lessonplan = {slides, title:null}
     }
     else {
         lessonplan = LessonPlans.findOne(match.params._id)

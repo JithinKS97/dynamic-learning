@@ -5,6 +5,8 @@ import { Meteor } from 'meteor/meteor'
 import { Button, Form, Card } from 'semantic-ui-react'
 
 import 'semantic-ui-css/semantic.min.css';
+
+import { Session } from 'meteor/session'
  
 export default class Login extends React.Component {
 
@@ -18,13 +20,14 @@ export default class Login extends React.Component {
 
     componentDidMount() {
 
-        if(!localStorage.getItem('slidesToSave'))
+        const state = Session.get('stateToSave')
+        
+        if(!state)
             return
 
-        const slides = JSON.parse(localStorage.getItem('slidesToSave'))
-
         this.setState({            
-            slides
+            slides:state.slides,
+            title:state.title
         })
 
     }
@@ -53,19 +56,12 @@ export default class Login extends React.Component {
                         return
                     }
 
-                    Meteor.call('lessonplans.insert', 'My New LessonPlan',(err, _id)=>{
+
+                    Meteor.call('lessonplans.insert', this.state.title, (err, _id)=>{
                         
-                        Meteor.call('lessonplans.update', _id, this.state.slides,()=>{
-
-                            localStorage.removeItem('slidesToSave');
-
-                            this.setState({
-                                slides:null
-                            })  
-                        })
-                    })
-
-                 
+                        Meteor.call('lessonplans.update', _id, this.state.slides)
+                        Session.set('stateToSave', null)
+                    })                 
 
                 })
             }
@@ -109,14 +105,3 @@ export default class Login extends React.Component {
     }
 }
 
-
-{/* <h1>Dynamic Learning</h1>
-{this.state.error ? <p>{this.state.error}</p> : undefined}
-
-<Form onSubmit = {this.onSubmit.bind(this)} noValidate>
-    <Form.Field type='email' ref= { e => this.email = e} name='email' placeholder='Email'/>
-    <input type='password' ref= {e => this.password = e} name='password' placeholder='Password'/>
-    <Button>Sign in</Button>
-</Form>
-
-<Link to='/signup'>Don't have an account?</Link> */}
