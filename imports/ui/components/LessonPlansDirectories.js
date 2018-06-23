@@ -187,8 +187,6 @@ export default class LessonPlansDirectories extends Component {
                             <Button type='submit'>
                                 Submit
                             </Button>
-
-
                        
                         </Form>
                     </Modal.Description>

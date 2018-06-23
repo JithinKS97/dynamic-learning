@@ -65,6 +65,7 @@ export default class AddSim extends React.Component {
                                 
 
             const sim = {
+                linkToCode:this.state.node.linkToCode,
                 src:this.state.node.src,
                 w:this.state.node.w,
                 h:this.state.node.h,
@@ -141,8 +142,6 @@ export default class AddSim extends React.Component {
                                 {this.state.node?<Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
                                     <SimPreview  {...this.state.node}/>                 
                                 </Grid.Column>:null}
-
-
 
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 

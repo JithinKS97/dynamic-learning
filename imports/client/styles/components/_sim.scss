@@ -6,26 +6,43 @@
   top:100px;
 }
 
-.sim-handle__trash {
-  color: rgba(255,255,255,0);
-  transition: 0.1s ease-in;
+.sim-nav {
+  color: rgba(0,0,0,0);
 }
 
-.sim-handle__trash:hover {
-
+.sim-nav:hover {
   color: #444444;
 }
 
+.sim-delete {
+  
+  transition: 0.1s ease-in;
+}
+
+.sim-delete:hover {
+  color: #e8e8e8;
+  transition: 0.1s ease-in;
+}
 
 .sim-handle {
-
-  color: rgba(255,255,255,0);
+  
   transition: 0.1s ease-in;
 }
 
 .sim-handle:hover {
+  color: #e8e8e8;
+  transition: 0.1s ease-in;
+}
 
-  color:#444444;
+
+.link-to-code {
+  color:inherit;
+  transition: 0.1s ease-in;
+}
+
+.link-to-code:hover {
+  color: #e8e8e8;
+  transition: 0.1s ease-in;
 }
 
 .iframe {

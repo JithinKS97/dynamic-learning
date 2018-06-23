@@ -306,9 +306,17 @@ class Request extends React.Component {
                     <Modal
                         open = {this.state.requestTitle?false:true}
                         size = 'tiny'
+                        
                     >
 
-                        <Modal.Header>Preview</Modal.Header>
+                        <Modal.Header>
+                            Preview                           
+   
+                            <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
+                                <Button link className = 'close-button'>X</Button> 
+                            </Link>                                       
+
+                        </Modal.Header>
 
                         <Modal.Content>
 
@@ -322,12 +330,6 @@ class Request extends React.Component {
 
                                         <Form.Field>
                                             <Button>Submit</Button>
-                                        </Form.Field>
-
-                                        <Form.Field>
-                                            <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
-                                                Back
-                                            </Link>
                                         </Form.Field>
                                     </Form>
 

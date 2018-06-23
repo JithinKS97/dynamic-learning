@@ -3,12 +3,14 @@ import SimContainer from './SimContainer'
 import Rnd from 'react-rnd'
 import { Meteor } from 'meteor/meteor'
 
-
+import {Link} from 'react-router-dom'
 
 import 'semantic-ui-css/semantic.min.css';
 
 import TiArrowMove from 'react-icons/lib/ti/arrow-move'
 import FaClose from 'react-icons/lib/fa/close'
+import FaCode from 'react-icons/lib/fa/code'
+
 
 
 export default class simsList extends React.Component {
@@ -127,10 +129,10 @@ export default class simsList extends React.Component {
                                         src = {iframe.src}
                                         {...iframe}
                                     />
-                                    <div className = 'sim-handle__container' style = {{marginLeft:'0.5rem'}}>
+                                    <div className = 'sim-nav' style = {{marginLeft:'0.5rem'}}>
                                     
                                         <FaClose
-                                            className = 'sim-handle__trash'
+                                            className = 'sim-delete'
                                             onClick = {()=>{
                                             
                                                 const confirmation = confirm('Are you sure you want to remove this?')
@@ -142,6 +144,8 @@ export default class simsList extends React.Component {
                                         />
                                     
                                         <TiArrowMove size = '22' className = 'sim-handle'/>
+
+                                        <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
 
                                     </div>
 

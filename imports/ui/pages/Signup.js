@@ -20,7 +20,10 @@ export default class Signup extends React.Component {
 
     componentDidMount() {
 
-        const state = Session.get('stateToSave')      
+        const state = Session.get('stateToSave')
+        
+        if(!state)
+            return
 
         this.setState({            
             slides:state.slides,

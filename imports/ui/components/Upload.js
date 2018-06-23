@@ -6,6 +6,7 @@ import SimPreview from './SimPreview'
 import { Button, Modal, Form, TextArea} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import Rnd from 'react-rnd'
+import { EMLINK } from 'constants';
  
 
 export default class Upload extends React.Component {
@@ -21,7 +22,8 @@ export default class Upload extends React.Component {
         this.state = {
             src:'',
             error:'',
-            modalOpen: false
+            modalOpen: false,
+            linkToCode:''
         }
     }
 
@@ -33,6 +35,7 @@ export default class Upload extends React.Component {
         
         e.preventDefault()
         let entry = this.src.value
+        let linkToCode = this.linkToCode.value
         this.setState({
             error:entry
         })
@@ -43,28 +46,39 @@ export default class Upload extends React.Component {
         */
 
         const tag = entry.match(`<iframe.+?src="https://alpha.editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
-        
-        if(tag) {
-            const validTag = tag[0]
+        const link = linkToCode.match(`https://alpha.editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/sketches/[ A-Za-z0-9_@./#&+-]*`)
 
+
+        
+        if(tag && link) {
+            const validTag = tag[0]
+            const validLink = link[0]
             /* The contents in the src is obtained using regular expression */
 
             const src = validTag.match(`src\s*=\s*"\s*(.*)\s*">`)
-            if(src) {
+
+            const srcEnding = validTag.match(`embed/(.*)"></iframe>`)
+            const linkEnding = validLink.match(`sketches/(.*)`)
+
+
+            if(src && srcEnding[1] === linkEnding[1]) {
                 const validSrc = src[1]
                 this.setState({
-                    src:validSrc
+                    src: validSrc,
+                    linkToCode: validLink
                 })
             }
             else {
                 this.setState({
-                    src:''
+                    src:'',
+                    linkToCode:''
                 })
             }
         }
         else {
             this.setState({
-                src:''
+                src:'',
+                linkToCode:''
             })
         }
     }
@@ -73,7 +87,7 @@ export default class Upload extends React.Component {
 
         e.preventDefault()
 
-        const {src} = this.state
+        const {src, linkToCode} = this.state
         const w = '300px'
         const h = '200px'
         const name = this.name.value
@@ -88,12 +102,12 @@ export default class Upload extends React.Component {
             if(typeof this.props.methodToRun == 'string')
             {
                    
-                Meteor.call(this.props.methodToRun, name, src, w, h)
+                Meteor.call(this.props.methodToRun, name, src, w, h, linkToCode)
                 uploaded = true                             
             }
             else if(typeof this.props.methodToRun == 'function'){
 
-                this.props.methodToRun(src, w, h)
+                this.props.methodToRun(src, w, h, linkToCode)
                 uploaded = true                
             }
             if(uploaded == true) {
@@ -147,9 +161,13 @@ export default class Upload extends React.Component {
 
                             <Form>
                                 <Form.Field>
-                                    <label>Enter iframe tag from p5 online text editor ( Served through https )</label>
+                                    <label>iframe tag from p5 online text editor ( Served through https )</label>
                                     <input ref = { e => this.src = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
-                                </Form.Field>                            
+                                </Form.Field>
+                                <Form.Field>
+                                    <label>Link to the code</label>
+                                    <input ref = { e => this.linkToCode = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
+                                </Form.Field>                           
                             </Form>
 
                                 {this.state.src?
@@ -170,12 +188,8 @@ export default class Upload extends React.Component {
                                         </Form.Field>                                        
                                     </Form>
                                     :null
-                                }
-                               
+                                }                     
 
-                                                                         
-
-    
                     </Modal.Content>
                       
                 </Modal>
