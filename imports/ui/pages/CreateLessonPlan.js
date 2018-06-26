@@ -6,11 +6,8 @@ import List from '../components/List'
 import AddSim from '../components/AddSim'
 import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
-
 import { Session } from 'meteor/session'
-
 import { withTracker } from 'meteor/react-meteor-data';
-
 import { Checkbox, Menu, Button, Dimmer, Loader, Segment, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
@@ -456,17 +453,18 @@ class CreateLessonPlan extends React.Component {
 
                 <div className = 'board'>
                     <SimsList
+                        navVisibility = {true}
                         isRndRequired = {true}
                         saveChanges = {this.saveChanges.bind(this)}
                         delete = {this.deleteSim.bind(this)}
                         {...this.state}
                     />                   
-                    <DrawingBoardCmp ref = {e => this.drawingBoard = e}/>                   
+                    <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>                   
                 </div>
                 
                 <div style = {{marginLeft:'0.8rem'}} className = 'menu'>
                 
-                    <AddSim ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                    <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
                     
                     <Menu icon vertical>                
 

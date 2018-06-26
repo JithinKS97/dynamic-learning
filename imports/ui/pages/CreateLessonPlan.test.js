@@ -2,9 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import React from'react'
 import { mount } from 'enzyme'
 import { Router, Route } from 'react-router-dom'
-
 import { createMemoryHistory } from 'history';
-
 
 if(Meteor.isClient) {
 

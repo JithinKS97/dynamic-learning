@@ -25,7 +25,8 @@ export default class SimsDirectories extends React.Component {
         this.state = {
             treeData: [],
             node:null,
-            modelOpen:false
+            modelOpen:false,
+            selectedLessonPlanId:null
           }
 
     }
@@ -208,10 +209,7 @@ export default class SimsDirectories extends React.Component {
                           <button
                             
                             className = 'icon__button'
-                            style = {{
-                                visibility:node.isFile?'visible':'hidden'
-                            
-                            }}
+                            style = {{display:node.isFile?'block':'none'}}
                             onClick = {()=>{
                                 
                                 this.setState({isOpen:true, node},()=>{
@@ -225,7 +223,7 @@ export default class SimsDirectories extends React.Component {
         
                           <button
                           
-                            style = {{visibility: this.props.isPreview?'hidden':'visible'}}
+                            style = {{display: this.props.isPreview?'none':'block'}}
                             className = 'icon__button'
                             onClick={() =>{
         
@@ -236,7 +234,7 @@ export default class SimsDirectories extends React.Component {
                                 if(!node.isFile) {
                                     removeSimsInside(node)
                                 }
-
+                                    
                                 Meteor.call('sims.remove', node._id)                                
                               }
                             }

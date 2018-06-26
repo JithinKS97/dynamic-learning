@@ -165,7 +165,7 @@ export default class Upload extends React.Component {
                                     <input ref = { e => this.src = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
                                 </Form.Field>
                                 <Form.Field>
-                                    <label>Link to the code</label>
+                                    <label>Code edit link</label>
                                     <input ref = { e => this.linkToCode = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
                                 </Form.Field>                           
                             </Form>

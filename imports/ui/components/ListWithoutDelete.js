@@ -27,19 +27,11 @@ const List = (props) => {
 
                 return (                    
                     <Menu.Item 
-                    
-                         key = {index}                        
+                        style = {{width:'9rem'}}
+                        key = {index} 
+                        onClick = {()=>{props.saveChanges(undefined, index)}}                       
                     >
-                        <Button onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</Button>
-
-                        {isOwner && !props.isPreview?<Button onClick = {()=>{
-
-                            const confirmation = confirm('Are you sure you want to delete?')
-                            
-                            if(confirmation == true)
-                                props.delete(index)
-
-                        }}>X</Button>:null}
+                    {props.showTitle?slide.title:index}
 
                     </Menu.Item>
                 )
@@ -49,7 +41,7 @@ const List = (props) => {
 
 
     return (
-        <Menu icon vertical>
+        <Menu vertical icon>
             {renderSlides()}
         </Menu>
     )

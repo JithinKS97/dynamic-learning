@@ -1,18 +1,11 @@
 import React from 'react'
-
 import SimsDirectories from './SimsDirectories'
-
 import { Button, Grid, Modal, Tab } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
-
 import SimPreview from './SimPreview'
-
 import SimPool from './SimPool'
 
-
 export default class AddSim extends React.Component {
-
-
 
     constructor(props) {
         super(props)

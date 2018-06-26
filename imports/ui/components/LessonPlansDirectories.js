@@ -6,11 +6,14 @@ import 'react-sortable-tree/style.css';
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
 
-import { Button, Modal, Form} from 'semantic-ui-react'
+import { Button, Modal, Form, Label, Input } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
+
+import GoEye from 'react-icons/lib/go/eye'
+import LessonPlanViewer from './LessonPlanViewer'
 
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
  
@@ -31,7 +34,10 @@ export default class LessonPlansDirectories extends Component {
         
       treeData: [],
       modalOpen: false,
-      modal2Open:false
+      modal2Open: false,
+      selectedLessonPlanId: null,
+      node:null,
+      editable:false
     }
   }
 
@@ -105,8 +111,23 @@ export default class LessonPlansDirectories extends Component {
   handle2Open = () => this.setState({ modal2Open: true })
   handle2Close = () => this.setState({ modal2Open: false })
 
+  editTitle() {
+
+    if(this.state.editable == true) {
+        this.setState({
+            editable: false
+        })
+    }    
+    else {
+        this.setState({
+            editable: true
+        })
+    }
+  }
+
   render() {
 
+    
 
     const getNodeKey = ({ treeIndex }) => treeIndex;
     
@@ -158,10 +179,11 @@ export default class LessonPlansDirectories extends Component {
 
     return ( 
 
-        <div>   
+        <div>
+
+
 
              <Modal 
-
                 trigger = {<Button onClick={this.handleOpen} >Create new lessonplan</Button>}
                 open={this.state.modalOpen}
                 onClose={this.handleClose}
@@ -193,6 +215,28 @@ export default class LessonPlansDirectories extends Component {
                     
                 </Modal.Content>              
 
+            </Modal>
+
+            <Modal
+                size = 'fullscreen'
+                open = {!!this.state.selectedLessonPlanId}
+                style = {{transform: 'scale(0.8, 0.8)', marginTop:'8rem'}}
+            >
+                <Modal.Header>
+                    Preview
+                    <Button className = 'close-button' onClick = {()=>{this.setState({selectedLessonPlanId:null})}}>X</Button>
+                </Modal.Header>
+                <Modal.Content>                
+                    <Modal.Description>
+                        <LessonPlanViewer _id = {this.state.selectedLessonPlanId}/>
+                        <br/>
+                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center'}}>{this.state.node?<h2>{this.state.node.title}</h2>:null}</Label>:null}
+                        {this.state.editable?<Input style = {{width:'15rem'}}/>:null}
+                        <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
+                        
+                    </Modal.Description>
+                </Modal.Content>
+                
             </Modal>
 
 
@@ -230,7 +274,7 @@ export default class LessonPlansDirectories extends Component {
                     
                 </Modal.Content>              
 
-                </Modal>
+            </Modal>
 
             <div style={{ height: 400, padding:'1.6rem' }}>        
                 
@@ -262,12 +306,26 @@ export default class LessonPlansDirectories extends Component {
                         <button
                             
                             className = 'icon__button'
-                            style = {{visibility:node.isFile?'visible':'hidden'}}>
+                            style = {{display:node.isFile?'block':'none'}}>
 
                             <Link to ={{ pathname: `/createlessonplan/${node._id}`}}>
                                <FaEdit size={17} color="black" />
                             </Link>
 
+                        </button>,
+                        
+                        <button
+                        onClick = {()=>{
+
+                                this.setState({
+                                    node,
+                                    selectedLessonPlanId:node._id
+                                })
+                            }}
+                            style = {{display:node.isFile?'block':'none'}}
+                            className = 'icon__button'
+                        >
+                            <GoEye size={17} color="black"/>
                         </button>,
 
                         <button
@@ -290,6 +348,7 @@ export default class LessonPlansDirectories extends Component {
                             <FaTrash size={17} color="black"/>
 
                         </button>
+
                         ]
                     })}
                 />

@@ -310,7 +310,8 @@ class Request extends React.Component {
                     >
 
                         <Modal.Header>
-                            Preview                           
+
+                            Title for the request forum                         
    
                             <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
                                 <Button link className = 'close-button'>X</Button> 
@@ -324,7 +325,7 @@ class Request extends React.Component {
 
                                     <Form onSubmit = {this.setTitle.bind(this)}>
                                         <Form.Field>
-                                            <label>Enter the title</label>
+                                            <label>Title</label>
                                             <input ref = {e => this.requestTitle = e}/>
                                         </Form.Field>
 

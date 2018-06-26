@@ -80,7 +80,7 @@ export default class Login extends React.Component {
                     <Card.Content>
 
                         {this.state.error ? <p>{this.state.error}</p> : undefined}
-                        <Form onSubmit = { this.onSubmit.bind(this) }>
+                        <Form noValidate onSubmit = { this.onSubmit.bind(this) }>
                             <Form.Field>
                                 <label>Email</label>
                                 <input type = 'email' ref = { e => this.email = e } placeholder='Email' />

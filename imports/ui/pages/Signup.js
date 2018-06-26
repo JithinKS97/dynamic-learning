@@ -89,7 +89,7 @@ export default class Signup extends React.Component {
 
                         {this.state.error ? <p>{this.state.error}</p> : undefined}
                     
-                        <Form onSubmit = {this.onSubmit.bind(this)} noValidate>
+                        <Form noValidate onSubmit = {this.onSubmit.bind(this)} noValidate>
                             <Form.Field>
                                 <label>Username</label>
                                 <input ref= { e => this.username = e } placeholder='Username'/>

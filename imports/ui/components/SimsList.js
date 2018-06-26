@@ -2,15 +2,10 @@ import React from 'react'
 import SimContainer from './SimContainer'
 import Rnd from 'react-rnd'
 import { Meteor } from 'meteor/meteor'
-
-import {Link} from 'react-router-dom'
-
 import 'semantic-ui-css/semantic.min.css';
-
 import TiArrowMove from 'react-icons/lib/ti/arrow-move'
 import FaClose from 'react-icons/lib/fa/close'
 import FaCode from 'react-icons/lib/fa/code'
-
 
 
 export default class simsList extends React.Component {
@@ -129,7 +124,7 @@ export default class simsList extends React.Component {
                                         src = {iframe.src}
                                         {...iframe}
                                     />
-                                    <div className = 'sim-nav' style = {{marginLeft:'0.5rem'}}>
+                                    <div className = 'sim-nav' style = {{marginLeft:'0.5rem', visibility:this.props.navVisibility?'visible':'hidden'}}>
                                     
                                         <FaClose
                                             className = 'sim-delete'

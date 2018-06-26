@@ -2,8 +2,6 @@ import React from 'react'
 import '../../api/castify-api'
 import { Meteor } from 'meteor/meteor'
 
-
-
 export default class SandBox extends React.Component {
 
   constructor(props) {

@@ -20,7 +20,8 @@ export default class DrawingBoardCmp extends React.Component {
             webStorage: false
           });
 
-          window.onresize = this.onresize.bind(this)          
+          window.onresize = this.onresize.bind(this)  
+              
     }
 
     componentWillUnmount() {
@@ -36,6 +37,12 @@ export default class DrawingBoardCmp extends React.Component {
 
 
     render() {
+
+        if(!this.props.toolbarVisible) {
+            if(document.getElementsByClassName('drawing-board-controls')[0])
+                document.getElementsByClassName('drawing-board-controls')[0].style.visibility = 'hidden'
+        }       
+
         return(<div ref = {e => this.container = e} id="container"></div>)
     }
 }
