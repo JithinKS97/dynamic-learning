@@ -30,8 +30,8 @@ export default class DrawingBoardCmp extends React.Component {
 
     onresize() {
 
-        document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style.height = document.getElementsByClassName('drawing-board')[0].getClientRects()[0].height + 'px'
-        document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style.width = document.getElementsByClassName('drawing-board')[0].getClientRects()[0].width + 'px'
+        // document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style.height = document.getElementsByClassName('drawing-board')[0].getClientRects()[0].height + 'px'
+        // document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style.width = document.getElementsByClassName('drawing-board')[0].getClientRects()[0].width + 'px'
         
     }
 

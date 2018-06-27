@@ -10,9 +10,9 @@ const SideBar = () => {
             <ul>
                 
                 <Menu vertical >
-                    <Menu.Item link><Link to = 'lessonplans'>Manage lessonplans</Link></Menu.Item>                    
-                    <Menu.Item link><Link  to = 'uploadsim'>Manage simulations</Link></Menu.Item>
-                    <Menu.Item link><Link to = 'requests'>Help make simulations</Link></Menu.Item>   
+                    <Link to = 'lessonplans'><Menu.Item link>Manage lessonplans</Menu.Item></Link>                    
+                    <Link  to = 'uploadsim'><Menu.Item link>Manage simulations</Menu.Item></Link>
+                    <Link to = 'requests'><Menu.Item link>Help make simulations</Menu.Item></Link>   
                 </Menu>
    
             </ul>

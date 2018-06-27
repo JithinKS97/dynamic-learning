@@ -16,6 +16,19 @@ export default class SimContainer extends React.Component{
         this.channel.port1.onmessage = this.handleMessage.bind(this)
     }
 
+    componentDidMount() {
+
+        const iframeLoaded = () => {
+            const data = {}
+            data.operation = 'sendingPort'
+            this.otherWindow.postMessage(data, '*', [this.channel.port2]);
+        }
+
+        this.otherWindow = this.iframe.contentWindow
+
+        this.iframe.addEventListener("load", iframeLoaded, false);
+    }
+
     handleMessage(e) {
 
         /* If the iframe is just a preview, we need not have the message operations.
