@@ -472,13 +472,13 @@ class CreateLessonPlan extends React.Component {
                             <Checkbox label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
                         </Menu.Item>        
 
-                        {Meteor.userId()?<Menu.Item link>
-                            <Link to = '/dashboard/lessonplans'>Dashboard</Link>
-                        </Menu.Item>:null}
+                        {Meteor.userId()?
+                            <Link to = '/dashboard/lessonplans'><Menu.Item link>Dashboard</Menu.Item></Link>
+                        :null}
 
-                        {!!Meteor.userId()?<Menu.Item link>
-                            <Link to = {`/request/${this.state._id}`}>Request</Link>
-                        </Menu.Item>:null}
+                        {!!Meteor.userId()?
+                            <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request</Menu.Item></Link>
+                        :null}
                         
 
                         <Menu.Item onClick = {()=>{
