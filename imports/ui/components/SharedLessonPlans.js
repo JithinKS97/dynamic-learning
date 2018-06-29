@@ -89,9 +89,7 @@ export default class SharedLessonPlans extends React.Component {
                                 confirm('Lesson has been succesfully forked')
                                                         
 
-                            })                          
-
-
+                            })
                             }}><FaCodeFork/>
                         </Button>
                         <Button onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>

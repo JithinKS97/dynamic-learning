@@ -1,22 +1,14 @@
 import React from 'react'
-
 import LessonPlansDirectories from '../components/LessonPlansDirectories'
 import RequestsList from '../components/RequestsList'
 import SimsDirectories from '../components/SimsDirectories'
 import SideBar from '../components/SideBar'
 import { Accounts } from 'meteor/accounts-base'
 import SimPreview from '../components/SimPreview'
-
 import { Sims } from '../../api/sims'
-
 import { Tab } from 'semantic-ui-react'
-
 import { Tracker } from 'meteor/tracker'
-
 import SharedLessonPlans from '../components/SharedLessonPlans'
-
-
-
 import { Grid, Button, Modal, Checkbox, Label } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
  
@@ -109,8 +101,11 @@ export default class Dashboard extends React.Component {
         }
         else {
 
-            if(this.title.value === '')
+            if(this.title.value === '') {
+                this.setState({editable:false})
                 return
+            }
+                
 
             Meteor.call('sims.titleChange', this.state.node._id, this.state.title)
             this.setState({editable:false})
