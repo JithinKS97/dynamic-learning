@@ -59,6 +59,33 @@ export default class SharedLessonPlans extends React.Component {
 
     }
 
+    forkButtonDisplay() {
+
+        if(this.state.lessonplan) {
+
+            if(this.state.lessonplan.userId !== Meteor.userId()) {
+                return (
+                    <Button onClick = {()=>{
+
+                        const confirmation = confirm('Are you sure you want to fork this lesson?')
+                                                    
+                        if(!confirmation)
+                            return
+
+                        Meteor.call('lessonplans.insert', this.state.lessonplan.title, (err, _id) => {
+
+                                Meteor.call('lessonplans.update', _id, this.state.lessonplan.slides)
+                                this.setState({lessonplan:null})
+                                confirm('Lesson has been succesfully forked')                                               
+
+                            })
+                        }}><FaCodeFork/>
+                    </Button>
+                )
+            }
+        }
+    }
+
     render() {
 
         return(
@@ -71,36 +98,13 @@ export default class SharedLessonPlans extends React.Component {
                     <Modal.Header>
                         Preview
                         <div style = {{float:'right'}}>
-                        <Button onClick = {()=>{
-
-                            const confirmation = confirm('Are you sure you want to fork this lesson?')
-                                                        
-                            if(!confirmation)
-                                return
-
-                            Meteor.call('lessonplans.insert', this.state.lessonplan.title, (err, _id) => {
-
-                                console.log(_id)
-
-                                Meteor.call('lessonplans.update', _id, this.state.lessonplan.slides)
-
-                                this.setState({lessonplan:null})
-
-                                confirm('Lesson has been succesfully forked')
-                                                        
-
-                            })
-                            }}><FaCodeFork/>
-                        </Button>
+                        {this.forkButtonDisplay()}
                         <Button onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>
                         </div>
                     </Modal.Header>
                     <Modal.Content>                      
                         <LessonPlanViewer _id = {this.state.lessonplan?this.state.lessonplan._id:null}/>
-
-
                     </Modal.Content>
-
                </Modal>
                 <List style = {{width:'100%', height:'100%'}}  selection verticalAlign='middle'>
                     {this.displayLessonPlans()}
