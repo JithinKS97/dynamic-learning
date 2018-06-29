@@ -92,7 +92,7 @@ export default class AddSim extends React.Component {
 
         const panes = [
             { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> },
-            { menuItem: 'Simulation Pool', render: () => <Tab.Pane style = {{height:'429px'}}><SimPool getNode = {this.getNode.bind(this)}/></Tab.Pane> },
+            { menuItem: 'Shared simulations', render: () => <Tab.Pane style = {{height:'429px'}}><SimPool getNode = {this.getNode.bind(this)}/></Tab.Pane> },
           ]
 
 

@@ -6,7 +6,7 @@ import 'react-sortable-tree/style.css';
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
 
-import { Button, Modal, Form, Label, Input } from 'semantic-ui-react'
+import { Button, Modal, Form, Label, Checkbox } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import FaTrash from 'react-icons/lib/fa/trash'
@@ -37,7 +37,8 @@ export default class LessonPlansDirectories extends Component {
       modal2Open: false,
       selectedLessonPlanId: null,
       node:null,
-      editable:false
+      editable:false,
+      title:null
     }
   }
 
@@ -112,10 +113,20 @@ export default class LessonPlansDirectories extends Component {
   handle2Close = () => this.setState({ modal2Open: false })
 
   editTitle() {
+    
+    if(!this.title && this.state.editable == true)
+        return
 
     if(this.state.editable == true) {
+
+        if(!this.title.value)
+            return
+
+        Meteor.call('lessonplans.updateTitle', this.state.selectedLessonPlanId, this.title.value)
+
         this.setState({
-            editable: false
+            editable: false,
+            title:this.title.value
         })
     }    
     else {
@@ -220,21 +231,37 @@ export default class LessonPlansDirectories extends Component {
             <Modal
                 size = 'fullscreen'
                 open = {!!this.state.selectedLessonPlanId}
-                style = {{transform: 'scale(0.8, 0.8)', marginTop:'8rem'}}
+                style = {{transform: 'scale(0.75, 0.75)', marginTop:'8rem'}}
             >
                 <Modal.Header>
                     Preview
-                    <Button className = 'close-button' onClick = {()=>{this.setState({selectedLessonPlanId:null})}}>X</Button>
+                    <Button className = 'close-button' onClick = {()=>{this.setState({selectedLessonPlanId:null, editable:false})}}>X</Button>
                 </Modal.Header>
                 <Modal.Content>                
                     <Modal.Description>
-                        <LessonPlanViewer _id = {this.state.selectedLessonPlanId}/>
-                        <br/>
-                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center'}}>{this.state.node?<h2>{this.state.node.title}</h2>:null}</Label>:null}
-                        {this.state.editable?<Input style = {{width:'15rem'}}/>:null}
-                        <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
-                        
+
+                        <LessonPlanViewer _id = {this.state.selectedLessonPlanId}/>                  
+                                            
                     </Modal.Description>
+
+                    <Modal.Description style = {{padding:'0.8rem 0'}}>
+                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
+                        {this.state.editable?<input ref = {e => this.title = e} style = {{width:'15rem', padding:'0.8rem'}}/>:null}
+                        <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
+                    </Modal.Description>
+
+                    <Modal.Description>
+                        <Checkbox 
+                            label = 'Share with others'
+                            defaultChecked = {this.state.node?this.state.node.isPublic:false}
+                            ref = {e => this.checkbox = e }
+                            onChange = {()=>{
+                                
+                                Meteor.call('lessonplans.visibilityChange', this.state.selectedLessonPlanId, !this.checkbox.state.checked)
+                            }}     
+                        />
+                    </Modal.Description>
+
                 </Modal.Content>
                 
             </Modal>
@@ -319,7 +346,8 @@ export default class LessonPlansDirectories extends Component {
 
                                 this.setState({
                                     node,
-                                    selectedLessonPlanId:node._id
+                                    selectedLessonPlanId:node._id,
+                                    title:node.title
                                 })
                             }}
                             style = {{display:node.isFile?'block':'none'}}

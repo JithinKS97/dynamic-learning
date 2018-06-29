@@ -11,6 +11,11 @@ if(Meteor.isServer) {
     Meteor.publish('lessonplans',function(){
         return LessonPlans.find({userId:this.userId})
     })
+
+    Meteor.publish('lessonplans.public',function(){
+        
+        return LessonPlans.find({isPublic:true})
+    })
 }
 
 Meteor.methods({
@@ -132,6 +137,16 @@ Meteor.methods({
         }).validate(slides)
         
         LessonPlans.update({_id, userId:this.userId}, {$set:{slides, updatedAt: moment().valueOf()}})
-    }
+    },
+
+    'lessonplans.updateTitle'(_id, title) {
+        
+        LessonPlans.update({_id, userId:this.userId}, {$set:{title, updatedAt: moment().valueOf()}})
+    },
+
+    'lessonplans.visibilityChange'(_id, isPublic) {
+        
+        LessonPlans.update({_id}, {$set:{isPublic}})
+    },
 })
 

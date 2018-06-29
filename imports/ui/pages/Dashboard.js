@@ -9,7 +9,11 @@ import SimPreview from '../components/SimPreview'
 
 import { Sims } from '../../api/sims'
 
+import { Tab } from 'semantic-ui-react'
+
 import { Tracker } from 'meteor/tracker'
+
+import SharedLessonPlans from '../components/SharedLessonPlans'
 
 
 
@@ -71,11 +75,18 @@ export default class Dashboard extends React.Component {
 
     renderOption() {
 
+        const panes = [
+            { menuItem: 'My lessonplans', render: () => <Tab.Pane> <LessonPlansDirectories/></Tab.Pane> },
+            { menuItem: 'Shared lessonplans', render: () => <Tab.Pane style = {{height:'436px'}}><SharedLessonPlans/></Tab.Pane> },
+          ]
+
+        
+
        const option = this.props.match.params.option
 
        switch(option) {
             case 'lessonplans':
-                return <LessonPlansDirectories/>
+                return <Tab panes = {panes}/>
             case 'requests':
                 return <RequestsList/>
             case 'uploadsim':
@@ -124,26 +135,28 @@ export default class Dashboard extends React.Component {
                             </Button> 
                         </Modal.Header>
 
-                        <Modal.Content>                          
-                            <SimPreview {...this.state.node}/>                        
-                            <br/>
-                            {this.state.editable?null:<Label style = {{padding:'0.8rem'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
-                            {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem'}} ref = {e => this.title = e}/>:null}
-                            <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button> 
-                            <br/>
-                            <Checkbox 
-                                style = {{marginTop:'0.8rem'}}
-                                checked = {this.state.isPublic}
-                                ref = {e => this.checkbox = e }
-                                onChange = {()=>{
+                        <Modal.Content>
+                            <Modal.Description>                        
+                                <SimPreview {...this.state.node}/>                        
+                                <br/>
+                                {this.state.editable?null:<Label style = {{padding:'0.8rem'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
+                                {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem'}} ref = {e => this.title = e}/>:null}
+                                <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button> 
+                            </Modal.Description>
+                            <Modal.Description>  
+                                <Checkbox 
+                                    style = {{marginTop:'0.8rem'}}
+                                    checked = {this.state.isPublic}
+                                    ref = {e => this.checkbox = e }
+                                    onChange = {()=>{
 
-                                    Meteor.call('sims.visibilityChange', this.state.node._id, !this.checkbox.state.checked)
-                                    this.setState({
-                                        isPublic: !this.checkbox.state.checked
-                                    })      
+                                        Meteor.call('sims.visibilityChange', this.state.node._id, !this.checkbox.state.checked)
+                                        this.setState({
+                                            isPublic: !this.checkbox.state.checked
+                                        })      
 
-                            }} label = 'public'/> 
-
+                                }} label = 'Share with others'/> 
+                            </Modal.Description>
                         </Modal.Content>         
 
                     </Modal>

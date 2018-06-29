@@ -7,9 +7,7 @@ import { Tracker } from 'meteor/tracker'
 import { Sims } from '../../api/sims'
 
 import FaTrash from 'react-icons/lib/fa/trash'
-
 import FaPlayCircleO from 'react-icons/lib/fa/play-circle-o'
-
 
 import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
@@ -53,8 +51,7 @@ export default class SimsDirectories extends React.Component {
 
             this.setState({
                 treeData
-            })
-          
+            })         
             
         })
 
@@ -165,8 +162,6 @@ export default class SimsDirectories extends React.Component {
                                 <Button type='submit'>
                                     Submit
                                 </Button>
-                                
-                                
 
                             </Form>
                         </Modal.Description>
@@ -177,7 +172,7 @@ export default class SimsDirectories extends React.Component {
 
                 <div style={{ height: 400, padding:'1.6rem' }}>
 
-                    
+                    {Meteor.userId()?null:<h3>You need to login to add your own simulations</h3>}
 
                     <SortableTree
                         onVisibilityToggle = {({treeData, node, expanded}) => {
