@@ -12,7 +12,7 @@ import 'semantic-ui-css/semantic.min.css';
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
 
-import GoEye from 'react-icons/lib/go/eye'
+import MdSettings from 'react-icons/lib/md/settings'
 import LessonPlanViewer from './LessonPlanViewer'
 
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
@@ -119,8 +119,12 @@ export default class LessonPlansDirectories extends Component {
 
     if(this.state.editable == true) {
 
-        if(!this.title.value)
+        if(!this.title.value) {
+            this.setState({
+                editable:false
+            })
             return
+        }
 
         Meteor.call('lessonplans.updateTitle', this.state.selectedLessonPlanId, this.title.value)
 
@@ -353,7 +357,7 @@ export default class LessonPlansDirectories extends Component {
                             style = {{display:node.isFile?'block':'none'}}
                             className = 'icon__button'
                         >
-                            <GoEye size={17} color="black"/>
+                            <MdSettings size={17} color="black"/>
                         </button>,
 
                         <button

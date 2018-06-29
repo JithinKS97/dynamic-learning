@@ -70,11 +70,7 @@ export default class SharedLessonPlans extends React.Component {
                 >
                     <Modal.Header>
                         Preview
-                        <Button className = 'close-button' onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>
-                    </Modal.Header>
-                    <Modal.Content>                      
-                        <LessonPlanViewer _id = {this.state.lessonplan?this.state.lessonplan._id:null}/>
-
+                        <div style = {{float:'right'}}>
                         <Button onClick = {()=>{
 
                             const confirmation = confirm('Are you sure you want to fork this lesson?')
@@ -94,9 +90,16 @@ export default class SharedLessonPlans extends React.Component {
                                                         
 
                             })                          
-                            
 
-                        }} style = {{marginTop:'0.8rem'}}><FaCodeFork/></Button>
+
+                            }}><FaCodeFork/>
+                        </Button>
+                        <Button onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Content>                      
+                        <LessonPlanViewer _id = {this.state.lessonplan?this.state.lessonplan._id:null}/>
+
 
                     </Modal.Content>
 

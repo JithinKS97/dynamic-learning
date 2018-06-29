@@ -7,7 +7,8 @@ import { Tracker } from 'meteor/tracker'
 import { Sims } from '../../api/sims'
 
 import FaTrash from 'react-icons/lib/fa/trash'
-import FaPlayCircleO from 'react-icons/lib/fa/play-circle-o'
+import MdSettings from 'react-icons/lib/md/settings'
+
 
 import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
@@ -213,7 +214,7 @@ export default class SimsDirectories extends React.Component {
                             
                             }} 
                             >
-                            <FaPlayCircleO size={22} color="black"/>
+                            <MdSettings size={22} color="black"/>
                           </button>,
         
                           <button
