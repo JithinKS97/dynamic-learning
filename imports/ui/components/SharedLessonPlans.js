@@ -90,11 +90,14 @@ export default class SharedLessonPlans extends React.Component {
 
                                 this.setState({lessonplan:null})
 
-                            })
+                                confirm('Lesson has been succesfully forked')
+                                                        
+
+                            })                          
                             
 
                         }} style = {{marginTop:'0.8rem'}}><FaCodeFork/></Button>
-                        
+
                     </Modal.Content>
 
                </Modal>
