@@ -200,12 +200,28 @@ export default class SimsDirectories extends React.Component {
 
 
                     generateNodeProps={({ node, path }) => ({
+
+                        onClick: ()=>{
+
+                            if(!node.isFile)
+                                return
+
+                            if(!this.props.isPreview)
+                                return
+
+                            this.setState({isOpen:true, node},()=>{
+                                this.props.getNode(this.state.node)
+                            }) 
+                        },
+
                         buttons: [
+                          
+                          
 
                           <button
                             
                             className = 'icon__button'
-                            style = {{display:node.isFile?'block':'none'}}
+                            style = {{display:node.isFile?'block':'none', visibility: this.props.isPreview?'hidden':'visible'}}
                             onClick = {()=>{
                                 
                                 this.setState({isOpen:true, node},()=>{

@@ -59,13 +59,21 @@ export default class SharedLessonPlans extends React.Component {
 
     }
 
-    forkButtonDisplay() {
 
-        if(this.state.lessonplan) {
 
-            if(this.state.lessonplan.userId !== Meteor.userId()) {
-                return (
-                    <Button onClick = {()=>{
+    render() {
+
+        return(
+            <div>
+                <Modal 
+                    open = {this.state.lessonplan}
+                    size = 'fullscreen'
+                    style = {{transform: 'scale(0.75, 0.75)', marginTop:'8rem'}}
+                >
+                    <Modal.Header>
+                        Preview
+                        <div style = {{float:'right'}}>
+                        <Button onClick = {()=>{
 
                         const confirmation = confirm('Are you sure you want to fork this lesson?')
                                                     
@@ -80,25 +88,7 @@ export default class SharedLessonPlans extends React.Component {
 
                             })
                         }}><FaCodeFork/>
-                    </Button>
-                )
-            }
-        }
-    }
-
-    render() {
-
-        return(
-            <div>
-                <Modal 
-                    open = {this.state.lessonplan}
-                    size = 'fullscreen'
-                    style = {{transform: 'scale(0.75, 0.75)', marginTop:'8rem'}}
-                >
-                    <Modal.Header>
-                        Preview
-                        <div style = {{float:'right'}}>
-                        {this.forkButtonDisplay()}
+                        </Button>
                         <Button onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>
                         </div>
                     </Modal.Header>
