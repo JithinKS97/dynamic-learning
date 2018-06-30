@@ -4,6 +4,7 @@ import { Button, Grid, Modal, Tab } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import SimPreview from './SimPreview'
 import SimPool from './SimPool'
+import FaCode from 'react-icons/lib/fa/code'
 
 export default class AddSim extends React.Component {
 
@@ -107,7 +108,6 @@ export default class AddSim extends React.Component {
                                        
                 >
 
-
                     <Modal.Header>
                         Simulations
                         <Button
@@ -138,6 +138,7 @@ export default class AddSim extends React.Component {
                                 </Grid.Column>:null}
 
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
+                                {this.state.node?<a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a>:null}
                                 
                             </Grid>       
                             

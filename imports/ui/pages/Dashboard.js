@@ -11,6 +11,7 @@ import { Tracker } from 'meteor/tracker'
 import SharedLessonPlans from '../components/SharedLessonPlans'
 import { Grid, Button, Modal, Checkbox, Label } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import FaCode from 'react-icons/lib/fa/code'
  
 export default class Dashboard extends React.Component {
 
@@ -137,7 +138,8 @@ export default class Dashboard extends React.Component {
                                 <br/>
                                 {this.state.editable?null:<Label style = {{padding:'0.8rem'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
                                 {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem'}} ref = {e => this.title = e}/>:null}
-                                <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button> 
+                                <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
+                                <a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a> 
                             </Modal.Description>
                             <Modal.Description>  
                                 <Checkbox 
