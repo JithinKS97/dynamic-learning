@@ -60,7 +60,9 @@ Meteor.methods({
             'iframes.$.h':{type:String},
             'iframes.$.x':{type:Number},
             'iframes.$.y':{type:Number},
-            'iframes.$.userId':{type:String}
+            'iframes.$.userId':{type:String},
+            'iframes.$.title':{type:String},
+            'iframes.$.linkToCode':{type:String}
 
 
         }).validate(slides)

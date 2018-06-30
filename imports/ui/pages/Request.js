@@ -8,9 +8,12 @@ import CommentsList from '../components/CommentsList'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data';
+import SimPreview from '../components/SimPreview'
+import FaTrash from 'react-icons/lib/fa/trash'
+import FaCode from 'react-icons/lib/fa/code'
 
 
-import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment} from 'semantic-ui-react'
+import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment, Menu} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 class Request extends React.Component {
@@ -23,11 +26,13 @@ class Request extends React.Component {
             show:false,
             slides: [],
             curSlide: 0,
-            initialized:false
+            initialized:false,
+            selectedSim:null
         }
         this.update.bind(this)
         this.pushSim.bind(this)
         this.requestExists = false
+        this.deleteSim.bind(this)
         this.push.bind(this)
     }
 
@@ -164,7 +169,7 @@ class Request extends React.Component {
         this.update()
     }
     
-    pushSim(src, w, h) {
+    pushSim(title, src, w, h, linkToCode) {
         const { slides, curSlide }  = this.state
 
         const toPush = {
@@ -173,13 +178,16 @@ class Request extends React.Component {
             w,
             h,
             x:0,
-            y:0
+            y:0,
+            title,
+            linkToCode
         }
 
         slides[curSlide].iframes.push(toPush)
         this.setState({
             slides
         })
+        console.log('hello')
         this.update()
     }
 
@@ -189,6 +197,10 @@ class Request extends React.Component {
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
         */
+        const confirmation = confirm('Are you sure you want to delete this sim')
+        if(!confirmation)
+            return
+
         const isOwner = this.state.userId == Meteor.userId()
 
         if(isOwner) {
@@ -221,6 +233,42 @@ class Request extends React.Component {
 
     }
 
+    displaySims() {
+
+        const {slides, curSlide} = this.state
+        const sims = slides[curSlide]
+
+        if(sims)
+            return sims.iframes.map((sim, index) => {
+                return (
+                    <Menu.Item style = {{display:'flex', justifyContent:'space-between'}} key = {index}>
+                        <Button onClick = {()=>{
+                            this.setState({
+                                selectedSim:sim
+                            })
+                        }} 
+                        style = {{width:'100%', textAlign:'left'}}>{sim.title}</Button>
+                        {Meteor.userId()==sim.userId?<Button onClick = {()=>{
+                            this.deleteSim(index)
+                        }}><FaTrash/></Button>:null}
+                    </Menu.Item>
+                )
+            })
+    }
+
+    displayMenu() {
+
+        const {slides, curSlide} = this.state
+        const sim = slides[curSlide]
+        if(sim) {
+            if(sim.iframes.length>0) {
+                return <Menu style = {{display:'flex', width:'100%'}} vertical>
+                    {this.displaySims()}        
+                </Menu>
+            }
+        }
+    }
+
     render() {
 
 
@@ -233,6 +281,19 @@ class Request extends React.Component {
                 <Dimmer active = {!this.state.initialized}>
                     <Loader />
                 </Dimmer>
+
+                <Modal size = 'small' style = {{width:'auto'}} open = {!!this.state.selectedSim}>
+                    <Modal.Header>
+                        Preview
+                        <div className ='close-button'>
+                            <a className = 'link-to-code' target = '_blank' href = {this.state.selectedSim?this.state.selectedSim.linkToCode:''}><Button><FaCode/></Button></a>                  
+                            <Button  onClick = {()=>{this.setState({selectedSim:null})}}>X</Button>                        
+                        </div>
+                    </Modal.Header>
+                    <Modal.Content>
+                        <SimPreview src = {this.state.selectedSim?this.state.selectedSim.src:null}/>
+                    </Modal.Content>
+                </Modal>
 
                 <div>
                     <Grid style = {{height:'100vh'}}  columns={3} divided>
@@ -293,7 +354,7 @@ class Request extends React.Component {
                                     {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
                                 </div>    
                                     
-                                    <SimsList isRndRequired = {false} preview = {false} rnd = {false} saveChanges = {this.saveChanges.bind(this)} delete = {this.deleteSim.bind(this)} {...this.state}/>
+                                    {this.state.show?this.displayMenu.bind(this)():null}
                                     
                             </Grid.Column>
                         </Grid.Row>

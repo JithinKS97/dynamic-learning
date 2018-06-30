@@ -3,10 +3,8 @@ import { Meteor } from 'meteor/meteor'
 import SimPreview from './SimPreview'
 
 
-import { Button, Modal, Form, TextArea} from 'semantic-ui-react'
+import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
-import Rnd from 'react-rnd'
-import { EMLINK } from 'constants';
  
 
 export default class Upload extends React.Component {
@@ -107,7 +105,7 @@ export default class Upload extends React.Component {
             }
             else if(typeof this.props.methodToRun == 'function'){
 
-                this.props.methodToRun(src, w, h, linkToCode)
+                this.props.methodToRun(name, src, w, h, linkToCode)
                 uploaded = true                
             }
             if(uploaded == true) {
@@ -118,7 +116,8 @@ export default class Upload extends React.Component {
                     modalOpen: false,
                     name:null,
                     w:null,
-                    h:null
+                    h:null,
+                    linkToCode
                 }) 
             }
             this.handleClose()      
@@ -133,7 +132,7 @@ export default class Upload extends React.Component {
         modalOpen: false,
         name:null,
         w:null,
-        h:null 
+        h:null
     })
 
     

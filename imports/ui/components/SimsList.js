@@ -152,34 +152,35 @@ export default class simsList extends React.Component {
                 else {
             
                     return (
-                   
-                        <div key = {index}>
-                            {iframe.userId == Meteor.userId()?
-                            
-                                    <button                                   
-                                    
-                                        style = {{float:'right', paddingRight:'1.6rem'}}
-                                        className = 'icon__button'                                        
-                                        onClick = {()=>{
-
-                                            const confirmation = confirm('Are you sure you want to remove this?')
-                                            if(confirmation == true)
-                                                this.props.delete(index)
-
-                                        }}><FaClose/>
-                                    
-                                    </button>:
+                        <Rnd>
+                            <div key = {index}>
+                                {iframe.userId == Meteor.userId()?
                                 
-                                null}  
-                                <SimContainer
-                                    isPreview = {false}
-                                    {...this.props} 
-                                    index = {index} 
-                                    src = {iframe.src}
-                                    {...iframe}
-                                />
-                                
-                        </div>
+                                        <button                                   
+                                        
+                                            style = {{float:'right', paddingRight:'1.6rem'}}
+                                            className = 'icon__button'                                        
+                                            onClick = {()=>{
+
+                                                const confirmation = confirm('Are you sure you want to remove this?')
+                                                if(confirmation == true)
+                                                    this.props.delete(index)
+
+                                            }}><FaClose/>
+                                        
+                                        </button>:
+                                    
+                                    null}  
+                                    <SimContainer
+                                        isPreview = {false}
+                                        {...this.props} 
+                                        index = {index} 
+                                        src = {iframe.src}
+                                        {...iframe}
+                                    />
+                                    
+                            </div>
+                        </Rnd>
                     )
                 }               
             })

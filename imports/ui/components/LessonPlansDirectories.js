@@ -239,7 +239,18 @@ export default class LessonPlansDirectories extends Component {
             >
                 <Modal.Header>
                     Preview
-                    <Button className = 'close-button' onClick = {()=>{this.setState({selectedLessonPlanId:null, editable:false})}}>X</Button>
+                    <div className = 'close-button'>
+                        <Checkbox 
+                            label = 'Share with others'
+                            defaultChecked = {this.state.node?this.state.node.isPublic:false}
+                            ref = {e => this.checkbox = e }
+                            onChange = {()=>{
+                                
+                                Meteor.call('lessonplans.visibilityChange', this.state.selectedLessonPlanId, !this.checkbox.state.checked)
+                            }}     
+                        />
+                        <Button style = {{marginLeft:'0.8rem'}} onClick = {()=>{this.setState({selectedLessonPlanId:null, editable:false})}}>X</Button>
+                    </div>
                 </Modal.Header>
                 <Modal.Content>                
                     <Modal.Description>
@@ -252,18 +263,6 @@ export default class LessonPlansDirectories extends Component {
                         {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
                         {this.state.editable?<input ref = {e => this.title = e} style = {{width:'15rem', padding:'0.8rem'}}/>:null}
                         <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
-                    </Modal.Description>
-
-                    <Modal.Description>
-                        <Checkbox 
-                            label = 'Share with others'
-                            defaultChecked = {this.state.node?this.state.node.isPublic:false}
-                            ref = {e => this.checkbox = e }
-                            onChange = {()=>{
-                                
-                                Meteor.call('lessonplans.visibilityChange', this.state.selectedLessonPlanId, !this.checkbox.state.checked)
-                            }}     
-                        />
                     </Modal.Description>
 
                 </Modal.Content>
