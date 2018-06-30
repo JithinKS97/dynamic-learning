@@ -237,9 +237,8 @@ class Request extends React.Component {
                 <div>
                     <Grid style = {{height:'100vh'}}  columns={3} divided>
                         <Grid.Row>
-                            <Grid.Column style = {{overflow:'auto'}}>
-                                <Container style = {{padding:'1.6rem'}}>
-                                    <Container style = {{margin:'1.6rem'}}>                              
+                            <Grid.Column style = {{overflow:'auto'}}>                                
+                                    <Container style = {{margin:'1.6rem'}}>                            
                                                                 
                                         <h1>{this.state.requestTitle}</h1>
 
@@ -279,7 +278,7 @@ class Request extends React.Component {
                                     null}
 
                                     {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
-                                </Container>
+                                
                             </Grid.Column>
                             <Grid.Column style = {{overflow:'auto', padding:'1.6rem'}}>
                         
@@ -338,10 +337,9 @@ class Request extends React.Component {
 
                             </Modal.Content> 
 
-                    </Modal>:null}               
+                    </Modal>:null}             
 
-                </div>
-            
+                </div>            
             </Segment>
 
         )

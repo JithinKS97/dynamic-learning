@@ -445,7 +445,7 @@ class CreateLessonPlan extends React.Component {
 
             <div className = 'createLessonPlan'>            
 
-                <div className = 'slides'>
+                <div style = {{margin:'0 1.6rem'}} className = 'slides'>
                     <Button onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                     <h1>{this.state.curSlide}</h1>
                     <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>

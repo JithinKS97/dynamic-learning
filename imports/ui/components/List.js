@@ -26,11 +26,11 @@ const List = (props) => {
                 */
 
                 return (                    
-                    <Menu.Item 
-                    
+                    <Menu.Item
+                         style = {{display:'flex', justifyContent:'space-between'}}                
                          key = {index}                        
                     >
-                        <Button onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</Button>
+                        <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</Button>
 
                         {isOwner && !props.isPreview?<Button onClick = {()=>{
 
@@ -49,7 +49,7 @@ const List = (props) => {
 
 
     return (
-        <Menu icon vertical>
+        <Menu style = {{display:'flex'}} icon vertical>
             {renderSlides()}
         </Menu>
     )

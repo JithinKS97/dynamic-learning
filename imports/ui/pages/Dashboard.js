@@ -9,7 +9,7 @@ import { Sims } from '../../api/sims'
 import { Tab } from 'semantic-ui-react'
 import { Tracker } from 'meteor/tracker'
 import SharedLessonPlans from '../components/SharedLessonPlans'
-import { Grid, Button, Modal, Checkbox, Label } from 'semantic-ui-react'
+import { Grid, Button, Modal, Checkbox, Label, Container } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import FaCode from 'react-icons/lib/fa/code'
  
@@ -115,61 +115,61 @@ export default class Dashboard extends React.Component {
 
     render() {
         return(
-            <div>
-                    
+            <div style = {{height:'100vh'}}>                   
             
-                    <Modal
-                        closeOnRootNodeClick={false}                
-                        style = {{width:'auto'}}
-                        open={!!this.state.node}
-                        onClose={this.handleClose}
-                        size='tiny'            
-                    >
-                        <Modal.Header>
-                            Preview
-                            <Button className = 'close-button' onClick = {this.handleClose}>
-                                X
-                            </Button> 
-                        </Modal.Header>
+                <Modal
+                    closeOnRootNodeClick={false}                
+                    style = {{width:'auto'}}
+                    open={!!this.state.node}
+                    onClose={this.handleClose}
+                    size='tiny'            
+                >
+                    <Modal.Header>
+                        Preview
+                        <Button className = 'close-button' onClick = {this.handleClose}>
+                            X
+                        </Button> 
+                    </Modal.Header>
 
-                        <Modal.Content>
-                            <Modal.Description>                        
-                                <SimPreview {...this.state.node}/>                        
-                                <br/>
-                                {this.state.editable?null:<Label style = {{padding:'0.8rem'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
-                                {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem'}} ref = {e => this.title = e}/>:null}
-                                <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
-                                <a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a> 
-                            </Modal.Description>
-                            <Modal.Description>  
-                                <Checkbox 
-                                    style = {{marginTop:'0.8rem'}}
-                                    checked = {this.state.isPublic}
-                                    ref = {e => this.checkbox = e }
-                                    onChange = {()=>{
+                    <Modal.Content>
+                        <Modal.Description>                        
+                            <SimPreview {...this.state.node}/>                        
+                            <br/>
+                            {this.state.editable?null:<Label style = {{padding:'0.8rem'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
+                            {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem'}} ref = {e => this.title = e}/>:null}
+                            <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
+                            <a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a> 
+                        </Modal.Description>
+                        <Modal.Description>  
+                            <Checkbox 
+                                style = {{marginTop:'0.8rem'}}
+                                checked = {this.state.isPublic}
+                                ref = {e => this.checkbox = e }
+                                onChange = {()=>{
 
-                                        Meteor.call('sims.visibilityChange', this.state.node._id, !this.checkbox.state.checked)
-                                        this.setState({
-                                            isPublic: !this.checkbox.state.checked
-                                        })      
+                                    Meteor.call('sims.visibilityChange', this.state.node._id, !this.checkbox.state.checked)
+                                    this.setState({
+                                        isPublic: !this.checkbox.state.checked
+                                    })      
 
-                                }} label = 'Share with others'/> 
-                            </Modal.Description>
-                        </Modal.Content>         
+                            }} label = 'Share with others'/> 
+                        </Modal.Description>
+                    </Modal.Content>         
 
-                    </Modal>
+                </Modal>               
 
-                <Button onClick = {()=>{Accounts.logout()}}>Log out</Button>   
-                <Grid columns={3} divided>
-                    <Grid.Row>
-                        <Grid.Column >
+                <Grid  columns={3} divided>
+                    <Grid.Row>                        
+                        <Grid.Column width = {2} style = {{margin:'1.6rem'}}>
+                        <Button style = {{margin:'0.8rem 0'}} onClick = {()=>{Accounts.logout()}}>Log out</Button>
                             <SideBar/> 
                         </Grid.Column>
-                        <Grid.Column >
+                        <Grid.Column width = {8} style = {{margin:'1.6rem'}}>
                             {this.renderOption()}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                
             </div>
         )
     }
