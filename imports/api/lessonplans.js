@@ -3,8 +3,27 @@ import { Meteor } from 'meteor/meteor'
 import { Requests} from './requests'
 import SimpleSchema from 'simpl-schema'
 import moment from 'moment'
+import { Index, MongoDBEngine } from 'meteor/easy:search'
  
 export const LessonPlans = new Mongo.Collection('lessonplans')
+
+export const LessonPlansIndex = new Index({
+    collection: LessonPlans,
+    fields: ['title'],
+    engine: new MongoDBEngine({
+        selector: function (searchObject, options, aggregation) {
+            // selector contains the default mongo selector that Easy Search would use
+            let selector = this.defaultConfiguration().selector(searchObject, options, aggregation)
+      
+            // modify the selector to only match documents where region equals "New York"
+            selector.isPublic = true
+            selector.isFile = true
+      
+            return selector
+        }
+    })
+    
+})
 
 if(Meteor.isServer) {
 

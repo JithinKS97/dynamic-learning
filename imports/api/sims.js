@@ -7,7 +7,18 @@ export const Sims = new Mongo.Collection('sims')
 export const SimsIndex = new Index({
     collection: Sims,
     fields: ['title'],
-    engine: new MongoDBEngine()
+    engine: new MongoDBEngine({
+        selector: function (searchObject, options, aggregation) {
+            // selector contains the default mongo selector that Easy Search would use
+            let selector = this.defaultConfiguration().selector(searchObject, options, aggregation)
+      
+            // modify the selector to only match documents where region equals "New York"
+            selector.isPublic = true
+            selector.isFile = true
+      
+            return selector
+        }
+    })
 })
 
 if(Meteor.isServer) {

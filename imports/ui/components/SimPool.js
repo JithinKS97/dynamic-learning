@@ -30,6 +30,10 @@ export default class SimPool extends React.Component {
         })
     }
 
+    componentWillUnmount() {
+        this.searchTracker.stop()
+    }
+
     displaySims() {
 
         const {sims} = this.state
@@ -54,7 +58,7 @@ export default class SimPool extends React.Component {
 
     search(event, data) {
 
-        Tracker.autorun(()=>{
+        this.searchTracker = Tracker.autorun(()=>{
             this.setState({sims:SimsIndex.search(data.value).fetch()})
         })
         

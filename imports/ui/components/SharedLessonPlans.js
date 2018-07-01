@@ -1,9 +1,10 @@
 import React from 'react'
-import { LessonPlans } from '../../api/lessonplans'
-import { List, Modal,Button } from 'semantic-ui-react'
+import { LessonPlans, LessonPlansIndex } from '../../api/lessonplans'
+import { List, Modal,Button, Input } from 'semantic-ui-react'
 import LessonPlanViewer from './LessonPlanViewer'
 
 import FaCodeFork from 'react-icons/lib/fa/code-fork'
+import { getDiffieHellman } from 'crypto';
 
  
 export default class SharedLessonPlans extends React.Component {
@@ -37,6 +38,7 @@ export default class SharedLessonPlans extends React.Component {
     componentWillUnmount() {
 
         this.lessonplansTracker.stop()
+    
     }
 
     displayLessonPlans() {
@@ -58,7 +60,26 @@ export default class SharedLessonPlans extends React.Component {
         })
 
     }
+    search(event, data) {
 
+        Tracker.autorun(()=>{
+            this.setState({
+                lessonplans:LessonPlansIndex.search(data.value).fetch()
+            })
+        })
+        
+    }
+
+    getId() {
+
+        if(!this.state.selectedLessonPlan)
+            return
+
+        if(this.state.selectedLessonPlan.__originalId == undefined)
+            return this.state.selectedLessonPlan._id
+        else
+            return this.state.selectedLessonPlan.__originalId
+    }
 
 
     render() {
@@ -66,7 +87,7 @@ export default class SharedLessonPlans extends React.Component {
         return(
             <div>
                 <Modal 
-                    open = {this.state.lessonplan}
+                    open = {!!this.state.lessonplan}
                     size = 'fullscreen'
                     style = {{transform: 'scale(0.83, 0.83)', marginTop:'8rem'}}
                 >
@@ -93,9 +114,10 @@ export default class SharedLessonPlans extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Content>                      
-                        <LessonPlanViewer _id = {this.state.lessonplan?this.state.lessonplan._id:null}/>
+                        <LessonPlanViewer _id = {this.getId.bind(this)()}/>
                     </Modal.Content>
                </Modal>
+                <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
                 <List style = {{width:'100%', height:'100%'}}  selection verticalAlign='middle'>
                     {this.displayLessonPlans()}
                 </List>
