@@ -79,8 +79,6 @@ class CreateLessonPlan extends React.Component {
     }
 
     componentDidMount() {
-        
-        console.log(Session.get('lessonPlanSession'))
 
         this.db = this.drawingBoard.b
         this.isInteractEnabled=false;
@@ -99,7 +97,6 @@ class CreateLessonPlan extends React.Component {
         window.addEventListener("keydown", this.handleKeyDown, false);
 
     }
-
 
     componentDidUpdate() {
 
@@ -136,7 +133,6 @@ class CreateLessonPlan extends React.Component {
 
     componentWillUnmount() {
 
-        Session.set('lessonPlanSession', false)
         window.removeEventListener("keydown", this.handleKeyDown, false)
     }
 
