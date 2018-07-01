@@ -1,6 +1,5 @@
 import React from 'react'
 import List from '../components/List'
-import SimsList from '../components/SimsList'
 import Upload from '../components/Upload'
 import { Requests } from '../../api/requests'
 import CommentForm from '../components/CommentForm'

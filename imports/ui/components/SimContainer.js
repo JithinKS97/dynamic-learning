@@ -52,6 +52,7 @@ export default class SimContainer extends React.Component{
             }
             else if(e.data.operation == 'load')
             {
+                console.log('hello')
                 this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
             }
             else if(e.data.operation == 'dom') {
