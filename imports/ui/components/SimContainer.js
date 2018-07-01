@@ -21,13 +21,16 @@ export default class SimContainer extends React.Component{
         const iframeLoaded = () => {
             const data = {}
             data.operation = 'sendingPort'
-            this.otherWindow.postMessage(data, '*', [this.channel.port2]);
+            this.otherWindow.postMessage(data, '*', [this.channel.port2])
+            
         }
 
         this.otherWindow = this.iframe.contentWindow
 
         this.iframe.addEventListener("load", iframeLoaded, false);
+       
     }
+
 
     handleMessage(e) {
 
@@ -53,10 +56,20 @@ export default class SimContainer extends React.Component{
             else if(e.data.operation == 'dom') {
                 console.log(e.data.data)
             }
+            else if(e.data.operation == 'keyPress') {
+                if(e.data.Key == 'a')
+                    this.props.undo()
+                else if(e.data.Key == 'x')
+                    this.props.next()
+                else if(e.data.Key == 'z')
+                    this.props.previous()
+                else if(e.data.Key == 's')
+                    this.props.save()
+                else if(e.data.Key == 'd')
+                    this.props.interact()
+            }
         }
     }
-
-
 
     render(){
 

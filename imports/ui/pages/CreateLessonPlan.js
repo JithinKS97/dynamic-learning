@@ -458,6 +458,12 @@ class CreateLessonPlan extends React.Component {
                         saveChanges = {this.saveChanges.bind(this)}
                         delete = {this.deleteSim.bind(this)}
                         {...this.state}
+                        
+                        next = {this.next.bind(this)}
+                        previous = {this.previous.bind(this)}
+                        save = {this.save.bind(this)}
+                        interact = {this.interact.bind(this)}
+                        undo = {this.undo.bind(this)}
                     />                   
                     <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>                   
                 </div>
