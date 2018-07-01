@@ -79,6 +79,8 @@ class CreateLessonPlan extends React.Component {
     }
 
     componentDidMount() {
+        
+        console.log(Session.get('lessonPlanSession'))
 
         this.db = this.drawingBoard.b
         this.isInteractEnabled=false;
@@ -97,6 +99,7 @@ class CreateLessonPlan extends React.Component {
         window.addEventListener("keydown", this.handleKeyDown, false);
 
     }
+
 
     componentDidUpdate() {
 
@@ -133,10 +136,8 @@ class CreateLessonPlan extends React.Component {
 
     componentWillUnmount() {
 
-
+        Session.set('lessonPlanSession', false)
         window.removeEventListener("keydown", this.handleKeyDown, false)
-
-
     }
 
     changed() {
@@ -270,10 +271,10 @@ class CreateLessonPlan extends React.Component {
            function was called.
         */
 
-
-
+        
 
         if(slides == undefined) {
+
             this.setState({
                 curSlide
             },()=>{
@@ -445,7 +446,7 @@ class CreateLessonPlan extends React.Component {
 
             <div className = 'createLessonPlan'>            
 
-                <div style = {{margin:'0 1.6rem'}} className = 'slides'>
+                <div style = {{margin:'0 0.8rem'}} className = 'slides'>
                     <Button onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                     <h1>{this.state.curSlide}</h1>
                     <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>

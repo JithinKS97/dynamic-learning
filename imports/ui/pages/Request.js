@@ -298,7 +298,7 @@ class Request extends React.Component {
                 <div>
                     <Grid style = {{height:'100vh'}}  columns={3} divided>
                         <Grid.Row>
-                            <Grid.Column style = {{overflow:'auto'}}>                                
+                            <Grid.Column width = {4} style = {{overflow:'auto'}}>                                
                                     <Container style = {{margin:'1.6rem'}}>                            
                                                                 
                                         <h1>{this.state.requestTitle}</h1>
@@ -341,7 +341,7 @@ class Request extends React.Component {
                                     {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
                                 
                             </Grid.Column>
-                            <Grid.Column style = {{overflow:'auto', padding:'1.6rem'}}>
+                            <Grid.Column width = {8} style = {{overflow:'auto', padding:'1.6rem'}}>
                         
                                     {this.state.show?<CommentsList  deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
                                     <br/>
@@ -349,7 +349,7 @@ class Request extends React.Component {
                                     null}
                         
                             </Grid.Column>
-                            <Grid.Column style = {{overflow:'auto', padding:'1.6rem'}}>
+                            <Grid.Column width = {4} style = {{overflow:'auto', padding:'1.6rem'}}>
                                 <div style = {{marginBottom:'1.6rem'}}>
                                     {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
                                 </div>    

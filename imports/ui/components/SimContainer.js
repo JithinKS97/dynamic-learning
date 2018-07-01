@@ -6,19 +6,21 @@ export default class SimContainer extends React.Component{
     constructor(props){
 
         super(props) 
-
-        /* For the communication to the iframe document, we create a MessageChannel,
-           port 1 is the port in this window. On recieveing a message here, we call
-           handleMessage.
-        */
-
-        this.channel = new MessageChannel()
-        this.channel.port1.onmessage = this.handleMessage.bind(this)
+        
     }
 
     componentDidMount() {
 
         const iframeLoaded = () => {
+
+            /* For the communication to the iframe document, we create a MessageChannel,
+                port 1 is the port in this window. On recieveing a message here, we call
+                handleMessage.
+            */
+
+            this.channel = null;
+            this.channel = new MessageChannel()
+            this.channel.port1.onmessage = this.handleMessage.bind(this)
             const data = {}
             data.operation = 'sendingPort'
             this.otherWindow.postMessage(data, '*', [this.channel.port2])
@@ -30,7 +32,6 @@ export default class SimContainer extends React.Component{
         this.iframe.addEventListener("load", iframeLoaded, false);
        
     }
-
 
     handleMessage(e) {
 
