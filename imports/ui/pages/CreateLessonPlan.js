@@ -246,6 +246,9 @@ class CreateLessonPlan extends React.Component {
 
     save() {
 
+        if(this.addSim.state.isOpen)
+            return
+
         if(!Meteor.userId()) { 
 
             this.setState({createAccount:true})
@@ -336,7 +339,10 @@ class CreateLessonPlan extends React.Component {
         this.saveChanges(slides)
     }
 
-    interact(){
+    interact() {
+
+      if(this.addSim.state.isOpen)
+        return
 
       this.isInteractEnabled = !this.isInteractEnabled;
       if(this.isInteractEnabled) {
@@ -347,7 +353,10 @@ class CreateLessonPlan extends React.Component {
       }
     }
 
-    undo(e){
+    undo(e) {
+
+      if(this.addSim.state.isOpen)
+        return
 
       this.curPosition[this.state.curSlide]--
       const slides = this.state.slides

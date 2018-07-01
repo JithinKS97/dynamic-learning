@@ -235,7 +235,7 @@ export default class LessonPlansDirectories extends Component {
             <Modal
                 size = 'fullscreen'
                 open = {!!this.state.selectedLessonPlanId}
-                style = {{transform: 'scale(0.75, 0.75)', marginTop:'8rem'}}
+                style = {{transform: 'scale(0.8, 0.8)', marginTop:'8rem'}}
             >
                 <Modal.Header>
                     Preview

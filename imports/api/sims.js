@@ -1,7 +1,14 @@
 import { Mongo } from 'meteor/mongo'
 import { Meteor } from 'meteor/meteor'
+import { Index, MongoDBEngine } from 'meteor/easy:search'
 
 export const Sims = new Mongo.Collection('sims')
+
+export const SimsIndex = new Index({
+    collection: Sims,
+    fields: ['title'],
+    engine: new MongoDBEngine()
+})
 
 if(Meteor.isServer) {
 
