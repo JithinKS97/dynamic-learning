@@ -30,10 +30,6 @@ export default class SimPool extends React.Component {
         })
     }
 
-    componentWillUnmount() {
-        this.searchTracker.stop()
-    }
-
     displaySims() {
 
         const {sims} = this.state

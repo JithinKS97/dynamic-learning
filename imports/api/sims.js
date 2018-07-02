@@ -17,7 +17,8 @@ export const SimsIndex = new Index({
             selector.isFile = true
       
             return selector
-        }
+        },
+        sort: () => { title: -1 }
     })
 })
 
