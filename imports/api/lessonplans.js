@@ -9,7 +9,7 @@ export const LessonPlans = new Mongo.Collection('lessonplans')
 
 export const LessonPlansIndex = new Index({
     collection: LessonPlans,
-    fields: ['title'],
+    fields: ['title', 'tags'],
     engine: new MongoDBEngine({
         selector: function (searchObject, options, aggregation) {
             // selector contains the default mongo selector that Easy Search would use
@@ -76,6 +76,11 @@ Meteor.methods({
         })
     },
 
+    'lessonplans.tagsChange'(_id, tags) {
+
+        LessonPlans.update({_id}, {$set:{tags}})
+    },
+
     'lessonplans.folder.insert'(title) {
 
         if(!this.userId) {
@@ -89,10 +94,12 @@ Meteor.methods({
             isFile:false,
             parent_id:'0',
             children:[],
-            expanded:false
+            expanded:false,
+            tags:[]
 
         })
     },
+    
 
     'lessonplans.remove'(_id) {
 

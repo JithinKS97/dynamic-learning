@@ -24,6 +24,7 @@
     "react-router-dom": "^4.2.2",
     "react-sortable-tree": "^2.2.0",
     "react-sortable-tree-theme-file-explorer": "^1.1.2",
+    "react-tagsinput": "^3.19.0",
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.81.1",
     "simpl-schema": "^1.5.0"

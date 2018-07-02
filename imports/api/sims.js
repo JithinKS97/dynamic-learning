@@ -6,7 +6,7 @@ export const Sims = new Mongo.Collection('sims')
 
 export const SimsIndex = new Index({
     collection: Sims,
-    fields: ['title'],
+    fields: ['title', 'tags'],
     engine: new MongoDBEngine({
         selector: function (searchObject, options, aggregation) {
             // selector contains the default mongo selector that Easy Search would use
@@ -54,8 +54,13 @@ Meteor.methods({
             isFile:true,
             isPublic:false,
             parent_id:'0',
-            linkToCode
+            linkToCode,
+            tags:[]
         })
+    },
+    'sims.tagsChange'(_id, tags) {
+
+        Sims.update({_id}, {$set:{tags}})
     },
 
     'sims.folder.insert'(title) {

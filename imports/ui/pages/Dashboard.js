@@ -12,6 +12,7 @@ import SharedLessonPlans from '../components/SharedLessonPlans'
 import { Grid, Button, Modal, Checkbox, Label, Container } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import FaCode from 'react-icons/lib/fa/code'
+import TagsInput from 'react-tagsinput'
  
 export default class Dashboard extends React.Component {
 
@@ -24,7 +25,8 @@ export default class Dashboard extends React.Component {
             modelOpen:false,
             isPublic:null,
             editable:false,
-            title:''
+            title:'',
+            tags:[]
         }
         
         this.renderOption.bind(this)
@@ -60,7 +62,8 @@ export default class Dashboard extends React.Component {
             this.setState({
                 node:sim,
                 isPublic: sim.isPublic,
-                title:node.title
+                title:node.title,
+                tags:node.tags
             })
             
         })
@@ -113,6 +116,14 @@ export default class Dashboard extends React.Component {
         }
     }
 
+    handleTagsInput(tags) {
+
+        this.setState({tags},()=>{
+
+            Meteor.call('sims.tagsChange', this.state.node._id, tags)
+        })
+    }
+
     render() {
         return(
             <div style = {{height:'100vh'}}>                   
@@ -135,6 +146,7 @@ export default class Dashboard extends React.Component {
                         <Modal.Description>                        
                             <SimPreview {...this.state.node}/>                        
                             <br/>
+                
                             {this.state.editable?null:<Label style = {{padding:'0.8rem'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
                             {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem'}} ref = {e => this.title = e}/>:null}
                             <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
@@ -142,7 +154,7 @@ export default class Dashboard extends React.Component {
                         </Modal.Description>
                         <Modal.Description>  
                             <Checkbox 
-                                style = {{marginTop:'0.8rem'}}
+                                style = {{margin:'0.8rem 0'}}
                                 checked = {this.state.isPublic}
                                 ref = {e => this.checkbox = e }
                                 onChange = {()=>{
@@ -152,7 +164,8 @@ export default class Dashboard extends React.Component {
                                         isPublic: !this.checkbox.state.checked
                                     })      
 
-                            }} label = 'Share with others'/> 
+                            }} label = 'Share with others'/>
+                            {this.state.isPublic?<TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} />:null}
                         </Modal.Description>
                     </Modal.Content>         
 

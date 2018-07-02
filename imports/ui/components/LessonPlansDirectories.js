@@ -16,6 +16,7 @@ import MdSettings from 'react-icons/lib/md/settings'
 import LessonPlanViewer from './LessonPlanViewer'
 
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+import TagsInput from 'react-tagsinput'
  
 
 /*This component displays the lessonplan files in nested tree structure.
@@ -38,7 +39,9 @@ export default class LessonPlansDirectories extends Component {
       selectedLessonPlanId: null,
       node:null,
       editable:false,
-      title:null
+      title:null,
+      isPublic:null,
+      tags:[]
     }
   }
 
@@ -140,6 +143,14 @@ export default class LessonPlansDirectories extends Component {
     }
   }
 
+  handleTagsInput(tags) {
+
+        this.setState({tags},()=>{
+
+            Meteor.call('lessonplans.tagsChange', this.state.node._id, tags)
+        })
+    }
+
   render() {
 
     
@@ -195,9 +206,7 @@ export default class LessonPlansDirectories extends Component {
     return ( 
 
         <div>
-
-
-
+            
              <Modal 
                 trigger = {<Button onClick={this.handleOpen} >Create new lessonplan</Button>}
                 open={this.state.modalOpen}
@@ -235,22 +244,11 @@ export default class LessonPlansDirectories extends Component {
             <Modal
                 size = 'fullscreen'
                 open = {!!this.state.selectedLessonPlanId}
-                style = {{transform: 'scale(0.8, 0.8)', marginTop:'8rem'}}
+                style = {{transform: 'scale(0.75, 0.75)', marginTop:'8rem'}}
             >
                 <Modal.Header>
-                    Preview
-                    <div className = 'close-button'>
-                        <Checkbox 
-                            label = 'Share with others'
-                            defaultChecked = {this.state.node?this.state.node.isPublic:false}
-                            ref = {e => this.checkbox = e }
-                            onChange = {()=>{
-                                
-                                Meteor.call('lessonplans.visibilityChange', this.state.selectedLessonPlanId, !this.checkbox.state.checked)
-                            }}     
-                        />
-                        <Button style = {{marginLeft:'0.8rem'}} onClick = {()=>{this.setState({selectedLessonPlanId:null, editable:false})}}>X</Button>
-                    </div>
+                    Preview        
+                    <Button className = 'close-button' style = {{marginLeft:'0.8rem'}} onClick = {()=>{this.setState({selectedLessonPlanId:null, editable:false})}}>X</Button>
                 </Modal.Header>
                 <Modal.Content>                
                     <Modal.Description>
@@ -260,7 +258,22 @@ export default class LessonPlansDirectories extends Component {
                     </Modal.Description>
 
                     <Modal.Description style = {{padding:'0.8rem 0'}}>
-                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
+                        <Checkbox
+                            style = {{margin:'0.8rem 0'}}
+                            label = 'Share with others'
+                            checked = {this.state.isPublic}
+                            ref = {e => this.checkbox = e }
+                            onChange = {()=>{
+                                
+                                Meteor.call('lessonplans.visibilityChange', this.state.selectedLessonPlanId, !this.checkbox.state.checked)
+                                this.setState({
+                                    isPublic: !this.checkbox.state.checked
+                                }) 
+                            }}     
+                        />
+                        <br/>
+                        {this.state.isPublic?<TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} />:null}
+                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center', marginTop:'0.8rem'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
                         {this.state.editable?<input ref = {e => this.title = e} style = {{width:'15rem', padding:'0.8rem'}}/>:null}
                         <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
                     </Modal.Description>
@@ -350,7 +363,8 @@ export default class LessonPlansDirectories extends Component {
                                 this.setState({
                                     node,
                                     selectedLessonPlanId:node._id,
-                                    title:node.title
+                                    title:node.title,
+                                    isPublic:node.isPublic
                                 })
                             }}
                             style = {{display:node.isFile?'block':'none'}}
