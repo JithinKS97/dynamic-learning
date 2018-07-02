@@ -2,7 +2,7 @@ import React from 'react'
 import { Sims, SimsIndex } from '../../api/sims'
 import { List, Input } from 'semantic-ui-react' 
  
-export default class SimPool extends React.Component {
+export default class SharedSims extends React.Component {
 
     constructor(props) {
 
@@ -18,7 +18,7 @@ export default class SimPool extends React.Component {
     componentDidMount() {
 
         Meteor.subscribe('sims.public')
-        Tracker.autorun(()=>{
+        this.simsTracker = Tracker.autorun(()=>{
 
             const sims = Sims.find({isPublic:true}).fetch()
             this.setState({
@@ -28,6 +28,11 @@ export default class SimPool extends React.Component {
 
             
         })
+    }
+
+    componentWillUnmount() {
+
+        this.simsTracker.stop()
     }
 
     displaySims() {

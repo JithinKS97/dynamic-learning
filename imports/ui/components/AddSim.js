@@ -3,7 +3,7 @@ import SimsDirectories from './SimsDirectories'
 import { Button, Grid, Modal, Tab } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import SimPreview from './SimPreview'
-import SimPool from './SimPool'
+import SharedSims from './SharedSims'
 import FaCode from 'react-icons/lib/fa/code'
 
 export default class AddSim extends React.Component {
@@ -93,7 +93,7 @@ export default class AddSim extends React.Component {
 
         const panes = [
             { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> },
-            { menuItem: 'Shared simulations', render: () => <Tab.Pane style = {{height:'429px'}}><SimPool getNode = {this.getNode.bind(this)}/></Tab.Pane> },
+            { menuItem: 'Shared simulations', render: () => <Tab.Pane style = {{height:'429px'}}><SharedSims getNode = {this.getNode.bind(this)}/></Tab.Pane> },
           ]
 
 
