@@ -346,10 +346,10 @@ class CreateLessonPlan extends React.Component {
 
       this.isInteractEnabled = !this.isInteractEnabled;
       if(this.isInteractEnabled) {
-        document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+        $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
       }
       else {
-        document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
+        $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
       }
     }
 

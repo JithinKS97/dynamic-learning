@@ -57,7 +57,7 @@ class LessonPlanViewer extends React.Component {
            called. See the definition below.
         */
 
-        document.getElementsByClassName('drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+        $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
 
     }
 

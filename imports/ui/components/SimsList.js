@@ -74,13 +74,13 @@ export default class simsList extends React.Component {
 
                                 onDragStart={()=>{
                                     
-                                    document.getElementsByClassName('sim')[0].style['pointer-events'] = 'none'
+                                    $('.sim')[0].style['pointer-events'] = 'none'
 
                                 }}
     
                                 onDragStop={(e, d) => {
 
-                                    document.getElementsByClassName('sim')[0].style['pointer-events'] = 'unset'
+                                    $('.sim')[0].style['pointer-events'] = 'unset'
     
                                     slides[curSlide].iframes[index].x = d.lastX
                                     slides[curSlide].iframes[index].y = d.lastY
