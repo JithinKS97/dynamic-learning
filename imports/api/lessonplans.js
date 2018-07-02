@@ -60,7 +60,8 @@ Meteor.methods({
             updatedAt: moment().valueOf(),
             isFile:true,
             isPublic:false,
-            parent_id:'0'
+            parent_id:'0',
+            tags:[]
 
         },(err, docs)=>{
 
@@ -94,8 +95,7 @@ Meteor.methods({
             isFile:false,
             parent_id:'0',
             children:[],
-            expanded:false,
-            tags:[]
+            expanded:false
 
         })
     },
