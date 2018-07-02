@@ -244,7 +244,7 @@ export default class LessonPlansDirectories extends Component {
             <Modal
                 size = 'fullscreen'
                 open = {!!this.state.selectedLessonPlanId}
-                style = {{transform: 'scale(0.75, 0.75)', marginTop:'8rem'}}
+                style = {{transform: 'scale(0.75, 0.75)', marginTop:'10rem'}}
             >
                 <Modal.Header>
                     Preview        
@@ -258,6 +258,10 @@ export default class LessonPlansDirectories extends Component {
                     </Modal.Description>
 
                     <Modal.Description style = {{padding:'0.8rem 0'}}>
+                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center', marginTop:'0.8rem'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
+                        {this.state.editable?<input ref = {e => this.title = e} style = {{width:'15rem', padding:'0.8rem'}}/>:null}
+                        <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
+                        <br/>
                         <Checkbox
                             style = {{margin:'0.8rem 0'}}
                             label = 'Share with others'
@@ -273,9 +277,6 @@ export default class LessonPlansDirectories extends Component {
                         />
                         <br/>
                         {this.state.isPublic?<TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} />:null}
-                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center', marginTop:'0.8rem'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
-                        {this.state.editable?<input ref = {e => this.title = e} style = {{width:'15rem', padding:'0.8rem'}}/>:null}
-                        <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
                     </Modal.Description>
 
                 </Modal.Content>
@@ -364,7 +365,8 @@ export default class LessonPlansDirectories extends Component {
                                     node,
                                     selectedLessonPlanId:node._id,
                                     title:node.title,
-                                    isPublic:node.isPublic
+                                    isPublic:node.isPublic,
+                                    tags:node.tags
                                 })
                             }}
                             style = {{display:node.isFile?'block':'none'}}
