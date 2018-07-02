@@ -110,15 +110,14 @@ export default class SimsDirectories extends React.Component {
                 If the node is a file, using the id in it, it is removed
                 from the database.
     
-                If the node has no children, returned otherwise
+                If the node has no children, returned, otherwise
                 we recursively move to the children nodes.
             */
     
             if(node.isFile) {
     
                 Meteor.call('sims.remove', node._id)
-                return
-                
+                    return                
             }
     
             if(node.children.length == 0) {
@@ -142,7 +141,7 @@ export default class SimsDirectories extends React.Component {
                     open={this.state.modalOpen}
                     onClose={this.handleClose}
                     size='tiny'            
-                    >
+                >
                     <Modal.Header>
                         New folder
                         <Button className = 'close-button' onClick = {this.handleClose}>
@@ -199,7 +198,7 @@ export default class SimsDirectories extends React.Component {
                     }
 
 
-                    generateNodeProps={({ node, path }) => ({
+                    generateNodeProps = {({ node, path }) => ({
 
                         onClick: ()=>{
 
@@ -254,7 +253,7 @@ export default class SimsDirectories extends React.Component {
                             <FaTrash size={17} color="black"/>
                           </button>
                         ]
-                      })}
+                    })}
 
                     />
                 </div>

@@ -24,9 +24,7 @@ export default class SharedSims extends React.Component {
             this.setState({
                 sims,
                 selectedSim:null
-            })
-
-            
+            })            
         })
     }
 
@@ -70,7 +68,7 @@ export default class SharedSims extends React.Component {
         return(
             <div>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
-                <List style = {{width:'100%', height:'100%'}}  selection verticalAlign='middle'>
+                <List selection verticalAlign='middle'>
                     {this.displaySims()}
                 </List>
             </div>

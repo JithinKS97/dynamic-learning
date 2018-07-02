@@ -96,17 +96,13 @@ class LessonPlanViewer extends React.Component {
 
     componentWillUnmount() {
 
-
         window.removeEventListener("keydown", this.handleKeyDown, false)
-
-
     }
 
 
     next() {
 
         /*
-
             If the current slide is the last slide, we cannot move forward.
 
             If the current slide is not the last slide, current slide no. is incremented and

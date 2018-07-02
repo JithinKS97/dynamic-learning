@@ -71,7 +71,8 @@ class Request extends React.Component {
             const title = this.title.value
             const curSlide = slides.length
 
-            if(this.state.show == false) {            
+            if(this.state.show == false) {
+                            
                 slides[0].title = this.title.value
                 this.setState({slides, show:true})            
             }

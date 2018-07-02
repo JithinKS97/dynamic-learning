@@ -51,8 +51,7 @@ export default class Login extends React.Component {
                     error :''
                 },()=>{
 
-                    if(!this.state.slides)
-                    {
+                    if(!this.state.slides) {
                         return
                     }
 

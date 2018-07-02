@@ -6,6 +6,10 @@ import SimPreview from './SimPreview'
 import SharedSims from './SharedSims'
 import FaCode from 'react-icons/lib/fa/code'
 
+/*
+    This component is for the addition of simulations to the lessonplan.
+*/
+
 export default class AddSim extends React.Component {
 
     constructor(props) {
@@ -41,9 +45,7 @@ export default class AddSim extends React.Component {
         })
     }
 
-    getNode(node) {
-
-        
+    getNode(node) {        
 
         this.setState({
             node
@@ -54,10 +56,7 @@ export default class AddSim extends React.Component {
 
         if(this.state.node) {
 
-            console.log(this.state.node)
-
-            const { slides, curSlide } = this.props
-                                
+            const { slides, curSlide } = this.props                                
 
             const sim = {
                 linkToCode:this.state.node.linkToCode,
@@ -94,7 +93,7 @@ export default class AddSim extends React.Component {
         const panes = [
             { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> },
             { menuItem: 'Shared simulations', render: () => <Tab.Pane style = {{height:'429px'}}><SharedSims getNode = {this.getNode.bind(this)}/></Tab.Pane> },
-          ]
+        ]
 
 
         return(
@@ -104,8 +103,7 @@ export default class AddSim extends React.Component {
                     
                     open={this.state.isOpen}
                     onClose={this.handleClose}
-                    size='large'      
-                                       
+                    size='large'    
                 >
 
                     <Modal.Header>
@@ -114,8 +112,7 @@ export default class AddSim extends React.Component {
                             className = 'close-button'
                             onClick = {()=>{                                        
                             this.setState({
-                                node:this.handleClose()
-                        
+                                node:this.handleClose()                        
                             })
                         }}>X</Button>
                     </Modal.Header>
@@ -140,9 +137,9 @@ export default class AddSim extends React.Component {
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 {this.state.node?<a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a>:null}
                                 
-                            </Grid>       
+                            </Grid>    
                             
-                           </Modal.Description>
+                         </Modal.Description>
                     </Modal.Content>
 
                 </Modal>

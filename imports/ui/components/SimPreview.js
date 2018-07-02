@@ -8,6 +8,7 @@ export default class SimPreview extends React.Component {
         super(props)
 
         this.state = {
+
             h:360,
             w:640
         }
@@ -38,6 +39,7 @@ export default class SimPreview extends React.Component {
                 onResize={(e, direction, ref, delta, position) => {                
 
                     this.setState({
+                        
                         h: ref.offsetHeight,
                         w: ref.offsetWidth
                     })
@@ -47,7 +49,6 @@ export default class SimPreview extends React.Component {
                 <iframe 
                     style = {{border: this.props.src?'2px solid grey':'none'}}
                     className = 'iframe'
-                    // ref = {e => this.iframe = e} 
                     scrolling = 'no' 
                     height = {this.state.h+'px'} 
                     width = {this.state.w+'px'}

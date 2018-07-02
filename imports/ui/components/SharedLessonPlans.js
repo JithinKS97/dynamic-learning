@@ -29,9 +29,7 @@ export default class SharedLessonPlans extends React.Component {
             this.setState({
                 lessonplans,
                 selectedLessonPlan:null
-            })
-
-            
+            })            
         })
     }
 

@@ -35,13 +35,3 @@ if(Meteor.isServer) {
         })
     })
 }
-
-
-
-// const add = (a, b) => a + b
-
-// it('should add two numbers', function() {
-//     const res = add(2, 3)
-
-//     expect(res).toBe(5)
-// }) 

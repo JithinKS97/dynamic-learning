@@ -92,7 +92,6 @@ export default class LessonPlansDirectories extends Component {
 
     this.folderName.value = ''
 
-
   }
 
 
@@ -145,15 +144,13 @@ export default class LessonPlansDirectories extends Component {
 
   handleTagsInput(tags) {
 
-        this.setState({tags},()=>{
+    this.setState({tags},()=>{
 
-            Meteor.call('lessonplans.tagsChange', this.state.node._id, tags)
-        })
-    }
+        Meteor.call('lessonplans.tagsChange', this.state.node._id, tags)
+    })
+  }
 
-  render() {
-
-    
+  render() {    
 
     const getNodeKey = ({ treeIndex }) => treeIndex;
     
@@ -188,8 +185,7 @@ export default class LessonPlansDirectories extends Component {
         if(node.isFile) {
 
             Meteor.call('lessonplans.remove', node._id)
-            return
-            
+            return            
         }
 
         if(node.children.length == 0) {
@@ -284,13 +280,13 @@ export default class LessonPlansDirectories extends Component {
             </Modal>
 
 
-             <Modal 
+            <Modal 
 
                 trigger = {<Button onClick={this.handle2Open} >Create a folder</Button>}
                 open={this.state.modal2Open}
                 onClose={this.handle2Close}
                 size='tiny'            
-                >
+            >
                 <Modal.Header>
                     New folder
                     <Button className = 'close-button' onClick = {this.handle2Close}>
