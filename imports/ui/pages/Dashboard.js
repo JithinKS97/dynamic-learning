@@ -74,9 +74,7 @@ export default class Dashboard extends React.Component {
         const panes = [
             { menuItem: 'My lessonplans', render: () => <Tab.Pane> <LessonPlansDirectories/></Tab.Pane> },
             { menuItem: 'Shared lessonplans', render: () => <Tab.Pane style = {{height:'436px'}}><SharedLessonPlans/></Tab.Pane> },
-          ]
-
-        
+        ]        
 
        const option = this.props.match.params.option
 

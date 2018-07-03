@@ -1,5 +1,5 @@
 import React from 'react'
-import { LessonPlans, LessonPlansIndex } from '../../api/lessonplans'
+import { LessonPlansIndex } from '../../api/lessonplans'
 import { List, Modal,Button, Input } from 'semantic-ui-react'
 import LessonPlanViewer from './LessonPlanViewer'
 
@@ -26,9 +26,8 @@ export default class SharedLessonPlans extends React.Component {
          Meteor.subscribe('lessonplans.public')
          this.lessonplansTracker = Tracker.autorun(()=>{
 
-            const lessonplans = LessonPlans.find({isPublic:true}).fetch()
             this.setState({
-                lessonplans,
+                lessonplans:LessonPlansIndex.search('').fetch(),
                 selectedLessonPlan:null
             })            
         })
@@ -71,8 +70,7 @@ export default class SharedLessonPlans extends React.Component {
             this.setState({
                 lessonplans:LessonPlansIndex.search(data.value).fetch()
             })
-        })
-        
+        })        
     }
 
     getId() {

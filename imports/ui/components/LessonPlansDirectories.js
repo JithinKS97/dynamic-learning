@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData} from 'react-sortable-tree';
 import { Meteor } from 'meteor/meteor'
-import { Tracker } from 'meteor/tracker'
+import { withTracker } from 'meteor/react-meteor-data';
 import 'react-sortable-tree/style.css';
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
 
-import { Button, Modal, Form, Label, Checkbox } from 'semantic-ui-react'
+import { Button, Modal, Form, Label, Checkbox, Dimmer, Loader, Segment } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import FaTrash from 'react-icons/lib/fa/trash'
@@ -26,14 +26,13 @@ import TagsInput from 'react-tagsinput'
     and the main directory.
 */
 
-export default class LessonPlansDirectories extends Component {
+class LessonPlansDirectories extends Component {
 
   constructor(props) {
     super(props)
 
     this.state = {
         
-      treeData: [],
       modalOpen: false,
       modal2Open: false,
       selectedLessonPlanId: null,
@@ -44,38 +43,6 @@ export default class LessonPlansDirectories extends Component {
       tags:[]
     }
     
-  }
-
-  componentDidMount() {
-
-      Meteor.subscribe('lessonplans')
-
-      this.lessonplansTracker = Tracker.autorun(()=>{
-        
-        const lessonplans = LessonPlans.find().fetch()
-
-        /* Here we fetch two things, all the lessonplans and all directory data */
-        
-        const flatData = LessonPlans.find({userId: Meteor.userId()}).fetch()
-        const getKey = node => node._id
-        const getParentKey = node => node.parent_id
-        const rootKey = '0'        
-
-        const treeData = getTreeFromFlatData({
-            flatData,
-            getKey,
-            getParentKey,
-            rootKey
-        })
-
-        this.setState({
-            treeData
-        })   
-    })
-  }
-
-  componentWillUnmount() {
-    this.lessonplansTracker.stop()
   }
 
   addNewFolder(e) {   
@@ -208,6 +175,10 @@ export default class LessonPlansDirectories extends Component {
     return ( 
 
         <div>
+
+        <Dimmer active = {!this.props.lessonplansExists}>
+            <Loader />
+        </Dimmer>
             
              <Modal 
                 trigger = {<Button onClick={this.handleOpen} >Create new lessonplan</Button>}
@@ -331,7 +302,7 @@ export default class LessonPlansDirectories extends Component {
                     }}
                     theme = {FileExplorerTheme}
                     canDrop={canDrop}                    
-                    treeData={this.state.treeData}
+                    treeData={this.props.treeData}
                     onChange={treeData => this.setState({ treeData })}
                     onMoveNode = { args => {
 
@@ -406,8 +377,34 @@ export default class LessonPlansDirectories extends Component {
                 />
 
             </div>
-
         </div>
+ 
     )
   }
 }
+
+export default LessonPlansDirectoriesContainer = withTracker(()=>{
+
+    const lessonplansHandle = Meteor.subscribe('lessonplans')
+    const loading = !lessonplansHandle.ready()
+    const flatData = LessonPlans.find({userId: Meteor.userId()}).fetch()
+    const lessonplansExists = !loading && !!flatData
+
+    const getKey = node => node._id
+    const getParentKey = node => node.parent_id
+    const rootKey = '0'        
+
+    const treeData = getTreeFromFlatData({
+        flatData,
+        getKey,
+        getParentKey,
+        rootKey
+    })
+ 
+
+    return {
+        lessonplansExists,
+        treeData
+    }
+
+})(LessonPlansDirectories)

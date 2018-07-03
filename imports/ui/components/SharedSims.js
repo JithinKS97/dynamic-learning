@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sims, SimsIndex } from '../../api/sims'
+import { SimsIndex } from '../../api/sims'
 import { List, Input } from 'semantic-ui-react' 
  
 export default class SharedSims extends React.Component {
@@ -18,11 +18,11 @@ export default class SharedSims extends React.Component {
     componentDidMount() {
 
         Meteor.subscribe('sims.public')
+
         this.simsTracker = Tracker.autorun(()=>{
 
-            const sims = Sims.find({isPublic:true}).fetch()
             this.setState({
-                sims,
+                sims:SimsIndex.search('').fetch(),
                 selectedSim:null
             })            
         })
@@ -57,10 +57,9 @@ export default class SharedSims extends React.Component {
 
     search(event, data) {
 
-        this.searchTracker = Tracker.autorun(()=>{
+        Tracker.autorun(()=>{
             this.setState({sims:SimsIndex.search(data.value).fetch()})
-        })
-        
+        })        
     }
 
     render() {

@@ -3,19 +3,15 @@ import Upload from '../components/Upload'
 import { Meteor } from 'meteor/meteor'
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css'; 
-import { Tracker } from 'meteor/tracker'
 import { Sims } from '../../api/sims'
-
 import FaTrash from 'react-icons/lib/fa/trash'
 import MdSettings from 'react-icons/lib/md/settings'
-
-
-import { Button, Modal, Form} from 'semantic-ui-react'
+import { Button, Modal, Form, Dimmer, Loader} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
-
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+import { withTracker } from 'meteor/react-meteor-data';
 
-export default class SimsDirectories extends React.Component {
+class SimsDirectories extends React.Component {
 
     constructor(props) {
 
@@ -28,39 +24,6 @@ export default class SimsDirectories extends React.Component {
             selectedLessonPlanId:null
           }
 
-    }
-
-    componentDidMount() {
-
-        Meteor.subscribe('sims')
-
-        this.simsTracker = Tracker.autorun(()=>{
-
-            const flatData = Sims.find({userId: Meteor.userId()}).fetch()
-            const getKey = node => node._id
-            const getParentKey = node => node.parent_id
-            const rootKey = '0'
-            
-
-            const treeData = getTreeFromFlatData({
-                flatData,
-                getKey,
-                getParentKey,
-                rootKey
-            })
-
-
-            this.setState({
-                treeData
-            })         
-            
-        })
-
-    }
-
-    componentWillUnmount() {
-        
-        this.simsTracker.stop()
     }
 
 
@@ -133,6 +96,10 @@ export default class SimsDirectories extends React.Component {
         return(
             <div>
 
+            <Dimmer active = {!this.props.simsExists}>
+                <Loader />
+            </Dimmer>
+
                 <Upload isPreview = {this.props.isPreview} methodToRun = 'sims.insert' />
 
                 <Modal
@@ -180,7 +147,7 @@ export default class SimsDirectories extends React.Component {
                         }}
                         theme= {FileExplorerTheme}
                         canDrag = {this.props.isPreview?false:true}
-                        treeData={this.state.treeData}
+                        treeData={this.props.treeData}
                         onChange={treeData => this.setState({ treeData })}
                         canDrop={canDrop}
                         onMoveNode = { args => {
@@ -261,3 +228,30 @@ export default class SimsDirectories extends React.Component {
         )
     }
 }
+
+export default SimsDirectoriesContainer = withTracker(()=>{
+
+    const simsHandle = Meteor.subscribe('sims')
+    const loading = !simsHandle.ready()
+    const flatData = Sims.find({userId: Meteor.userId()}).fetch()
+    const simsExists = !loading && !!flatData
+
+    const getKey = node => node._id
+    const getParentKey = node => node.parent_id
+    const rootKey = '0'
+    
+
+    const treeData = getTreeFromFlatData({
+        flatData,
+        getKey,
+        getParentKey,
+        rootKey
+    })    
+
+    return {
+        simsExists,
+        treeData: simsExists?treeData:[]
+    }
+
+})(SimsDirectories)
+
