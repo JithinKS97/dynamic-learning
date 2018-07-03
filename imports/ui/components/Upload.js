@@ -90,9 +90,6 @@ export default class Upload extends React.Component {
         const h = '200px'
         const name = this.name.value
 
-        console.log(this.state)
-
-
         if(src && name ) {           
 
             let uploaded = false;

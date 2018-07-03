@@ -4,7 +4,7 @@ import { List, Modal,Button, Input } from 'semantic-ui-react'
 import LessonPlanViewer from './LessonPlanViewer'
 
 import FaCodeFork from 'react-icons/lib/fa/code-fork'
-import { getDiffieHellman } from 'crypto';
+
 
  
 export default class SharedLessonPlans extends React.Component {
@@ -15,7 +15,8 @@ export default class SharedLessonPlans extends React.Component {
 
         this.state = {
             lessonplans:[],
-            lessonplan:null
+            lessonplan:null,
+            username:null
         }
         this.displayLessonPlans.bind(this)
     }
@@ -48,6 +49,12 @@ export default class SharedLessonPlans extends React.Component {
                 <List.Item key = {index} onClick = {()=>{
                     this.setState({                        
                         selectedLessonPlan: lessonplan
+                    },()=>{
+                        Meteor.call('getUsername', this.state.selectedLessonPlan.userId,(err, username) => {
+                            this.setState({
+                                username
+                            })
+                        })
                     })
                 }}>
                     <List.Content onClick = {()=>{this.setState({lessonplan})}}>    
@@ -112,6 +119,7 @@ export default class SharedLessonPlans extends React.Component {
                     </Modal.Header>
                     <Modal.Content>                      
                         <LessonPlanViewer _id = {this.getId.bind(this)()}/>
+                        {this.state.lessonplan?<p style = {{paddingTop:'0.8rem', paddingLeft:'0.8rem', fontSize:'1.2rem'}}>{`Created by ${this.state.username}`}</p>:null}
                     </Modal.Content>
                </Modal>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>

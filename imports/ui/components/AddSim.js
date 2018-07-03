@@ -5,6 +5,7 @@ import 'semantic-ui-css/semantic.min.css';
 import SimPreview from './SimPreview'
 import SharedSims from './SharedSims'
 import FaCode from 'react-icons/lib/fa/code'
+import { Meteor } from 'meteor/meteor'
 
 /*
     This component is for the addition of simulations to the lessonplan.
@@ -17,7 +18,8 @@ export default class AddSim extends React.Component {
         super(props)
         this.state = {
             isOpen: false,
-            node:null
+            node:null,
+            username:null
         }
         this.handleOpen.bind(this)
         this.handleClose.bind(this)
@@ -45,12 +47,6 @@ export default class AddSim extends React.Component {
         })
     }
 
-    getNode(node) {        
-
-        this.setState({
-            node
-        })
-    }
 
     addToLesson() {
 
@@ -86,11 +82,18 @@ export default class AddSim extends React.Component {
 
         this.setState({
             node
+        },()=>{
+            Meteor.call('getUsername', this.state.node.userId,(err, username) => {
+                this.setState({
+                    username
+                })
+            })
         })
     }
 
 
     render() {
+
 
         const panes = [
             { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> },
@@ -130,7 +133,6 @@ export default class AddSim extends React.Component {
                                 
                                 <Grid.Column width = {8}>
                                    <Tab ref = { e => this.tab = e} onTabChange = {(event, data)=>{
-                                       console.log(this.tab)
                                        this.setState({node:null})
                                     }} panes={panes}/>   
                                 </Grid.Column>
@@ -141,6 +143,7 @@ export default class AddSim extends React.Component {
                                 
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 {this.state.node?<a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a>:null}
+                                {this.state.node && this.tab.state.activeIndex === 1?<p style = {{paddingTop:'0.8rem'}}>{`Created by ${this.state.username}`}</p>:null}
                                 
                             </Grid>    
                             
