@@ -276,7 +276,7 @@ class Request extends React.Component {
 
         return (
 
-            <Segment style = {{padding:0, margin:0}}>
+            <Segment>
             
                 <Dimmer inverted active = {!this.state.initialized}>
                     <Loader />
@@ -402,7 +402,6 @@ class Request extends React.Component {
 
                 </div>            
             </Segment>
-
         )
     }
 }
