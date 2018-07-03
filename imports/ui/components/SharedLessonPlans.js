@@ -1,6 +1,6 @@
 import React from 'react'
 import { LessonPlansIndex } from '../../api/lessonplans'
-import { List, Modal,Button, Input } from 'semantic-ui-react'
+import { List, Modal,Button, Input, Dimmer, Loader } from 'semantic-ui-react'
 import LessonPlanViewer from './LessonPlanViewer'
 
 import FaCodeFork from 'react-icons/lib/fa/code-fork'
@@ -16,19 +16,23 @@ export default class SharedLessonPlans extends React.Component {
         this.state = {
             lessonplans:[],
             lessonplan:null,
-            username:''
+            username:'',
+            loading:true
         }
         this.displayLessonPlans.bind(this)
     }
 
-    componentDidMount() {
+    componentDidMount() {  
+        
+        this.lessonplansTracker = Tracker.autorun(()=>{
 
-         Meteor.subscribe('lessonplans.public')
-         this.lessonplansTracker = Tracker.autorun(()=>{
+            const lessonplansHandle = Meteor.subscribe('lessonplans.public')
+            const loading = !lessonplansHandle.ready()
 
             this.setState({
                 lessonplans:LessonPlansIndex.search('').fetch(),
-                selectedLessonPlan:null
+                selectedLessonPlan:null,
+                loading
             })            
         })
     }
@@ -88,6 +92,10 @@ export default class SharedLessonPlans extends React.Component {
 
         return(
             <div>
+
+                <Dimmer inverted active = {this.state.loading}>
+                    <Loader />
+                </Dimmer>
                 <Modal 
                     open = {!!this.state.lessonplan}
                     size = 'fullscreen'

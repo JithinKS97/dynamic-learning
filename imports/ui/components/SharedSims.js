@@ -1,6 +1,6 @@
 import React from 'react'
 import { SimsIndex } from '../../api/sims'
-import { List, Input } from 'semantic-ui-react' 
+import { List, Input, Dimmer, Loader } from 'semantic-ui-react' 
  
 export default class SharedSims extends React.Component {
 
@@ -10,20 +10,24 @@ export default class SharedSims extends React.Component {
 
         this.state = {
             sims:[],
-            searchTag:null
+            searchTag:null,
+            loading:true
         }
         this.displaySims.bind(this)
     }
 
-    componentDidMount() {
+    componentDidMount() {        
 
-        Meteor.subscribe('sims.public')
 
         this.simsTracker = Tracker.autorun(()=>{
 
+            const simsHandle = Meteor.subscribe('sims.public')
+            const loading = !simsHandle.ready()
+
             this.setState({
                 sims:SimsIndex.search('').fetch(),
-                selectedSim:null
+                selectedSim:null,
+                loading
             })            
         })
     }
@@ -66,6 +70,9 @@ export default class SharedSims extends React.Component {
 
         return(
             <div>
+                <Dimmer inverted active = {this.state.loading}>
+                    <Loader />
+                </Dimmer>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
                 <List selection verticalAlign='middle'>
                     {this.displaySims()}

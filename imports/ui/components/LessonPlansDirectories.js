@@ -6,7 +6,7 @@ import 'react-sortable-tree/style.css';
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
 
-import { Button, Modal, Form, Label, Checkbox, Dimmer, Loader, Segment } from 'semantic-ui-react'
+import { Button, Modal, Form, Label, Checkbox, Dimmer, Loader } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import FaTrash from 'react-icons/lib/fa/trash'
@@ -176,7 +176,7 @@ class LessonPlansDirectories extends Component {
 
         <div>
 
-        <Dimmer active = {!this.props.lessonplansExists}>
+        <Dimmer inverted active = {!this.props.lessonplansExists}>
             <Loader />
         </Dimmer>
             

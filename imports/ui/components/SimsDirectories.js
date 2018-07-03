@@ -96,7 +96,7 @@ class SimsDirectories extends React.Component {
         return(
             <div>
 
-            <Dimmer active = {!this.props.simsExists}>
+            <Dimmer inverted active = {!this.props.simsExists}>
                 <Loader />
             </Dimmer>
 
