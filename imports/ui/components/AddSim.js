@@ -13,6 +13,7 @@ import FaCode from 'react-icons/lib/fa/code'
 export default class AddSim extends React.Component {
 
     constructor(props) {
+
         super(props)
         this.state = {
             isOpen: false,
@@ -20,7 +21,6 @@ export default class AddSim extends React.Component {
         }
         this.handleOpen.bind(this)
         this.handleClose.bind(this)
-
     }
 
     componentDidMount() {
@@ -65,7 +65,8 @@ export default class AddSim extends React.Component {
                 h:this.state.node.h,
                 x:0,
                 y:0,
-                data:{}
+                data:{},
+                pane:null
             }
 
             slides[curSlide].iframes.push(sim)
@@ -128,7 +129,10 @@ export default class AddSim extends React.Component {
                             >
                                 
                                 <Grid.Column width = {8}>
-                                   <Tab onTabChange = {()=>{this.setState({node:null})}} panes={panes}/>   
+                                   <Tab ref = { e => this.tab = e} onTabChange = {(event, data)=>{
+                                       console.log(this.tab)
+                                       this.setState({node:null})
+                                    }} panes={panes}/>   
                                 </Grid.Column>
 
                                 {this.state.node?<Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
@@ -137,7 +141,7 @@ export default class AddSim extends React.Component {
                                 
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 {this.state.node?<a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a>:null}
-                                {this.state.node?<p style = {{float:'right', paddingTop:'0.8rem'}}>{`Created by ${Meteor.users.findOne({_id: this.state.node.userId}).username}`}</p>:null}
+                                {this.state.node && this.tab.state.activeIndex === 1?<p style = {{float:'right', paddingTop:'0.8rem'}}>{`Created by ${Meteor.users.findOne({_id: this.state.node.userId}).username}`}</p>:null}
                                 
                             </Grid>    
                             
