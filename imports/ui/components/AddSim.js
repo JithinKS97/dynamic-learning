@@ -92,9 +92,6 @@ export default class AddSim extends React.Component {
 
     getUsername() {
 
-        if(!this.state.node)
-            return
-
         const user = Meteor.users.findOne({_id: this.state.node.userId})
         if(user)
             return user.username       

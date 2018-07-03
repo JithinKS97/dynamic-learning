@@ -81,9 +81,6 @@ export default class SharedLessonPlans extends React.Component {
     }
 
     getUsername() {
-
-        if(!this.state.lessonplan)
-            return
     
         const user = Meteor.users.findOne({_id: this.state.lessonplan.userId})
         if(user)
