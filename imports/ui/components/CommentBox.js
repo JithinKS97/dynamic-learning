@@ -9,6 +9,13 @@ const CommentBox = (props,) => {
 
     momentNow = moment(props.comment.time)
 
+    const getUsername = () => {
+    
+        const user = Meteor.users.findOne({_id: props.userId})
+        if(user)
+            return user.username       
+    } 
+
     return (
         <Comment style = {{padding:'0.8rem', backgroundColor:'#eeeeee'}}>
             <Comment.Content>
@@ -23,7 +30,7 @@ const CommentBox = (props,) => {
 
                 <p>{props.comment.comment} </p>
                 <p>{momentNow.fromNow()}</p> 
-                <p>{Meteor.users.findOne({_id: props.userId}).username}</p>                              
+                <p>{getUsername()}</p>                              
                 
             </Comment.Content>
         </Comment>        
