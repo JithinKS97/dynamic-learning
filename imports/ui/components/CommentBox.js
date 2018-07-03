@@ -30,7 +30,7 @@ const CommentBox = (props,) => {
 
                 <p>{props.comment.comment} </p>
                 <p>{momentNow.fromNow()}</p> 
-                <p>{getUsername()}</p>                              
+                <p>{props.comment.username}</p>                              
                 
             </Comment.Content>
         </Comment>        

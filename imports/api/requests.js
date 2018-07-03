@@ -47,6 +47,7 @@ Meteor.methods({
             'comments.$.comment':{type:String},
             'comments.$.userId':{type:String},
             'comments.$.time':{type:Number},
+            'comments.$.username':{type:String},
 
             iframes: {
                 type:Array,

@@ -18,7 +18,6 @@ export default class SharedLessonPlans extends React.Component {
             lessonplan:null
         }
         this.displayLessonPlans.bind(this)
-        this.getUsername.bind(this)
     }
 
     componentDidMount() {
@@ -80,14 +79,6 @@ export default class SharedLessonPlans extends React.Component {
             return this.state.selectedLessonPlan.__originalId
     }
 
-    getUsername() {
-    
-        const user = Meteor.users.findOne({_id: this.state.lessonplan.userId})
-        if(user)
-            return user.username       
-    } 
-
-
     render() {
 
         return(
@@ -121,7 +112,6 @@ export default class SharedLessonPlans extends React.Component {
                     </Modal.Header>
                     <Modal.Content>                      
                         <LessonPlanViewer _id = {this.getId.bind(this)()}/>
-                        {this.state.lessonplan?<p style = {{paddingTop:'0.8rem', fontSize:'1.2rem'}}>{`Created by ${this.getUsername()}`}</p>:null}
                     </Modal.Content>
                </Modal>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
