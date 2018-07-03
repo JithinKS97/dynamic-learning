@@ -30,7 +30,6 @@ class CreateLessonPlan extends React.Component {
         /*When isInteractEnabled is true, the pointer events of the canvas are de activated
           so that we can interact with the simulations.
         */
-        this.isInteractEnabled=false
         this.undoArray= []
         this.curPosition= []
         this.lessonplanExists = false
@@ -42,7 +41,8 @@ class CreateLessonPlan extends React.Component {
             _id: '',
             initialized:false,
             createAccount:false,
-            redirectToLogin:false
+            redirectToLogin:false,
+            checked: false
         }
 
         this.pushSlide.bind(this)
@@ -344,13 +344,18 @@ class CreateLessonPlan extends React.Component {
       if(this.addSim.state.isOpen)
         return
 
-      this.isInteractEnabled = !this.isInteractEnabled;
-      if(this.isInteractEnabled) {
+      if(!this.state.checked) {
         $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
       }
       else {
         $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
       }
+
+      this.setState((state) => {
+            return {
+                checked: !state.checked
+            }
+      })
     }
 
     undo(e) {
@@ -372,7 +377,6 @@ class CreateLessonPlan extends React.Component {
 
         if(!Meteor.userId()){
 
-            console.log('hello')
             this.setState({createAccount:true})
         }            
         else {
@@ -481,7 +485,7 @@ class CreateLessonPlan extends React.Component {
                     <Menu icon vertical>                
 
                     <Menu.Item link>                    
-                            <Checkbox label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
+                            <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
                         </Menu.Item>        
 
                         {Meteor.userId()?
