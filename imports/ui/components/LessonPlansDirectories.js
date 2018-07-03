@@ -6,7 +6,7 @@ import 'react-sortable-tree/style.css';
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
 
-import { Button, Modal, Form, Label, Checkbox } from 'semantic-ui-react'
+import { Button, Modal, Form, Label, Checkbox, Dimmer, Loader } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 import FaTrash from 'react-icons/lib/fa/trash'
@@ -116,9 +116,12 @@ class LessonPlansDirectories extends Component {
 
         Meteor.call('lessonplans.tagsChange', this.state.node._id, tags)
     })
-  } 
+  }
+
+    
   
-    render() {    
+
+  render() {    
 
     const getNodeKey = ({ treeIndex }) => treeIndex;
     
@@ -172,6 +175,10 @@ class LessonPlansDirectories extends Component {
     return ( 
 
         <div>
+
+        <Dimmer inverted active = {!this.props.lessonplansExists}>
+            <Loader />
+        </Dimmer>
             
              <Modal 
                 trigger = {<Button onClick={this.handleOpen} >Create new lessonplan</Button>}
@@ -378,8 +385,11 @@ class LessonPlansDirectories extends Component {
 
 export default LessonPlansDirectoriesContainer = withTracker(()=>{
 
-    Meteor.subscribe('lessonplans')
+    const lessonplansHandle = Meteor.subscribe('lessonplans')
+    const loading = !lessonplansHandle.ready()
     const flatData = LessonPlans.find({userId: Meteor.userId()}).fetch()
+    const lessonplansExists = !loading && !!flatData
+
     const getKey = node => node._id
     const getParentKey = node => node.parent_id
     const rootKey = '0'        
@@ -393,7 +403,7 @@ export default LessonPlansDirectoriesContainer = withTracker(()=>{
  
 
     return {
-
+        lessonplansExists,
         treeData
     }
 

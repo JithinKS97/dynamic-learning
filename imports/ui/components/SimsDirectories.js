@@ -6,7 +6,7 @@ import 'react-sortable-tree/style.css';
 import { Sims } from '../../api/sims'
 import FaTrash from 'react-icons/lib/fa/trash'
 import MdSettings from 'react-icons/lib/md/settings'
-import { Button, Modal, Form } from 'semantic-ui-react'
+import { Button, Modal, Form, Dimmer, Loader} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -95,6 +95,10 @@ class SimsDirectories extends React.Component {
         
         return(
             <div>
+
+            <Dimmer inverted active = {!this.props.simsExists}>
+                <Loader />
+            </Dimmer>
 
                 <Upload isPreview = {this.props.isPreview} methodToRun = 'sims.insert' />
 
@@ -227,8 +231,11 @@ class SimsDirectories extends React.Component {
 
 export default SimsDirectoriesContainer = withTracker(()=>{
 
-    Meteor.subscribe('sims')
+    const simsHandle = Meteor.subscribe('sims')
+    const loading = !simsHandle.ready()
     const flatData = Sims.find({userId: Meteor.userId()}).fetch()
+    const simsExists = !loading && !!flatData
+
     const getKey = node => node._id
     const getParentKey = node => node.parent_id
     const rootKey = '0'
@@ -242,9 +249,8 @@ export default SimsDirectoriesContainer = withTracker(()=>{
     })    
 
     return {
-        
-        treeData
+        simsExists,
+        treeData: simsExists?treeData:[]
     }
 
 })(SimsDirectories)
-
