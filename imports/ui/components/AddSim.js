@@ -88,6 +88,7 @@ export default class AddSim extends React.Component {
         })
     }
 
+
     render() {
 
         const panes = [
@@ -133,9 +134,10 @@ export default class AddSim extends React.Component {
                                 {this.state.node?<Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
                                     <SimPreview  {...this.state.node}/>                 
                                 </Grid.Column>:null}
-
+                                
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 {this.state.node?<a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a>:null}
+                                {this.state.node?<p style = {{float:'right', paddingTop:'0.8rem'}}>{`Created by ${Meteor.users.findOne({_id: this.state.node.userId}).username}`}</p>:null}
                                 
                             </Grid>    
                             

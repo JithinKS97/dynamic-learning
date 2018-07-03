@@ -273,6 +273,7 @@ export default class LessonPlansDirectories extends Component {
                         />
                         <br/>
                         {this.state.isPublic?<TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} />:null}
+                        
                     </Modal.Description>
 
                 </Modal.Content>

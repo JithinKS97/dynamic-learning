@@ -23,7 +23,7 @@ const CommentBox = (props,) => {
 
                 <p>{props.comment.comment} </p>
                 <p>{momentNow.fromNow()}</p> 
-                <p>{props.comment.username}</p>                              
+                <p>{Meteor.users.findOne({_id: props.userId}).username}</p>                              
                 
             </Comment.Content>
         </Comment>        
