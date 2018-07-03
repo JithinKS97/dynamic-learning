@@ -43,6 +43,7 @@ export default class LessonPlansDirectories extends Component {
       isPublic:null,
       tags:[]
     }
+    
   }
 
   componentDidMount() {
@@ -150,6 +151,9 @@ export default class LessonPlansDirectories extends Component {
     })
   }
 
+    
+  
+
   render() {    
 
     const getNodeKey = ({ treeIndex }) => treeIndex;
@@ -198,6 +202,8 @@ export default class LessonPlansDirectories extends Component {
         }        
 
     }
+
+    
 
     return ( 
 

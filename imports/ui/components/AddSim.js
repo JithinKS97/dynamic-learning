@@ -21,6 +21,7 @@ export default class AddSim extends React.Component {
         }
         this.handleOpen.bind(this)
         this.handleClose.bind(this)
+        this.getUsername.bind(this)
     }
 
     componentDidMount() {
@@ -89,6 +90,16 @@ export default class AddSim extends React.Component {
         })
     }
 
+    getUsername() {
+
+        if(!this.state.node)
+            return
+
+        const user = Meteor.users.findOne({_id: this.state.node.userId})
+        if(user)
+            return user.username       
+    }
+
 
     render() {
 
@@ -141,7 +152,7 @@ export default class AddSim extends React.Component {
                                 
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 {this.state.node?<a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a>:null}
-                                {this.state.node && this.tab.state.activeIndex === 1?<p style = {{float:'right', paddingTop:'0.8rem'}}>{`Created by ${Meteor.users.findOne({_id: this.state.node.userId}).username}`}</p>:null}
+                                {this.state.node && this.tab.state.activeIndex === 1?<p style = {{float:'right', paddingTop:'0.8rem'}}>{`Created by ${this.getUsername()}`}</p>:null}
                                 
                             </Grid>    
                             
