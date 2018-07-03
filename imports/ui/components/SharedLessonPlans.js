@@ -16,7 +16,7 @@ export default class SharedLessonPlans extends React.Component {
         this.state = {
             lessonplans:[],
             lessonplan:null,
-            username:null
+            username:''
         }
         this.displayLessonPlans.bind(this)
     }

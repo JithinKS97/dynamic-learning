@@ -14,7 +14,7 @@ export default class CommentBox extends React.Component {
         super(props)
         this.momentNow = moment(this.props.comment.time)
         this.state = {
-            username:null
+            username:''
         }
 
         Tracker.autorun(()=>{

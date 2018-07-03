@@ -19,7 +19,7 @@ export default class AddSim extends React.Component {
         this.state = {
             isOpen: false,
             node:null,
-            username:null
+            username:''
         }
         this.handleOpen.bind(this)
         this.handleClose.bind(this)

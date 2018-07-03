@@ -20,7 +20,6 @@ export const validateNewUser = (user)=>{
 Meteor.methods({
   'getUsername'(_id) {
     const user = Meteor.users.findOne({_id})
-    console.log(user.username)
     if(user)
       return user.username
   }
