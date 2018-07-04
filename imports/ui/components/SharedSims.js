@@ -50,7 +50,7 @@ export default class SharedSims extends React.Component {
                         this.props.getNode(sim)
                     })
                 }}>
-                    <List.Content>    
+                    <List.Content style = {{paddingLeft:'0.8rem'}}>    
                         {sim.title}
                     </List.Content>
                 </List.Item>
@@ -62,6 +62,7 @@ export default class SharedSims extends React.Component {
     search(event, data) {
 
         Tracker.autorun(()=>{
+
             this.setState({sims:SimsIndex.search(data.value).fetch()})
         })        
     }
@@ -74,7 +75,7 @@ export default class SharedSims extends React.Component {
                     <Loader />
                 </Dimmer>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
-                <List selection verticalAlign='middle'>
+                <List  selection verticalAlign='middle'>
                     {this.displaySims()}
                 </List>
             </div>

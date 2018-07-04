@@ -2,10 +2,7 @@ import React from 'react'
 import { LessonPlansIndex } from '../../api/lessonplans'
 import { List, Modal,Button, Input, Dimmer, Loader } from 'semantic-ui-react'
 import LessonPlanViewer from './LessonPlanViewer'
-
 import FaCodeFork from 'react-icons/lib/fa/code-fork'
-
-
  
 export default class SharedLessonPlans extends React.Component {
 
@@ -60,7 +57,7 @@ export default class SharedLessonPlans extends React.Component {
                         })
                     })
                 }}>
-                    <List.Content onClick = {()=>{this.setState({lessonplan})}}>    
+                    <List.Content style = {{paddingLeft:'0.8rem'}} onClick = {()=>{this.setState({lessonplan})}}>    
                         {lessonplan.title}
                     </List.Content>
                 </List.Item>
@@ -130,7 +127,7 @@ export default class SharedLessonPlans extends React.Component {
                         <LessonPlanViewer _id = {this.getId.bind(this)()}/>
                         {this.state.lessonplan?<p style = {{paddingTop:'0.8rem', paddingLeft:'0.8rem', fontSize:'1.2rem'}}>{`Created by ${this.state.username}`}</p>:null}
                     </Modal.Content>
-               </Modal>
+                </Modal>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
                 <List style = {{width:'100%', height:'100%'}}  selection verticalAlign='middle'>
                     {this.displayLessonPlans()}
