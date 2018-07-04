@@ -1,11 +1,16 @@
 import React from 'react'
+import { Dimmer, Loader } from 'semantic-ui-react'
 
 
 export default class SimContainer extends React.Component{
 
     constructor(props){
 
-        super(props) 
+        super(props)
+
+        this.state = {
+            loading:true
+        }
         
     }
 
@@ -17,6 +22,10 @@ export default class SimContainer extends React.Component{
                 port 1 is the port in this window. On recieveing a message here, we call
                 handleMessage.
             */
+
+            this.setState({
+                loading:false
+            })
 
             this.channel = null;
             this.channel = new MessageChannel()
@@ -78,7 +87,9 @@ export default class SimContainer extends React.Component{
         return(
 
             <div className = 'sim'>
-                                
+                <Dimmer active = {this.state.loading}>
+                    <Loader/>
+                </Dimmer>            
                 {
                     this.props.src?
                         <div>

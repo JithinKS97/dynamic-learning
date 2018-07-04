@@ -24,3 +24,5 @@ underscore@1.0.10
 semantic:ui
 session
 easy:search
+accounts-google
+accounts-github
