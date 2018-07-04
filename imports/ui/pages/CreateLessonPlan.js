@@ -35,6 +35,7 @@ class CreateLessonPlan extends React.Component {
         this.lessonplanExists = false
 
         this.state = {
+            
             title:true,
             curSlide:0,
             slides: [],
