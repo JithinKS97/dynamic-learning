@@ -57,7 +57,7 @@ export default class SimPreview extends React.Component {
                     }}
                 
                 >
-                    <Dimmer inverted active = {this.state.loading}>
+                    <Dimmer active = {this.state.loading}>
                         <Loader/>
                     </Dimmer>
                     
