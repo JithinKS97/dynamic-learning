@@ -369,7 +369,7 @@ class LessonPlansDirectories extends Component {
                             }
                         >
                             <FaTrash size={17} color="black"/>
-
+                            
                         </button>
 
                         ]

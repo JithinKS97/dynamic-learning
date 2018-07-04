@@ -120,6 +120,7 @@ export default class SharedLessonPlans extends React.Component {
 
                             })
                         }}><FaCodeFork/>
+                        Fork
                         </Button>
                         
                         <Button onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>

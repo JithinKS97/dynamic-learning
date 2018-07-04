@@ -12,7 +12,7 @@ export const SimsIndex = new Index({
             // selector contains the default mongo selector that Easy Search would use
             let selector = this.defaultConfiguration().selector(searchObject, options, aggregation)
       
-            // modify the selector to only match documents where region equals "New York"
+            // modify the selector to only match documents
             selector.isPublic = true
             selector.isFile = true
       

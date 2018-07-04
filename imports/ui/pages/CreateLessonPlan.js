@@ -498,7 +498,6 @@ class CreateLessonPlan extends React.Component {
                             Login
                         </Menu.Item>:null}
 
-
                     </Menu>
                             
                 </div>
