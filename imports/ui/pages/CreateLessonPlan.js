@@ -35,7 +35,7 @@ class CreateLessonPlan extends React.Component {
         this.lessonplanExists = false
 
         this.state = {
-            title:null,
+            title:true,
             curSlide:0,
             slides: [],
             _id: '',
@@ -399,35 +399,6 @@ class CreateLessonPlan extends React.Component {
                 <Loader />
             </Dimmer>
 
-            <Modal size = 'tiny' open = {!!!this.state.title}>
-                <Modal.Header>
-                    Enter the title for the lessonplan
-                </Modal.Header>
-                    
-                <Modal.Content>
-                    <Modal.Description>
-                        <Form onSubmit = {()=>{
-                            
-                            if(!this.title.value)
-                                return
-                            
-                            this.setState({
-
-                                title:this.title.value
-                            })
-
-                        }}>
-                            <Form.Field>
-                                <label>Title</label>
-                                <input ref = { e => this.title = e}/>
-                            </Form.Field>
-                            <Form.Field>
-                                <Button type = 'submit'>Submit</Button>
-                            </Form.Field>                            
-                        </Form>
-                    </Modal.Description>
-                </Modal.Content>
-            </Modal>
 
             <Modal size= 'tiny' open = {this.state.createAccount}>
                 <Modal.Header>
@@ -532,6 +503,35 @@ class CreateLessonPlan extends React.Component {
                 </div>
             
             </div>
+            <Modal size = 'tiny' open = {!!!this.state.title}>
+                <Modal.Header>
+                    Enter the title for the lessonplan
+                </Modal.Header>
+                    
+                <Modal.Content>
+                    <Modal.Description>
+                        <Form onSubmit = {()=>{
+                            
+                            if(!this.title.value)
+                                return
+                            
+                            this.setState({
+
+                                title:this.title.value
+                            })
+
+                        }}>
+                            <Form.Field>
+                                <label>Title</label>
+                                <input ref = { e => this.title = e}/>
+                            </Form.Field>
+                            <Form.Field>
+                                <Button type = 'submit'>Submit</Button>
+                            </Form.Field>                            
+                        </Form>
+                    </Modal.Description>
+                </Modal.Content>
+            </Modal>
 
         </Segment>
 
