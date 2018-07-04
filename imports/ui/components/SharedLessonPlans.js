@@ -105,7 +105,7 @@ export default class SharedLessonPlans extends React.Component {
                         Preview
                         <div style = {{float:'right'}}>
 
-                        {this.state.lessonplan && Meteor.userId() !== this.state.lessonplan.userId?<Button onClick = {()=>{
+                        <Button onClick = {()=>{
 
                         const confirmation = confirm('Are you sure you want to fork this lesson?')
                                                     
@@ -120,7 +120,7 @@ export default class SharedLessonPlans extends React.Component {
 
                             })
                         }}><FaCodeFork/>
-                        </Button>:null}
+                        </Button>
                         
                         <Button onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>
                         </div>
