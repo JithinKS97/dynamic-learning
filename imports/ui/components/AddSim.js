@@ -141,7 +141,7 @@ export default class AddSim extends React.Component {
                                     <SimPreview  {...this.state.node}/>                 
                                 </Grid.Column>:null}
                                 
-                                {this.state.node?<Button style = {{marginLeft:'0.8rem'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
+                                {this.state.node?<Button style = {{marginLeft:'0.8rem', visibility:this.state.node?'visible':'hidden'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
                                 {this.state.node?<a className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a>:null}
                                 {this.state.node && this.tab.state.activeIndex === 1?<p style = {{paddingTop:'0.8rem'}}>{`Created by ${this.state.username}`}</p>:null}
                                 

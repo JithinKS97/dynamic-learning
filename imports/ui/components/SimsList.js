@@ -94,7 +94,7 @@ export default class simsList extends React.Component {
                                     
                                     bottom: false,
                                     bottomLeft: false,
-                                    bottomRight: true,
+                                    bottomRight: this.props.navVisibility?true:false,
                                     left: false,
                                     right: false,
                                     top: false,
