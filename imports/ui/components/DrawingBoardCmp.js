@@ -22,9 +22,6 @@ export default class DrawingBoardCmp extends React.Component {
               
     }
 
-
-
-
     render() {
 
         if(!this.props.toolbarVisible) {
