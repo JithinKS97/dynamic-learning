@@ -231,8 +231,8 @@ class LessonPlansDirectories extends Component {
                     </Modal.Description>
 
                     <Modal.Description style = {{padding:'0.8rem 0'}}>
-                        {!this.state.editable?<Label style = {{width:'15rem', textAlign:'center', marginTop:'0.8rem'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
-                        {this.state.editable?<input ref = {e => this.title = e} style = {{width:'15rem', padding:'0.8rem'}}/>:null}
+                        {!this.state.editable?<Label style = {{width:'16rem', textAlign:'center', marginTop:'0.8rem'}}>{this.state.node?<h2>{this.state.title}</h2>:null}</Label>:null}
+                        {this.state.editable?<input ref = {e => this.title = e} style = {{width:'16rem', padding:'0.8rem'}}/>:null}
                         <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'2rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
                         <br/>
                         <Checkbox
