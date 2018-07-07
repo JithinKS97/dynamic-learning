@@ -252,7 +252,7 @@ class LessonPlanViewer extends React.Component {
              <div className = 'createLessonPlan'>            
 
                 <div className = 'slides'>
-                    <h1>{this.state.curSlide}</h1>
+                    <h1>{this.state.curSlide+1}</h1>
                     <ListWithoutDelete showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                 </div>
 
