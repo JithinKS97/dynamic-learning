@@ -86,8 +86,8 @@ export default class Upload extends React.Component {
         e.preventDefault()
 
         const {src, linkToCode} = this.state
-        const w = '300px'
-        const h = '200px'
+        const w = '640px'
+        const h = '360px'
         const name = this.name.value
 
         if(src && name ) {           

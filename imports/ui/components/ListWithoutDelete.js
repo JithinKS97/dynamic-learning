@@ -1,6 +1,6 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
-import { Menu, Button} from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 
 const List = (props) => {
 
@@ -31,7 +31,7 @@ const List = (props) => {
                         key = {index} 
                         onClick = {()=>{props.saveChanges(undefined, index)}}                       
                     >
-                    {props.showTitle?slide.title:index}
+                    {props.showTitle?slide.title:index+1}
 
                     </Menu.Item>
                 )

@@ -6,7 +6,7 @@ import ListWithoutDelete from '../components/ListWithoutDelete'
 import { Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data';
-import {Dimmer, Loader, Segment, Modal, Form} from 'semantic-ui-react'
+import {Dimmer, Loader, Segment} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 

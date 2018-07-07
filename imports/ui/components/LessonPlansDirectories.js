@@ -125,7 +125,7 @@ class LessonPlansDirectories extends Component {
 
     const getNodeKey = ({ treeIndex }) => treeIndex;
     
-    const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
+    const canDrop = ({ node, nextParent }) => {
 
         /* To prevent a file to be added as a child of a file 
             and to prevent a directory to be added as a child of a file.
@@ -297,7 +297,7 @@ class LessonPlansDirectories extends Component {
             <div style={{ height: 400, padding:'1.6rem' }}>        
                 
                 <SortableTree
-                    onVisibilityToggle = {({treeData, node, expanded}) => {
+                    onVisibilityToggle = {({ node, expanded}) => {
                         Meteor.call('lessonplans.folder.visibilityChange', node._id, expanded)
                     }}
                     theme = {FileExplorerTheme}
@@ -318,7 +318,7 @@ class LessonPlansDirectories extends Component {
                         }             
                     }
 
-                    generateNodeProps={({ node, path }) => ({
+                    generateNodeProps={({ node }) => ({
                         buttons: [
 
                         <button

@@ -48,7 +48,7 @@ class SimsDirectories extends React.Component {
     
     render() {  
 
-        const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
+        const canDrop = ({ node, nextParent }) => {
 
             /* To prevent a file to be added as a child of a file 
                 and to prevent a directory to be added as a child of a file.
@@ -142,7 +142,7 @@ class SimsDirectories extends React.Component {
                     {Meteor.userId()?null:<h3>You need to login to add your own simulations</h3>}
 
                     <SortableTree
-                        onVisibilityToggle = {({treeData, node, expanded}) => {
+                        onVisibilityToggle = {({ node, expanded}) => {
                             Meteor.call('sims.folder.visibilityChange', node._id, expanded)
                         }}
                         theme= {FileExplorerTheme}
@@ -165,7 +165,7 @@ class SimsDirectories extends React.Component {
                     }
 
 
-                    generateNodeProps = {({ node, path }) => ({
+                    generateNodeProps = {({ node }) => ({
 
                         onClick: ()=>{
 

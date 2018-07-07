@@ -47,7 +47,7 @@ export default class SimPreview extends React.Component {
                     }}
                     
 
-                    onResize={(e, direction, ref, delta, position) => {                
+                    onResize={({ref}) => {                
 
                         this.setState({
                             

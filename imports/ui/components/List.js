@@ -30,7 +30,7 @@ const List = (props) => {
                          style = {{display:'flex', justifyContent:'space-between'}}                
                          key = {index}                        
                     >
-                        <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index}</Button>
+                        <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index+1}</Button>
 
                         {isOwner && !props.isPreview?<Button onClick = {()=>{
 

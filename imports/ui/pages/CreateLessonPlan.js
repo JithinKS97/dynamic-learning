@@ -429,7 +429,7 @@ class CreateLessonPlan extends React.Component {
 
                 <div style = {{margin:'0 0.8rem'}} className = 'slides'>
                     <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
-                    <h1>{this.state.curSlide}</h1>
+                    <h1>{this.state.curSlide+1}</h1>
                     <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                 </div>
 
@@ -545,13 +545,14 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     const loading = !lessonplansHandle.ready()
     let lessonplan, lessonplanExists
 
-    if(match.params._id === undefined)
-    {
+    if(match.params._id === undefined) {
+
         lessonplanExists = true
         const slides = []
         lessonplan = {slides, title:null}
     }
     else {
+        
         lessonplan = LessonPlans.findOne(match.params._id)
         lessonplanExists = !loading && !!lessonplan
     }
