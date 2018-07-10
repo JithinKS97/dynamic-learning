@@ -9,7 +9,7 @@ import { Sims } from '../../api/sims'
 import { Tab } from 'semantic-ui-react'
 import { Tracker } from 'meteor/tracker'
 import SharedLessonPlans from '../components/SharedLessonPlans'
-import { Grid, Button, Modal, Checkbox, Label } from 'semantic-ui-react'
+import { Grid, Button, Modal, Checkbox, Label, Header } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import FaCode from 'react-icons/lib/fa/code'
 import TagsInput from 'react-tagsinput'
@@ -80,11 +80,19 @@ export default class Dashboard extends React.Component {
 
        switch(option) {
             case 'lessonplans':
-                return <Tab panes = {panes}/>
+                return <div>
+                            <Header>Manage Lessonplans</Header>
+                            <Tab panes = {panes}/>
+                        </div>
+
             case 'requests':
                 return <RequestsList/>
+
             case 'uploadsim':
-                return <SimsDirectories height = {720} getNode = {this.getNode.bind(this)} isPreview = {false}/>
+                return <div>
+                            <Header>Manage simulations</Header>
+                            <SimsDirectories height = {720} getNode = {this.getNode.bind(this)} isPreview = {false}/>
+                        </div>
        }
     }
 

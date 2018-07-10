@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Requests } from '../../api/requests'
-import { List } from 'semantic-ui-react'
+import { List, Header } from 'semantic-ui-react'
 
 const RequestsList = (props) => {
 
@@ -28,9 +28,12 @@ const RequestsList = (props) => {
     }
 
     return(
-        <List style = {{height:'720px', marginTop:'2.4rem'}}  selection verticalAlign='middle'>
-            {renderRequests()}
-        </List>
+        <div>
+            <Header style = {{marginLeft:'2.4rem'}}>Requests</Header>
+            <List style = {{height:'720px', marginTop:'2.4rem'}}  selection verticalAlign='middle'>
+                {renderRequests()}
+            </List>            
+        </div>
     )
 
 
