@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Requests } from '../../api/requests'
+import { List } from 'semantic-ui-react'
 
 const RequestsList = (props) => {
 
@@ -11,13 +12,15 @@ const RequestsList = (props) => {
 
             if(request.requestTitle) {
                 return (
-                    
+                    <List.Item>
                         <Link key = {index} to={{ pathname: `/request/${request._id}`}} >
-                            <div>
-                                {request.requestTitle}
-                            </div>
+                            
+                                <List.Content style = {{color:'black', paddingLeft:'2.4rem'}}>                  
+                                    {request.requestTitle}                             
+                                </List.Content>
+                            
                         </Link>
-                    
+                    </List.Item>
                 )
             }
             
@@ -25,9 +28,9 @@ const RequestsList = (props) => {
     }
 
     return(
-        <ul>
+        <List style = {{height:'720px', marginTop:'2.4rem'}}  selection verticalAlign='middle'>
             {renderRequests()}
-        </ul>
+        </List>
     )
 
 

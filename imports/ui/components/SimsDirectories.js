@@ -137,7 +137,7 @@ class SimsDirectories extends React.Component {
 
                 </Modal>
 
-                <div style={{ height: 400, padding:'1.6rem' }}>
+                <div style={{ height: this.props.height, padding:'1.6rem' }}>
 
                     {Meteor.userId()?null:<h3>You need to login to add your own simulations</h3>}
 
