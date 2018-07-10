@@ -34,7 +34,7 @@ export default class CommentForm extends React.Component {
     render() {
         return (
        
-                <Form onSubmit = {this.postComment.bind(this)}>
+                <Form style = {{maxWidth:'650px'}} onSubmit = {this.postComment.bind(this)}>
                     <Form.Field>
                         <textarea rows = '4' placeholder = 'Comment' ref = {e => this.comment = e}/>
                     </Form.Field>

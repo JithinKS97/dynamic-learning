@@ -21,7 +21,7 @@ const CommentsList  = (props) => {
 
     return (
         <div>
-            <Comment.Group> 
+            <Comment.Group > 
                 <Header as='h3' dividing>
                     Comments
                 </Header>

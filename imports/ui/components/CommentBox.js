@@ -31,7 +31,7 @@ export default class CommentBox extends React.Component {
     render() {
         return (
             <Comment style = {{padding:'0.8rem', backgroundColor:'#eeeeee'}}>
-                <Comment.Content>
+                <Comment.Content style = {{width:'100%'}}>
 
                         {this.props.comment.userId == Meteor.userId()?<Button style = {{float:'right', padding:'0.5rem'}} onClick = {() =>{
 
