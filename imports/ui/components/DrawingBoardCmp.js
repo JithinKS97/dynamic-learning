@@ -34,3 +34,4 @@ export default class DrawingBoardCmp extends React.Component {
         return(<div ref = {e => this.container = e} id="container"></div>)
     }
 }
+

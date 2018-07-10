@@ -57,7 +57,7 @@ export default class SharedLessonPlans extends React.Component {
                         })
                     })
                 }}>
-                    <List.Content style = {{paddingLeft:'0.8rem'}} onClick = {()=>{this.setState({lessonplan})}}>    
+                    <List.Content style = {{paddingLeft:'2.4rem'}} onClick = {()=>{this.setState({lessonplan})}}>    
                         {lessonplan.title}
                     </List.Content>
                 </List.Item>

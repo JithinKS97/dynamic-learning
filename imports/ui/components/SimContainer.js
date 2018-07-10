@@ -49,37 +49,34 @@ export default class SimContainer extends React.Component{
            to the data property of the simulation.
            If the opration property is load, the data stored is send back.
         */
+        
+        let {slides, curSlide, index} = this.props
 
-        if(!this.props.isPreview)
-        {
-            let {slides, curSlide, index} = this.props
-
-            if(e.data.operation == 'save') {
-                console.log('data to be saved:',e.data.data)
-                slides[curSlide].iframes[index].data = e.data.data
-                this.props.saveChanges(slides, undefined)
-            }
-            else if(e.data.operation == 'load')
-            {
-                
-                this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
-            }
-            else if(e.data.operation == 'dom') {
-                console.log(e.data.data)
-            }
-            else if(e.data.operation == 'keyPress') {
-                if(e.data.Key == 'a')
-                    this.props.undo()
-                else if(e.data.Key == 'x')
-                    this.props.next()
-                else if(e.data.Key == 'z')
-                    this.props.previous()
-                else if(e.data.Key == 's')
-                    this.props.save()
-                else if(e.data.Key == 'd')
-                    this.props.interact()
-            }
+        if(e.data.operation == 'save') {
+            console.log('data to be saved:',e.data.data)
+            slides[curSlide].iframes[index].data = e.data.data
+            this.props.saveChanges(slides, undefined)
         }
+        else if(e.data.operation == 'load') {
+            
+            this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
+        }
+        else if(e.data.operation == 'dom') {
+            console.log(e.data.data)
+        }
+        else if(e.data.operation == 'keyPress') {
+            if(e.data.Key == 'a')
+                this.props.undo()
+            else if(e.data.Key == 'x')
+                this.props.next()
+            else if(e.data.Key == 'z')
+                this.props.previous()
+            else if(e.data.Key == 's')
+                this.props.save()
+            else if(e.data.Key == 'd')
+                this.props.interact()
+        }
+        
     }
 
     render(){

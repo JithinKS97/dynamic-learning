@@ -108,7 +108,8 @@ export default class AddSim extends React.Component {
                     
                     open={this.state.isOpen}
                     onClose={this.handleClose}
-                    size='fullscreen'    
+                    size='fullscreen' 
+                    
                 >
 
                     <Modal.Header>

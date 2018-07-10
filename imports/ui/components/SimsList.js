@@ -118,7 +118,6 @@ export default class simsList extends React.Component {
                                 <div style ={{display:'flex', flexDirection:'row'}}>
 
                                     <SimContainer
-                                        isPreview = {false}
                                         {...this.props} 
                                         index = {index} 
                                         src = {iframe.src}

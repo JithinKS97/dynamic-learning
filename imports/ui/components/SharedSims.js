@@ -50,7 +50,7 @@ export default class SharedSims extends React.Component {
                         this.props.getNode(sim)
                     })
                 }}>
-                    <List.Content style = {{paddingLeft:'0.8rem'}}>    
+                    <List.Content style = {{paddingLeft:'2.4rem'}}>    
                         {sim.title}
                     </List.Content>
                 </List.Item>
