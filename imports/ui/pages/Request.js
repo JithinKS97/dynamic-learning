@@ -10,16 +10,31 @@ import { withTracker } from 'meteor/react-meteor-data';
 import SimPreview from '../components/SimPreview'
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaCode from 'react-icons/lib/fa/code'
-
-
 import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment, Menu} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+
+/* This component renders the page where the teachers post the requests for the new simulation 
+    and the teachers and the other users have discussions about the simulations that they are trying to make.
+*/
 
 class Request extends React.Component {
 
     constructor(props) {
 
         super(props)
+
+        /*
+            If there are no topics, some elements need not be displayed, show variable is used to hide them.
+            slides holds the contents of each slides. Each slide constitute the new request topics, the comments
+            of each users and the simulations uploaded by them.
+
+            curSlide holds the number of the current slide that is displayed.
+
+            Iniitialized is set to true after the data is fetched from the database and set to the state.
+            See the componentDidUpdate lifecycle method.
+
+            selectedSim holds the sim that is currently selected and displayed inside the modal.
+         */
 
         this.state = {
             show:false,
@@ -41,8 +56,8 @@ class Request extends React.Component {
 
             const request = this.props.request
 
-            if(request.slides.length == 0)
-            {
+            if(request.slides.length == 0) {
+
                 request.slides[0] = {
                     title:'',
                     comments:[],
@@ -172,7 +187,7 @@ class Request extends React.Component {
     pushSim(title, src, w, h, linkToCode) {
         const { slides, curSlide }  = this.state
 
-        const toPush = {
+        const objectToPush = {
             userId:Meteor.userId(),
             src,
             w,
@@ -183,7 +198,7 @@ class Request extends React.Component {
             linkToCode
         }
 
-        slides[curSlide].iframes.push(toPush)
+        slides[curSlide].iframes.push(objectToPush)
         this.setState({
             slides
         })

@@ -20,6 +20,14 @@ export default class Signup extends React.Component {
 
     componentDidMount() {
 
+
+        /* If the createlessonplan is opened without logging in and the user requires to sign up,
+            The slides are stored to meteor sessions with the title stateToSave.
+            It is obtained from here.
+
+            If there is no value, returned, else the slides and the title is set to the state.
+        */
+
         const state = Session.get('stateToSave')
         
         if(!state)
@@ -63,6 +71,11 @@ export default class Signup extends React.Component {
                     if(!this.state.slides) {   
                         return
                     }
+
+                    /*
+                        The values in the states are used to create a new lessonplan and the session variable
+                        is set to null.
+                    */
 
                     Meteor.call('lessonplans.insert', this.state.title,(err, _id)=>{
 

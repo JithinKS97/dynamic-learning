@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 
-import { Button, Form, Card } from 'semantic-ui-react'
+import { Button, Form, Card, Image } from 'semantic-ui-react'
 
 import 'semantic-ui-css/semantic.min.css';
 
@@ -19,6 +19,13 @@ export default class Login extends React.Component {
     }
 
     componentDidMount() {
+
+        /* If the createlessonplan is opened without logging in and the user requires to login,
+            The slides are stored to meteor sessions with the title stateToSave.
+            It is obtained from here.
+
+            If there is no value, returned, else the slides and the title is set to the state.
+        */
 
         const state = Session.get('stateToSave')
         
@@ -51,16 +58,20 @@ export default class Login extends React.Component {
                     error :''
                 },()=>{
 
-                    if(!this.state.slides) {
-                        return
-                    }
-
-
-                    Meteor.call('lessonplans.insert', this.state.title, (err, _id)=>{
+                        if(!this.state.slides) {
+                            return
+                        }
                         
-                        Meteor.call('lessonplans.update', _id, this.state.slides)
-                        Session.set('stateToSave', null)
-                    })                 
+                        /*
+                            The values in the states are used to create a new lessonplan and the session variable
+                            is set to null.
+                        */
+
+                        Meteor.call('lessonplans.insert', this.state.title, (err, _id)=>{
+                            
+                            Meteor.call('lessonplans.update', _id, this.state.slides)
+                            Session.set('stateToSave', null)
+                        })                 
 
                 })
             }
@@ -72,6 +83,7 @@ export default class Login extends React.Component {
         return (
             <div className = 'boxed-view'>
                 <Card>
+
                     <Card.Content>
                         <Card.Header>Login</Card.Header>
                     </Card.Content>

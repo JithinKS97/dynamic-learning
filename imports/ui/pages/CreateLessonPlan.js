@@ -13,11 +13,8 @@ import 'semantic-ui-css/semantic.min.css';
 
 
 /* This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
-    is composed of an array of slides. Each slide will contain a note and array of simulations.
+    is composed of an array of slides. Each slide contains a note of type string and array of simulations.
     The changes need to be saved explicitly by clicking the save button for updating the database.
-
-    curSlide is for keeping track of the current slide. _id is the id of the lessonplan
-    document.
 */
 
 
@@ -26,22 +23,24 @@ class CreateLessonPlan extends React.Component {
     constructor(props) {
 
         super(props)
-
-        /*When isInteractEnabled is true, the pointer events of the canvas are de activated
-          so that we can interact with the simulations.
-        */
         this.undoArray= []
         this.curPosition= []
         this.lessonplanExists = false
 
         this.state = {
+
+            /*Title holds the title of the lessonplan. CurSlide holds the current slide on which we are in.
+                _id holds the id of the lessonplan. Initialzed is set to true once data is fetched from the
+                database and is filled in the state. loginNotification becomes true when save button is pressed
+                and the user is not logged in. Checked holds the interact checkbox value.
+            */
             
             title:true,
             curSlide:0,
             slides: [],
             _id: '',
             initialized:false,
-            createAccount:false,
+            loginNotification:false,
             redirectToLogin:false,
             checked: false
         }
@@ -52,6 +51,10 @@ class CreateLessonPlan extends React.Component {
     }
 
     handleKeyDown(event){
+
+        /*
+            This function handles the shortcut key functionalities.
+         */
 
 
         if(event.key == 'z' || event.key == 'Z' ) {
@@ -88,12 +91,12 @@ class CreateLessonPlan extends React.Component {
 
         /* board:reset and board:stopDrawing are events associated with the drawing
            board. They are triggered whenever the we press the reset button or stop
-           the drawing. Whenever these events are triggered, the changed method is
+           the drawing. Whenever these events are triggered, the onChange method is
            called. See the definition below.
         */
 
-        this.db.ev.bind('board:reset', this.changed.bind(this));
-        this.db.ev.bind('board:stopDrawing', this.changed.bind(this));
+        this.db.ev.bind('board:reset', this.onChange.bind(this));
+        this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
 
         window.addEventListener("keydown", this.handleKeyDown, false);
 
@@ -137,7 +140,7 @@ class CreateLessonPlan extends React.Component {
         window.removeEventListener("keydown", this.handleKeyDown, false)
     }
 
-    changed() {
+    onChange() {
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
             Here we retrieve the current slide no. and note from the states. The notes are
@@ -197,9 +200,8 @@ class CreateLessonPlan extends React.Component {
     previous() {
 
         /*
-            If the current slide is not the beggining slide, Undo stack is cleared.
-            The current slide no. is decremented and the notes of that particular
-            slide is set to the board.
+            If the current slide is not the beggining slide, The current slide no. is decremented
+            and the notes of that particular slide is set to the board.
         */
 
        let {curSlide, slides} = this.state
@@ -236,9 +238,11 @@ class CreateLessonPlan extends React.Component {
         */
 
         this.setState({
+
             curSlide:0,
             slides:[]
         },()=>{
+
             const { slides } = this.state
             this.pushSlide(slides)
             this.db.reset({ webStorage: false, history: true, background: true })
@@ -247,12 +251,16 @@ class CreateLessonPlan extends React.Component {
 
     save() {
 
+        /* This function is intended for saving the slides to the database.
+            If not logged in, user is asked to login first.
+        */
+
         if(this.addSim.state.isOpen)
             return
 
         if(!Meteor.userId()) { 
 
-            this.setState({createAccount:true})
+            this.setState({loginNotification:true})
         }
         else {
 
@@ -266,11 +274,12 @@ class CreateLessonPlan extends React.Component {
 
     saveChanges(slides, curSlide) {
 
-        /* This function is used in multiple places to save the changes. Depending upon
-           the change made, the changes are saved looking upon arguments given when the
+        /* This function is used in multiple places to save the changes (not in the databse, but 
+            in the react state).
+           
+           Depending upon the change made, the changes are saved looking upon arguments given when the
            function was called.
         */
-
         
 
         if(slides == undefined) {
@@ -328,9 +337,9 @@ class CreateLessonPlan extends React.Component {
 
     deleteSim(index) {
 
-        /* This function decides what to do when cross button is pressed in the
-           simulation. The simulation is deleted from the iframes array of the
-           current slide and the changes are saved.
+        /* This function decides what to do when cross button in the simulatin is pressed.
+            The simulation is deleted from the iframes array of the
+            current slide and the changes are saved.
         */
 
         const {slides, curSlide} = this.state
@@ -341,6 +350,12 @@ class CreateLessonPlan extends React.Component {
     }
 
     interact() {
+
+      /*
+        To interact with the simulation, interact should be enabled which disables the pointer events in the canvas,
+         so that when we interact with the simulation, no drawings are made. Unchecking the interact, unsets the
+         pointer events.        
+       */
 
       if(this.addSim.state.isOpen)
         return
@@ -376,14 +391,7 @@ class CreateLessonPlan extends React.Component {
 
     headToRequestPage() {
 
-        if(!Meteor.userId()){
-
-            this.setState({createAccount:true})
-        }            
-        else {
-
-            this.setState({redirectToRequest:true})
-        }
+        this.setState({redirectToRequest:true})
     }
 
     render() {
@@ -394,146 +402,147 @@ class CreateLessonPlan extends React.Component {
         }
 
         return (
-        <Segment style = {{padding:0, margin:0}}>
 
-            <Dimmer active = {!this.state.initialized}>
-                <Loader />
-            </Dimmer>
+            <Segment style = {{padding:0, margin:0}}>
 
+                <Dimmer active = {!this.state.initialized}>
+                    <Loader />
+                </Dimmer>
 
-            <Modal size= 'tiny' open = {this.state.createAccount}>
-                <Modal.Header>
-                    You need to login to save changes
-                    <Button style = {{float:'right'}} onClick = {()=>{
-                        this.setState({createAccount:false})
-                    }}>X</Button>
-                </Modal.Header>
-                <Modal.Content>
-                    <Modal.Description style = {{textAlign:'center'}}>
-                 
-                                <Button onClick = {()=>{
-                                    
-                                    Session.set('stateToSave', this.state)
-
-                                    this.setState({redirectToLogin:true})
-
-                                }} style = {{marginTop:'1.6rem'}}>Login</Button>
-                   
-          
-                    </Modal.Description>
-                </Modal.Content>
-            </Modal>
-            
-
-            <div className = 'createLessonPlan'>            
-
-                <div style = {{margin:'0 0.8rem'}} className = 'slides'>
-                    <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
-                    <h1>{this.state.curSlide+1}</h1>
-                    <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                </div>
-
-                <div className = 'board'>
-                    <SimsList
-                        navVisibility = {true}
-                        isRndRequired = {true}
-                        saveChanges = {this.saveChanges.bind(this)}
-                        delete = {this.deleteSim.bind(this)}
-                        {...this.state}
-                        
-                        next = {this.next.bind(this)}
-                        previous = {this.previous.bind(this)}
-                        save = {this.save.bind(this)}
-                        interact = {this.interact.bind(this)}
-                        undo = {this.undo.bind(this)}
-                    />                   
-                    <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>                   
-                </div>
-                
-                <div style = {{marginLeft:'0.8rem'}} className = 'menu'>
-                
-                    <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                <Modal size= 'tiny' open = {this.state.loginNotification}>
+                    <Modal.Header>
+                        You need to login to save changes
+                        <Button style = {{float:'right'}} onClick = {()=>{
+                            this.setState({loginNotification:false})
+                        }}>X</Button>
+                    </Modal.Header>
+                    <Modal.Content>
+                        <Modal.Description style = {{textAlign:'center'}}>
                     
-                    <Menu icon vertical>                
-
-                    <Menu.Item link>                    
-                            <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
-                        </Menu.Item>        
-
-                        {Meteor.userId()?
-                            <Link to = '/dashboard/lessonplans'><Menu.Item link>Dashboard</Menu.Item></Link>
-                        :null}
-
-                        {!!Meteor.userId()?
-                            <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request</Menu.Item></Link>
-                        :null}
-                        
-
-                        <Menu.Item onClick = {()=>{
-                            const confirmation = confirm('Are you sure you want to reset all?')
-                            if(confirmation == true)
-                            this.reset()
-                        }}>
-                            Reset
-                        </Menu.Item>
-                        
-                        <Menu.Item onClick = {()=>{this.addSim.addSim()}}>
-                            Add simulation
-                        </Menu.Item>
-
-                        <Menu.Item onClick = {()=>{this.undo()}}>
-                            Undo
-                        </Menu.Item>
-
-                        <Menu.Item onClick = {()=>{this.save()}}>
-                            Save
-                        </Menu.Item>
-
-                        {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
-
+                            <Button onClick = {()=>{
+                                
                                 Session.set('stateToSave', this.state)
 
-                                this.setState({redirectToLogin:true}
-                            )}}>
-                            Login
-                        </Menu.Item>:null}
+                                this.setState({redirectToLogin:true})
 
-                    </Menu>
-                            
-                </div>
-            
-            </div>
-            <Modal size = 'tiny' open = {!!!this.state.title}>
-                <Modal.Header>
-                    Enter the title for the lessonplan
-                </Modal.Header>
+                            }} style = {{marginTop:'1.6rem'}}>Login</Button>
                     
-                <Modal.Content>
-                    <Modal.Description>
-                        <Form onSubmit = {()=>{
+            
+                        </Modal.Description>
+                    </Modal.Content>
+                </Modal>
+                
+
+                <div className = 'createLessonPlan'>            
+
+                    <div style = {{margin:'0 0.8rem'}} className = 'slides'>
+                        <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
+                        <h1>{this.state.curSlide+1}</h1>
+                        <List showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                    </div>
+
+                    <div className = 'board'>
+                        <SimsList
+                        
+                            navVisibility = {true}
+                            isRndRequired = {true}
+                            saveChanges = {this.saveChanges.bind(this)}
+                            delete = {this.deleteSim.bind(this)}
+                            {...this.state}
                             
-                            if(!this.title.value)
-                                return
+                            next = {this.next.bind(this)}
+                            previous = {this.previous.bind(this)}
+                            save = {this.save.bind(this)}
+                            interact = {this.interact.bind(this)}
+                            undo = {this.undo.bind(this)}
+                        />                   
+                        <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>                   
+                    </div>
+                    
+                    <div style = {{marginLeft:'0.8rem'}} className = 'menu'>
+                    
+                        <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                        
+                        <Menu icon vertical>                
+
+                            <Menu.Item link>                    
+                                <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
+                            </Menu.Item>        
+
+                            {Meteor.userId()?
+                                <Link to = '/dashboard/lessonplans'><Menu.Item link>Dashboard</Menu.Item></Link>
+                            :null}
+
+                            {!!Meteor.userId()?
+                                <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request</Menu.Item></Link>
+                            :null}
                             
-                            this.setState({
 
-                                title:this.title.value
-                            })
+                            <Menu.Item onClick = {()=>{
+                                    const confirmation = confirm('Are you sure you want to reset all?')
+                                    if(confirmation == true)
+                                    this.reset()
+                                }}>
+                                Reset
+                            </Menu.Item>
+                            
+                            <Menu.Item onClick = {()=>{this.addSim.addSim()}}>
+                                Add simulation
+                            </Menu.Item>
 
-                        }}>
-                            <Form.Field>
-                                <label>Title</label>
-                                <input ref = { e => this.title = e}/>
-                            </Form.Field>
-                            <Form.Field>
-                                <Button type = 'submit'>Submit</Button>
-                            </Form.Field>                            
-                        </Form>
-                    </Modal.Description>
-                </Modal.Content>
-            </Modal>
+                            <Menu.Item onClick = {()=>{this.undo()}}>
+                                Undo
+                            </Menu.Item>
 
-        </Segment>
+                            <Menu.Item onClick = {()=>{this.save()}}>
+                                Save
+                            </Menu.Item>
+
+                            {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
+
+                                    Session.set('stateToSave', this.state)
+
+                                    this.setState({redirectToLogin:true}
+                            )}}>
+                                Login
+                            </Menu.Item>:null}
+
+                        </Menu>
+                                
+                    </div>
+                
+                </div>
+                <Modal size = 'tiny' open = {!!!this.state.title}>
+                    <Modal.Header>
+                        Enter the title for the lessonplan
+                    </Modal.Header>
+                        
+                    <Modal.Content>
+                        <Modal.Description>
+                            <Form onSubmit = {()=>{
+                                
+                                if(!this.title.value)
+                                    return
+                                
+                                this.setState({
+
+                                    title:this.title.value
+                                })
+
+                            }}>
+                                <Form.Field>
+                                    <label>Title</label>
+                                    <input ref = { e => this.title = e}/>
+                                </Form.Field>
+                                <Form.Field>
+                                    <Button type = 'submit'>Submit</Button>
+                                </Form.Field>                            
+                            </Form>
+                        </Modal.Description>
+                    </Modal.Content>
+                </Modal>
+
+            </Segment>
 
         )
     }
