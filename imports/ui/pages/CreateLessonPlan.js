@@ -324,7 +324,7 @@ class CreateLessonPlan extends React.Component {
               $('canvas')[0].style.height=$('#container')[0].style.height;
               $('canvas')[0].height=window.innerHeight-28;
               this.db.reset();
-                this.db.setImg(this.state.slides[this.state.curSlide].note)
+              this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
 

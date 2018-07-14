@@ -92,7 +92,7 @@ class LessonPlanViewer extends React.Component {
                     this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
                     $('#container')[0].style.height=(window.innerHeight+this.pageCount*300)+'px';
                     $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=1080+this.pageCount*300;
+                    $('canvas')[0].height=window.innerHeight+this.pageCount*300;
                     this.db.reset('0');
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
