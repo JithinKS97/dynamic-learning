@@ -19,7 +19,7 @@ export default class DrawingBoardCmp extends React.Component {
             ],
             webStorage: false
           });
-              
+
     }
 
     render() {
@@ -28,10 +28,9 @@ export default class DrawingBoardCmp extends React.Component {
 
             if($('.drawing-board-controls').length>0) {
                 $('.drawing-board-controls')[0].style.visibility = 'hidden'
-            }   
-        }       
+            }
+        }
 
         return(<div ref = {e => this.container = e} id="container"></div>)
     }
 }
-

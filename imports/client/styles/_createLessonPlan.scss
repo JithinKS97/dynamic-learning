@@ -3,12 +3,12 @@
     display: flex;
     flex-direction: row;
     height:100vh;
-}
-  
+}  
+
 .menu {
-    
+
     flex:0.1;
-    
+
 }
 
 .menu__container {
@@ -21,13 +21,13 @@
 .board {
 
     flex:0.8;
-    
+
 }
 
 .board-preview {
 
     flex:0.9;
-    
+
 }
 
 .slides {
