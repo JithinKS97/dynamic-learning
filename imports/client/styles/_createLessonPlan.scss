@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: row;
     height:100vh;
+    overflow:hidden;
 }  
 
 .menu {
@@ -21,13 +22,15 @@
 .board {
 
     flex:0.8;
+    overflow-y:auto;
 
 }
 
 .board-preview {
 
     flex:0.9;
-
+    overflow-y:auto;
+    overflow-x:hidden;
 }
 
 .slides {

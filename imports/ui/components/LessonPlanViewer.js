@@ -32,6 +32,7 @@ class LessonPlanViewer extends React.Component {
         this.undoArray= []
         this.curPosition= []
         this.lessonplanExists = false
+        this.pageCount=0;
 
         this.state = {
             title:null,
@@ -88,6 +89,11 @@ class LessonPlanViewer extends React.Component {
                     this.db.reset({ webStorage: false, history: true, background: true })
                 }
                 else {
+                    this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                    $('#container')[0].style.height=(window.innerHeight+this.pageCount*300)+'px';
+                    $('canvas')[0].style.height=$('#container')[0].style.height;
+                    $('canvas')[0].height=1080+this.pageCount*300;
+                    this.db.reset('0');
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
             })
