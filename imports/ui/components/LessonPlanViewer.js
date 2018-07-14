@@ -6,7 +6,7 @@ import ListWithoutDelete from '../components/ListWithoutDelete'
 import { Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data';
-import {Dimmer, Loader, Segment} from 'semantic-ui-react'
+import { Dimmer, Loader, Segment } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 
@@ -165,16 +165,23 @@ class LessonPlanViewer extends React.Component {
 
     saveChanges(slides, curSlide) {
 
-        /* This function is used in multiple places to save the changes. Depending upon
-           the change made, the changes are saved looking upon arguments given when the
-           function was called.
-        */
+        /* This function is used in multiple places to save the changes (not in the databse, but
+            in the react state).
 
+           Depending upon the change made, the changes are saved looking upon arguments given when the
+           function was called.
+        */        
 
         if(slides == undefined) {
+
             this.setState({
                 curSlide
             },()=>{
+                this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                $('#container')[0].style.height=(window.innerHeight-28+this.pageCount*300)+'px';
+                $('canvas')[0].style.height=$('#container')[0].style.height;
+                $('canvas')[0].height=window.innerHeight-28+this.pageCount*300;
+                this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
@@ -189,7 +196,11 @@ class LessonPlanViewer extends React.Component {
                 slides,
                 curSlide
             },()=>{
-                this.db.setImg(this.state.slides[this.state.curSlide].note)
+              $('#container')[0].style.height=window.innerHeight-28+'px';
+              $('canvas')[0].style.height=$('#container')[0].style.height;
+              $('canvas')[0].height=window.innerHeight-28;
+              this.db.reset();
+              this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
 
