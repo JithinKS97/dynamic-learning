@@ -538,6 +538,25 @@ class CreateLessonPlan extends React.Component {
                                 Increase Canvas
                             </Menu.Item>
 
+                            <Menu.Item onClick = {()=>{
+                              if (this.pageCount==0){
+                                alert("Canvas size cannot be decreased further!");
+                                return;
+                              }
+                              var temp=this.db.getImg();
+                              this.pageCount-=1;
+                              $('canvas')[0].style.height=($('canvas')[0].height-300).toString()+'px';
+                              $('canvas')[0].height-=300;
+                              $('#container')[0].style.height=$('canvas')[0].style.height;
+                              this.db.reset('0');
+                              this.db.setImg(temp);
+                              var slides = this.state.slides;
+                              slides[this.state.curSlide].pageCount=this.pageCount;
+                              this.setState({slides});
+                            }}>
+                                Decrease Canvas
+                            </Menu.Item>
+
                             {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
 
                                     Session.set('stateToSave', this.state)
