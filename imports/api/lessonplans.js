@@ -4,7 +4,7 @@ import { Requests} from './requests'
 import SimpleSchema from 'simpl-schema'
 import moment from 'moment'
 import { Index, MongoDBEngine } from 'meteor/easy:search'
- 
+
 export const LessonPlans = new Mongo.Collection('lessonplans')
 
 export const LessonPlansIndex = new Index({
@@ -14,15 +14,15 @@ export const LessonPlansIndex = new Index({
         selector: function (searchObject, options, aggregation) {
             // selector contains the default mongo selector that Easy Search would use
             let selector = this.defaultConfiguration().selector(searchObject, options, aggregation)
-      
+
             // modify the selector to only match documents
             selector.isPublic = true
             selector.isFile = true
-      
+
             return selector
         }
     })
-    
+
 })
 
 if(Meteor.isServer) {
@@ -32,7 +32,7 @@ if(Meteor.isServer) {
     })
 
     Meteor.publish('lessonplans.public',function(){
-        
+
         return LessonPlans.find({isPublic:true})
     })
 }
@@ -53,7 +53,7 @@ Meteor.methods({
                 So it is given the same id as the Lessonplan document, docs is the
                 id of the inserted LessonPlan document.
             */
-                        
+
             title,
             slides:[],
             userId:this.userId,
@@ -67,9 +67,9 @@ Meteor.methods({
 
             Requests.insert({
 
-                userId:this.userId, 
-                _id:docs, 
-                slides:[], 
+                userId:this.userId,
+                _id:docs,
+                slides:[],
                 requestTitle:'',
                 updatedAt: moment().valueOf()
             })
@@ -88,8 +88,8 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized')
         }
 
-        return LessonPlans.insert({ 
-            
+        return LessonPlans.insert({
+
             userId:this.userId,
             title,
             isFile:false,
@@ -99,7 +99,7 @@ Meteor.methods({
 
         })
     },
-    
+
 
     'lessonplans.remove'(_id) {
 
@@ -119,7 +119,7 @@ Meteor.methods({
     },
 
     'lessonplans.directoryChange'(_id, parent_id) {
-        
+
         LessonPlans.update({_id}, {$set:{parent_id}})
     },
 
@@ -152,6 +152,11 @@ Meteor.methods({
                 optional:true
             },
 
+            pageCount: {
+              type: Number,
+              optional: true
+            },
+
             iframes: {
                 type:Array,
                 optional: true,
@@ -161,18 +166,17 @@ Meteor.methods({
 
 
         }).validate(slides)
-        
+
         LessonPlans.update({_id, userId:this.userId}, {$set:{slides, updatedAt: moment().valueOf()}})
     },
 
     'lessonplans.updateTitle'(_id, title) {
-        
+
         LessonPlans.update({_id, userId:this.userId}, {$set:{title, updatedAt: moment().valueOf()}})
     },
 
     'lessonplans.visibilityChange'(_id, isPublic) {
-        
+
         LessonPlans.update({_id}, {$set:{isPublic}})
     },
 })
-

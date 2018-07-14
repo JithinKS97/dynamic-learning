@@ -34,7 +34,7 @@ class CreateLessonPlan extends React.Component {
                 database and is filled in the state. loginNotification becomes true when save button is pressed
                 and the user is not logged in. Checked holds the interact checkbox value.
             */
-            
+
             title:true,
             curSlide:0,
             slides: [],
@@ -42,9 +42,9 @@ class CreateLessonPlan extends React.Component {
             initialized:false,
             loginNotification:false,
             redirectToLogin:false,
-            checked: false
+            checked: false,
         }
-
+        this.pageCount=0;
         this.pushSlide.bind(this)
         this.save.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -76,9 +76,9 @@ class CreateLessonPlan extends React.Component {
         }
 
         if(event.key == 'd' || event.key == 'D') {
-           
+
             this.interact()
-            
+
         }
     }
 
@@ -94,7 +94,7 @@ class CreateLessonPlan extends React.Component {
            the drawing. Whenever these events are triggered, the onChange method is
            called. See the definition below.
         */
-
+        this.canvasSize=$('canvas')[0].height;
         this.db.ev.bind('board:reset', this.onChange.bind(this));
         this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
 
@@ -108,7 +108,7 @@ class CreateLessonPlan extends React.Component {
         if(!this.state.initialized && this.props.lessonplanExists) {
 
             const lessonplan = this.props.lessonplan
-            
+
             if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
 
                 this.undoArray = lessonplan.slides.map((slide) => {
@@ -116,7 +116,7 @@ class CreateLessonPlan extends React.Component {
                     this.curPosition.push(0);
                     return [slide.note];
                 });
-            }     
+            }
 
             this.setState({
                 ...lessonplan,
@@ -129,6 +129,11 @@ class CreateLessonPlan extends React.Component {
                     this.db.reset({ webStorage: false, history: true, background: true })
                 }
                 else {
+                    this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                    $('#container')[0].style.height=(window.innerHeight+this.pageCount*300)+'px';
+                    $('canvas')[0].style.height=$('#container')[0].style.height;
+                    $('canvas')[0].height=window.innerHeight+this.pageCount*300;
+                    this.db.reset('0');
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
             })
@@ -146,10 +151,14 @@ class CreateLessonPlan extends React.Component {
             Here we retrieve the current slide no. and note from the states. The notes are
             updated and stored back to the state.
         */
+        if(arguments[0][0]=='0')
+          return;
+        console.log(arguments);
         const {curSlide, slides} = this.state
 
         const note = this.db.getImg()
         slides[curSlide].note = note
+        slides[curSlide].pageCount=this.pageCount;
 
         if(this.undoArray[curSlide]){
           this.undoArray[curSlide].push(note);
@@ -187,7 +196,7 @@ class CreateLessonPlan extends React.Component {
     addNewSlide(e) {
 
         let {curSlide, slides} = this.state
-
+        this.pageCount=0
         this.pushSlide(slides)
             curSlide = slides.length-1
             this.setState({
@@ -220,7 +229,8 @@ class CreateLessonPlan extends React.Component {
 
         const newSlide = {
             note: '',
-            iframes: []
+            iframes: [],
+            pageCount:0
         }
 
         slides.push(newSlide)
@@ -258,7 +268,7 @@ class CreateLessonPlan extends React.Component {
         if(this.addSim.state.isOpen)
             return
 
-        if(!Meteor.userId()) { 
+        if(!Meteor.userId()) {
 
             this.setState({loginNotification:true})
         }
@@ -269,23 +279,34 @@ class CreateLessonPlan extends React.Component {
             Meteor.call('lessonplans.update', _id, slides,(err)=>{
                 alert('Saved successfully')
             })
-        }  
+        }
     }
 
     saveChanges(slides, curSlide) {
 
-        /* This function is used in multiple places to save the changes (not in the databse, but 
+        /* This function is used in multiple places to save the changes (not in the databse, but
             in the react state).
-           
+
            Depending upon the change made, the changes are saved looking upon arguments given when the
            function was called.
+<<<<<<< HEAD
         */        
+=======
+        */
+
+>>>>>>> c3234e59f5337a03c8676a0b01bdd8c36ef7ce22
 
         if(slides == undefined) {
 
             this.setState({
                 curSlide
             },()=>{
+                console.log('asdf');
+                this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                $('#container')[0].style.height=(window.innerHeight+this.pageCount*300)+'px';
+                $('canvas')[0].style.height=$('#container')[0].style.height;
+                $('canvas')[0].height=window.innerHeight+this.pageCount*300;
+                this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
@@ -300,6 +321,10 @@ class CreateLessonPlan extends React.Component {
                 slides,
                 curSlide
             },()=>{
+              $('#container')[0].style.height=window.innerHeight+'px';
+              $('canvas')[0].style.height=$('#container')[0].style.height;
+              $('canvas')[0].height=window.innerHeight;
+              this.db.reset();
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
@@ -353,7 +378,7 @@ class CreateLessonPlan extends React.Component {
       /*
         To interact with the simulation, interact should be enabled which disables the pointer events in the canvas,
          so that when we interact with the simulation, no drawings are made. Unchecking the interact, unsets the
-         pointer events.        
+         pointer events.
        */
 
       if(this.addSim.state.isOpen)
@@ -417,22 +442,22 @@ class CreateLessonPlan extends React.Component {
                     </Modal.Header>
                     <Modal.Content>
                         <Modal.Description style = {{textAlign:'center'}}>
-                    
+
                             <Button onClick = {()=>{
-                                
+
                                 Session.set('stateToSave', this.state)
 
                                 this.setState({redirectToLogin:true})
 
                             }} style = {{marginTop:'1.6rem'}}>Login</Button>
-                    
-            
+
+
                         </Modal.Description>
                     </Modal.Content>
                 </Modal>
-                
 
-                <div className = 'createLessonPlan'>            
+
+                <div className = 'createLessonPlan'>
 
                     <div style = {{margin:'0 0.8rem'}} className = 'slides'>
                         <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
@@ -442,31 +467,31 @@ class CreateLessonPlan extends React.Component {
 
                     <div className = 'board'>
                         <SimsList
-                        
+
                             navVisibility = {true}
                             isRndRequired = {true}
                             saveChanges = {this.saveChanges.bind(this)}
                             delete = {this.deleteSim.bind(this)}
                             {...this.state}
-                            
+
                             next = {this.next.bind(this)}
                             previous = {this.previous.bind(this)}
                             save = {this.save.bind(this)}
                             interact = {this.interact.bind(this)}
                             undo = {this.undo.bind(this)}
-                        />                   
-                        <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>                   
+                        />
+                        <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
                     </div>
-                    
-                    <div style = {{marginLeft:'0.8rem'}} className = 'menu'>
-                    
-                        <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
-                        
-                        <Menu icon vertical>                
 
-                            <Menu.Item link>                    
+                    <div style = {{marginLeft:'0.8rem'}} className = 'menu'>
+
+                        <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+
+                        <Menu icon vertical>
+
+                            <Menu.Item link>
                                 <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
-                            </Menu.Item>        
+                            </Menu.Item>
 
                             {Meteor.userId()?
                                 <Link to = '/dashboard/lessonplans'><Menu.Item link>Dashboard</Menu.Item></Link>
@@ -475,7 +500,7 @@ class CreateLessonPlan extends React.Component {
                             {!!Meteor.userId()?
                                 <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request</Menu.Item></Link>
                             :null}
-                            
+
 
                             <Menu.Item onClick = {()=>{
                                     const confirmation = confirm('Are you sure you want to reset all?')
@@ -484,7 +509,7 @@ class CreateLessonPlan extends React.Component {
                                 }}>
                                 Reset
                             </Menu.Item>
-                            
+
                             <Menu.Item onClick = {()=>{this.addSim.addSim()}}>
                                 Add simulation
                             </Menu.Item>
@@ -497,6 +522,21 @@ class CreateLessonPlan extends React.Component {
                                 Save
                             </Menu.Item>
 
+                            <Menu.Item onClick = {()=>{
+                              var temp=this.db.getImg();
+                              this.pageCount+=1;
+                              $('canvas')[0].style.height=($('canvas')[0].height+300).toString()+'px';
+                              $('canvas')[0].height+=300;
+                              $('#container')[0].style.height=$('canvas')[0].style.height;
+                              this.db.reset('0');
+                              this.db.setImg(temp);
+                              var slides = this.state.slides;
+                              slides[this.state.curSlide].pageCount=this.pageCount;
+                              this.setState({slides});
+                            }}>
+                                Increase Canvas
+                            </Menu.Item>
+
                             {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
 
                                     Session.set('stateToSave', this.state)
@@ -507,22 +547,22 @@ class CreateLessonPlan extends React.Component {
                             </Menu.Item>:null}
 
                         </Menu>
-                                
+
                     </div>
-                
+
                 </div>
                 <Modal size = 'tiny' open = {!!!this.state.title}>
                     <Modal.Header>
                         Enter the title for the lessonplan
                     </Modal.Header>
-                        
+
                     <Modal.Content>
                         <Modal.Description>
                             <Form onSubmit = {()=>{
-                                
+
                                 if(!this.title.value)
                                     return
-                                
+
                                 this.setState({
 
                                     title:this.title.value
@@ -535,7 +575,7 @@ class CreateLessonPlan extends React.Component {
                                 </Form.Field>
                                 <Form.Field>
                                     <Button type = 'submit'>Submit</Button>
-                                </Form.Field>                            
+                                </Form.Field>
                             </Form>
                         </Modal.Description>
                     </Modal.Content>
@@ -548,7 +588,7 @@ class CreateLessonPlan extends React.Component {
 }
 
 export default CreatelessonPlanContainer = withTracker(({ match }) => {
-    
+
     const lessonplansHandle = Meteor.subscribe('lessonplans')
     const loading = !lessonplansHandle.ready()
     let lessonplan, lessonplanExists
@@ -560,7 +600,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
         lessonplan = {slides, title:null}
     }
     else {
-        
+
         lessonplan = LessonPlans.findOne(match.params._id)
         lessonplanExists = !loading && !!lessonplan
     }
@@ -573,5 +613,3 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     }
 
 })(CreateLessonPlan)
-
-
