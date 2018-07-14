@@ -23,8 +23,8 @@
 .drawing-board-control > button[disabled] { color: gray; }
 .drawing-board-control > button[disabled]:hover, .drawing-board-control > button[disabled]:focus, .drawing-board-control > button[disabled]:active, .drawing-board-control > button[disabled].active { background-color: #eee; box-shadow: 0 1px 3px -2px #121212, inset 0 2px 5px 0 rgba(255, 255, 255, 0.3); -webkit-box-shadow: 0 1px 3px -2px #121212, inset 0 2px 5px 0 rgba(255, 255, 255, 0.3); cursor: default; }
 
-.drawing-board-controls { margin: 0 auto; text-align: center; font-size: 0; display: table; border-spacing: 9.33333px 0; position: relative; min-height: $control-height; }
-.drawing-board-controls[data-align="left"] { margin: 0; left: -9.33333px; }
+.drawing-board-controls { z-index: 5; margin: 0 auto; text-align: center; font-size: 0; display: table; border-spacing: 9.33333px 0; position: fixed; left:12vw; min-height: $control-height; }
+
 .drawing-board-controls[data-align="right"] { margin: 0 0 0 auto; right: -9.33333px; }
 .drawing-board-canvas-wrapper + .drawing-board-controls, .drawing-board-controls + .drawing-board-canvas-wrapper { margin-top: 5px; }
 
