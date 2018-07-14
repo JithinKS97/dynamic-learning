@@ -279,8 +279,7 @@ class CreateLessonPlan extends React.Component {
            
            Depending upon the change made, the changes are saved looking upon arguments given when the
            function was called.
-        */
-        
+        */        
 
         if(slides == undefined) {
 

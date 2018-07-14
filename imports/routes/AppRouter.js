@@ -25,7 +25,8 @@ const authenticatedPages = [
     '/sandbox',
     '/dashboard/lessonplans',
     '/dashboard/requests',
-    '/dashboard/uploadsim'
+    '/dashboard/uploadsim',
+    '/dashboard/lessons'
 ]
 
 export const onAuthChange = (isAuthenticated) => {

@@ -2,6 +2,7 @@ import React from 'react'
 import LessonPlansDirectories from '../components/LessonPlansDirectories'
 import RequestsList from '../components/RequestsList'
 import SimsDirectories from '../components/SimsDirectories'
+import LessonsDirectories from '../components/LessonsDirectories'
 import SideBar from '../components/SideBar'
 import { Accounts } from 'meteor/accounts-base'
 import SimPreview from '../components/SimPreview'
@@ -123,6 +124,8 @@ export default class Dashboard extends React.Component {
                             <Header>Manage simulations</Header>
                             <SimsDirectories height = {720} getNode = {this.getNode.bind(this)} isPreview = {false}/>
                         </div>
+            case 'lessons':
+                    return <div><LessonsDirectories/></div>
        }
     }
 

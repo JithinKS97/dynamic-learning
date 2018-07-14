@@ -124,8 +124,8 @@ class LessonPlanViewer extends React.Component {
     previous() {
 
         /*
-            If the current slide is not the beggining slide, Undo stack is cleared.
-            The current slide no. is decremented and the notes of that particular
+            If the current slide is not the beggining slide,
+            the current slide no. is decremented and the notes of that particular
             slide is set to the board.
         */
 
@@ -140,7 +140,8 @@ class LessonPlanViewer extends React.Component {
     pushSlide(slides) {
 
         /* To create a new slide, first the structure of slide is defined and
-           then pushed to the slides array.
+           then pushed to the slides array. This is to avoid the undefined error
+           when somewhere else we access slide.note, slide.iframes.
         */
 
         const newSlide = {
@@ -162,8 +163,6 @@ class LessonPlanViewer extends React.Component {
            the change made, the changes are saved looking upon arguments given when the
            function was called.
         */
-
-
 
 
         if(slides == undefined) {
