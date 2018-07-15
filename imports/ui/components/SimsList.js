@@ -69,7 +69,7 @@ export default class simsList extends React.Component {
                                
                                 bounds = '.drawing-board-canvas'
                                 dragHandleClassName = '.sim-handle'
-                                size={{ width: iframe.w,  height: iframe.h}}
+                                size={{ width: iframe.w+33,  height: iframe.h}}
                                 position={{ x: iframe.x, y: iframe.y }}
 
                                 onDragStart={()=>{
@@ -116,7 +116,7 @@ export default class simsList extends React.Component {
                                     height and with of the iframe.
                                 */}
                                 <div style ={{display:'flex', flexDirection:'row'}}>
-
+    
                                     <SimContainer
                                         {...this.props} 
                                         index = {index} 

@@ -125,7 +125,10 @@ export default class Dashboard extends React.Component {
                             <SimsDirectories height = {720} getNode = {this.getNode.bind(this)} isPreview = {false}/>
                         </div>
             case 'lessons':
-                    return <div><LessonsDirectories/></div>
+                    return <div>
+                                <Header>Manage Lessons</Header>
+                                <LessonsDirectories/>
+                            </div>
        }
     }
 

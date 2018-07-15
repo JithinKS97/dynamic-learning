@@ -398,6 +398,7 @@ class CreateLessonPlan extends React.Component {
     }
 
     checkCanvasSize(){
+        
       var i=$('iframe').length, iframe;
       var maxHeight=-Infinity;
       while(i--){
@@ -405,7 +406,6 @@ class CreateLessonPlan extends React.Component {
         if((iframe.position().top+iframe.height())>maxHeight)
           maxHeight=iframe.position().top+iframe.height();
       }
-      console.log($('canvas')[0].height-300,maxHeight);
       if($('canvas')[0].height-300<maxHeight)
         return 1;
       return 0;
