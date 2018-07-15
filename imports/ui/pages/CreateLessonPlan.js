@@ -444,6 +444,7 @@ class CreateLessonPlan extends React.Component {
 
             return <Redirect to = {`/dashboard/lessonplans`}/>
         }
+
         return (
 
             <Segment style = {{padding:0, margin:0}}>
@@ -587,6 +588,10 @@ class CreateLessonPlan extends React.Component {
                             </Menu.Item>
 
                             {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
+
+                                    const confirmation = confirm('You will be redirected to login page. Changes will be saved for you.')
+                                    if(!confirmation)
+                                        return
 
                                     Session.set('stateToSave', this.state)
 
