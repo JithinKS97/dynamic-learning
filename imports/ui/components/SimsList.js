@@ -23,9 +23,7 @@ export default class simsList extends React.Component {
 
         /* This component displays a list of simulations.
            The props contain the current slide no. and the slides.
-
            The iframes of the current slide are obtained and rendered.
-
            On clicking the X button the delete function passed in the props is called.
         */  
         const {slides, curSlide} = this.props
@@ -41,19 +39,14 @@ export default class simsList extends React.Component {
                 /*Rnd is the react component which is used for dragging and resizing 
                     of the iframes. For more information about it, look in the documentation
                     of React-Rnd. 
-
                     The size and the positions are initialized. The size with the values entered
                     when the simulations are uploaded, and the position values are 0 by default initially.
-
                     onDragStop is called everytime the iframe is stopped dragging, we set its position
                     to the current position it had when it has been finished dragging. The changes are saved.
-
                     onResize is called everytime the iframe is resized. The dimensions of the iframes
                     are set accordingly.
-
                     IsRnd is the prop that is passed to decide whether we need the resize
                     and drag feature enabled.
-
                     isPreview is a variable which specifies whether the iframe is just a preview 
                     or is it the real simulation used in the lessonplan. 
                 */
@@ -78,7 +71,7 @@ export default class simsList extends React.Component {
 
                                 }}
     
-                                onDragStop={(d) => {
+                                onDragStop={(e, d) => {
 
                                     $('.sim')[0].style['pointer-events'] = 'unset'
     
@@ -103,7 +96,7 @@ export default class simsList extends React.Component {
                                 }}
                                 
 
-                                onResize={(ref) => {
+                                onResize={(e, direction, ref, delta, position) => {
                                   
                                     slides[curSlide].iframes[index].w = ref.offsetWidth
                                     slides[curSlide].iframes[index].h = ref.offsetHeight
@@ -116,7 +109,7 @@ export default class simsList extends React.Component {
                                     height and with of the iframe.
                                 */}
                                 <div style ={{display:'flex', flexDirection:'row'}}>
-    
+
                                     <SimContainer
                                         {...this.props} 
                                         index = {index} 
