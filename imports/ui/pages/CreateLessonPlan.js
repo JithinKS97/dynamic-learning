@@ -43,6 +43,7 @@ class CreateLessonPlan extends React.Component {
             loginNotification:false,
             redirectToLogin:false,
             checked: false,
+            redirectToDashboard:false
         }
         this.pageCount=0;
         this.pushSlide.bind(this)
@@ -430,13 +431,19 @@ class CreateLessonPlan extends React.Component {
         this.setState({redirectToRequest:true})
     }
 
+    
+
     render() {
 
         if(this.state.redirectToLogin) {
 
             return <Redirect to = {`/`}/>
         }
+        
+        if(this.state.redirectToDashboard) {
 
+            return <Redirect to = {`/dashboard/lessonplans`}/>
+        }
         return (
 
             <Segment style = {{padding:0, margin:0}}>
@@ -506,7 +513,18 @@ class CreateLessonPlan extends React.Component {
                             </Menu.Item>
 
                             {Meteor.userId()?
-                                <Link to = '/dashboard/lessonplans'><Menu.Item link>Dashboard</Menu.Item></Link>
+                                <Menu.Item onClick = {()=>{
+                                    const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
+
+                                    if(!confirmation)
+                                        return
+
+                                    this.setState({                                      
+
+                                        redirectToDashboard:true
+                                    })
+                                }}
+                                   >Dashboard</Menu.Item>
                             :null}
 
                             {!!Meteor.userId()?
