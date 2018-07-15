@@ -7,7 +7,7 @@
 
 .drawing-board { position: relative; display: block; }
 
-.drawing-board-canvas-wrapper { position: relative; margin: 0; border-top: 1px solid #fff; }
+.drawing-board-canvas-wrapper { position: relative; margin: 0; border-top: 0 solid #fff; }
 
 .drawing-board-canvas { position: absolute; top: 0; left: 0; z-index: 10; width: auto; }
 
@@ -26,7 +26,7 @@
 .drawing-board-controls { z-index: 5; margin: 0 auto; text-align: center; font-size: 0; display: table; border-spacing: 9.33333px 0; position: fixed; left:12vw; min-height: $control-height; }
 
 .drawing-board-controls[data-align="right"] { margin: 0 0 0 auto; right: -9.33333px; }
-.drawing-board-canvas-wrapper + .drawing-board-controls, .drawing-board-controls + .drawing-board-canvas-wrapper { margin-top: 5px; }
+.drawing-board-canvas-wrapper + .drawing-board-controls, .drawing-board-controls + .drawing-board-canvas-wrapper { margin-top: 0px; }
 
 .drawing-board-controls-hidden { height: 0; min-height: 0; padding: 0; margin: 0; border: 0; }
 
