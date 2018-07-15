@@ -153,7 +153,6 @@ class CreateLessonPlan extends React.Component {
         */
         if(arguments[0][0]=='0')
           return;
-        console.log(arguments);
         const {curSlide, slides} = this.state
 
         const note = this.db.getImg()
