@@ -69,7 +69,7 @@ export default class simsList extends React.Component {
                                
                                 bounds = '.drawing-board-canvas'
                                 dragHandleClassName = '.sim-handle'
-                                size={{ width: iframe.w+33,  height: iframe.h}}
+                                size={{ width: iframe.w+40,  height: iframe.h}}
                                 position={{ x: iframe.x, y: iframe.y }}
 
                                 onDragStart={()=>{
@@ -78,7 +78,7 @@ export default class simsList extends React.Component {
 
                                 }}
     
-                                onDragStop={(e, d) => {
+                                onDragStop={(d) => {
 
                                     $('.sim')[0].style['pointer-events'] = 'unset'
     
@@ -103,7 +103,7 @@ export default class simsList extends React.Component {
                                 }}
                                 
 
-                                onResize={(e, direction, ref, delta, position) => {
+                                onResize={(ref) => {
                                   
                                     slides[curSlide].iframes[index].w = ref.offsetWidth
                                     slides[curSlide].iframes[index].h = ref.offsetHeight
