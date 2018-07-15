@@ -294,7 +294,7 @@ class CreateLessonPlan extends React.Component {
 
            Depending upon the change made, the changes are saved looking upon arguments given when the
            function was called.
-        */        
+        */
 
         if(slides == undefined) {
 
@@ -395,6 +395,20 @@ class CreateLessonPlan extends React.Component {
                 checked: !state.checked
             }
       })
+    }
+
+    checkCanvasSize(){
+      var i=$('iframe').length, iframe;
+      var maxHeight=-Infinity;
+      while(i--){
+        iframe=$('iframe').eq(i-1).parents().eq(3);
+        if((iframe.position().top+iframe.height())>maxHeight)
+          maxHeight=iframe.position().top+iframe.height();
+      }
+      console.log($('canvas')[0].height-300,maxHeight);
+      if($('canvas')[0].height-300<maxHeight)
+        return 1;
+      return 0;
     }
 
     undo(e) {
@@ -537,7 +551,7 @@ class CreateLessonPlan extends React.Component {
                             </Menu.Item>
 
                             <Menu.Item onClick = {()=>{
-                              if (this.pageCount==0){
+                              if (this.pageCount==0 || this.checkCanvasSize()){
                                 alert("Canvas size cannot be decreased further!");
                                 return;
                               }

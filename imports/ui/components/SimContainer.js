@@ -11,7 +11,7 @@ export default class SimContainer extends React.Component{
         this.state = {
             loading:true
         }
-        
+
     }
 
     componentDidMount() {
@@ -33,13 +33,13 @@ export default class SimContainer extends React.Component{
             const data = {}
             data.operation = 'sendingPort'
             this.otherWindow.postMessage(data, '*', [this.channel.port2])
-            
+
         }
 
         this.otherWindow = this.iframe.contentWindow
 
         this.iframe.addEventListener("load", iframeLoaded, false);
-       
+
     }
 
     handleMessage(e) {
@@ -49,7 +49,7 @@ export default class SimContainer extends React.Component{
            to the data property of the simulation.
            If the opration property is load, the data stored is send back.
         */
-        
+
         let {slides, curSlide, index} = this.props
 
         if(e.data.operation == 'save') {
@@ -58,7 +58,7 @@ export default class SimContainer extends React.Component{
             this.props.saveChanges(slides, undefined)
         }
         else if(e.data.operation == 'load') {
-            
+
             this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
         }
         else if(e.data.operation == 'dom') {
@@ -76,7 +76,7 @@ export default class SimContainer extends React.Component{
             else if(e.data.Key == 'd')
                 this.props.interact()
         }
-        
+
     }
 
     render(){
@@ -86,21 +86,21 @@ export default class SimContainer extends React.Component{
             <div className = 'sim'>
                 <Dimmer active = {this.state.loading}>
                     <Loader/>
-                </Dimmer>            
+                </Dimmer>
                 {
                     this.props.src?
                         <div>
 
-                            <iframe 
+                            <iframe
                                 className = 'iframe'
-                                ref = {e => this.iframe = e} 
-                                scrolling = 'no' 
-                                height = {this.props.h+'px'} 
-                                width = {this.props.w+'px'} 
+                                ref = {e => this.iframe = e}
+                                scrolling = 'no'
+                                height = {this.props.h}
+                                width = {this.props.w} 
                                 src={this.props.src}>
                             </iframe>
-                            
-                        </div>                        
+
+                        </div>
                         :null
                 }
 
@@ -108,6 +108,3 @@ export default class SimContainer extends React.Component{
         )
     }
 }
-
-
-
