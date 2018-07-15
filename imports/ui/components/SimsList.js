@@ -66,20 +66,19 @@ export default class simsList extends React.Component {
                                 position={{ x: iframe.x, y: iframe.y }}
 
                                 onDragStart={()=>{
-                                    
-                                    $('.sim')[0].style['pointer-events'] = 'none'
+
+                                    $('.sim')[index].style['pointer-events'] = 'none'
 
                                 }}
     
                                 onDragStop={(e, d) => {
 
-                                    $('.sim')[0].style['pointer-events'] = 'unset'
+                                    $('.sim')[index].style['pointer-events'] = 'unset'
     
                                     slides[curSlide].iframes[index].x = d.lastX
                                     slides[curSlide].iframes[index].y = d.lastY
     
                                     this.props.saveChanges(slides, undefined)
-
                                     
                                 }}
 
