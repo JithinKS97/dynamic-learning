@@ -518,8 +518,10 @@ class CreateLessonPlan extends React.Component {
                                 <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
                             </Menu.Item>
 
-                            <Menu.Item  onClick = {()=>{this.addSim.addSim()}}>
-                                Add simulation
+                            <Menu.Item>
+                                <Button onClick = {()=>{this.addSim.addSim()}} color='black'>
+                                    Add simulation
+                                </Button>
                             </Menu.Item>
 
                             {Meteor.userId()?
