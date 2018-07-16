@@ -163,7 +163,19 @@ export default class simsList extends React.Component {
                     return (
               
                  
-                            <div key = {index}>                      
+                            <div style = {{marginBottom:'16rem'}} key = {index}>
+
+                                <Button                                 
+                                    
+                                    style = {{marginTop:'0.8rem', marginBottom:'0.8rem'}}
+                                    onClick = {()=>{
+
+                                        const confirmation = confirm('Are you sure you want to remove this?')
+                                        if(confirmation == true)
+                                            this.props.delete(index)
+                                    }}>X
+
+                                </Button>                    
                                                                
 
                                 <SimContainer
@@ -173,17 +185,7 @@ export default class simsList extends React.Component {
                                     src = {iframe.src}
                                     {...iframe}
                                 />
-                                <Button                                 
-                                
-                                    style = {{marginTop:'0.8rem'}}
-                                    onClick = {()=>{
 
-                                        const confirmation = confirm('Are you sure you want to remove this?')
-                                        if(confirmation == true)
-                                            this.props.delete(index)
-                                    }}>X
-
-                                </Button> 
                                     
                             </div>
                  

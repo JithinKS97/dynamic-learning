@@ -2,7 +2,7 @@ import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Lessons } from '../../api/lessons'
 import HorizontalList from '../components/HorizontalList'
-import { Grid, Button } from 'semantic-ui-react'
+import { Grid, Button, Container } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import VideoContainer from '../components/VideoContainer'
 import SimsList from '../components/SimsList'
@@ -164,15 +164,19 @@ class CreateLesson extends React.Component {
         return (
 
             <Grid divided='vertically' style = {{height:'100vh', boxSizing: 'border-box'}}>
-                <Grid.Row style = {{height:'80vh'}} columns = {2}>
-                    <Grid.Column width ={8} style = {{padding:'1.6rem'}}>
-                        <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Dashboard</Button></Link>
-                        <VideoContainer addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
+                <Grid.Row style = {{height:'80vh'}}>
+                    <Grid.Column style = {{padding:'1.6rem', width:'55vw'}}>
+                        
+                            <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Back to dashboard</Button></Link>
+                            <VideoContainer addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
+                        
                     </Grid.Column>
-                    <Grid.Column width ={4} style = {{padding:'1.6rem'}}>
-                        <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>
-                        <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
-                        <SimsList isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
+                    <Grid.Column  style = {{padding:'1.6rem', overflowY:'scroll', width:'45vw'}}>
+                        <Container >
+                            <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>
+                            <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
+                            <SimsList isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
+                        </Container>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row style = {{height:'20vh', padding:'1.6rem'}} >
@@ -181,10 +185,9 @@ class CreateLesson extends React.Component {
                     <Button 
                         onClick = {this.addNewSlide.bind(this)}
                         style = {{
-                            width:'2.4rem', 
-                            height:'2.4rem', 
+
                             margin:'auto 0.8rem', 
-                            borderRadius:'100%'
+
                         }}>
                         +
                     </Button>

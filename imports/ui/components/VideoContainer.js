@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, Form, Label } from 'semantic-ui-react'
+import { Button, Modal, Form, Container } from 'semantic-ui-react'
 
 
 export default class VideoContainer extends React.Component {
@@ -97,7 +97,12 @@ export default class VideoContainer extends React.Component {
                 </Modal>
                 {
                     this.props.url?
-                    <div>
+                    <Container>
+                        <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{
+                            
+                            this.props.addVideo(null)
+                            
+                        }}>X</Button>
                         <iframe 
                             width="920" 
                             height="600" 
@@ -106,12 +111,8 @@ export default class VideoContainer extends React.Component {
                             allowFullScreen>
                         </iframe>
                         <br/>
-                        <Button style = {{marginTop:'0.8rem'}} onClick = {()=>{
-                            
-                            this.props.addVideo(null)
-                            
-                        }}>X</Button>
-                    </div>                   
+
+                    </Container>                   
                     
                     :
 
