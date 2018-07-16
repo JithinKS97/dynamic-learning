@@ -171,7 +171,7 @@ class CreateLesson extends React.Component {
                             <VideoContainer addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
                         
                     </Grid.Column>
-                    <Grid.Column  style = {{padding:'1.6rem', overflowY:'scroll', width:'45vw'}}>
+                    <Grid.Column  style = {{padding:'1.6rem', overflowY:'auto', width:'45vw'}}>
                         <Container >
                             <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>
                             <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
