@@ -88,6 +88,10 @@ class CreateLesson extends React.Component {
            it is just reset. Otherwise, the slide is deleted and the current slide is set.
         */
 
+        const confirmation = confirm('Are you sure you want to delete the slide?')
+        if(!confirmation)
+            return
+
         const slides = this.props.lesson.slides
 
         if(slides.length!=1) {

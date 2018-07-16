@@ -99,6 +99,10 @@ export default class VideoContainer extends React.Component {
                     this.props.url?
                     <Container>
                         <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{
+
+                            const confirmation = confirm('Are you sure want to remove this video?')
+                            if(!confirmation)
+                                return
                             
                             this.props.addVideo(null)
                             
