@@ -165,12 +165,12 @@ class CreateLesson extends React.Component {
 
             <Grid divided='vertically' style = {{height:'100vh', boxSizing: 'border-box'}}>
                 <Grid.Row style = {{height:'80vh'}} columns = {2}>
-                    <Grid.Column style = {{padding:'1.6rem'}}>
-                        <Link to = '/dashboard/lessons'><Button>Dashboard</Button></Link>
+                    <Grid.Column width ={8} style = {{padding:'1.6rem'}}>
+                        <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Dashboard</Button></Link>
                         <VideoContainer addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
                     </Grid.Column>
-                    <Grid.Column style = {{padding:'1.6rem'}}>
-                        <Button onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>
+                    <Grid.Column width ={4} style = {{padding:'1.6rem'}}>
+                        <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>
                         <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
                         <SimsList isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
                     </Grid.Column>

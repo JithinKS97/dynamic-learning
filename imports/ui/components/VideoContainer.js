@@ -99,18 +99,18 @@ export default class VideoContainer extends React.Component {
                     this.props.url?
                     <div>
                         <iframe 
-                            width="560" 
-                            height="315" 
+                            width="920" 
+                            height="600" 
                             src={`//www.youtube.com/embed/${this.getId(this.props.url)}?rel=0&amp;showinfo=0`} 
                             frameBorder="0" 
                             allowFullScreen>
                         </iframe>
                         <br/>
-                        <Button onClick = {()=>{
+                        <Button style = {{marginTop:'0.8rem'}} onClick = {()=>{
                             
                             this.props.addVideo(null)
                             
-                        }}>Remove</Button>
+                        }}>X</Button>
                     </div>                   
                     
                     :

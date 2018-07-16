@@ -7,6 +7,7 @@ import TiArrowMove from 'react-icons/lib/ti/arrow-move'
 import FaClose from 'react-icons/lib/fa/close'
 import FaCode from 'react-icons/lib/fa/code'
 import MdNetworkCell from 'react-icons/lib/md/network-cell'
+import { Button } from 'semantic-ui-react'
 
 
 
@@ -163,21 +164,7 @@ export default class simsList extends React.Component {
               
                  
                             <div key = {index}>                      
-                                
-                                <button                                   
-                                
-                                    style = {{float:'right', paddingRight:'1.6rem'}}
-                                    className = 'icon__button'                                        
-                                    onClick = {()=>{
-
-                                        const confirmation = confirm('Are you sure you want to remove this?')
-                                        if(confirmation == true)
-                                            this.props.delete(index)
-
-                                    }}><FaClose/>
-                                
-                                </button>
-                                
+                                                               
 
                                 <SimContainer
                                     isPreview = {false}
@@ -186,6 +173,17 @@ export default class simsList extends React.Component {
                                     src = {iframe.src}
                                     {...iframe}
                                 />
+                                <Button                                 
+                                
+                                    style = {{marginTop:'0.8rem'}}
+                                    onClick = {()=>{
+
+                                        const confirmation = confirm('Are you sure you want to remove this?')
+                                        if(confirmation == true)
+                                            this.props.delete(index)
+                                    }}>X
+
+                                </Button> 
                                     
                             </div>
                  

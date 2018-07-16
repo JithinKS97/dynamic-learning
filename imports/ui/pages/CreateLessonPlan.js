@@ -512,10 +512,14 @@ class CreateLessonPlan extends React.Component {
 
                         <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
-                        <Menu icon vertical>
+                        <Menu color = {'blue'} icon vertical>
 
                             <Menu.Item link>
                                 <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
+                            </Menu.Item>
+
+                            <Menu.Item  onClick = {()=>{this.addSim.addSim()}}>
+                                Add simulation
                             </Menu.Item>
 
                             {Meteor.userId()?
@@ -550,10 +554,6 @@ class CreateLessonPlan extends React.Component {
                                     this.reset()
                                 }}>
                                 Reset
-                            </Menu.Item>
-
-                            <Menu.Item onClick = {()=>{this.addSim.addSim()}}>
-                                Add simulation
                             </Menu.Item>
 
                             <Menu.Item onClick = {()=>{this.undo()}}>
