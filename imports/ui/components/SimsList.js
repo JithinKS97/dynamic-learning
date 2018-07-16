@@ -24,6 +24,8 @@ export default class simsList extends React.Component {
     renderSims() {
 
 
+
+
         /* This component displays a list of simulations.
            The props contain the current slide no. and the slides.
            The iframes of the current slide are obtained and rendered.

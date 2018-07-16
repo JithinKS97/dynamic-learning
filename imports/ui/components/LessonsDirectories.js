@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData }  from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import { Button, Modal, Form } from 'semantic-ui-react'
+import { Button, Modal, Form, Dimmer, Loader } from 'semantic-ui-react'
 import 'react-sortable-tree/style.css';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import 'semantic-ui-css/semantic.min.css';
@@ -21,7 +21,8 @@ export default class Tree extends Component {
       treeData: [],
       isOpen: false,
       title:'',
-      toCreate:null
+      toCreate:null,
+      loading:true
     }
   }
 
@@ -29,7 +30,9 @@ export default class Tree extends Component {
 
     this.lessonsTracker = Tracker.autorun(()=>{
 
-        Meteor.subscribe('lessons')
+
+        const lessonsHandle = Meteor.subscribe('lessons')
+        const loading = !lessonsHandle.ready()
         const flatData = Lessons.find().fetch()
 
         const getKey = node => node._id
@@ -45,7 +48,8 @@ export default class Tree extends Component {
 
         this.setState({
 
-            treeData
+            treeData,
+            loading        
         })
     })
   }
@@ -130,6 +134,9 @@ export default class Tree extends Component {
     return (
 
     <div>
+        <Dimmer inverted active = {this.state.loading}>
+            <Loader />
+        </Dimmer>
 
         <Modal size = 'tiny' open = {this.state.isOpen}>
 
@@ -180,7 +187,7 @@ export default class Tree extends Component {
             })
         }}>Create a folder</Button>
 
-        <div style={{ height: 400, padding:'1.6rem' }}>
+        <div style={{ height: 720, padding:'1.6rem' }}>
 
             <SortableTree
 

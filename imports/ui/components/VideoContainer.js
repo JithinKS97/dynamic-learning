@@ -115,12 +115,14 @@ export default class VideoContainer extends React.Component {
                     </Container>                   
                     
                     :
-
-                    <Button onClick = {()=>{
-                        this.setState({
-                            open:true
-                        })
-                    }}>Add video link</Button>
+                    
+                    <div>
+                        <Button onClick = {()=>{
+                            this.setState({
+                                open:true
+                            })
+                        }}>Add youtube link</Button>
+                    </div>
 
                 }
             </div>

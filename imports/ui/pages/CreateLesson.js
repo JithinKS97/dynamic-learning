@@ -2,7 +2,7 @@ import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Lessons } from '../../api/lessons'
 import HorizontalList from '../components/HorizontalList'
-import { Grid, Button, Container } from 'semantic-ui-react'
+import { Grid, Button, Container, Dimmer, Loader } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import VideoContainer from '../components/VideoContainer'
 import SimsList from '../components/SimsList'
@@ -162,6 +162,10 @@ class CreateLesson extends React.Component {
 
 
         return (
+            <div>
+            <Dimmer active = {!this.props.lessonExists}>
+                <Loader />
+            </Dimmer>
 
             <Grid divided='vertically' style = {{height:'100vh', boxSizing: 'border-box'}}>
                 <Grid.Row style = {{height:'80vh'}}>
@@ -192,7 +196,8 @@ class CreateLesson extends React.Component {
                         +
                     </Button>
                 </Grid.Row>
-            </Grid>     
+            </Grid>  
+            </div>   
 
         )
     }
@@ -207,7 +212,8 @@ export default CreateLessonContainer = withTracker(({match})=>{
 
     return {
 
-        lesson: lessonExists? lesson : {slides:[]}
+        lesson: lessonExists? lesson : {slides:[]},
+        lessonExists 
     }
 })(CreateLesson)
 
