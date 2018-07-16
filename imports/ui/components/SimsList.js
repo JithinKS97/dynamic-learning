@@ -64,7 +64,7 @@ export default class simsList extends React.Component {
                                
                                 bounds = '.drawing-board-canvas'
                                 dragHandleClassName = '.sim-handle'
-                                size={{ width: iframe.w+40,  height: iframe.h}}
+                                size={{ width: this.props.navVisibility?iframe.w+40:iframe.w,  height: iframe.h}}
                                 position={{ x: iframe.x, y: iframe.y }}
 
                                 onDragStart={()=>{
@@ -108,7 +108,7 @@ export default class simsList extends React.Component {
 
                                 onResize={(e, direction, ref, delta, position) => {
                                   
-                                    slides[curSlide].iframes[index].w = ref.offsetWidth-40
+                                    slides[curSlide].iframes[index].w = this.props.navVisibility?ref.offsetWidth-40:ref.offsetWidth
                                     slides[curSlide].iframes[index].h = ref.offsetHeight
                                     this.props.saveChanges(slides, undefined)
                                 }}
@@ -147,7 +147,7 @@ export default class simsList extends React.Component {
 
                                             <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                         </div>
-                                        <div style = {{float:'right', marginLeft:'0.8rem', marginBottom:'0.2rem'}}><MdNetworkCell/></div>    
+                                        <div style = {{float:'right', marginLeft:'0.8rem', marginBottom:'0.1rem'}}><MdNetworkCell/></div>    
 
                                     </div>
                                     
