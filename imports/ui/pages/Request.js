@@ -202,7 +202,6 @@ class Request extends React.Component {
         this.setState({
             slides
         })
-        console.log('hello')
         this.update()
     }
 

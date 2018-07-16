@@ -17,7 +17,8 @@ Meteor.methods({
     'lessons.insert'(title) {
 
         const newSlide = {
-            videoTag:null,
+
+            url:null,
             iframes:[]
         }
 

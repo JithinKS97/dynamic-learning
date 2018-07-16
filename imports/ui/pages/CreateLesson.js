@@ -1,16 +1,30 @@
 import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Lessons } from '../../api/lessons'
-import List from '../components/List'
+import HorizontalList from '../components/HorizontalList'
 import { Grid, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import VideoContainer from '../components/VideoContainer'
+import SimsList from '../components/SimsList'
+import AddSim from '../components/AddSim'
+import { Link } from 'react-router-dom'
 
 class CreateLesson extends React.Component {
 
+    constructor(props) {
+        super(props)
 
-    addNewSlide(e) {
+        this.state = {
+            curSlide:0
+        }
+    }
 
-        let {curSlide, slides} = this.state
+
+    addNewSlide() {
+
+        let {curSlide} = this.state
+        slides = this.props.lesson.slides
+        console.log(slides)
         this.pushSlide(slides)
         curSlide = slides.length-1
         this.setState({
@@ -25,7 +39,7 @@ class CreateLesson extends React.Component {
         */
 
         const newSlide = {
-            videoTag:null,
+            url:null,
             iframes:[]
         }
 
@@ -38,36 +52,144 @@ class CreateLesson extends React.Component {
         if(!Meteor.userId())
             return
 
-        Meteor.call('lessons.update', _id, slides,(err)=>{
-            alert('Saved successfully')
-        })
+        Meteor.call('lessons.update', _id, slides)
     }
 
-    deleteSlide(index) {
-
-    }
 
     saveChanges(slides, curSlide) {
 
+        if(slides == undefined) {
+
+            this.setState({
+                curSlide
+            })
+        }
+        else if(curSlide == undefined) {
+            this.setState({
+                slides
+            },()=>{
+                this.save(this.props.lesson._id, slides)
+            })
+        }
+        else {
+
+            this.setState({
+                slides,
+                curSlide
+            },()=>{
+                this.save(this.props.lesson._id, slides)
+            })
+        }
+    }
+    deleteSlide(index) {
+
+        /* This function decides what to do when the X button is pressed in the
+           slide element. If there is only one element. it is not deleted,
+           it is just reset. Otherwise, the slide is deleted and the current slide is set.
+        */
+
+        const slides = this.props.lesson.slides
+
+        if(slides.length!=1) {
+
+            slides.splice(index, 1)
+
+            let { curSlide } = this.state
+
+            if(index == 0) {
+                curSlide = 0
+            }
+            if(curSlide == slides.length)
+                curSlide = slides.length-1
+            this.saveChanges(slides, curSlide)
+        }
+        else{
+
+          this.reset()
+        }
+    }
+
+    reset() {
+        const slides = []
+        slides.push({
+            url:null,
+            iframes:[]
+        })
+        this.save(this.props.lesson._id, slides)
+    }
+
+    addVideo(url) {
+
+        slides = this.props.lesson.slides
+        slides[this.state.curSlide].url = url
+        this.save(this.props.lesson._id, slides)
+    }
+
+    pushSim(title, src, w, h, linkToCode) {
+
+        const { curSlide }  = this.state
+        const slides = this.props.lesson.slides
+
+        const objectToPush = {
+            userId:Meteor.userId(),
+            src,
+            w,
+            h,
+            x:0,
+            y:0,
+            title,
+            linkToCode
+        }
+
+        slides[curSlide].iframes.push(objectToPush)
+        this.save(this.props.lesson._id, slides)
+    }
+
+    deleteSim(index) {
+
+
+
+        const { curSlide }  = this.state
+        const slides = this.props.lesson.slides
+        const iframes = slides[curSlide].iframes        
+        iframes.splice(index,1)
+        slides[this.state.curSlide].iframes = iframes
+        this.save(this.props.lesson._id, slides)       
     }
 
 
     render() {
+
+
         return (
 
             <Grid divided='vertically' style = {{height:'100vh', boxSizing: 'border-box'}}>
                 <Grid.Row style = {{height:'80vh'}} columns = {2}>
                     <Grid.Column style = {{padding:'1.6rem'}}>
-                        Helloo
+                        <Link to = '/dashboard/lessons'><Button>Dashboard</Button></Link>
+                        <VideoContainer addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
                     </Grid.Column>
                     <Grid.Column style = {{padding:'1.6rem'}}>
-                        Helloo
+                        <Button onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>
+                        <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
+                        <SimsList isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row style = {{height:'20vh', padding:'1.6rem'}} >
-                    Hellooo
+                    <h1 style = {{padding:'1.6rem', border:'auto auto'}}>{this.state.curSlide+1}</h1>
+                    <HorizontalList deleteSlide = {this.deleteSlide.bind(this)} saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides}/>
+                    <Button 
+                        onClick = {this.addNewSlide.bind(this)}
+                        style = {{
+                            width:'2.4rem', 
+                            height:'2.4rem', 
+                            margin:'auto 0.8rem', 
+                            borderRadius:'100%'
+                        }}>
+                        +
+                    </Button>
                 </Grid.Row>
-            </Grid>      
+            </Grid>     
 
         )
     }

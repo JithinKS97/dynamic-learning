@@ -160,43 +160,42 @@ export default class simsList extends React.Component {
                 else {
             
                     return (
-                        <Rnd>
-                            <div key = {index}>
-                                {iframe.userId == Meteor.userId()?
+              
+                 
+                            <div key = {index}>                      
                                 
-                                        <button                                   
-                                        
-                                            style = {{float:'right', paddingRight:'1.6rem'}}
-                                            className = 'icon__button'                                        
-                                            onClick = {()=>{
+                                <button                                   
+                                
+                                    style = {{float:'right', paddingRight:'1.6rem'}}
+                                    className = 'icon__button'                                        
+                                    onClick = {()=>{
 
-                                                const confirmation = confirm('Are you sure you want to remove this?')
-                                                if(confirmation == true)
-                                                    this.props.delete(index)
+                                        const confirmation = confirm('Are you sure you want to remove this?')
+                                        if(confirmation == true)
+                                            this.props.delete(index)
 
-                                            }}><FaClose/>
-                                        
-                                        </button>:
-                                    
-                                    null}  
-                                    <SimContainer
-                                        isPreview = {false}
-                                        {...this.props} 
-                                        index = {index} 
-                                        src = {iframe.src}
-                                        {...iframe}
-                                    />
+                                    }}><FaClose/>
+                                
+                                </button>
+                                
+
+                                <SimContainer
+                                    isPreview = {false}
+                                    {...this.props} 
+                                    index = {index} 
+                                    src = {iframe.src}
+                                    {...iframe}
+                                />
                                     
                             </div>
-                        </Rnd>
+                 
+               
                     )
                 }               
             })
         }         
     }
     render() {
-
-
 
         return (
             <div>
