@@ -7,6 +7,7 @@ import { PublicRoute } from './PublicRoute'
 
 import Login from '../ui/pages/Login'
 import CreateLessonPlan from '../ui/pages/CreateLessonPlan'
+import CreateLesson from '../ui/pages/CreateLesson'
 
 import Signup from '../ui/pages/Signup'
 import NotFound from '../ui/pages/NotFound'
@@ -26,7 +27,8 @@ const authenticatedPages = [
     '/dashboard/lessonplans',
     '/dashboard/requests',
     '/dashboard/uploadsim',
-    '/dashboard/lessons'
+    '/dashboard/lessons',
+    '/createlesson'
 ]
 
 export const onAuthChange = (isAuthenticated) => {
@@ -48,6 +50,7 @@ export const AppRouter = (
             <Switch>
                 <PublicRoute exact path='/' component = {Login}></PublicRoute>
                 <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
+                <PrivateRoute path='/createlesson/:_id' component = {CreateLesson}></PrivateRoute>
                 <PublicRoute path='/createlessonplan' component = {CreateLessonPlan}></PublicRoute>
                 <PublicRoute path='/signup' component = {Signup}></PublicRoute>
                 <PrivateRoute path='/request/:_id' component = {Request}></PrivateRoute>

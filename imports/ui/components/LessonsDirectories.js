@@ -9,6 +9,7 @@ import { Tracker } from 'meteor/tracker'
 import { Lessons } from '../../api/lessons'
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
+import {Link} from 'react-router-dom'
 
 export default class Tree extends Component {
 
@@ -189,13 +190,12 @@ export default class Tree extends Component {
                     buttons:[
 
                         <button
-                            
                             className = 'icon__button'
                             style = {{display:node.isFile?'block':'none'}}
                         >
 
      
-                            <FaEdit size={17} color="black" />   
+                            <Link to ={{ pathname: `/createlesson/${node._id}`}}><FaEdit size={17} color="black" /></Link>
 
                         </button>,
 

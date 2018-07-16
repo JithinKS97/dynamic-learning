@@ -49,6 +49,7 @@ class CreateLessonPlan extends React.Component {
         this.pushSlide.bind(this)
         this.save.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
+        this.click = 0
     }
 
     handleKeyDown(event){
@@ -447,7 +448,11 @@ class CreateLessonPlan extends React.Component {
 
         return (
 
-            <Segment style = {{padding:0, margin:0}}>
+            <Segment onClick = {()=>{
+
+                this.click++
+
+            }} style = {{padding:0, margin:0}}>
 
                 <Dimmer active = {!this.state.initialized}>
                     <Loader />
@@ -515,10 +520,16 @@ class CreateLessonPlan extends React.Component {
 
                             {Meteor.userId()?
                                 <Menu.Item onClick = {()=>{
-                                    const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
 
-                                    if(!confirmation)
-                                        return
+                                    
+                                    if(this.click>1) {
+
+                                        const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
+
+                                        if(!confirmation)
+                                            return
+                                    }
+                                    
 
                                     this.setState({                                      
 
@@ -549,7 +560,10 @@ class CreateLessonPlan extends React.Component {
                                 Undo
                             </Menu.Item>
 
-                            <Menu.Item onClick = {()=>{this.save()}}>
+                            <Menu.Item onClick = {()=>{
+                                    this.save()
+                                    this.click = 0
+                                }}>
                                 Save
                             </Menu.Item>
 

@@ -6,6 +6,8 @@ import 'semantic-ui-css/semantic.min.css';
 import TiArrowMove from 'react-icons/lib/ti/arrow-move'
 import FaClose from 'react-icons/lib/fa/close'
 import FaCode from 'react-icons/lib/fa/code'
+import MdNetworkCell from 'react-icons/lib/md/network-cell'
+
 
 
 export default class simsList extends React.Component {
@@ -106,7 +108,7 @@ export default class simsList extends React.Component {
 
                                 onResize={(e, direction, ref, delta, position) => {
                                   
-                                    slides[curSlide].iframes[index].w = ref.offsetWidth
+                                    slides[curSlide].iframes[index].w = ref.offsetWidth-40
                                     slides[curSlide].iframes[index].h = ref.offsetHeight
                                     this.props.saveChanges(slides, undefined)
                                 }}
@@ -127,25 +129,28 @@ export default class simsList extends React.Component {
                                     <div>
                                         <a style = {{marginLeft:'0.5rem', display:this.props.navVisibility?'none':'block'}} className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                     </div>
-                                    <div className = 'sim-nav' style = {{marginLeft:'0.5rem', visibility:this.props.navVisibility?'visible':'hidden'}}>
-                                    
-                                        <FaClose
-                                            className = 'sim-delete'
-                                            onClick = {()=>{
-                                            
-                                                const confirmation = confirm('Are you sure you want to remove this?')
-        
-                                                if(confirmation == true)
-                                                    this.props.delete(index)}
-                                            }
-                                            size  = '20'                              
-                                        />
-                                    
-                                        <TiArrowMove size = '22' className = 'sim-handle'/>
+                                    <div className = 'sim-nav' style = {{ marginLeft:'0.5rem', visibility:this.props.navVisibility?'visible':'hidden'}}>
+                                        <div style = {{display:'flex', flexDirection:'column'}}>
+                                            <FaClose
+                                                className = 'sim-delete'
+                                                onClick = {()=>{
+                                                
+                                                    const confirmation = confirm('Are you sure you want to remove this?')
+            
+                                                    if(confirmation == true)
+                                                        this.props.delete(index)}
+                                                }
+                                                size  = '20'                              
+                                            />
+                                        
+                                            <TiArrowMove size = '22' className = 'sim-handle'/>
 
-                                        <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+                                            <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+                                        </div>
+                                        <div style = {{float:'right', marginLeft:'0.8rem', marginBottom:'0.2rem'}}><MdNetworkCell/></div>    
 
                                     </div>
+                                    
 
                                 </div>
                             </Rnd>
