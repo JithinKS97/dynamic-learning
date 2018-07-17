@@ -515,7 +515,7 @@ class CreateLessonPlan extends React.Component {
                         <Menu color = {'blue'} icon vertical>
 
                             <Menu.Item link>
-                                <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact' onChange = {this.interact.bind(this)} type = 'checkbox'/>
+                                <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact with sim' onChange = {this.interact.bind(this)} type = 'checkbox'/>
                             </Menu.Item>
 
                             <Menu.Item>
@@ -546,7 +546,7 @@ class CreateLessonPlan extends React.Component {
                             :null}
 
                             {!!Meteor.userId()?
-                                <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request</Menu.Item></Link>
+                                <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
                             :null}
 
 
@@ -555,7 +555,7 @@ class CreateLessonPlan extends React.Component {
                                     if(confirmation == true)
                                     this.reset()
                                 }}>
-                                Reset
+                                Reset all
                             </Menu.Item>
 
                             <Menu.Item onClick = {()=>{this.undo()}}>
