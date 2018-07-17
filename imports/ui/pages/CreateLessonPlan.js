@@ -581,7 +581,7 @@ class CreateLessonPlan extends React.Component {
                               slides[this.state.curSlide].pageCount=this.pageCount;
                               this.setState({slides});
                             }}>
-                                Increase Canvas
+                                Increase Canvas size
                             </Menu.Item>
 
                             <Menu.Item onClick = {()=>{
@@ -600,7 +600,7 @@ class CreateLessonPlan extends React.Component {
                               slides[this.state.curSlide].pageCount=this.pageCount;
                               this.setState({slides});
                             }}>
-                                Decrease Canvas
+                                Decrease Canvas size
                             </Menu.Item>
 
                             {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
