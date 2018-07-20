@@ -43,8 +43,8 @@ export default class Upload extends React.Component {
            expression. The src should be set only if the entered tag is valid.
         */
 
-        const tag = entry.match(`<iframe.+?src="http://alpha.editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
-        const link = linkToCode.match(`http://alpha.editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/sketches/[ A-Za-z0-9_@./#&+-]*`)
+        const tag = entry.match(`<iframe.+?src="https://alpha.editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
+        const link = linkToCode.match(`https://alpha.editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/sketches/[ A-Za-z0-9_@./#&+-]*`)
 
 
         
