@@ -9,7 +9,7 @@ import { Tracker } from 'meteor/tracker'
 import { Lessons } from '../../api/lessons'
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
-import {Link} from 'react-router-dom'
+import {Redirect} from 'react-router-dom'
 
 export default class Tree extends Component {
 
@@ -22,7 +22,9 @@ export default class Tree extends Component {
       isOpen: false,
       title:'',
       toCreate:null,
-      loading:true
+      loading:true,
+      selectedLessonId:null,
+      redirectToLesson:false
     }
   }
 
@@ -131,6 +133,8 @@ export default class Tree extends Component {
         return true;
     }
 
+    if(this.state.redirectToLesson == true)
+        return <Redirect to = {`/createlesson/${this.state.selectedLessonId}`}/>
     return (
 
     <div>
@@ -197,12 +201,21 @@ export default class Tree extends Component {
                     buttons:[
 
                         <button
+                            onClick = {()=>{
+                                this.setState({
+                                    selectedLessonId:node._id
+                                },()=>{
+                                    this.setState({
+                                        redirectToLesson:true
+                                    })
+                                })
+                            }}
                             className = 'icon__button'
                             style = {{display:node.isFile?'block':'none'}}
                         >
 
      
-                            <Link to ={{ pathname: `/createlesson/${node._id}`}}><FaEdit size={17} color="black" /></Link>
+                           <FaEdit size={17} color="black" />
 
                         </button>,
 

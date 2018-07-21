@@ -5,6 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import 'react-sortable-tree/style.css';
 import { LessonPlans } from '../../api/lessonplans'
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import { Button, Modal, Form, Label, Checkbox, Dimmer, Loader } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
@@ -40,7 +41,8 @@ class LessonPlansDirectories extends Component {
       editable:false,
       title:null,
       isPublic:null,
-      tags:[]
+      tags:[],
+      redirectToLessonPlan:false
     }
     
   }
@@ -166,9 +168,11 @@ class LessonPlansDirectories extends Component {
             node.children.map(child => {
                 removeLessonPlansInside(child)
             })
-        }        
-
+        }
     }
+
+    if(this.state.redirectToLessonPlan == true)
+        return <Redirect to = {`/createlessonplan/${this.state.selectedLessonPlanId}`} />
 
     
 
@@ -322,13 +326,19 @@ class LessonPlansDirectories extends Component {
                         buttons: [
 
                         <button
-                            
+                            onClick = {()=>{
+                                this.setState({
+                                    selectedLessonPlanId: node._id
+                                },()=>{
+                                    this.setState({
+                                        redirectToLessonPlan: true
+                                    })
+                                })
+                            }}                            
                             className = 'icon__button'
                             style = {{display:node.isFile?'block':'none'}}>
 
-                            <Link to ={{ pathname: `/createlessonplan/${node._id}`}}>
-                               <FaEdit size={17} color="black" />
-                            </Link>
+                            <FaEdit size={17} color="black" />
 
                         </button>,
                         
