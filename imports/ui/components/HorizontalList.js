@@ -19,7 +19,7 @@ export default class HorizontalList extends React.Component {
                 
                     key = {index}
                 >   
-                    <div style = {{display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+                    <div style = {{display:'flex', flexDirection:'column'}}>
 
                         
                         <Button onClick = {()=>{

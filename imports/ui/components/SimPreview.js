@@ -29,6 +29,10 @@ export default class SimPreview extends React.Component {
  
             
                 <Rnd
+                    resizeHandleStyles = {{
+                        width:'100px',
+                        height:'100px'
+                    }}
 
                     style = {{position:'relative', marginBottom:'1.6rem'}}
 

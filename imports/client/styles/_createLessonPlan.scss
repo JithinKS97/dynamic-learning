@@ -22,13 +22,13 @@
 
     flex:0.8;
     overflow-y:auto;
-    overflow-x:hidden;
+    overflow-x:auto;
 }
 
 .board-preview {
 
     flex:0.9;
-    overflow-x:hidden;
+    overflow-x:auto;
 }
 
 .slides {
@@ -41,5 +41,7 @@
 
 #container {
     background-color: black;
-    height: calc(100vh - #{$control-height});
+    height: 720px;
+    width:1400px;
+    overflow-x: auto;
 }

@@ -67,6 +67,7 @@ export default class simsList extends React.Component {
                                
                                 bounds = '.drawing-board-canvas'
                                 dragHandleClassName = '.sim-handle'
+                                resizeHandleClasses = '.sim-resize'
                                 size={{ width: this.props.navVisibility?iframe.w+40:iframe.w,  height: iframe.h}}
                                 position={{ x: iframe.x, y: iframe.y }}
 
@@ -75,6 +76,7 @@ export default class simsList extends React.Component {
                                     const sims = $('.sim')
 
                                     for(let i=0;i<sims.length;i++) {
+                                        
                                         sims[i].style['pointer-events'] = 'none'
                                     }
                                 }}
