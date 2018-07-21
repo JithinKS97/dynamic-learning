@@ -85,7 +85,7 @@ export default class simsList extends React.Component {
 
                                     for(let i=0;i<sims.length;i++) {
                                         
-                                        sims[i].style['pointer-events'] = 'none'
+                                        sims[i].style['pointer-events'] = 'unset'
                                     }
     
                                     slides[curSlide].iframes[index].x = d.lastX
