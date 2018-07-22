@@ -29,11 +29,11 @@ export default class Signup extends React.Component {
         */
 
         const state = Session.get('stateToSave')
-        
+
         if(!state)
             return
 
-        this.setState({            
+        this.setState({
             slides:state.slides,
             title:state.title
         })
@@ -65,10 +65,10 @@ export default class Signup extends React.Component {
             else {
 
                 this.setState({
-                    error: ''                   
+                    error: ''
                 },()=>{
 
-                    if(!this.state.slides) {   
+                    if(!this.state.slides) {
                         return
                     }
 
@@ -88,7 +88,7 @@ export default class Signup extends React.Component {
             }
         })
     }
-    
+
     render() {
         return (
             <div className = 'boxed-view'>
@@ -100,7 +100,7 @@ export default class Signup extends React.Component {
                     <Card.Content>
 
                         {this.state.error ? <p>{this.state.error}</p> : undefined}
-                    
+
                         <Form noValidate onSubmit = {this.onSubmit.bind(this)} noValidate>
                             <Form.Field>
                                 <label>Username</label>
@@ -109,7 +109,7 @@ export default class Signup extends React.Component {
                             <Form.Field>
                                 <label>Email</label>
                                 <input type='email' ref= { e => this.email = e } placeholder='Email'/>
-                            </Form.Field>    
+                            </Form.Field>
                             <Form.Field>
                                 <label>Password</label>
                                 <input type='password' ref= { e => this.password = e } placeholder='Password'/>
@@ -120,7 +120,7 @@ export default class Signup extends React.Component {
                     </Card.Content>
 
                     <Card.Content>
-                        <Link className = 'link' to='/'>Already have an account?</Link>
+                        <Link className = 'link' to='/login'>Already have an account?</Link>
                     </Card.Content>
                 </Card>
             </div>

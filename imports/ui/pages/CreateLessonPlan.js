@@ -399,7 +399,7 @@ class CreateLessonPlan extends React.Component {
     }
 
     checkCanvasSize(){
-        
+
       var i=$('iframe').length, iframe;
       var maxHeight=-Infinity;
       while(i--){
@@ -432,15 +432,15 @@ class CreateLessonPlan extends React.Component {
         this.setState({redirectToRequest:true})
     }
 
-    
+
 
     render() {
 
         if(this.state.redirectToLogin) {
 
-            return <Redirect to = {`/`}/>
+            return <Redirect to = {`/login`}/>
         }
-        
+
         if(this.state.redirectToDashboard) {
 
             return <Redirect to = {`/dashboard/lessonplans`}/>
@@ -527,7 +527,7 @@ class CreateLessonPlan extends React.Component {
                             {Meteor.userId()?
                                 <Menu.Item onClick = {()=>{
 
-                                    
+
                                     if(this.click>1) {
 
                                         const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
@@ -535,9 +535,9 @@ class CreateLessonPlan extends React.Component {
                                         if(!confirmation)
                                             return
                                     }
-                                    
 
-                                    this.setState({                                      
+
+                                    this.setState({
 
                                         redirectToDashboard:true
                                     })
