@@ -2,8 +2,9 @@
   "name": "Dynamic Learning",
   "short_name": "Dynamic Learning",
   "theme_color": "#000000",
-  "background_color": "#000000",
+  "background_color": "#ffffff",
   "display": "standalone",
+  "description":"A platform where teachers and creative programmers can collaborate to create STEM lessons taught with the help of interactive simulations and animations.",
   "Scope": "/",
   "start_url": "/",
   "icons": [
