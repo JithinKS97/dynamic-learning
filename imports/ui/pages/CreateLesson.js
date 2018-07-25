@@ -58,6 +58,8 @@ class CreateLesson extends React.Component {
 
     saveChanges(slides, curSlide) {
 
+        
+
         if(slides == undefined) {
 
             this.setState({

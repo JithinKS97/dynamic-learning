@@ -210,11 +210,11 @@ export default class Dashboard extends React.Component {
 
                 <Grid  columns={3} divided>
                     <Grid.Row>                        
-                        <Grid.Column width = {2} style = {{margin:'1.6rem'}}>
+                        <Grid.Column width = {3} style = {{margin:'1.6rem'}}>
                         <Button onClick = {()=>{Accounts.logout()}}>Log out</Button>
                             <SideBar/> 
                         </Grid.Column>
-                        <Grid.Column width = {8} style = {{margin:'1.6rem'}}>
+                        <Grid.Column width = {10} style = {{margin:'1.6rem'}}>
                             {this.renderOption()}
                         </Grid.Column>
                     </Grid.Row>

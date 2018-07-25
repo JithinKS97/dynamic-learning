@@ -128,7 +128,12 @@ class CreateLessonPlan extends React.Component {
                 if(this.state.slides.length == 0) {
 
                     this.pushSlide(this.state.slides)
-                    this.db.reset({ webStorage: false, history: true, background: true })
+                    
+                    $('#container')[0].style.height=900+'px';
+                    $('canvas')[0].style.height=$('#container')[0].style.height;
+                    $('canvas')[0].height=900;
+                    this.db.reset('0');
+                   
                 }
                 else {
                     this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
