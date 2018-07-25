@@ -86,13 +86,17 @@ class LessonPlanViewer extends React.Component {
                 if(this.state.slides.length == 0) {
 
                     this.pushSlide(this.state.slides)
-                    this.db.reset({ webStorage: false, history: true, background: true })
+                    
+                    $('#container')[0].style.height=900+'px';
+                    $('canvas')[0].style.height=$('#container')[0].style.height;
+                    $('canvas')[0].height=900;
+                    this.db.reset('0');
                 }
                 else {
                     this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                    $('#container')[0].style.height=(window.innerHeight-28+this.pageCount*300)+'px';
+                    $('#container')[0].style.height=(900+this.pageCount*300)+'px';
                     $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=window.innerHeight-28+this.pageCount*300;
+                    $('canvas')[0].height=900+this.pageCount*300;
                     this.db.reset('0');
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
@@ -178,9 +182,9 @@ class LessonPlanViewer extends React.Component {
                 curSlide
             },()=>{
                 this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                $('#container')[0].style.height=(window.innerHeight-28+this.pageCount*300)+'px';
+                $('#container')[0].style.height=(900+this.pageCount*300)+'px';
                 $('canvas')[0].style.height=$('#container')[0].style.height;
-                $('canvas')[0].height=window.innerHeight-28+this.pageCount*300;
+                $('canvas')[0].height=900+this.pageCount*300;
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
@@ -196,9 +200,9 @@ class LessonPlanViewer extends React.Component {
                 slides,
                 curSlide
             },()=>{
-              $('#container')[0].style.height=window.innerHeight-28+'px';
+              $('#container')[0].style.height=900+'px';
               $('canvas')[0].style.height=$('#container')[0].style.height;
-              $('canvas')[0].height=window.innerHeight-28;
+              $('canvas')[0].height=900;
               this.db.reset();
               this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
