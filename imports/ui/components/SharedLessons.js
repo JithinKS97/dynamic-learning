@@ -1,7 +1,6 @@
 import React from 'react'
-import { Lessons } from '../../api/lessons'
 import {Tracker} from 'meteor/tracker'
-import { List, Input } from 'semantic-ui-react' 
+import { List, Input, Dimmer, Loader } from 'semantic-ui-react' 
 import {Redirect} from 'react-router-dom'
 import { LessonsIndex } from '../../api/lessons'
 
@@ -13,20 +12,24 @@ export default class SharedLessons extends React.Component {
         this.state = {
             lessons:[],
             redirectToLesson: false,
-            selectedLesson: null
+            selectedLesson: null,
+            loading:true
         }
     }
 
     componentDidMount() {
 
-        this.lessonsTracker = Meteor.subscribe('lessons.public')
-        Tracker.autorun(()=>{
+        this.lessonsTracker = Tracker.autorun(()=>{
 
+            this.lessonsHandle = Meteor.subscribe('lessons.public')
+            const loading = !this.lessonsHandle.ready()
             const lessons = LessonsIndex.search('').fetch()
+            
             if(!lessons)
                 return
             this.setState({
-                lessons
+                lessons,
+                loading
             })
 
         })
@@ -90,6 +93,9 @@ export default class SharedLessons extends React.Component {
 
         return(
             <div>
+                <Dimmer inverted active = {this.state.loading}>
+                    <Loader />
+                </Dimmer>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
                 <List
 
