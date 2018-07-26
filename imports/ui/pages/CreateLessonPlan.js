@@ -293,7 +293,7 @@ class CreateLessonPlan extends React.Component {
                 expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
             }
             catch(error) {
-                
+
                 if(error) {
                     Meteor.call('lessonplans.update', _id, slides,(err)=>{
                         alert('Saved successfully')
@@ -544,12 +544,23 @@ class CreateLessonPlan extends React.Component {
                             {Meteor.userId()?
                                 <Menu.Item onClick = {()=>{
 
+                                    const lessonplan = LessonPlans.findOne({_id: this.state._id})
 
-                                    const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
+                                    try {
+                                        expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
+                                    }
+                                    catch(error) {
+                                        
+                                        if(error) {
 
-                                    if(!confirmation)
-                                        return
+                                            const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
 
+                                            if(!confirmation)
+                                                return
+                                        }
+                                        else
+                                            return
+                                    }                               
 
                                     this.setState({
 
