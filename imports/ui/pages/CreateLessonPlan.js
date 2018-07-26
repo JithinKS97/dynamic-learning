@@ -10,6 +10,7 @@ import { Session } from 'meteor/session'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Checkbox, Menu, Button, Dimmer, Loader, Segment, Modal, Form } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import { expect } from 'chai';
 
 
 /* This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
@@ -49,7 +50,6 @@ class CreateLessonPlan extends React.Component {
         this.pushSlide.bind(this)
         this.save.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
-        this.click = 0
     }
 
     handleKeyDown(event){
@@ -287,9 +287,23 @@ class CreateLessonPlan extends React.Component {
 
             const {_id, slides} = this.state
 
-            Meteor.call('lessonplans.update', _id, slides,(err)=>{
-                alert('Saved successfully')
-            })
+            const lessonplan = LessonPlans.findOne({_id: this.state._id})
+
+            try {
+                expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
+            }
+            catch(error) {
+                
+                if(error) {
+                    Meteor.call('lessonplans.update', _id, slides,(err)=>{
+                        alert('Saved successfully')
+                    })
+                }
+                else
+                    return
+            }
+
+
         }
     }
 
@@ -455,8 +469,6 @@ class CreateLessonPlan extends React.Component {
 
             <Segment onClick = {()=>{
 
-                this.click++
-
             }} style = {{padding:0, margin:0}}>
 
                 <Dimmer active = {!this.state.initialized}>
@@ -533,13 +545,10 @@ class CreateLessonPlan extends React.Component {
                                 <Menu.Item onClick = {()=>{
 
 
-                                    if(this.click>1) {
+                                    const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
 
-                                        const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
-
-                                        if(!confirmation)
-                                            return
-                                    }
+                                    if(!confirmation)
+                                        return
 
 
                                     this.setState({
@@ -569,7 +578,6 @@ class CreateLessonPlan extends React.Component {
 
                             <Menu.Item onClick = {()=>{
                                     this.save()
-                                    this.click = 0
                                 }}>
                                 Save
                             </Menu.Item>
