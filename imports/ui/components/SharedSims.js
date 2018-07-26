@@ -44,6 +44,7 @@ export default class SharedSims extends React.Component {
         return sims.map((sim, index) =>{
             return (
                 <List.Item key = {index} onClick = {()=>{
+                    
                     this.setState({                        
                         selectedSim: sim
                     },()=>{

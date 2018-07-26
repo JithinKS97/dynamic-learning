@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 
-import { Button, Form, Card, Image } from 'semantic-ui-react'
+import { Button, Form, Card } from 'semantic-ui-react'
 
 import 'semantic-ui-css/semantic.min.css';
 

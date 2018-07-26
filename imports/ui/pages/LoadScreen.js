@@ -16,6 +16,7 @@ export default class LoadScreen extends React.Component {
               <h1>Dynamic Learning</h1>
               <p>A platform where teachers and creative programmers can collaborate to create STEM lessons taught with the help of interactive simulations and animations.</p>
               <Link className="btn" to="/createlessonplan">Try  Demo</Link>
+              <Link style = {{marginLeft:'2.4rem'}}className="btn" to="/login">Login</Link>
             </div>
           </header>
         );

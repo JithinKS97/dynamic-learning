@@ -7,7 +7,7 @@ import { PublicRoute } from './PublicRoute'
 
 import Login from '../ui/pages/Login'
 import CreateLessonPlan from '../ui/pages/CreateLessonPlan'
-import CreateLesson from '../ui/pages/CreateLesson'
+import Lesson from '../ui/pages/Lesson'
 import LoadScreen from '../ui/pages/LoadScreen'
 
 import Signup from '../ui/pages/Signup'
@@ -29,7 +29,8 @@ const authenticatedPages = [
     '/dashboard/requests',
     '/dashboard/uploadsim',
     '/dashboard/lessons',
-    '/createlesson'
+    '/dashboard/watchlesson',
+    '/lesson'
 ]
 
 export const onAuthChange = (isAuthenticated) => {
@@ -52,7 +53,7 @@ export const AppRouter = (
                 <PublicRoute exact path='/' component = {LoadScreen}></PublicRoute>
                 <PublicRoute exact path='/login' component = {Login}></PublicRoute>
                 <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
-                <PrivateRoute path='/createlesson/:_id' component = {CreateLesson}></PrivateRoute>
+                <PrivateRoute path='/lesson/:_id' component = {Lesson}></PrivateRoute>
                 <PublicRoute path='/createlessonplan' component = {CreateLessonPlan}></PublicRoute>
                 <PublicRoute path='/signup' component = {Signup}></PublicRoute>
                 <PrivateRoute path='/request/:_id' component = {Request}></PrivateRoute>

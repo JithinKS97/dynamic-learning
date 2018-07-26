@@ -27,10 +27,10 @@ export default class HorizontalList extends React.Component {
                             this.props.saveChanges(undefined, index)
                             
                         }} style = {{height:'100%'}}>{index + 1}</Button>
-                        <Button onClick = {()=>{
+                        {this.props.userId == Meteor.userId()?<Button onClick = {()=>{
 
                             this.props.deleteSlide(index)
-                        }} style = {{marginTop:'2.4rem'}}>X</Button>
+                        }} style = {{marginTop:'2.4rem'}}>X</Button>:null}
                         
                     </div>
                 </Menu.Item>

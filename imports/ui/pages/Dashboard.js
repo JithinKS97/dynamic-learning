@@ -2,6 +2,7 @@ import React from 'react'
 import LessonPlansDirectories from '../components/LessonPlansDirectories'
 import RequestsList from '../components/RequestsList'
 import SimsDirectories from '../components/SimsDirectories'
+import SharedLessons from '../components/SharedLessons'
 import LessonsDirectories from '../components/LessonsDirectories'
 import SideBar from '../components/SideBar'
 import { Accounts } from 'meteor/accounts-base'
@@ -110,6 +111,7 @@ export default class Dashboard extends React.Component {
        /* The components are rendered depending upon the selection in the menu */
 
        switch(option) {
+           
             case 'lessonplans':
                 return <div>
                             <Header>Manage Lessonplans</Header>
@@ -129,6 +131,13 @@ export default class Dashboard extends React.Component {
                                 <Header>Manage Lessons</Header>
                                 <LessonsDirectories/>
                             </div>
+            case 'watchlesson':
+                    return (
+                        <div>
+                            <Header>Manage Lessons</Header>
+                            <SharedLessons/>
+                        </div>
+                    )
        }
     }
 
@@ -164,7 +173,7 @@ export default class Dashboard extends React.Component {
     render() {
         return(
             <div style = {{height:'100vh'}}>                   
-            
+
                 <Modal
                     closeOnRootNodeClick={false}                
                     style = {{width:'auto'}}

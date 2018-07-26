@@ -2,14 +2,14 @@ import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Lessons } from '../../api/lessons'
 import HorizontalList from '../components/HorizontalList'
-import { Grid, Button, Container, Dimmer, Loader } from 'semantic-ui-react'
+import { Grid, Button, Container, Dimmer, Loader, Checkbox } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import VideoContainer from '../components/VideoContainer'
 import SimsList from '../components/SimsList'
 import AddSim from '../components/AddSim'
 import { Link } from 'react-router-dom'
 
-class CreateLesson extends React.Component {
+class Lesson extends React.Component {
 
     constructor(props) {
         super(props)
@@ -178,12 +178,21 @@ class CreateLesson extends React.Component {
                     <Grid.Column style = {{padding:'1.6rem', width:'55vw'}}>
                         
                             <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Back to dashboard</Button></Link>
-                            <VideoContainer addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
+                            {this.props.lesson.userId == Meteor.userId()?<Checkbox
+                                checked = {this.props.lesson.shared}
+                                ref = {e=>this.checkbox = e}
+                                onChange = {()=>{
+                                    Meteor.call('lessons.shareLesson', this.props.lesson._id, !this.checkbox.state.checked)
+                                }} 
+                                style = {{paddingLeft:'1.6rem'}} 
+                                label = 'share the lesson'
+                            />:null}
+                            <VideoContainer userId = {this.props.lesson.userId} addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
                         
                     </Grid.Column>
                     <Grid.Column  style = {{padding:'1.6rem', overflowY:'auto', width:'45vw'}}>
                         <Container >
-                            <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>
+                            {this.props.lesson.userId == Meteor.userId()?<Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:null}
                             <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
                             <SimsList isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
                         </Container>
@@ -191,8 +200,8 @@ class CreateLesson extends React.Component {
                 </Grid.Row>
                 <Grid.Row style = {{height:'20vh', padding:'1.6rem'}} >
                     <h1 style = {{padding:'1.6rem', border:'auto auto'}}>{this.state.curSlide+1}</h1>
-                    <HorizontalList deleteSlide = {this.deleteSlide.bind(this)} saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides}/>
-                    <Button 
+                    <HorizontalList userId = {this.props.lesson.userId} deleteSlide = {this.deleteSlide.bind(this)} saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides}/>
+                    {this.props.lesson.userId == Meteor.userId()?<Button 
                         onClick = {this.addNewSlide.bind(this)}
                         style = {{
 
@@ -200,7 +209,7 @@ class CreateLesson extends React.Component {
 
                         }}>
                         +
-                    </Button>
+                    </Button>:null}
                 </Grid.Row>
             </Grid>  
             </div>   
@@ -221,5 +230,5 @@ export default CreateLessonContainer = withTracker(({match})=>{
         lesson: lessonExists? lesson : {slides:[]},
         lessonExists 
     }
-})(CreateLesson)
+})(Lesson)
 

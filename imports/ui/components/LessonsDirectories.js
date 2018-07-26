@@ -134,7 +134,7 @@ export default class Tree extends Component {
     }
 
     if(this.state.redirectToLesson == true)
-        return <Redirect to = {`/createlesson/${this.state.selectedLessonId}`}/>
+        return <Redirect to = {`/lesson/${this.state.selectedLessonId}`}/>
     return (
 
     <div>

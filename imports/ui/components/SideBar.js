@@ -38,7 +38,8 @@ export default class SideBar extends React.Component {
                         <Link to = 'lessonplans'><Menu.Item link>Manage lessonplans</Menu.Item></Link>
                         <Link to = 'lessons'><Menu.Item link>Manage lessons</Menu.Item></Link>                    
                         <Link  to = 'uploadsim'><Menu.Item link>Manage simulations</Menu.Item></Link>
-                        <Link to = 'requests'><Menu.Item link>Help make simulations</Menu.Item></Link>   
+                        <Link to = 'requests'><Menu.Item link>Help make simulations</Menu.Item></Link>
+                        <Link to = 'watchlesson'><Menu.Item link>Watch lesson</Menu.Item></Link>
                     </Menu>
     
                 </ul>
