@@ -64,6 +64,23 @@ export default class VideoContainer extends React.Component {
             return null
     }
 
+    deleteButton() {
+        if(this.props.userId == Meteor.userId()) {
+            return (
+                <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{
+
+                    const confirmation = confirm('Are you sure want to remove this video?')
+                    if(!confirmation)
+                        return
+                    
+                    this.props.addVideo(null)
+                    
+                }}>X</Button>
+            )
+        }
+        else return null
+    }
+
     render() {
 
         return(
@@ -114,15 +131,7 @@ export default class VideoContainer extends React.Component {
                 {
                     this.props.url?
                     <Container>
-                        <Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{
-
-                            const confirmation = confirm('Are you sure want to remove this video?')
-                            if(!confirmation)
-                                return
-                            
-                            this.props.addVideo(null)
-                            
-                        }}>X</Button>
+                        {this.deleteButton()}
                         <iframe 
                             width="920" 
                             height="600" 
