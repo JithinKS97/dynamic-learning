@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom'
 
 class Lesson extends React.Component {
 
+
+
     constructor(props) {
         super(props)
 
@@ -194,7 +196,7 @@ class Lesson extends React.Component {
                         <Container >
                             {this.props.lesson.userId == Meteor.userId()?<Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:null}
                             <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
-                            <SimsList isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
+                            <SimsList userId = {this.props.lesson.userId} isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
                         </Container>
                     </Grid.Column>
                 </Grid.Row>
@@ -220,6 +222,7 @@ class Lesson extends React.Component {
 
 export default CreateLessonContainer = withTracker(({match})=>{
 
+    Meteor.subscribe('lessons.public')
     const lessonsHandle = Meteor.subscribe('lessons')
     const loading = !lessonsHandle.ready()
     const lesson = Lessons.findOne(match.params._id)

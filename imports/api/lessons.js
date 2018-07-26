@@ -27,7 +27,7 @@ if(Meteor.isServer) {
 
     Meteor.publish('lessons', function() {
 
-        return Lessons.find()
+        return Lessons.find({userId:this.userId})
     })
 
     Meteor.publish('lessons.public',function(){

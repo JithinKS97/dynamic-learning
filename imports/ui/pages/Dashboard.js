@@ -134,7 +134,7 @@ export default class Dashboard extends React.Component {
             case 'watchlesson':
                     return (
                         <div>
-                            <Header>Manage Lessons</Header>
+                            <Header>Dynamic Lessons</Header>
                             <SharedLessons/>
                         </div>
                     )

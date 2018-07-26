@@ -168,7 +168,7 @@ export default class simsList extends React.Component {
                  
                             <div style = {{marginBottom:'16rem'}} key = {index}>
 
-                                <Button                                 
+                                {this.props.userId == Meteor.userId()?<Button                                 
                                     
                                     style = {{marginTop:'0.8rem', marginBottom:'0.8rem'}}
                                     onClick = {()=>{
@@ -178,7 +178,7 @@ export default class simsList extends React.Component {
                                             this.props.delete(index)
                                     }}>X
 
-                                </Button>                    
+                                </Button>:null}               
                                                                
 
                                 <SimContainer
