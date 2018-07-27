@@ -16,7 +16,7 @@ export default class SharedLessons extends React.Component {
             selectedLesson: null,
             loading:true
         }
-        console.log(this.state)
+        
     }
 
     componentDidMount() {

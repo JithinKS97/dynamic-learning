@@ -92,6 +92,9 @@ class Lesson extends React.Component {
            it is just reset. Otherwise, the slide is deleted and the current slide is set.
         */
 
+        if(this.props.lesson.userId != Meteor.userId())
+            return
+
         const confirmation = confirm('Are you sure you want to delete the slide?')
         if(!confirmation)
             return
@@ -128,12 +131,18 @@ class Lesson extends React.Component {
 
     addVideo(url) {
 
+        if(this.props.lesson.userId != Meteor.userId())
+            return
+
         slides = this.props.lesson.slides
         slides[this.state.curSlide].url = url
         this.save(this.props.lesson._id, slides)
     }
 
     pushSim(title, src, w, h, linkToCode) {
+
+        if(this.props.lesson.userId != Meteor.userId())
+            return
 
         const { curSlide }  = this.state
         const slides = this.props.lesson.slides
@@ -155,7 +164,8 @@ class Lesson extends React.Component {
 
     deleteSim(index) {
 
-
+        if(this.props.lesson.userId != Meteor.userId())
+            return
 
         const { curSlide }  = this.state
         const slides = this.props.lesson.slides

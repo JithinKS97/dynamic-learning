@@ -180,7 +180,7 @@ export default class simsList extends React.Component {
 
                                 </Button>:null}               
                                                                
-
+                                    
                                 <SimContainer
                                     isPreview = {false}
                                     {...this.props} 
@@ -188,6 +188,9 @@ export default class simsList extends React.Component {
                                     src = {iframe.src}
                                     {...iframe}
                                 />
+                                <div>
+                                    <a style = {{marginLeft:'0.5rem', display:this.props.navVisibility?'none':'block'}} className = 'link-to-code-lesson' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+                                </div>
 
                                     
                             </div>

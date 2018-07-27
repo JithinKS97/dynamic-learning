@@ -46,6 +46,16 @@
   transition: 0.1s ease-in;
 }
 
+.link-to-code-lesson {
+  color:#e8e8e8;
+  transition: 0.1s ease-in;
+}
+
+.link-to-code-lesson:hover {
+  color: black;
+  transition: 0.1s ease-in;
+}
+
 .iframe {
   border: 2px solid #444444;
 }
