@@ -10,11 +10,13 @@ export default class SharedLessons extends React.Component {
         
         super(props)
         this.state = {
+
             lessons:[],
             redirectToLesson: false,
             selectedLesson: null,
             loading:true
         }
+        console.log(this.state)
     }
 
     componentDidMount() {

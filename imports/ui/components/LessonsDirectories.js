@@ -35,7 +35,7 @@ export default class Tree extends Component {
 
         const lessonsHandle = Meteor.subscribe('lessons')
         const loading = !lessonsHandle.ready()
-        const flatData = Lessons.find().fetch()
+        const flatData = Lessons.find({userId:Meteor.userId()}).fetch()
 
         const getKey = node => node._id
         const getParentKey = node => node.parent_id
