@@ -18,8 +18,9 @@ export default class HorizontalList extends React.Component {
                 <Menu.Item
                 
                     key = {index}
+                    style = {{height:'100%'}}
                 >   
-                    <div style = {{display:'flex', flexDirection:'column'}}>
+                    <div style = {{display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
 
                         
                         <Button onClick = {()=>{

@@ -13,9 +13,10 @@ import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 
 
-/* This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
-    is composed of an array of slides. Each slide contains a note of type string and array of simulations.
-    The changes need to be saved explicitly by clicking the save button for updating the database.
+/* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
+    is composed of a sequence of slides. Each slide contains a note (the drawing on the canvas which is
+    is of type string) and array of simulations. The changes need to be saved explicitly by clicking 
+    the save button for updating the database.
 */
 
 
@@ -26,14 +27,17 @@ class CreateLessonPlan extends React.Component {
         super(props)
         this.undoArray= []
         this.curPosition= []
+        this.isInteractEnabled=false
         this.lessonplanExists = false
 
         this.state = {
 
             /*Title holds the title of the lessonplan. CurSlide holds the current slide on which we are in.
-                _id holds the id of the lessonplan. Initialzed is set to true once data is fetched from the
+                _id holds the id of the current lessonplan. Initialzed is set to true once data is fetched from the
                 database and is filled in the state. loginNotification becomes true when save button is pressed
-                and the user is not logged in. Checked holds the interact checkbox value.
+                and the user is not logged in. Checked holds the interact checkbox value. RedirectToLogin is set to 
+                true if we want to redirect the user to the login page. Checked holds the interact checkbox value.
+                RedirectToDashboard set to true if we want to redirect the user to the dashboard
             */
 
             title:true,
@@ -46,6 +50,12 @@ class CreateLessonPlan extends React.Component {
             checked: false,
             redirectToDashboard:false
         }
+
+        /* PageCount holds the the value associated with the extra length of the canvas
+            PushSlide is for creation of new slide, save to save the slides to the db,
+            handleKeyDown for dealing with shortcuts (See the definitions below)
+        */
+
         this.pageCount=0;
         this.pushSlide.bind(this)
         this.save.bind(this)
@@ -87,18 +97,17 @@ class CreateLessonPlan extends React.Component {
     componentDidMount() {
 
         this.db = this.drawingBoard.b
-        this.isInteractEnabled=false;
-        this.undoArray= [];
-        this.curPosition= [];
 
         /* board:reset and board:stopDrawing are events associated with the drawing
            board. They are triggered whenever the we press the reset button or stop
            the drawing. Whenever these events are triggered, the onChange method is
            called. See the definition below.
         */
-        this.canvasSize=$('canvas')[0].height;
+
         this.db.ev.bind('board:reset', this.onChange.bind(this));
         this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
+
+        this.canvasSize=$('canvas')[0].height;        
 
         window.addEventListener("keydown", this.handleKeyDown, false);
 
@@ -213,7 +222,7 @@ class CreateLessonPlan extends React.Component {
               $('canvas')[0].style.height=$('#container')[0].style.height;
               $('canvas')[0].height=900+this.pageCount*300;
               this.db.reset('0');
-                this.db.reset({ webStorage: false, history: true, background: true })
+              this.db.reset({ webStorage: false, history: true, background: true })
         })
     }
 
@@ -289,6 +298,12 @@ class CreateLessonPlan extends React.Component {
 
             const lessonplan = LessonPlans.findOne({_id: this.state._id})
 
+            /* If the slides in the state has the same values as that of the slides
+                in the database, we need not save, expect to deep include by chai checks this equality.
+                If they are not same, an error is thrown. When we catch the error, we can see that the
+                data are different and we initiate the save.
+            */
+
             try {
                 expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
             }
@@ -312,7 +327,7 @@ class CreateLessonPlan extends React.Component {
         /* This function is used in multiple places to save the changes (not in the databse, but
             in the react state).
 
-           Depending upon the change made, the changes are saved looking upon arguments given when the
+           Depending upon the changes made, they are saved looking upon arguments given when the
            function was called.
         */
 

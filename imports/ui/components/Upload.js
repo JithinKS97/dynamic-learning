@@ -51,6 +51,7 @@ export default class Upload extends React.Component {
         if(tag && link) {
             const validTag = tag[0]
             const validLink = link[0]
+            
             /* The contents in the src is obtained using regular expression */
 
             const src = validTag.match(`src\s*=\s*"\s*(.*)\s*">`)
