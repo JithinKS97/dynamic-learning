@@ -92,7 +92,7 @@ Meteor.methods({
         Lessons.update({_id, userId:this.userId}, {$set:{slides, updatedAt: moment().valueOf()}})
     },
     'lessons.shareLesson'(_id, shared) {
-        console.log(shared)
+
         Lessons.update({_id, userId:this.userId}, {$set:{shared, updatedAt: moment().valueOf()}})
     }
 

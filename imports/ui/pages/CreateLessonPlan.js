@@ -276,6 +276,9 @@ class CreateLessonPlan extends React.Component {
             const { slides } = this.state
             this.pushSlide(slides)
             this.db.reset({ webStorage: false, history: true, background: true })
+            $('#container')[0].style.height=900+'px';
+            $('canvas')[0].style.height=$('#container')[0].style.height;
+            $('canvas')[0].height=900;
         })
     }
 
