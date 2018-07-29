@@ -1,5 +1,5 @@
 import React from 'react'
-import SimContainer from './SimContainer'
+import SimPreview from './SimPreview'
 import Rnd from 'react-rnd'
 import { Meteor } from 'meteor/meteor'
 import 'semantic-ui-css/semantic.min.css';
@@ -170,7 +170,7 @@ export default class simsList extends React.Component {
 
                                 {this.props.userId == Meteor.userId()?<Button                                 
                                     
-                                    style = {{marginTop:'0.8rem', marginBottom:'0.8rem'}}
+                                    style = {{marginTop:'0.8rem', marginBottom:'0.8rem', float:'center'}}
                                     onClick = {()=>{
 
                                         const confirmation = confirm('Are you sure you want to remove this?')
@@ -180,14 +180,15 @@ export default class simsList extends React.Component {
 
                                 </Button>:null}               
                                                                
-                                    
-                                <SimContainer
-                                    isPreview = {false}
-                                    {...this.props} 
-                                    index = {index} 
-                                    src = {iframe.src}
-                                    {...iframe}
-                                />
+                                <div>
+                                    <SimPreview
+                                        isPreview = {false}
+                                        {...this.props} 
+                                        index = {index} 
+                                        src = {iframe.src}
+                                        {...iframe}
+                                    />
+                                </div>
                                 <div>
                                     <a style = {{marginLeft:'0.5rem', display:this.props.navVisibility?'none':'block'}} className = 'link-to-code-lesson' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                 </div>
