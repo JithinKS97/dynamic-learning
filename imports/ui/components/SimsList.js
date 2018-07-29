@@ -1,5 +1,6 @@
 import React from 'react'
 import SimPreview from './SimPreview'
+import SimContainer from './SimContainer'
 import Rnd from 'react-rnd'
 import { Meteor } from 'meteor/meteor'
 import 'semantic-ui-css/semantic.min.css';
