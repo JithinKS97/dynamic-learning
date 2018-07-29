@@ -58,9 +58,7 @@ class Lesson extends React.Component {
     }
 
 
-    saveChanges(slides, curSlide) {
-
-        
+    saveChanges(slides, curSlide) {        
 
         if(slides == undefined) {
 

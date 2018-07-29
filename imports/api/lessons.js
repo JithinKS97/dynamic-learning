@@ -64,8 +64,11 @@ Meteor.methods({
 
     'lessons.folder.insert'(title) {
 
-        Lessons.insert({
+        console.log(title)
 
+        Lessons.insert({
+            
+            userId:this.userId,
             title,
             isFile: false,
             parent_id:'0',

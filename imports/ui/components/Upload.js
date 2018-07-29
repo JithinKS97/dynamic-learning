@@ -61,6 +61,7 @@ export default class Upload extends React.Component {
 
 
             if(src && srcEnding[1] === linkEnding[1]) {
+
                 const validSrc = src[1]
                 this.setState({
                     src: validSrc,
@@ -68,6 +69,7 @@ export default class Upload extends React.Component {
                 })
             }
             else {
+                
                 this.setState({
                     src:'',
                     linkToCode:''
