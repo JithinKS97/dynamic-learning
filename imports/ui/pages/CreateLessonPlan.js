@@ -160,6 +160,7 @@ class CreateLessonPlan extends React.Component {
 
         window.removeEventListener("keydown", this.handleKeyDown, false)
     }
+    
 
     onChange() {
         /*

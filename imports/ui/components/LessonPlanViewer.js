@@ -10,6 +10,7 @@ import { Dimmer, Loader, Segment } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 
+
 /* This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
     is composed of an array of slides. Each slide will contain a note and array of simulations.
     The changes need to be saved explicitly by clicking the save button for updating the database.
