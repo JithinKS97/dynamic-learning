@@ -359,14 +359,15 @@ class Request extends React.Component {
                         
                                     {this.state.show?<CommentsList  deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
                                     <br/>
-                                    {this.state.show?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
+                                    {this.state.show && !!Meteor.userId()?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
                                     null}
                         
                             </Grid.Column>
                             <Grid.Column width = {4} style = {{overflow:'auto', padding:'1.6rem'}}>
-                                <div style = {{marginBottom:'1.6rem'}}>
+                                        
+                                {Meteor.userId()?<div style = {{marginBottom:'1.6rem'}}>
                                     {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
-                                </div>    
+                                </div>:null}
                                     
                                     {this.state.show?this.displayMenu.bind(this)():null}
                                     

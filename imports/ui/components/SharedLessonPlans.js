@@ -3,6 +3,7 @@ import { LessonPlansIndex } from '../../api/lessonplans'
 import { List, Modal,Button, Input, Dimmer, Loader } from 'semantic-ui-react'
 import LessonPlanViewer from './LessonPlanViewer'
 import FaCodeFork from 'react-icons/lib/fa/code-fork'
+import {Link} from 'react-router-dom'
  
 export default class SharedLessonPlans extends React.Component {
 
@@ -102,7 +103,9 @@ export default class SharedLessonPlans extends React.Component {
                         Preview
                         <div style = {{float:'right'}}>
 
-                        <Button onClick = {()=>{
+                        {!Meteor.userId()?<Link to = {`/createlessonplan/${this.getId.bind(this)()}`}><Button>Open</Button></Link>:null}
+
+                        {Meteor.userId()?<Button onClick = {()=>{
 
                         const confirmation = confirm('Are you sure you want to fork this lesson?')
                                                     
@@ -111,6 +114,9 @@ export default class SharedLessonPlans extends React.Component {
 
                         Meteor.call('lessonplans.insert', this.state.lessonplan.title, (err, _id) => {
 
+                                if(!Meteor.userId())
+                                    return
+
                                 Meteor.call('lessonplans.update', _id, this.state.lessonplan.slides)
                                 this.setState({lessonplan:null})
                                 confirm('Lesson has been succesfully forked')                                               
@@ -118,7 +124,7 @@ export default class SharedLessonPlans extends React.Component {
                             })
                         }}><FaCodeFork/>
                         Fork
-                        </Button>
+                        </Button>:null}
                         
                         <Button onClick = {()=>{this.setState({lessonplan:null})}}>X</Button>
                         </div>

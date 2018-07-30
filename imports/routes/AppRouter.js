@@ -9,6 +9,8 @@ import Login from '../ui/pages/Login'
 import CreateLessonPlan from '../ui/pages/CreateLessonPlan'
 import Lesson from '../ui/pages/Lesson'
 import LoadScreen from '../ui/pages/LoadScreen'
+import Explore from '../ui/pages/Explore'
+
 
 import Signup from '../ui/pages/Signup'
 import NotFound from '../ui/pages/NotFound'
@@ -19,12 +21,9 @@ import Dashboard from '../ui/pages/Dashboard'
 
 
 const history = createHistory()
-const unAuthenticatedPages = ['/', '/signup', '/createlessonplan','/login']
+const publicPages = ['/', '/signup', '/createlessonplan','/login', '/explore']
 const authenticatedPages = [
-    '/lessonplans',
-    '/simupload',
-    '/request',
-    '/sandbox',
+
     '/dashboard/lessonplans',
     '/dashboard/requests',
     '/dashboard/uploadsim',
@@ -36,10 +35,10 @@ const authenticatedPages = [
 export const onAuthChange = (isAuthenticated) => {
 
 
-  const IsUnauthenticatedPage = unAuthenticatedPages.includes(location.pathname)
+  const IsPublicPage = publicPages.includes(location.pathname)
   const IsAuthenticatedPage = authenticatedPages.includes(location.pathname)
 
-  if(IsUnauthenticatedPage && isAuthenticated) {
+  if(IsPublicPage && isAuthenticated) {
     history.replace('/dashboard/lessonplans')
   } else if(IsAuthenticatedPage && !isAuthenticated) {
     history.replace('/')
@@ -51,12 +50,13 @@ export const AppRouter = (
         <div>
             <Switch>
                 <PublicRoute exact path='/' component = {LoadScreen}></PublicRoute>
+                <PublicRoute exact path='/explore' component = {Explore}></PublicRoute>
                 <PublicRoute exact path='/login' component = {Login}></PublicRoute>
-                <PrivateRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PrivateRoute>
-                <PrivateRoute path='/lesson/:_id' component = {Lesson}></PrivateRoute>
+                <PublicRoute path='/createlessonplan/:_id' component = {CreateLessonPlan}></PublicRoute>
+                <PublicRoute path='/lesson/:_id' component = {Lesson}></PublicRoute>
                 <PublicRoute path='/createlessonplan' component = {CreateLessonPlan}></PublicRoute>
                 <PublicRoute path='/signup' component = {Signup}></PublicRoute>
-                <PrivateRoute path='/request/:_id' component = {Request}></PrivateRoute>
+                <PublicRoute path='/request/:_id' component = {Request}></PublicRoute>
                 <PrivateRoute path='/sandbox' component = {SandBox}></PrivateRoute>
                 <PrivateRoute path='/dashboard/:option' component = {Dashboard}></PrivateRoute>
                 <Route path = '*' component = {NotFound}></Route>

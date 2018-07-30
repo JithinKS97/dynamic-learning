@@ -119,7 +119,10 @@ export default class Dashboard extends React.Component {
                         </div>
 
             case 'requests':
-                return <RequestsList/>
+                return <div>
+                            <Header style = {{marginLeft:'2.4rem'}}>Reqests</Header>
+                            <RequestsList/>
+                        </div>
 
             case 'uploadsim':
                 return <div>

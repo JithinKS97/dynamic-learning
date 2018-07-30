@@ -29,7 +29,6 @@ const RequestsList = (props) => {
 
     return(
         <div>
-            <Header style = {{marginLeft:'2.4rem'}}>Requests</Header>
             <List style = {{height:'720px', marginTop:'2.4rem'}}  selection verticalAlign='middle'>
                 {renderRequests()}
             </List>            

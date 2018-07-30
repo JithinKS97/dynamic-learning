@@ -658,7 +658,7 @@ class CreateLessonPlan extends React.Component {
                             )}}>
                                 Login
                             </Menu.Item>:null}
-
+                            {!Meteor.userId()?<Menu.Item><Link to = {`/explore`}>Back</Link></Menu.Item>:null}
                         </Menu>
 
                     </div>
