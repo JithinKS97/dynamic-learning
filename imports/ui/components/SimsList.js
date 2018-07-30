@@ -12,7 +12,7 @@ import { Button } from 'semantic-ui-react'
 
 
 
-export default class simsList extends React.Component {
+export default class SimsList extends React.Component {
 
     constructor(props) {
 
