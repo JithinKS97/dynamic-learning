@@ -76,13 +76,13 @@ The users can share lessonplans, lessons and the simulations with the other user
 
 ##### Component - Lesson
 
+This is the component where we can create lessons. Each lesson consists of a series of slides and on each slide there will be a video and the associated simulations. When the cretor of the lesson views the component, he will have options to edit the lesson (Add more slides, add video, add simulations) and for others, they can only view the lesson.
+
 ### 7) Exploring the App
 
 ##### Component - Explore
 
 For users visiting the app, they will be able to all the lessons, lessonplans and reques forums that has been created and shared with public so that they get an idea about what the app is all about.
-
-This is the component where we can create lessons. Each lesson consists of a series of slides and on each slide there will be a video and the associated simulations. When the cretor of the lesson views the component, he will have options to edit the lesson (Add more slides, add video, add simulations) and for others, they can only view the lesson.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
