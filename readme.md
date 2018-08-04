@@ -15,10 +15,6 @@ the same time they watch it.
 
 http://dynamiclearning.io
 
-## Frameworks used
-
-The webapp is build on top of full stack Javascript framework Meteor.js along with React.js. Meteor.js comes with inbuilt Mongo DB database which used in the app. Semantic UI React is used for obtaining styled ui components used throughout for making the ui of the app.
-
 ## Link to Github repo
 
 https://github.com/JithinKS97/dynamic-learning-app
@@ -30,6 +26,11 @@ https://github.com/JithinKS97/dynamic-learning-app
 3) Clone the repository
 4) Install the node dependencies by executing the command `npm install --save` from the root directory
 5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
+
+## Frameworks used
+
+The webapp is build on top of full stack Javascript framework Meteor.js along with React.js. Meteor.js comes with inbuilt Mongo DB database which used in the app. Semantic UI React is used for obtaining styled ui components used throughout for making the ui of the app.
+
 
 ## Main react components
 
