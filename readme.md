@@ -67,7 +67,7 @@ The users can share lessonplans, lessons and the simulations with the other user
 
 ##### Component - Lesson
 
-### 7)Exploring the App
+### 7) Exploring the App
 
 ##### Component - Explore
 
