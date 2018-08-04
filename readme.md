@@ -23,6 +23,14 @@ The webapp is build on top of full stack Javascript framework Meteor.js along wi
 
 https://github.com/JithinKS97/dynamic-learning-app
 
+## How to set up the development environment
+
+1) Install Node.js - https://nodejs.org/en/
+2) Install Meteor.js - https://www.meteor.com/
+3) Clone the repository
+4) Install the node dependencies by executing the command `npm install --save` from the root directory
+5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
+
 ## Main react components
 
 Below are the main React Components of the app and much of the work in GSoC 2018 was focused on the development
