@@ -353,7 +353,7 @@ class Request extends React.Component {
 
                                     null}
 
-                                    {this.state.show?<List showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
+                                    {this.state.show?<List from = {'request'} showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
                                 
                             </Grid.Column>
                             <Grid.Column width = {7} style = {{overflow:'auto', padding:'1.6rem'}}>
