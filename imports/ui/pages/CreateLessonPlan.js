@@ -375,6 +375,7 @@ class CreateLessonPlan extends React.Component {
            slide element. If there is only one element. it is not deleted,
            it is just reset. Otherwise, the slide is deleted and the current slide is set.
         */
+       
 
         const {slides} = this.state
 

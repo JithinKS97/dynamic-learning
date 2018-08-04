@@ -41,7 +41,8 @@ class Request extends React.Component {
             slides: [],
             curSlide: 0,
             initialized:false,
-            selectedSim:null
+            selectedSim:null,
+            requestTitle: true
         }
         this.update.bind(this)
         this.pushSim.bind(this)
@@ -379,7 +380,7 @@ class Request extends React.Component {
                     {isOwner?
 
                     <Modal
-                        open = {this.state.requestTitle?false:true}
+                        open = {!!!this.state.requestTitle}
                         size = 'tiny'
                         
                     >
