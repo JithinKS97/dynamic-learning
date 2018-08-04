@@ -65,7 +65,7 @@ for the development of a new simulation.
 
 ### 5) Sharing of lessonplans, lessons and simulations
 
-components - SharedSims, SharedLessonPlans, SharedLessons
+Components - SharedSims, SharedLessonPlans, SharedLessons
 
 The users can share lessonplans, lessons and the simulations with the other users if they want. I've used the
 meteor easy search component for implementing the search (https://github.com/matteodem/meteor-easy-search)
