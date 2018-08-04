@@ -33,7 +33,7 @@ of the components are provided in the component's js files.
 
 ### 1) Lessonplan creator
 
-#### Component - CreateLessonPlan
+##### Component - CreateLessonPlan
 
 This is the area where teachers create the lesson. It is basically a drawing app on which simulations can be embedded and notes can be added. Each lessonplan consists of a sequence slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
 
@@ -41,35 +41,35 @@ Each simulation is an iframe which is obtained from the online p5 text editor ex
 
 ### 2) Login and Signup components
 
-#### Components - Login, Signup
+##### Components - Login, Signup
 
 The login and sign up features are made by making use of the inbuilt authentication tools in Meteor.
 
 ### 3) The lessonplan, simulations, lessons organization
 
-#### Components - LessonplansDirectories, LessonsDirectories, SimsDirectories
+##### Components - LessonplansDirectories, LessonsDirectories, SimsDirectories
 
 React Sortable tree component (https://github.com/frontend-collective/react-sortable-tree) is used for building the interface for the organization of lessonplans, lessons and the uploaded simulations.
 
 ### 4) Request Forum
 
-#### Component - Request
+##### Component - Request
 
 For each lessonplan, a request forum can be created by the teacher where a request for a new simulation can be made. These requests are visible to all the other users of the app and anyone can participate in the discussion for the development of a new simulation.
 
 ### 5) Sharing of lessonplans, lessons and simulations
 
-#### Components - SharedSims, SharedLessonPlans, SharedLessons
+##### Components - SharedSims, SharedLessonPlans, SharedLessons
 
 The users can share lessonplans, lessons and the simulations with the other users if they want. I've used the meteor easy search component for implementing the search (https://github.com/matteodem/meteor-easy-search)
 
 ### 6) Creation of Lessons
 
-#### Component - Lesson
+##### Component - Lesson
 
 ### 7)Exploring the App
 
-#### Component - Explore
+##### Component - Explore
 
 For users visiting the app, they will be able to all the lessons, lessonplans and reques forums that has been created and shared with public so that they get an idea about what the app is all about.
 
