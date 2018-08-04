@@ -140,7 +140,7 @@ class SimsDirectories extends React.Component {
                 <div style={{ height: this.props.height, padding:'1.6rem' }}>
 
                     {Meteor.userId()?null:<h3>You need to login to add your own simulations</h3>}
-                    {this.props.treeData.length == 0?<h3>You haven't added any simulations yet !</h3>:null}
+                    {this.props.treeData.length == 0 && Meteor.userId()?<h3>You haven't added any simulations yet !</h3>:null}
 
                     <SortableTree
                         onVisibilityToggle = {({ node, expanded}) => {
