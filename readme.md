@@ -63,6 +63,12 @@ Components - SharedSims, SharedLessonPlans, SharedLessons
 
 The users can share lessonplans, lessons and the simulations with the other users if they want. I've used the meteor easy search component for implementing the search (https://github.com/matteodem/meteor-easy-search)
 
+### 6) Creation of Lessons
+
+Component - Lesson
+
+This is the component where we can create lessons. Each lesson consists of a series of slides and on each slide there will be a video and the associated simulations. When the cretor of the lesson views the component, he will have options to edit the lesson (Add more slides, add video, add simulations) and for others, they can only view the lesson.
+
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
 I've provided necessary documentation in the component js file itself in all the areas where I felt like clarifications are necessary.
