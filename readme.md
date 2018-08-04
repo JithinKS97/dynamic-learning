@@ -14,6 +14,10 @@ The three core objectives of the web app are-
 3) Students should be able to view the video lessons prepared by teachers and should be able to use the simulations
 the same time they watch it.
 
+### Link to the working webapp
+
+http://dynamiclearning.io
+
 ## Frameworks used
 
 The webapp is build on top of full stack Javascript framework Meteor.js along with React.js.
