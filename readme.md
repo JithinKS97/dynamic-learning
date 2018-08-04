@@ -70,7 +70,7 @@ Components - SharedSims, SharedLessonPlans, SharedLessons
 The users can share lessonplans, lessons and the simulations with the other users if they want. I've used the
 meteor easy search component for implementing the search (https://github.com/matteodem/meteor-easy-search)
 
-### 5) Above are the main React Components of the app and the you can find the other React Components in the
+ Above are the main React Components of the app and the you can find the other React Components in the
 'client/ui/components' folder.
 
 I've provided documentation in all the areas where I felt like clarifications are necessary.
