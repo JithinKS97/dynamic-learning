@@ -32,7 +32,7 @@ const List = (props) => {
                     >
                         <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index+1}</Button>
 
-                        {isOwner && !props.isPreview?<Button onClick = {()=>{
+                        {!props.isPreview?<Button onClick = {()=>{
 
                             const confirmation = confirm('Are you sure you want to delete?')
                             
