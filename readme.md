@@ -76,7 +76,7 @@ meteor easy search component for implementing the search (https://github.com/mat
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
-I've provided documentation in all the areas where I felt like clarifications are necessary.
+I've provided documentation in the js file itself in all the areas where I felt like clarifications are necessary.
 
 ## Features that can be added
 
