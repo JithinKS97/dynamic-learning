@@ -76,7 +76,7 @@ The users can share lessonplans, lessons and the simulations with the other user
 
 ##### Component - Lesson
 
-This is the component where we can create lessons. Each lesson consists of a series of slides and on each slide there will be a video and the associated simulations. When the cretor of the lesson views the component, he will have options to edit the lesson (Add more slides, add video, add simulations) and for others, they can only view the lesson.
+This is the component where we can create lessons. Each lesson consists of a series of slides and on each slide there will be a video and the associated simulations. When the creator of the lesson views the component, he will have options to edit the lesson (Add more slides, add video, add simulations) and for others, they can only view the lesson.
 
 ### 7) Exploring the App
 
