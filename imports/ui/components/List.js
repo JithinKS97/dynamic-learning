@@ -25,6 +25,7 @@ const List = (props) => {
                    that execute the operations are passed.
                 */
                 if(props.from == 'createLessonplan') {
+
                     return(
                         <Menu.Item
                          style = {{display:'flex', justifyContent:'space-between'}}                
@@ -45,7 +46,8 @@ const List = (props) => {
                     )
                     
                 }
-                else {
+                else {                    
+
                     return (
                         <Menu.Item
                          style = {{display:'flex', justifyContent:'space-between'}}                
@@ -53,7 +55,7 @@ const List = (props) => {
                         >
                             <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index+1}</Button>
 
-                            {!!Meteor.userId() && !props.isPreview?<Button onClick = {()=>{
+                            {Meteor.userId() == props.userId && !props.isPreview?<Button onClick = {()=>{
 
                                 const confirmation = confirm('Are you sure you want to delete?')
                                 

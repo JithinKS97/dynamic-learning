@@ -12,8 +12,8 @@ const RequestsList = (props) => {
 
             if(request.requestTitle) {
                 return (
-                    <List.Item>
-                        <Link key = {index} to={{ pathname: `/request/${request._id}`}} >
+                    <List.Item key = {index} >
+                        <Link to={{ pathname: `/request/${request._id}`}} >
                             
                                 <List.Content style = {{color:'black', paddingLeft:'2.4rem'}}>                  
                                     {request.requestTitle}                             

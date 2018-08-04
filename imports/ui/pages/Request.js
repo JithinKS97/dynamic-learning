@@ -111,6 +111,10 @@ class Request extends React.Component {
     }
 
     update() {
+
+        if(!Meteor.userId())
+            return
+
         const { slides, requestTitle }  = this.state
 
         Meteor.call('requests.update',this.state._id, slides)
@@ -353,7 +357,7 @@ class Request extends React.Component {
 
                                     null}
 
-                                    {this.state.show?<List from = {'request'} showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
+                                    {this.state.show?<List userId = {this.state.userId} from = {'request'} showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
                                 
                             </Grid.Column>
                             <Grid.Column width = {7} style = {{overflow:'auto', padding:'1.6rem'}}>
