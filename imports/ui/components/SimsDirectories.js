@@ -47,6 +47,7 @@ class SimsDirectories extends React.Component {
     handleClose = () => this.setState({ modalOpen: false })  
     
     simulationsNotAddedMessage() {
+        
         if(this.props.simsExists) {
             if(this.props.treeData.length == 0 && Meteor.userId()) {
                 return <h3>You haven't added any simulations yet !</h3>
