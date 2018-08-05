@@ -318,28 +318,28 @@ class Request extends React.Component {
                     <Grid style = {{height:'100vh'}}  columns={3} divided>
                         <Grid.Row>
                             <Grid.Column width = {4} style = {{overflow:'auto'}}>                                
-                                    <Container style = {{margin:'1.6rem'}}>                            
+                                    <div style = {{margin:'1.6rem'}}>
+
+                                        <Button onClick = {()=>{
+                                            history.back()
+                                            }}>Back</Button>
+
+                                            {isOwner?<Button onClick = {()=>{
+                                            
+                                            const confirmation = confirm('Are you sure you want to close this forum?')
+
+                                            if(confirmation && isOwner) {
+                                                Meteor.call('requests.reset', this.state._id)
+                                                history.back()
+                                            }   
+
+                                            }}>Close this request forum</Button>:null}                         
                                                                 
                                         <h1>{this.state.requestTitle}</h1>
 
-                                        <Button onClick = {()=>{
-                                        history.back()
-                                        }}>Back</Button>
+                      
 
-                                        {isOwner?<Button onClick = {()=>{
-                                        
-                                        const confirmation = confirm('Are you sure you want to close this forum?')
-
-                                        if(confirmation && isOwner)
-                                        {
-                                            Meteor.call('requests.reset', this.state._id)
-                                            history.back()
-                                        }                        
-                                        
-
-                                        }}>Close this request forum</Button>:null}
-
-                                    </Container>
+                                    </div>
 
                                     {isOwner?
                                     

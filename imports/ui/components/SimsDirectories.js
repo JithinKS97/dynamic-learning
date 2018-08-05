@@ -44,7 +44,17 @@ class SimsDirectories extends React.Component {
      }
 
     handleOpen = () => this.setState({ modalOpen: true })
-    handleClose = () => this.setState({ modalOpen: false })    
+    handleClose = () => this.setState({ modalOpen: false })  
+    
+    simulationsNotAddedMessage() {
+        if(this.props.simsExists) {
+            if(this.props.treeData.length == 0 && Meteor.userId()) {
+                return <h3>You haven't added any simulations yet !</h3>
+            }
+            else
+                return null
+        }
+    }
     
     render() {  
 
@@ -140,7 +150,7 @@ class SimsDirectories extends React.Component {
                 <div style={{ height: this.props.height, padding:'1.6rem' }}>
 
                     {Meteor.userId()?null:<h3>You need to login to add your own simulations</h3>}
-                    {this.props.treeData.length == 0 && Meteor.userId()?<h3>You haven't added any simulations yet !</h3>:null}
+                    {this.simulationsNotAddedMessage()}
 
                     <SortableTree
                         onVisibilityToggle = {({ node, expanded}) => {
