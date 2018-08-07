@@ -29,7 +29,7 @@ const RequestsList = (props) => {
 
     return(
         <div>
-            <List style = {{height:'720px', marginTop:'2.4rem'}}  selection verticalAlign='middle'>
+            <List style = {{height:window.innerHeight - 150, marginTop:'2.4rem'}}  selection verticalAlign='middle'>
                 {renderRequests()}
             </List>            
         </div>

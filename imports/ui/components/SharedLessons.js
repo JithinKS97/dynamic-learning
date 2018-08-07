@@ -103,7 +103,7 @@ export default class SharedLessons extends React.Component {
 
                     selection 
                     verticalAlign = 'middle'
-                    style = {{height:'720px'}}
+                    style = {{height:window.innerHeight - 150}}
                 >
                     {this.renderLessons()}
                 </List>

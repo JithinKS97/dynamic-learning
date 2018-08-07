@@ -133,8 +133,8 @@ export default class VideoContainer extends React.Component {
                     <Container>
                         {this.deleteButton()}
                         <iframe 
-                            width="920" 
-                            height="600" 
+                            width="720" 
+                            height="480" 
                             src={`//www.youtube.com/embed/${this.getId(this.props.url)}?rel=0&amp;showinfo=0`} 
                             frameBorder="0" 
                             allowFullScreen>

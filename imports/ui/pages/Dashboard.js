@@ -102,8 +102,8 @@ export default class Dashboard extends React.Component {
          */
 
         const panes = [
-            { menuItem: 'My lessonplans', render: () => <Tab.Pane style = {{height:'720px'}}> <LessonPlansDirectories/></Tab.Pane> },
-            { menuItem: 'Shared lessonplans', render: () => <Tab.Pane style = {{height:'720px'}}><SharedLessonPlans/></Tab.Pane> },
+            { menuItem: 'My lessonplans', render: () => <Tab.Pane style = {{height:window.innerHeight - 150+ 'px'}}> <LessonPlansDirectories/></Tab.Pane> },
+            { menuItem: 'Shared lessonplans', render: () => <Tab.Pane style = {{height:window.innerHeight - 150+ 'px'}}><SharedLessonPlans/></Tab.Pane> },
         ]        
 
        const option = this.props.match.params.option
@@ -127,7 +127,7 @@ export default class Dashboard extends React.Component {
             case 'uploadsim':
                 return <div>
                             <Header>Manage simulations</Header>
-                            <SimsDirectories height = {720} getNode = {this.getNode.bind(this)} isPreview = {false}/>
+                            <SimsDirectories height = {window.innerHeight - 150} getNode = {this.getNode.bind(this)} isPreview = {false}/>
                         </div>
             case 'lessons':
                     return <div>

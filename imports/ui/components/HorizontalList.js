@@ -18,7 +18,7 @@ export default class HorizontalList extends React.Component {
                 <Menu.Item
                 
                     key = {index}
-                    style = {{height:'100%', display:'flex', flexDirection:'column', justifyContent:'center'}}
+                    style = {{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}
                 >   
                    
 
@@ -31,7 +31,7 @@ export default class HorizontalList extends React.Component {
                         {this.props.userId == Meteor.userId()?<Button onClick = {()=>{
 
                             this.props.deleteSlide(index)
-                        }} style = {{marginTop:'2.4rem'}}>X</Button>:null}
+                        }} >X</Button>:null}
                
                 </Menu.Item>
             )
@@ -42,7 +42,7 @@ export default class HorizontalList extends React.Component {
 
         return (
 
-            <Menu>
+            <Menu  style = {{height:'100%'}}>
                 {this.renderList()}
             </Menu>
         )
