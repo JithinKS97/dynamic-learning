@@ -185,7 +185,7 @@ class Lesson extends React.Component {
 
             <Grid divided='vertically' style = {{height:'100vh', boxSizing: 'border-box'}}>
                 <Grid.Row style = {{height:'80vh'}}>
-                    <Grid.Column style = {{padding:'1.6rem', width:'55vw'}}>
+                    <Grid.Column style = {{padding:'1.6rem', width:'50vw'}}>
                         
                             <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Back to dashboard</Button></Link>
                             {this.props.lesson.userId == Meteor.userId()?<Checkbox
@@ -200,7 +200,7 @@ class Lesson extends React.Component {
                             <VideoContainer userId = {this.props.lesson.userId} addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
                         
                     </Grid.Column>
-                    <Grid.Column  style = {{padding:'1.6rem', overflowY:'auto', width:'45vw'}}>
+                    <Grid.Column  style = {{padding:'1.6rem', overflowY:'auto', width:'50vw'}}>
                         <Container >
                             {this.props.lesson.userId == Meteor.userId()?<Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:null}
                             <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
