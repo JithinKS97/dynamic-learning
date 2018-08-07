@@ -18,7 +18,7 @@ export default class HorizontalList extends React.Component {
                 <Menu.Item
                 
                     key = {index}
-                    style = {{height:'100%', display:'flex', flexDirection:'column', justifyContent:this.props.userId == Meteor.userId()?'space-between':'center'}}
+                    style = {{height:'100%', display:'flex', flexDirection:'column', justifyContent:this.props.userId == Meteor.userId()?'space-around':'center'}}
                 >   
                    
 
