@@ -29,7 +29,7 @@ https://github.com/JithinKS97/dynamic-learning-app
 
 ## Frameworks used
 
-The webapp is build on top of full stack Javascript framework Meteor.js along with React.js. Meteor.js comes with inbuilt Mongo DB database which used in the app. Semantic UI React is used for obtaining styled ui components used throughout for making the ui of the app.
+The webapp is build on top of full stack Javascript framework Meteor.js along with React.js. Meteor.js comes with inbuilt Mongo DB database which is used in the app. Semantic UI React is used for obtaining styled ui components used throughout for making the ui of the app.
 
 
 ## Main react components
@@ -44,7 +44,7 @@ of the components are provided in the component's js files.
 
 ##### Component - CreateLessonPlan
 
-This is the area where teachers create the lesson. It is basically a drawing app on which simulations can be embedded and notes can be added. Each lessonplan consists of a sequence slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
+This is the area where teachers create the lesson. It is basically a drawing app on which simulations can be embedded and notes can be added. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
 
 Each simulation is an iframe which is obtained from the online p5 text editor export feature.
 
@@ -54,7 +54,7 @@ Each simulation is an iframe which is obtained from the online p5 text editor ex
 
 The login and sign up features are made by making use of the inbuilt authentication tools in Meteor.
 
-### 3) The lessonplan, simulations, lessons organization
+### 3) The lessonplans, simulations, lessons organization
 
 ##### Components - LessonplansDirectories, LessonsDirectories, SimsDirectories
 
@@ -64,7 +64,7 @@ React Sortable tree component (https://github.com/frontend-collective/react-sort
 
 ##### Component - Request
 
-For each lessonplan, a request forum can be created by the teacher where a request for a new simulation can be made. These requests are visible to all the other users of the app and anyone can participate in the discussion for the development of a new simulation.
+For each lessonplan, a request forum can be created by the teacher where a request for a new simulation can be made. These requests are visible to all the other users of the app and anyone logged in can participate in the discussion for the development of a new simulation.
 
 ### 5) Sharing of lessonplans, lessons and simulations
 
@@ -82,11 +82,11 @@ This is the component where we can create lessons. Each lesson consists of a ser
 
 ##### Component - Explore
 
-For users visiting the app, they will be able to all the lessons, lessonplans and reques forums that has been created and shared with public so that they get an idea about what the app is all about.
+Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea about what the app is all about.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
-I've provided necessary documentation in the component js file itself in all the areas where I felt like clarifications are necessary.
+I've provided necessary documentations in the components' js files in all the areas where I felt like clarifications are necessary.
 
 ## Features that can be added
 
@@ -103,7 +103,6 @@ I've provided necessary documentation in the component js file itself in all the
 6) Login and Signup using Github, Google, email verification, password recovery.
 
 7) Smoothening of the canvas strokes. At present, we don't do any sort of smoothening for the drawings we make in the canvas, so the annotations we create are not so smooth. If we can implement some sort of smoothening algorithm, the annotations will be more beautiful.
-
 
 For feature enhancements, bug reports and contributions
 
