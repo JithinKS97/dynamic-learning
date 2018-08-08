@@ -21,10 +21,10 @@ https://github.com/JithinKS97/dynamic-learning-app
 
 ## How to set up the development environment
 
-1) Install Node.js - https://nodejs.org/en/
-2) Install Meteor.js - https://www.meteor.com/
+1) Install Meteor.js - https://www.meteor.com/
+2) Install git
 3) Clone the dynamic-learning-app repository
-4) Install the node dependencies by executing the command `npm install --save` from the root directory
+4) Install the node dependencies by executing the command `meteor npm install --save` from the root directory
 5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
 
 ## Frameworks used
