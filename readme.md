@@ -38,7 +38,7 @@ Below are the main React Components of the app and much of the work in GSoC 2018
 of these React components. These main React page components can be found in 'client/ui/pages'.
 
 The routes of each of the pages can be found in the 'clients/routes' directory. Detailed documentation for each
-of the components are provided in the component's js files.
+of the components are provided in the components' js files.
 
 ### 1) Lessonplan creator
 
