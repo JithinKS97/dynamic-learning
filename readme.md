@@ -32,10 +32,10 @@ https://github.com/JithinKS97/dynamic-learning-app
 The webapp is build on top of full stack Javascript framework Meteor.js along with React.js. Meteor.js comes with inbuilt Mongo DB database which is used in the app. Semantic UI React is used for obtaining styled ui components used throughout for making the ui of the app.
 
 
-## Main react components
+## Main React components
 
 Below are the main React Components of the app and much of the work in GSoC 2018 was focused on the development
-of these react components. These main react page components can be found in 'client/ui/pages'.
+of these React components. These main React page components can be found in 'client/ui/pages'.
 
 The routes of each of the pages can be found in the 'clients/routes' directory. Detailed documentation for each
 of the components are provided in the component's js files.
