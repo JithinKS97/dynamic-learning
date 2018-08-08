@@ -44,7 +44,7 @@ of the components are provided in the components' js files.
 
 ##### Component - CreateLessonPlan
 
-This is the area where teachers create the lesson. It is basically a drawing app on which simulations can be embedded and notes can be added. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
+This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations can be embedded and notes can be added. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
 
 Each simulation is an iframe which is obtained from the online p5 text editor export feature.
 
