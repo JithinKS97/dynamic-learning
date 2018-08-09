@@ -44,7 +44,7 @@ of the components are provided in the components' js files.
 
 ##### Component - CreateLessonPlan
 
-This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations can be embedded and notes can be added. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
+This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations can be embedded and annotations can be made. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
 
 Each simulation is an iframe which is obtained from the online p5 text editor export feature.
 
@@ -90,11 +90,11 @@ I've provided necessary documentations in the components' js files in all the ar
 
 ## Features that can be added
 
-1) In this year's GSoC, my main target was to develop the overall basic structure of the application on top of which further development can be done. I haven't given much emphasis on the design aspects and didn't go much into the styling (The Components of Semantic UI React comes up with the essential styles that are needed). So before the release, we should come up with a design theme for the whole app.
+1) In GSoC 2018, my main target was to develop the overall basic structure of the application on top of which further development can be done. I haven't given much emphasis on the design aspects and didn't go much into the styling (The Components of Semantic UI React comes up with the essential styles that are needed). The app needs a general styling template.
 
-2) Unit testing - Apart from some server side tests, no tests have been written. I think we should write enough test cases for the server side and client side code, so that the future contributors can add features without breaking the existing code.
+2) Unit testing - Apart from some server side tests, no tests have been written. Adequate test cases for the server side and client side code should be written, so that the future contributors can add features without breaking the existing code.
 
-3) Enhancing the Discussion forum. The forums area can be enhanced by providing more features like providing Avatars for each users and the ability to reply to the comments, voting for the comments etc.
+3) Enhancing the Discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users and the ability to reply to the comments, voting for the comments etc.
 
 4) Adding Comments forum for the lessons.
 
@@ -102,7 +102,7 @@ I've provided necessary documentations in the components' js files in all the ar
 
 6) Login and Signup using Github, Google, email verification, password recovery.
 
-7) Smoothening of the canvas strokes. At present, we don't do any sort of smoothening for the drawings we make in the canvas, so the annotations we create are not so smooth. If we can implement some sort of smoothening algorithm, the annotations will be more beautiful.
+7) Smoothening of the canvas strokes- At present, there are no smoothening algorithms for strokes in the canvas due to which they appear to be a little jagged.
 
 For feature enhancements, bug reports and contributions
 
