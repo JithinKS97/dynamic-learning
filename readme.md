@@ -82,7 +82,7 @@ This is the component where we can create lessons. Each lesson consists of a ser
 
 ##### Component - Explore
 
-Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea about what the app is all about.
+Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea about what the app.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
