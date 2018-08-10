@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dynamic Learning is meant to be an online platform where teachers and programmers collaborate to create and share STEM lessons which makes use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea of what the app is all about to the teacher community and future contributors.
+Dynamic Learning is meant to be an online platform where teachers and programmers collaborate to create and share STEM lessons which makes use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea aboout the app to the teacher community and future contributors.
 
 The three core objectives of the web app are-
 
@@ -82,7 +82,7 @@ This is the component where we can create lessons. Each lesson consists of a ser
 
 ##### Component - Explore
 
-Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea about what the app.
+Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea aboutthe  app.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
@@ -110,7 +110,7 @@ You can email me to jithunni.ks@gmail.com or you can create an issue in the repo
 
 ## Acknowledgement
 
-I'm extremenly thankful to Processing Foundation for having the faith in me and giving me an opportunity to start the project. There have been several situations where I have been stuck. I express my gratitude to my mentor Saber Khan, other members of Proessing Foundation Cassie Tarakajian, Lauren McCathy, Daniel Shiffman, Cassey Reas for getting back to me and providing me with intelligent advices and suggestions when I contacted them.
+I'm extremenly thankful to Processing Foundation for having the faith in me and giving me an opportunity to start the project. There have been several situations where I have been stuck. I express my gratitude to my mentor Saber Khan, other members of Proessing Foundation Cassie Tarakajian, Lauren McCarthy, Daniel Shiffman, Cassey Reas for getting back to me and providing me with intelligent advices and suggestions when I contacted them.
 
 I've started this project and doing it with my friend Anupam Asok. I'm so greatful to him for being with me in the development of this project.
 
