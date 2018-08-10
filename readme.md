@@ -94,7 +94,7 @@ I've provided necessary documentations in the components' js files in all the ar
 
 2) Unit testing - Apart from some server side tests, no tests have been written. Adequate test cases for the server side and client side code should be written, so that the future contributors can add features without breaking the existing code.
 
-3) Enhancing the Discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users and the ability to reply to the comments, voting for the comments etc.
+3) Enhancing the discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users and the ability to reply to the comments, voting for the comments etc.
 
 4) Adding Comments forum for the lessons.
 
