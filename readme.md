@@ -44,7 +44,7 @@ of the components are provided in the components' js files.
 
 ##### Component - CreateLessonPlan
 
-This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations can be embedded and annotations can be made. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of a note of string type and an array of simulations.
+This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations can be embedded and annotations can be made. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of annotations of string type and an array of simulations.
 
 Each simulation is an iframe which is obtained from the online p5 text editor export feature.
 
@@ -76,13 +76,13 @@ The users can share lessonplans, lessons and the simulations with the other user
 
 ##### Component - Lesson
 
-This is the component where we can create lessons. Each lesson consists of a series of slides and on each slide there will be a video and the associated simulations. When the creator of the lesson views the component, he will have options to edit the lesson (Add more slides, add video, add simulations) and for others, they can only view the lesson.
+This is the component where we can create lessons. Each lesson consists of a series of slides and on each slide there will be a video and the associated simulations. When the creator of the lesson views the component, he/she will have options to edit the lesson (Add more slides, add video, add simulations) and for others, they can only view the lesson.
 
 ### 7) Exploring the App
 
 ##### Component - Explore
 
-Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea aboutthe  app.
+Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea about the app.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
