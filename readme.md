@@ -1,6 +1,7 @@
 # Dynamic Learning
+#### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
-## Overview
+## Overview of the app
 
 Dynamic Learning is meant to be an online platform where teachers and programmers collaborate to create and share STEM lessons which makes use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
 
@@ -11,7 +12,7 @@ The three core objectives of the web app are-
 3) Students should be able to view the video lessons prepared by teachers and should be able to use the simulations
 the same time they watch it.
 
-## Link to the working webapp
+## Link to the webapp
 
 http://dynamiclearning.io
 
@@ -83,6 +84,13 @@ This is the component where we can create lessons. Each lesson consists of a ser
 ##### Component - Explore
 
 Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea about the app.
+
+### 8) Adding simulations and the communication between them and the app
+
+##### Component - SimContainer
+
+Simulations are added to the app by making use of the iframe export feature of the online p5 text editor. One of the challenges that I faced 
+was the implementation of the communication between the webapp and the iframe. Cassie Tarakajian[@catarak] helped me with this. She suggested me to use MessageChannel API and it worked. Another functionalitya I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
