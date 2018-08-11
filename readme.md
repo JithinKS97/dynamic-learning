@@ -1,7 +1,7 @@
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
-This summer I worked on developing a webapp (Dynamic Learning) for STEM subject teachers with the help of my mentor [Saber Khan](https://github.com/saberkhaniscool)
+For Google Summer of Code 2018, I worked on developing a webapp (Dynamic Learning) for STEM subject teachers with the help of my mentor [Saber Khan](https://github.com/saberkhaniscool)
 
 ## Overview of the app
 
