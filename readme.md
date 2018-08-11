@@ -1,7 +1,7 @@
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
-For Google Summer of Code 2018, I worked on developing a webapp (Dynamic Learning) for STEM subject teachers with the help of my mentor [Saber Khan](https://github.com/saberkhaniscool)
+For Google Summer of Code 2018, I worked on developing a webapp (Dynamic Learning) for STEM subject teachers with the help of my mentor [Saber Khan](https://github.com/saberkhaniscool).
 
 ## Overview of the app
 
@@ -92,7 +92,7 @@ Users who are not logged in visiting the app will be able to view all the lesson
 ##### Component - SimContainer
 
 Simulations are added to the app by making use of the iframe export feature of the online p5 text editor. One of the challenges that I faced 
-was the implementation of the communication between the webapp and the iframe. Cassie Tarakajian [@catarak](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API and it worked. Another functionalitya I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
+was the implementation of the communication between the webapp and the iframe. Cassie Tarakajian [@catarak](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API and it worked. Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
