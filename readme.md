@@ -90,7 +90,7 @@ Users who are not logged in visiting the app will be able to view all the lesson
 ##### Component - SimContainer
 
 Simulations are added to the app by making use of the iframe export feature of the online p5 text editor. One of the challenges that I faced 
-was the implementation of the communication between the webapp and the iframe. Cassie Tarakajian [@catarak] helped me with this. She suggested me to use MessageChannel API and it worked. Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
+was the implementation of the communication between the webapp and the iframe. Cassie Tarakajian [@catarak](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API and it worked. Another functionalitya I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
@@ -123,7 +123,6 @@ I'm extremenly thankful to Processing Foundation for having the faith in me and 
 I've started this project and doing it with my friend Anupam Asok. I'm so greatful to him for being with me in the development of this project.
 
 I'm so greatful to Andrew Mead and his course in udemy Full Stack Web Development using Meteor https://www.udemy.com/meteor-react/ for it has helped me greatly and Andrew has responded to each and every queries of mine.
-
 
 
 
