@@ -140,17 +140,17 @@ class CreateLessonPlan extends React.Component {
 
                     this.pushSlide(this.state.slides)
                     
-                    $('#container')[0].style.height=960+'px';
+                    $('#container')[0].style.height=900+'px';
                     $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=960;
+                    $('canvas')[0].height=900;
                     this.db.reset('0');
                    
                 }
                 else {
                     this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                    $('#container')[0].style.height=(960+this.pageCount*300)+'px';
+                    $('#container')[0].style.height=(900+this.pageCount*300)+'px';
                     $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=960+this.pageCount*300;
+                    $('canvas')[0].height=900+this.pageCount*300;
                     this.db.reset('0');
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
@@ -221,9 +221,9 @@ class CreateLessonPlan extends React.Component {
                 curSlide
             },()=>{
               this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-              $('#container')[0].style.height=(960+this.pageCount*300)+'px';
+              $('#container')[0].style.height=(900+this.pageCount*300)+'px';
               $('canvas')[0].style.height=$('#container')[0].style.height;
-              $('canvas')[0].height=960+this.pageCount*300;
+              $('canvas')[0].height=900+this.pageCount*300;
               this.db.reset('0');
               this.db.reset({ webStorage: false, history: true, background: true })
         })
@@ -279,9 +279,9 @@ class CreateLessonPlan extends React.Component {
             const { slides } = this.state
             this.pushSlide(slides)
             this.db.reset({ webStorage: false, history: true, background: true })
-            $('#container')[0].style.height=960+'px';
+            $('#container')[0].style.height=900+'px';
             $('canvas')[0].style.height=$('#container')[0].style.height;
-            $('canvas')[0].height=960;
+            $('canvas')[0].height=900;
         })
     }
 
@@ -343,9 +343,9 @@ class CreateLessonPlan extends React.Component {
                 curSlide
             },()=>{
                 this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                $('#container')[0].style.height=(960+this.pageCount*300)+'px';
+                $('#container')[0].style.height=(900+this.pageCount*300)+'px';
                 $('canvas')[0].style.height=$('#container')[0].style.height;
-                $('canvas')[0].height=960+this.pageCount*300;
+                $('canvas')[0].height=900+this.pageCount*300;
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
@@ -361,9 +361,9 @@ class CreateLessonPlan extends React.Component {
                 slides,
                 curSlide
             },()=>{
-              $('#container')[0].style.height=960+'px';
+              $('#container')[0].style.height=900+'px';
               $('canvas')[0].style.height=$('#container')[0].style.height;
-              $('canvas')[0].height=960
+              $('canvas')[0].height=900
               this.db.reset();
               this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
@@ -491,7 +491,7 @@ class CreateLessonPlan extends React.Component {
 
             <Segment onClick = {()=>{
 
-            }} style = {{padding:'0 0.8rem', margin:0}}>
+            }} style = {{padding:0, margin:0}}>
 
                 <Dimmer active = {!this.state.initialized}>
                     <Loader />
@@ -521,8 +521,8 @@ class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style = {{height:'100vh'}}  columns={3} divided>
-                    <Grid.Row>        
+                <Grid style = {{height:'100vh', padding:0, margin:0}}  columns={3} divided>
+                    <Grid.Row >        
                         <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>

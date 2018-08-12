@@ -194,8 +194,7 @@ export default class Dashboard extends React.Component {
                     <Modal.Content>
                         <Modal.Description>                        
                             <SimPreview {...this.state.node}/>                        
-                            <br/>
-                
+                            <br/>                
                             {this.state.editable?null:<Label style = {{padding:'0.8rem', width:'18rem', textAlign:'center'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
                             {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem', width:'18rem'}} ref = {e => this.title = e}/>:null}
                             <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>

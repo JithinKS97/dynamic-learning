@@ -15,8 +15,6 @@ export default class VideoContainer extends React.Component {
 
     getId(url) {
 
-        console.log(url)
-
         if(!url)
             return
         
@@ -132,6 +130,7 @@ export default class VideoContainer extends React.Component {
                     this.props.url?
                     <Container>
                         {this.deleteButton()}
+                        <br/>
                         <iframe 
                             width="720" 
                             height="480" 
