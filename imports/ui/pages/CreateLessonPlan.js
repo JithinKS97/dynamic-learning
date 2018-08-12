@@ -498,6 +498,7 @@ class CreateLessonPlan extends React.Component {
                 </Dimmer>
 
                 <Modal size= 'tiny' open = {this.state.loginNotification}>
+                
                     <Modal.Header>
                         You need to login to save changes
                         <Button style = {{float:'right'}} onClick = {()=>{
