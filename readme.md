@@ -1,8 +1,6 @@
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
-For Google Summer of Code 2018, I worked on developing a webapp (Dynamic Learning) for STEM subject teachers with the help of my mentor [Saber Khan](https://github.com/saberkhaniscool).
-
 ## Overview of the app
 
 Dynamic Learning is meant to be an online platform where teachers and programmers collaborate to create and share STEM lessons which makes use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
