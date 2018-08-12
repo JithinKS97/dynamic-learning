@@ -710,8 +710,13 @@ class CreateLessonPlan extends React.Component {
 
 export default CreatelessonPlanContainer = withTracker(({ match }) => {
 
-    
-    const lessonplansHandle = Meteor.subscribe('lessonplans.public')
+    let lessonplansHandle
+    if(Meteor.userId()) {
+        lessonplansHandle = Meteor.subscribe('lessonplans')
+    }
+    else {
+        lessonplansHandle = Meteor.subscribe('lessonplans.public')
+    }
     const loading = !lessonplansHandle.ready()
     let lessonplan, lessonplanExists
 
