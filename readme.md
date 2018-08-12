@@ -92,7 +92,7 @@ Users who are not logged in visiting the app will be able to view all the lesson
 ##### Component - SimContainer
 
 Simulations are added to the app by making use of the iframe export feature of the online p5 text editor. One of the challenges that I faced 
-was the implementation of the communication between the webapp and the iframe. Cassie Tarakajian [@catarak](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API and it worked. Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
+was the implementation of the communication between the webapp and the iframe. Cassie Tarakajian [Cassie Tarakajian](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API and it worked. Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
@@ -120,11 +120,11 @@ You can email me to jithunni.ks@gmail.com or you can create an issue in the repo
 
 ## Acknowledgement
 
-I'm extremenly thankful to Processing Foundation for having the faith in me and giving me an opportunity to start the project. There have been several situations where I have been stuck. I express my gratitude to my mentor Saber Khan, other members of Proessing Foundation Cassie Tarakajian, Lauren McCarthy, Daniel Shiffman, Cassey Reas for getting back to me and providing me with intelligent advices and suggestions when I contacted them.
+I'm extremenly thankful to Processing Foundation for having the faith in me and giving me an opportunity to start the project. There have been several situations where I have been stuck. I express my gratitude to my mentor [Saber Khan](https://github.com/saberkhaniscool), other members of Proessing Foundation [Cassie Tarakajian](https://github.com/catarak), [Lauren McCarthy](https://github.com/lmccart), [Daniel Shiffman](https://github.com/shiffman), [Cassey Reas](https://github.com/REAS) for getting back to me and providing me with intelligent advices and suggestions when I contacted them.
 
-I've started this project and doing it with my friend Anupam Asok. I'm so greatful to him for being with me in the development of this project.
+I've started this project and doing it with my friend [Anupam Asok](https://github.com/Anu-Asok). I'm so greatful to him for being with me in the development of this project.
 
-I'm so greatful to Andrew Mead and his course in udemy Full Stack Web Development using Meteor https://www.udemy.com/meteor-react/ for it has helped me greatly and Andrew has responded to each and every queries of mine.
+I'm so greatful to [Andrew Mead](https://github.com/andrewjmead) and his course in udemy Full Stack Web Development using Meteor https://www.udemy.com/meteor-react/ for it has helped me greatly and Andrew has responded to each and every queries of mine.
 
 
 
