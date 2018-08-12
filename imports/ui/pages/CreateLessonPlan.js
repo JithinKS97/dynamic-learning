@@ -81,9 +81,7 @@ class CreateLessonPlan extends React.Component {
 
             this.save()
         }
-        <Dimmer inverted active = {this.state.loading}>
-        <Loader />
-    </Dimmer>
+
         if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0) {
 
             this.undo()
