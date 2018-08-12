@@ -79,6 +79,10 @@ Meteor.methods({
 
     'lessonplans.tagsChange'(_id, tags) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         LessonPlans.update({_id}, {$set:{tags}})
     },
 
@@ -120,10 +124,18 @@ Meteor.methods({
 
     'lessonplans.directoryChange'(_id, parent_id) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         LessonPlans.update({_id}, {$set:{parent_id}})
     },
 
     'lessonplans.folder.visibilityChange'(_id, expanded) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
 
         LessonPlans.update({_id}, {$set:{expanded}})
     },
@@ -172,10 +184,18 @@ Meteor.methods({
 
     'lessonplans.updateTitle'(_id, title) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         LessonPlans.update({_id, userId:this.userId}, {$set:{title, updatedAt: moment().valueOf()}})
     },
 
     'lessonplans.visibilityChange'(_id, isPublic) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
 
         LessonPlans.update({_id}, {$set:{isPublic}})
     },

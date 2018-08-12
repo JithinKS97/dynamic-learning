@@ -119,6 +119,7 @@ class Lesson extends React.Component {
     }
 
     reset() {
+        
         const slides = []
         slides.push({
             url:null,

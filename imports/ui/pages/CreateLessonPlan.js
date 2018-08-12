@@ -730,7 +730,6 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
         
         lessonplan = LessonPlans.findOne(match.params._id)
         lessonplanExists = !loading && !!lessonplan
-        console.log(lessonplan, lessonplanExists)
     }
 
 

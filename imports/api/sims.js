@@ -60,6 +60,10 @@ Meteor.methods({
     },
     'sims.tagsChange'(_id, tags) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         Sims.update({_id}, {$set:{tags}})
     },
 
@@ -84,25 +88,45 @@ Meteor.methods({
 
     'sims.folderChange'(_id, parent_id) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         Sims.update({_id}, {$set:{parent_id}})
     },
 
     'sims.visibilityChange'(_id, isPublic) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
         
         Sims.update({_id}, {$set:{isPublic}})
     },
 
     'sims.folder.visibilityChange'(_id, expanded) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         Sims.update({_id}, {$set:{expanded}})
     },
     
     'sims.remove'(_id) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         Sims.remove({_id, userId:this.userId})
     },
 
     'sims.titleChange'(_id, title) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
 
         Sims.update({_id}, {$set:{title}})
     }

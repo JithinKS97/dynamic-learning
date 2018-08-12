@@ -40,6 +40,10 @@ Meteor.methods({
 
     'lessons.insert'(title) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         const newSlide = {
 
             url:null,
@@ -64,7 +68,9 @@ Meteor.methods({
 
     'lessons.folder.insert'(title) {
 
-        console.log(title)
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
 
         Lessons.insert({
             
@@ -77,24 +83,44 @@ Meteor.methods({
             updatedAt: moment().valueOf()
         })
     },'lessons.directoryChange'(_id, parent_id) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
         
         Lessons.update({_id}, {$set:{parent_id}})
     },
 
     'lessons.folder.visibilityChange'(_id, expanded) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         Lessons.update({_id}, {$set:{expanded}})
     },
     'lessons.remove'(_id) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
 
         Lessons.remove({_id})
     },
 
     'lessons.update'(_id, slides) {
 
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
+
         Lessons.update({_id, userId:this.userId}, {$set:{slides, updatedAt: moment().valueOf()}})
     },
     'lessons.shareLesson'(_id, shared) {
+
+        if(!this.userId) {
+            throw new Meteor.Error('not-authorized')
+        }
 
         Lessons.update({_id, userId:this.userId}, {$set:{shared, updatedAt: moment().valueOf()}})
     }
