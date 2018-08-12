@@ -710,7 +710,8 @@ class CreateLessonPlan extends React.Component {
 
 export default CreatelessonPlanContainer = withTracker(({ match }) => {
 
-    const lessonplansHandle = Meteor.subscribe('lessonplans')
+    
+    const lessonplansHandle = Meteor.subscribe('lessonplans.public')
     const loading = !lessonplansHandle.ready()
     let lessonplan, lessonplanExists
 
@@ -721,9 +722,10 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
         lessonplan = {slides, title:null}
     }
     else {
-
+        
         lessonplan = LessonPlans.findOne(match.params._id)
         lessonplanExists = !loading && !!lessonplan
+        console.log(lessonplan, lessonplanExists)
     }
 
 
