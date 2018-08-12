@@ -522,7 +522,7 @@ class CreateLessonPlan extends React.Component {
 
 
                 <Grid style = {{height:'100vh', padding:0, margin:0}}  columns={3} divided>
-                    <Grid.Row >        
+                    <Grid.Row>        
                         <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>
@@ -663,7 +663,7 @@ class CreateLessonPlan extends React.Component {
                                 )}}>
                                     Login
                                 </Menu.Item>:null}
-                                {!Meteor.userId()?<Menu.Item><Link to = {`/explore`}>Back</Link></Menu.Item>:null}
+                                {!Meteor.userId()?<Link to = {`/explore`}><Menu.Item link>Back</Menu.Item></Link>:null}
                             </Menu>
 
                         </Grid.Column>
