@@ -491,7 +491,7 @@ class CreateLessonPlan extends React.Component {
 
             <Segment onClick = {()=>{
 
-            }} style = {{padding:0, margin:0}}>
+            }} style = {{padding:'0 0.8rem', margin:0}}>
 
                 <Dimmer active = {!this.state.initialized}>
                     <Loader />
