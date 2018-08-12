@@ -264,7 +264,7 @@ class LessonPlanViewer extends React.Component {
 
         return (
             
-        <Segment style = {{padding:0, margin:0}}>
+        <Segment style = {{padding:'0 0.8rem', margin:0}}>
 
             <Dimmer active = {!this.state.initialized}>
                 <Loader />
