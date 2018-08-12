@@ -6,7 +6,7 @@ import ListWithoutDelete from '../components/ListWithoutDelete'
 import { Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data';
-import { Dimmer, Loader, Segment } from 'semantic-ui-react'
+import { Dimmer, Loader, Segment, Grid } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 
@@ -270,25 +270,26 @@ class LessonPlanViewer extends React.Component {
                 <Loader />
             </Dimmer>        
 
-             <div className = 'createLessonPlan'>            
+             <Grid style = {{height:'100vh'}}  columns={3} divided>
+                <Grid.Row>         
 
-                <div className = 'slides'>
-                    <h1>{this.state.curSlide+1}</h1>
-                    <ListWithoutDelete showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                </div>
+                    <Grid.Column style = {{textAlign:'center'}} width = {2}>
+                        <h1>{this.state.curSlide+1}</h1>
+                        <ListWithoutDelete showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                    </Grid.Column>
 
-                <div className = 'board-preview'>
-                    <SimsList
-                        navVisibility = {false}
-                        isRndRequired = {true}
-                        saveChanges = {this.saveChanges.bind(this)}
-                        delete = {this.deleteSim.bind(this)}
-                        {...this.state}
-                    />                   
-                    <DrawingBoardCmp toolbarVisible = {false} ref = {e => this.drawingBoard = e}/>                   
-                </div>
-            
-            </div>
+                    <Grid.Column style = {{overflow:'auto', padding:0, margin:0}} width = {14}>
+                        <SimsList
+                            navVisibility = {false}
+                            isRndRequired = {true}
+                            saveChanges = {this.saveChanges.bind(this)}
+                            delete = {this.deleteSim.bind(this)}
+                            {...this.state}
+                        />                   
+                        <DrawingBoardCmp toolbarVisible = {false} ref = {e => this.drawingBoard = e}/>                   
+                    </Grid.Column>
+                </Grid.Row> 
+            </Grid>
 
         </Segment>
 

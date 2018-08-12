@@ -72,6 +72,9 @@ export default class Signup extends React.Component {
                         return
                     }
 
+                    if(this.state.userId == Meteor.userId())
+                        return
+
                     /*
                         The values in the states are used to create a new lessonplan and the session variable
                         is set to null.

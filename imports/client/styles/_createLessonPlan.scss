@@ -1,48 +1,7 @@
-.createLessonPlan {
-
-    display: flex;
-    flex-direction: row;
-    height:100vh;
-    overflow:hidden;
-}  
-
-.menu {
-
-    flex:0.1;
-
-}
-
-.menu__container {
-
-    display:flex;
-    flex-direction: column;
-}
-
-.board {
-
-    flex:0.8;
-    overflow-y:auto;
-    overflow-x:auto;
-}
-
-.board-preview {
-
-    flex:0.9;
-    overflow-x:auto;
-}
-
-.slides {
-
-    text-align: center;
-    flex:0.1;
-    overflow-y:auto;
-}
-
-
 #container {
     
     background-color: black;
-    height: 720px;
-    width:1140px;
+    height: 1080px;
+    width:1280px;
     overflow-x: auto;
 }

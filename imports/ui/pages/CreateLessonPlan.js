@@ -8,7 +8,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { withTracker } from 'meteor/react-meteor-data';
-import { Checkbox, Menu, Button, Dimmer, Loader, Segment, Modal, Form } from 'semantic-ui-react'
+import { Checkbox, Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 
@@ -521,152 +521,157 @@ class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <div className = 'createLessonPlan'>
+                <Grid style = {{height:'100vh'}}  columns={3} divided>
+                    <Grid.Row>        
+                        <Grid.Column style = {{textAlign:'center'}} width = {2}>
+                            <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
+                            <h1>{this.state.curSlide+1}</h1>
+                            <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                        </Grid.Column>
 
-                    <div style = {{margin:'0 0.8rem'}} className = 'slides'>
-                        <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
-                        <h1>{this.state.curSlide+1}</h1>
-                        <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
-                    </div>
+                        <Grid.Column style = {{overflow:'auto', margin:0, padding:0}} width = {12}>
+                            
+                                <SimsList
 
-                    <div className = 'board'>
-                        <SimsList
+                                    navVisibility = {true}
+                                    isRndRequired = {true}
+                                    saveChanges = {this.saveChanges.bind(this)}
+                                    delete = {this.deleteSim.bind(this)}
+                                    {...this.state}
 
-                            navVisibility = {true}
-                            isRndRequired = {true}
-                            saveChanges = {this.saveChanges.bind(this)}
-                            delete = {this.deleteSim.bind(this)}
-                            {...this.state}
+                                    next = {this.next.bind(this)}
+                                    previous = {this.previous.bind(this)}
+                                    save = {this.save.bind(this)}
+                                    interact = {this.interact.bind(this)}
+                                    undo = {this.undo.bind(this)}
+                                />
+                                <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
+                        
+                        </Grid.Column>
 
-                            next = {this.next.bind(this)}
-                            previous = {this.previous.bind(this)}
-                            save = {this.save.bind(this)}
-                            interact = {this.interact.bind(this)}
-                            undo = {this.undo.bind(this)}
-                        />
-                        <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
-                    </div>
+                        <Grid.Column width = {2}>
 
-                    <div style = {{marginLeft:'0.8rem'}} className = 'menu'>
+                            <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
-                        <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                            <Menu color = {'blue'} icon vertical>
 
-                        <Menu color = {'blue'} icon vertical>
+                                <Menu.Item link>
+                                    <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact with sim' onChange = {this.interact.bind(this)} type = 'checkbox'/>
+                                </Menu.Item>
 
-                            <Menu.Item link>
-                                <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact with sim' onChange = {this.interact.bind(this)} type = 'checkbox'/>
-                            </Menu.Item>
+                                <Menu.Item>
+                                    <Button onClick = {()=>{this.addSim.addSim()}} color='black'>
+                                        Add simulation
+                                    </Button>
+                                </Menu.Item>
 
-                            <Menu.Item>
-                                <Button onClick = {()=>{this.addSim.addSim()}} color='black'>
-                                    Add simulation
-                                </Button>
-                            </Menu.Item>
+                                {Meteor.userId()?
+                                    <Menu.Item onClick = {()=>{
 
-                            {Meteor.userId()?
-                                <Menu.Item onClick = {()=>{
+                                        const lessonplan = LessonPlans.findOne({_id: this.state._id})
 
-                                    const lessonplan = LessonPlans.findOne({_id: this.state._id})
-
-                                    try {
-                                        expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
-                                    }
-                                    catch(error) {
-                                        
-                                        if(error) {
-
-                                            const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
-
-                                            if(!confirmation)
-                                                return
+                                        try {
+                                            expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
                                         }
-                                        else
+                                        catch(error) {
+                                            
+                                            if(error) {
+
+                                                const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
+
+                                                if(!confirmation)
+                                                    return
+                                            }
+                                            else
+                                                return
+                                        }                               
+
+                                        this.setState({
+
+                                            redirectToDashboard:true
+                                        })
+                                    }}
+                                    >Dashboard</Menu.Item>
+                                :null}
+
+                                {!!Meteor.userId()?
+                                    <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
+                                :null}
+
+
+                                <Menu.Item onClick = {()=>{
+                                        const confirmation = confirm('Are you sure you want to reset all?')
+                                        if(confirmation == true)
+                                        this.reset()
+                                    }}>
+                                    Reset all
+                                </Menu.Item>
+
+                                <Menu.Item onClick = {()=>{this.undo()}}>
+                                    Undo
+                                </Menu.Item>
+
+                                <Menu.Item onClick = {()=>{
+                                        this.save()
+                                    }}>
+                                    Save
+                                </Menu.Item>
+
+                                <Menu.Item onClick = {()=>{
+                                var temp=this.db.getImg();
+                                this.pageCount+=1;
+                                $('canvas')[0].style.height=($('canvas')[0].height+300).toString()+'px';
+                                $('canvas')[0].height+=300;
+                                $('#container')[0].style.height=$('canvas')[0].style.height;
+                                this.db.reset('0');
+                                this.db.setImg(temp);
+                                var slides = this.state.slides;
+                                slides[this.state.curSlide].pageCount=this.pageCount;
+                                this.setState({slides});
+                                }}>
+                                    Increase Canvas size
+                                </Menu.Item>
+
+                                <Menu.Item onClick = {()=>{
+                                if (this.pageCount==0 || this.checkCanvasSize()){
+                                    alert("Canvas size cannot be decreased further!");
+                                    return;
+                                }
+                                var temp=this.db.getImg();
+                                this.pageCount-=1;
+                                $('canvas')[0].style.height=($('canvas')[0].height-300).toString()+'px';
+                                $('canvas')[0].height-=300;
+                                $('#container')[0].style.height=$('canvas')[0].style.height;
+                                this.db.reset('0');
+                                this.db.setImg(temp);
+                                var slides = this.state.slides;
+                                slides[this.state.curSlide].pageCount=this.pageCount;
+                                this.setState({slides});
+                                }}>
+                                    Decrease Canvas size
+                                </Menu.Item>
+
+                                {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
+
+                                        const confirmation = confirm('You will be redirected to login page. Changes will be saved for you.')
+                                        if(!confirmation)
                                             return
-                                    }                               
 
-                                    this.setState({
+                                        Session.set('stateToSave', this.state)
 
-                                        redirectToDashboard:true
-                                    })
-                                }}
-                                   >Dashboard</Menu.Item>
-                            :null}
+                                        this.setState({redirectToLogin:true}
+                                )}}>
+                                    Login
+                                </Menu.Item>:null}
+                                {!Meteor.userId()?<Menu.Item><Link to = {`/explore`}>Back</Link></Menu.Item>:null}
+                            </Menu>
 
-                            {!!Meteor.userId()?
-                                <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
-                            :null}
+                        </Grid.Column>
+                    </Grid.Row>            
+                </Grid>
 
 
-                            <Menu.Item onClick = {()=>{
-                                    const confirmation = confirm('Are you sure you want to reset all?')
-                                    if(confirmation == true)
-                                    this.reset()
-                                }}>
-                                Reset all
-                            </Menu.Item>
 
-                            <Menu.Item onClick = {()=>{this.undo()}}>
-                                Undo
-                            </Menu.Item>
-
-                            <Menu.Item onClick = {()=>{
-                                    this.save()
-                                }}>
-                                Save
-                            </Menu.Item>
-
-                            <Menu.Item onClick = {()=>{
-                              var temp=this.db.getImg();
-                              this.pageCount+=1;
-                              $('canvas')[0].style.height=($('canvas')[0].height+300).toString()+'px';
-                              $('canvas')[0].height+=300;
-                              $('#container')[0].style.height=$('canvas')[0].style.height;
-                              this.db.reset('0');
-                              this.db.setImg(temp);
-                              var slides = this.state.slides;
-                              slides[this.state.curSlide].pageCount=this.pageCount;
-                              this.setState({slides});
-                            }}>
-                                Increase Canvas size
-                            </Menu.Item>
-
-                            <Menu.Item onClick = {()=>{
-                              if (this.pageCount==0 || this.checkCanvasSize()){
-                                alert("Canvas size cannot be decreased further!");
-                                return;
-                              }
-                              var temp=this.db.getImg();
-                              this.pageCount-=1;
-                              $('canvas')[0].style.height=($('canvas')[0].height-300).toString()+'px';
-                              $('canvas')[0].height-=300;
-                              $('#container')[0].style.height=$('canvas')[0].style.height;
-                              this.db.reset('0');
-                              this.db.setImg(temp);
-                              var slides = this.state.slides;
-                              slides[this.state.curSlide].pageCount=this.pageCount;
-                              this.setState({slides});
-                            }}>
-                                Decrease Canvas size
-                            </Menu.Item>
-
-                            {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
-
-                                    const confirmation = confirm('You will be redirected to login page. Changes will be saved for you.')
-                                    if(!confirmation)
-                                        return
-
-                                    Session.set('stateToSave', this.state)
-
-                                    this.setState({redirectToLogin:true}
-                            )}}>
-                                Login
-                            </Menu.Item>:null}
-                            {!Meteor.userId()?<Menu.Item><Link to = {`/explore`}>Back</Link></Menu.Item>:null}
-                        </Menu>
-
-                    </div>
-
-                </div>
                 <Modal size = 'tiny' open = {!!!this.state.title}>
                     <Modal.Header>
                         Enter the title for the lessonplan
