@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Requests } from '../../api/requests'
-import { List, Header } from 'semantic-ui-react'
+import { List, Dimmer, Loader } from 'semantic-ui-react'
 
 const RequestsList = (props) => {
 
@@ -29,6 +29,9 @@ const RequestsList = (props) => {
 
     return(
         <div>
+            <Dimmer inverted active = {props.loading}>
+                <Loader />
+            </Dimmer>
             <List style = {{height:window.innerHeight - 150, marginTop:'2.4rem'}}  selection verticalAlign='middle'>
                 {renderRequests()}
             </List>            
@@ -40,10 +43,12 @@ const RequestsList = (props) => {
 
 export default RequestsListContainer = withTracker((props)=>{
 
-    Meteor.subscribe('requests')
+    const requestsHandle = Meteor.subscribe('requests')
+    const loading = !requestsHandle.ready()
 
     return({
-        requests:Requests.find().fetch()
+        requests:Requests.find().fetch(),
+        loading
     })
 
 })(RequestsList)
