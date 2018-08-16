@@ -455,7 +455,9 @@ class CreateLessonPlan extends React.Component {
 
       if(this.addSim.state.isOpen)
         return
-
+      if(this.curPosition[this.state.curSlide]<=0)
+        return
+        
       this.curPosition[this.state.curSlide]--
       const slides = this.state.slides
       slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
