@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, Form, Container } from 'semantic-ui-react'
+import { Button, Modal, Form, Container, Dimmer, Loader } from 'semantic-ui-react'
 
 
 export default class VideoContainer extends React.Component {
@@ -9,7 +9,8 @@ export default class VideoContainer extends React.Component {
         super(props)
         this.state = {
             open:false,
-            url:'error'
+            url:'error',
+            loading:true
         }
     }
 
@@ -102,7 +103,10 @@ export default class VideoContainer extends React.Component {
                                 </Form.Field>
                                 {this.state.url =='error'?null:
                                     <div>
+                                        
                                         <iframe 
+
+                                            
                                             width="560" 
                                             height="315" 
                                             src={`//www.youtube.com/embed/${this.getId(this.state.url)}?rel=0&amp;showinfo=0`} 
@@ -130,14 +134,22 @@ export default class VideoContainer extends React.Component {
                     this.props.url?
                     <Container>
                         {this.deleteButton()}
-                        <br/>
-                        <iframe 
-                            width="720" 
-                            height="480" 
-                            src={`//www.youtube.com/embed/${this.getId(this.props.url)}?rel=0&amp;showinfo=0`} 
-                            frameBorder="0" 
-                            allowFullScreen>
-                        </iframe>
+                        <br/>                        
+                            <Dimmer active = {this.state.loading}>
+                                <Loader/>
+                            </Dimmer>
+                            <iframe
+                                onLoad = {()=>{
+                                    this.setState({
+                                        loading:false
+                                    })
+                                }}
+                                width="720" 
+                                height="480" 
+                                src={`//www.youtube.com/embed/${this.getId(this.props.url)}?rel=0&amp;showinfo=0`} 
+                                frameBorder="0" 
+                                allowFullScreen>
+                            </iframe>                        
                         <br/>
 
                     </Container>                   

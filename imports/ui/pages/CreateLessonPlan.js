@@ -170,6 +170,7 @@ class CreateLessonPlan extends React.Component {
         */
         if(arguments[0][0]=='0')
           return;
+          
         const {curSlide, slides} = this.state
 
         const note = this.db.getImg()
@@ -457,7 +458,7 @@ class CreateLessonPlan extends React.Component {
         return
       if(this.curPosition[this.state.curSlide]<=0)
         return
-        
+
       this.curPosition[this.state.curSlide]--
       const slides = this.state.slides
       slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
