@@ -15,10 +15,9 @@ const RequestsList = (props) => {
                     <List.Item key = {index} >
                         <Link to={{ pathname: `/request/${request._id}`}} >
                             
-                                <List.Content style = {{color:'black', paddingLeft:'2.4rem'}}>                  
-                                    {request.requestTitle}                             
-                                </List.Content>
-                            
+                            <List.Content style = {{color:'black', paddingLeft:'2.4rem'}}>                  
+                                {request.requestTitle}                             
+                            </List.Content>                            
                         </Link>
                     </List.Item>
                 )
@@ -32,7 +31,7 @@ const RequestsList = (props) => {
             <Dimmer inverted active = {props.loading}>
                 <Loader />
             </Dimmer>
-            <List style = {{height:window.innerHeight - 150, marginTop:'2.4rem'}}  selection verticalAlign='middle'>
+            <List selection style = {{height:window.innerHeight - 150, marginTop:'2.4rem'}}  selection verticalAlign='middle'>
                 {renderRequests()}
             </List>            
         </div>
