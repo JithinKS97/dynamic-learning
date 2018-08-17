@@ -65,8 +65,8 @@ class CreateLessonPlan extends React.Component {
 
         window.onresize = ()=>{
             this.setState({
-                widthScale: 1,
-                heightScale: 1
+                widthScale: window.innerWidth*(12/16)/1366,
+                heightScale: window.innerHeight/900
             })
         }
     }
@@ -539,7 +539,7 @@ class CreateLessonPlan extends React.Component {
                             <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                         </Grid.Column>
 
-                        <Grid.Column style = {{overflow:'auto',transform: `scale(${this.state.widthScale}, ${this.state.heightScale})`, margin:0, padding:0}} width = {12}>
+                        <Grid.Column style = {{overflow:'auto',transform: `scale(${Math.min(this.state.widthScale, this.state.heightScale)})`, margin:0, padding:0}} width = {12}>
                             
                                 <SimsList
 
