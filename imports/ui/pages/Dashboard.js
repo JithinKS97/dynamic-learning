@@ -179,10 +179,9 @@ export default class Dashboard extends React.Component {
 
                 <Modal
                     closeOnRootNodeClick={false}                
-                    style = {{width:'auto'}}
                     open={!!this.state.node}
                     onClose={this.handleClose}
-                    size='tiny'            
+                    size='small'            
                 >
                     <Modal.Header>
                         Preview

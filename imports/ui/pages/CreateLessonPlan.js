@@ -48,7 +48,9 @@ class CreateLessonPlan extends React.Component {
             loginNotification:false,
             redirectToLogin:false,
             checked: false,
-            redirectToDashboard:false
+            redirectToDashboard:false,
+            widthScale:1,
+            heightScale:1
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -60,6 +62,13 @@ class CreateLessonPlan extends React.Component {
         this.pushSlide.bind(this)
         this.save.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
+
+        window.onresize = ()=>{
+            this.setState({
+                widthScale: 1,
+                heightScale: 1
+            })
+        }
     }
 
     handleKeyDown(event){
@@ -530,7 +539,7 @@ class CreateLessonPlan extends React.Component {
                             <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                         </Grid.Column>
 
-                        <Grid.Column style = {{overflow:'auto', margin:0, padding:0}} width = {12}>
+                        <Grid.Column style = {{overflow:'auto',transform: `scale(${this.state.widthScale}, ${this.state.heightScale})`, margin:0, padding:0}} width = {12}>
                             
                                 <SimsList
 
