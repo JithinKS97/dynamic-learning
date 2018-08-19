@@ -60,6 +60,9 @@ class CreateLessonPlan extends React.Component {
         this.pushSlide.bind(this)
         this.save.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
+
+        this.changePageCount.bind(this)
+
     }
 
     handleKeyDown(event){
@@ -136,19 +139,14 @@ class CreateLessonPlan extends React.Component {
 
                 if(this.state.slides.length == 0) {
 
-                    this.pushSlide(this.state.slides)
-                    
-                    $('#container')[0].style.height=900+'px';
-                    $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=900;
+                    this.pushSlide(this.state.slides)                    
+                    this.setSizeOfPage(0)
                     this.db.reset('0');
                    
                 }
                 else {
                     this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                    $('#container')[0].style.height=(900+this.pageCount*300)+'px';
-                    $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=900+this.pageCount*300;
+                    this.setSizeOfPage(this.pageCount)
                     this.db.reset('0');
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
@@ -161,6 +159,12 @@ class CreateLessonPlan extends React.Component {
         window.removeEventListener("keydown", this.handleKeyDown, false)
     }
     
+    setSizeOfPage(pageCount) {
+
+        $('#container')[0].style.height=(900+pageCount*300)+'px';
+        $('canvas')[0].style.height=$('#container')[0].style.height;
+        $('canvas')[0].height=900+pageCount*300;
+    }
 
     onChange() {
         /*
@@ -220,9 +224,7 @@ class CreateLessonPlan extends React.Component {
                 curSlide
             },()=>{
               this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-              $('#container')[0].style.height=(900+this.pageCount*300)+'px';
-              $('canvas')[0].style.height=$('#container')[0].style.height;
-              $('canvas')[0].height=900+this.pageCount*300;
+              this.setSizeOfPage(this.pageCount)
               this.db.reset('0');
               this.db.reset({ webStorage: false, history: true, background: true })
         })
@@ -278,9 +280,7 @@ class CreateLessonPlan extends React.Component {
             const { slides } = this.state
             this.pushSlide(slides)
             this.db.reset({ webStorage: false, history: true, background: true })
-            $('#container')[0].style.height=900+'px';
-            $('canvas')[0].style.height=$('#container')[0].style.height;
-            $('canvas')[0].height=900;
+            this.setSizeOfPage(0)
         })
     }
 
@@ -342,9 +342,7 @@ class CreateLessonPlan extends React.Component {
                 curSlide
             },()=>{
                 this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                $('#container')[0].style.height=(900+this.pageCount*300)+'px';
-                $('canvas')[0].style.height=$('#container')[0].style.height;
-                $('canvas')[0].height=900+this.pageCount*300;
+                this.setSizeOfPage(this.pageCount)
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
@@ -360,9 +358,7 @@ class CreateLessonPlan extends React.Component {
                 slides,
                 curSlide
             },()=>{
-              $('#container')[0].style.height=900+'px';
-              $('canvas')[0].style.height=$('#container')[0].style.height;
-              $('canvas')[0].height=900
+              this.setSizeOfPage(0)
               this.db.reset();
               this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
@@ -474,6 +470,21 @@ class CreateLessonPlan extends React.Component {
         this.setState({redirectToRequest:true})
     }
 
+
+    changePageCount(option) {
+
+        
+        var temp=this.db.getImg();
+        this.pageCount+=option;
+        $('canvas')[0].style.height=($('canvas')[0].height+option*300).toString()+'px';
+        $('canvas')[0].height+=option*300;
+        $('#container')[0].style.height=$('canvas')[0].style.height;
+        this.db.reset('0');
+        this.db.setImg(temp);
+        var slides = this.state.slides;
+        slides[this.state.curSlide].pageCount=this.pageCount;
+        this.setState({slides});
+    }
 
 
     render() {
@@ -619,16 +630,7 @@ class CreateLessonPlan extends React.Component {
                                 </Menu.Item>
 
                                 <Menu.Item onClick = {()=>{
-                                var temp=this.db.getImg();
-                                this.pageCount+=1;
-                                $('canvas')[0].style.height=($('canvas')[0].height+300).toString()+'px';
-                                $('canvas')[0].height+=300;
-                                $('#container')[0].style.height=$('canvas')[0].style.height;
-                                this.db.reset('0');
-                                this.db.setImg(temp);
-                                var slides = this.state.slides;
-                                slides[this.state.curSlide].pageCount=this.pageCount;
-                                this.setState({slides});
+                                    this.changePageCount(1)
                                 }}>
                                     Increase Canvas size
                                 </Menu.Item>
@@ -638,16 +640,7 @@ class CreateLessonPlan extends React.Component {
                                     alert("Canvas size cannot be decreased further!");
                                     return;
                                 }
-                                var temp=this.db.getImg();
-                                this.pageCount-=1;
-                                $('canvas')[0].style.height=($('canvas')[0].height-300).toString()+'px';
-                                $('canvas')[0].height-=300;
-                                $('#container')[0].style.height=$('canvas')[0].style.height;
-                                this.db.reset('0');
-                                this.db.setImg(temp);
-                                var slides = this.state.slides;
-                                slides[this.state.curSlide].pageCount=this.pageCount;
-                                this.setState({slides});
+                                    this.changePageCount(-1)
                                 }}>
                                     Decrease Canvas size
                                 </Menu.Item>
