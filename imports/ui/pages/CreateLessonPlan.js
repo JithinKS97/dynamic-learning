@@ -217,14 +217,13 @@ class CreateLessonPlan extends React.Component {
     addNewSlide(e) {
 
         let {curSlide, slides} = this.state
-        this.pageCount=0
         this.pushSlide(slides)
             curSlide = slides.length-1
             this.setState({
                 curSlide
             },()=>{
               this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-              this.setSizeOfPage(this.pageCount)
+              this.setSizeOfPage(0)
               this.db.reset('0');
         })
     }
