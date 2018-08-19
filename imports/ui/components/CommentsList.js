@@ -12,7 +12,7 @@ const CommentsList  = (props) => {
         if(slides.length>0) {
             comments = slides[curSlide].comments
             return comments.map((comment, index)=>{
-                return <CommentBox key = {index} comment = {comment} {...props}/>
+                return <CommentBox key = {index} index = {index} comment = {comment} {...props}/>
 
             })
         }
