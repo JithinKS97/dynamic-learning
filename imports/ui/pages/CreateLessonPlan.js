@@ -226,7 +226,6 @@ class CreateLessonPlan extends React.Component {
               this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
               this.setSizeOfPage(this.pageCount)
               this.db.reset('0');
-              this.db.reset({ webStorage: false, history: true, background: true })
         })
     }
 
@@ -279,8 +278,8 @@ class CreateLessonPlan extends React.Component {
 
             const { slides } = this.state
             this.pushSlide(slides)
-            this.db.reset({ webStorage: false, history: true, background: true })
             this.setSizeOfPage(0)
+            this.db.reset('0')            
         })
     }
 
@@ -359,7 +358,7 @@ class CreateLessonPlan extends React.Component {
                 curSlide
             },()=>{
               this.setSizeOfPage(0)
-              this.db.reset();
+              this.db.reset('0');
               this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
