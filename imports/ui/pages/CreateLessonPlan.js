@@ -565,8 +565,8 @@ class CreateLessonPlan extends React.Component {
 
                             <Menu color = {'blue'} icon vertical>
 
-                                <Menu.Item link>
-                                    <Checkbox checked = {this.state.checked} ref = {e => this.checkbox = e} label='Interact with sim' onChange = {this.interact.bind(this)} type = 'checkbox'/>
+                                <Menu.Item>
+                                    <Button toggle active = {!this.state.checked} onClick = {this.interact.bind(this)}>{this.state.checked?'Draw':'Interact'}</Button>
                                 </Menu.Item>
 
                                 <Menu.Item>
