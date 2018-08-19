@@ -42,12 +42,12 @@ export default class CommentBox extends React.Component {
                     }>X</Button>:null}
                     <div style = {{display:'flex', flexDirection:'row'}}>
                         <Comment.Author>{this.state.username}</Comment.Author>
-                        <Comment.Metadata>
+                        <Comment.Metadata style = {{paddingLeft:'0.8rem', paddingTop:'0.15rem'}}>
                             <div>{this.momentNow.fromNow()}</div>
                         </Comment.Metadata>
                     </div>
                     <div></div>
-                    <Comment.Text style = {{paddingTop:'0.8rem'}}>{this.props.comment.comment}</Comment.Text>
+                    <Comment.Text style = {{paddingTop:'0.8rem', width:'95%'}}>{this.props.comment.comment}</Comment.Text>
                     {/* <Comment.Actions>
                     <Comment.Action>Reply</Comment.Action>
                     </Comment.Actions> */}
