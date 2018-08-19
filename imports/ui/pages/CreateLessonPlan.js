@@ -222,7 +222,7 @@ class CreateLessonPlan extends React.Component {
             this.setState({
                 curSlide
             },()=>{
-              this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+              
               this.setSizeOfPage(0)
               this.db.reset('0');
         })

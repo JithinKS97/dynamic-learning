@@ -152,10 +152,9 @@ export default class SimsList extends React.Component {
 
                                             <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                         </div>
-                                        <div style = {{float:'right', marginLeft:'0.8rem', marginBottom:'0.1rem'}}><MdNetworkCell/></div>    
+                                        <div style = {{float:'right', marginLeft:'0.8rem', marginBottom:'0.1rem'}}><MdNetworkCell/></div>   
 
-                                    </div>
-                                    
+                                    </div>                    
 
                                 </div>
                             </Rnd>
