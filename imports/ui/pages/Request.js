@@ -38,10 +38,10 @@ export default class Request extends React.Component {
          */
 
         this.state = {
+            
             show:false,
             slides: [],
             curSlide: 0,
-            initialized:false,
             selectedSim:null,
             requestTitle: true,
             loading:true
@@ -56,7 +56,7 @@ export default class Request extends React.Component {
 
     componentDidMount() {
 
-        Tracker.autorun(()=>{
+        this.requestsTracker = Tracker.autorun(()=>{
 
             const requestsHandle = Meteor.subscribe('requests')
             const loading = !requestsHandle.ready()
@@ -78,7 +78,6 @@ export default class Request extends React.Component {
 
             this.setState({
                 ...request,
-                initialized:true,
                 show,
                 loading
             })
@@ -87,8 +86,8 @@ export default class Request extends React.Component {
     }
 
     componentWillUnmount() {
-
-
+        
+        this.requestsTracker.stop()
     }
 
     push(e) {
