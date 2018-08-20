@@ -166,7 +166,7 @@ export default class SimsList extends React.Component {
                     return (
               
                  
-                            <div style = {{marginBottom:index!=iframes.length-1?'16rem':'8rem'}} key = {index}>
+                            <div style = {{marginBottom:'16rem'}} key = {index}>
 
                                 {this.props.userId == Meteor.userId()?<Button                                 
                                     
