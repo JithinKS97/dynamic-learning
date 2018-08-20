@@ -12,12 +12,13 @@ import FaTrash from 'react-icons/lib/fa/trash'
 import FaCode from 'react-icons/lib/fa/code'
 import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment, Menu} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import { Tracker } from 'meteor/tracker'
 
 /* This component renders the page where the teachers post the requests for the new simulation 
     and the teachers and the other users have discussions about the simulations that they are trying to make.
 */
 
-class Request extends React.Component {
+export default class Request extends React.Component {
 
     constructor(props) {
 
@@ -42,7 +43,8 @@ class Request extends React.Component {
             curSlide: 0,
             initialized:false,
             selectedSim:null,
-            requestTitle: true
+            requestTitle: true,
+            loading:true
         }
         this.update.bind(this)
         this.pushSim.bind(this)
@@ -51,11 +53,17 @@ class Request extends React.Component {
         this.push.bind(this)
     }
 
-    componentDidUpdate() {
 
-        if(!this.state.initialized && this.props.requestExists) {
+    componentDidMount() {
 
-            const request = this.props.request
+        Tracker.autorun(()=>{
+
+            const requestsHandle = Meteor.subscribe('requests')
+            const loading = !requestsHandle.ready()
+            const request = Requests.findOne(this.props.match.params._id)
+
+            if(!request)
+                return
 
             if(request.slides.length == 0) {
 
@@ -71,9 +79,15 @@ class Request extends React.Component {
             this.setState({
                 ...request,
                 initialized:true,
-                show
+                show,
+                loading
             })
-        }
+
+        })
+    }
+
+    componentWillUnmount() {
+
 
     }
 
@@ -297,7 +311,7 @@ class Request extends React.Component {
 
             <Segment>
             
-                <Dimmer inverted active = {!this.state.initialized}>
+                <Dimmer inverted active = {this.state.loading}>
                     <Loader />
                 </Dimmer>
 
@@ -425,18 +439,3 @@ class Request extends React.Component {
         )
     }
 }
-
-export default RequestContainer = withTracker(({ match }) => {
-
-    const requestsHandle = Meteor.subscribe('requests')
-    const loading = !requestsHandle.ready()
-    const request = Requests.findOne(match.params._id)
-    const requestExists = !loading && !!request
-
-    return {
-
-        requestExists,
-        request: requestExists? request : []
-    }
-
-})(Request)
