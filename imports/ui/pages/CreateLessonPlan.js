@@ -645,7 +645,7 @@ class CreateLessonPlan extends React.Component {
                                         if(confirmation == true)
                                         this.reset()
                                     }}>
-                                    Reset all
+                                    Reset everything
                                 </Menu.Item>
 
                                 <Menu.Item onClick = {()=>{this.undo()}}>
