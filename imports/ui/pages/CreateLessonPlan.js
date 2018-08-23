@@ -48,7 +48,9 @@ class CreateLessonPlan extends React.Component {
             loginNotification:false,
             redirectToLogin:false,
             checked: false,
-            redirectToDashboard:false
+            redirectToDashboard:false,
+            redirectToForked:false,
+            forkedLessonPlanId:null
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -287,14 +289,38 @@ class CreateLessonPlan extends React.Component {
         /* This function is intended for saving the slides to the database.
             If not logged in, user is asked to login first.
         */
+        if(!Meteor.userId()) {
+
+            this.setState({loginNotification:true})
+            return
+        }
+
+        if(this.state.userId != Meteor.userId()) {
+
+            const confirmation = confirm("Are you sure you want to fork this lessonplan?")
+
+            if(!confirmation)
+                return
+
+            Meteor.call('lessonplans.insert', this.state.title, (err, _id)=>{
+                            
+                Meteor.call('lessonplans.update', _id, this.state.slides)
+                this.setState({
+
+                    redirectToForked:true,
+                    forkedLessonPlanId:_id
+                },()=>{
+
+                    confirm('Forked succesfully')
+                })
+            }) 
+            return
+        }
 
         if(this.addSim.state.isOpen)
             return
 
-        if(!Meteor.userId()) {
 
-            this.setState({loginNotification:true})
-        }
         else {
 
             const {_id, slides} = this.state
@@ -487,6 +513,11 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
+        if(this.state.redirectToForked) {
+
+            return <Redirect to = {`/dashboard/lessonplans`}/>
+        }
+
         if(this.state.redirectToLogin) {
 
             return <Redirect to = {`/login`}/>
@@ -624,7 +655,7 @@ class CreateLessonPlan extends React.Component {
                                 <Menu.Item onClick = {()=>{
                                         this.save()
                                     }}>
-                                    Save
+                                    {Meteor.userId()==this.state.userId || !Meteor.userId()?'Save':'Fork and Save'}
                                 </Menu.Item>
 
                                 <Menu.Item onClick = {()=>{

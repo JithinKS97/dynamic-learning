@@ -6,7 +6,6 @@ import CommentForm from '../components/CommentForm'
 import CommentsList from '../components/CommentsList'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
-import { withTracker } from 'meteor/react-meteor-data';
 import SimPreview from '../components/SimPreview'
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaCode from 'react-icons/lib/fa/code'
@@ -294,9 +293,12 @@ export default class Request extends React.Component {
         const sim = slides[curSlide]
         if(sim) {
             if(sim.iframes.length>0) {
-                return <Menu style = {{display:'flex', width:'100%'}} vertical>
-                    {this.displaySims()}        
-                </Menu>
+                return (
+                
+                    <Menu style = {{display:'flex', width:'100%'}} vertical>
+                        {this.displaySims()}        
+                    </Menu>
+                )
             }
         }
     }
@@ -348,9 +350,7 @@ export default class Request extends React.Component {
 
                                             }}>Close this request forum</Button>:null}                         
                                                                 
-                                        <h1>{this.state.requestTitle}</h1>
-
-                      
+                                        <h1>{this.state.requestTitle}</h1>                     
 
                                     </div>
 
@@ -398,8 +398,7 @@ export default class Request extends React.Component {
 
                     <Modal
                         open = {!!!this.state.requestTitle}
-                        size = 'tiny'
-                        
+                        size = 'tiny'                        
                     >
 
                         <Modal.Header>

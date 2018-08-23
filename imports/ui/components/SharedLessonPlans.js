@@ -103,7 +103,9 @@ export default class SharedLessonPlans extends React.Component {
                         Preview
                         <div style = {{float:'right'}}>
 
-                        {!Meteor.userId()?<Link to = {`/createlessonplan/${this.getId.bind(this)()}`}><Button>Open</Button></Link>:null}
+                        
+
+                        <Link to = {`/createlessonplan/${this.getId.bind(this)()}`}><Button>Open</Button></Link>
 
                         {Meteor.userId()?<Button onClick = {()=>{
 

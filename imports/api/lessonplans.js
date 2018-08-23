@@ -28,7 +28,8 @@ export const LessonPlansIndex = new Index({
 if(Meteor.isServer) {
 
     Meteor.publish('lessonplans',function(){
-        return LessonPlans.find({userId:this.userId})
+        
+        return LessonPlans.find({ $or: [ { userId:this.userId }, { isPublic:true } ] })
     })
 
     Meteor.publish('lessonplans.public',function(){
@@ -142,42 +143,12 @@ Meteor.methods({
 
     'lessonplans.update'(_id, slides) {
 
+        console.log(slides)
+
         if(!this.userId) {
 
             throw new Meteor.Error('not-authorized')
         }
-
-        new SimpleSchema({
-
-            _id: {
-                type: String,
-                min:1
-            }
-
-        }).validate({_id})
-
-
-        new SimpleSchema({
-
-            note: {
-                type: String,
-                optional:true
-            },
-
-            pageCount: {
-              type: Number,
-              optional: true
-            },
-
-            iframes: {
-                type:Array,
-                optional: true,
-            },
-
-            'iframes.$':{type:Object, blackbox:true}
-
-
-        }).validate(slides)
 
         LessonPlans.update({_id, userId:this.userId}, {$set:{slides, updatedAt: moment().valueOf()}})
     },
