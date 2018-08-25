@@ -635,7 +635,7 @@ class CreateLessonPlan extends React.Component {
                                     >Dashboard</Menu.Item>
                                 :null}
 
-                                {!!Meteor.userId()?
+                                {!!Meteor.userId() && this.state.userId == Meteor.userId()?
                                     <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
                                 :null}
 
