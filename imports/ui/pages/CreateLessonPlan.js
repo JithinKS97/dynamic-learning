@@ -605,7 +605,7 @@ class CreateLessonPlan extends React.Component {
 
                             <Menu color = {'blue'} icon vertical>
                                 {this.state.userId !=Meteor.userId()?<Menu.Item>
-                                    {`Created by ${this.state.creator}`}
+                                    {`${this.state.title} created by ${this.state.creator}`}
                                 </Menu.Item>:null}
                                 <Menu.Item>
                                     <Button toggle active = {!this.state.checked} onClick = {this.interact.bind(this)}>{this.state.checked?'Draw':'Interact'}</Button>
