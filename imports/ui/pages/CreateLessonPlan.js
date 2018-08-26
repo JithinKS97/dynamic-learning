@@ -50,7 +50,8 @@ class CreateLessonPlan extends React.Component {
             checked: false,
             redirectToDashboard:false,
             redirectToForked:false,
-            forkedLessonPlanId:null
+            forkedLessonPlanId:null,
+            creator:''
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -136,14 +137,22 @@ class CreateLessonPlan extends React.Component {
 
             this.setState({
                 ...lessonplan,
-                initialized:true
+                initialized:true,
+                
             },() => {
+
+                Meteor.call('getUsername', this.state.userId, (err,name)=>{
+
+                    this.setState({
+                        creator:name
+                    })
+                })
 
                 if(this.state.slides.length == 0) {
 
                     this.pushSlide(this.state.slides)                    
                     this.setSizeOfPage(0)
-                    this.db.reset('0');
+                    this.db.reset('0')
                    
                 }
                 else {
@@ -353,7 +362,7 @@ class CreateLessonPlan extends React.Component {
 
     saveChanges(slides, curSlide) {
 
-        /* This function is used in multiple places to save the changes (not in the databse, but
+        /* This function is used in multiple places to save the changes (not in the database, but
             in the react state).
 
            Depending upon the changes made, they are saved looking upon arguments given when the
@@ -421,7 +430,7 @@ class CreateLessonPlan extends React.Component {
 
     deleteSim(index) {
 
-        /* This function decides what to do when cross button in the simulatin is pressed.
+        /* This function decides what to do when cross button in the simulation is pressed.
             The simulation is deleted from the iframes array of the
             current slide and the changes are saved.
         */
@@ -595,7 +604,9 @@ class CreateLessonPlan extends React.Component {
                             <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
                             <Menu color = {'blue'} icon vertical>
-
+                                {this.state.userId !=Meteor.userId()?<Menu.Item>
+                                    {`Created by ${this.state.creator}`}
+                                </Menu.Item>:null}
                                 <Menu.Item>
                                     <Button toggle active = {!this.state.checked} onClick = {this.interact.bind(this)}>{this.state.checked?'Draw':'Interact'}</Button>
                                 </Menu.Item>
