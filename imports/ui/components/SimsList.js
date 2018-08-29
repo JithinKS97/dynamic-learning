@@ -24,6 +24,19 @@ export default class SimsList extends React.Component {
     
     renderSims() {
 
+        function calcMargin(iframes, index) {
+
+            if(iframes.length == 1) {
+
+                return 0
+            }
+            else if(iframes.length-1!=index) {
+                return '13rem'
+            }
+            else {
+                return '6rem'
+            }
+        }
 
 
 
@@ -161,11 +174,12 @@ export default class SimsList extends React.Component {
                     )
                 }
                 else {
-            
+
+  
                     return (
               
                  
-                            <div style = {{marginBottom:iframes.length-1!=index?'13rem':'8rem'}} key = {index}>
+                            <div style = {{marginBottom:calcMargin(iframes, index)}} key = {index}>
 
                                 <Button                                 
                                     

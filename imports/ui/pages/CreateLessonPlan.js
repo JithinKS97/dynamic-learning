@@ -8,7 +8,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { withTracker } from 'meteor/react-meteor-data';
-import { Checkbox, Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid } from 'semantic-ui-react'
+import {  Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 
