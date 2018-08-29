@@ -39,7 +39,7 @@ export default class SimPreview extends React.Component {
         if(!this.props.slides) {
             return 360
         }
-        else {
+        else if(this.props.h) {
             this.setState({
                 h:this.props.h
             })
@@ -51,7 +51,7 @@ export default class SimPreview extends React.Component {
         if(!this.props.slides) {
             return 640
         }
-        else {
+        else if(this.props.w) {
             this.setState({
                 w:this.props.w
             })
@@ -94,12 +94,13 @@ export default class SimPreview extends React.Component {
                             w: ref.offsetWidth
                         },()=>{
 
+                            if(!this.props.slides)
+                                return
 
                             this.props.slides[this.props.curSlide].iframes[this.props.index].w = ref.offsetWidth
                             this.props.slides[this.props.curSlide].iframes[this.props.index].h = ref.offsetHeight
 
-                            console.log(Meteor.userId(), this.props.userId)
-
+                            
                             if(Meteor.userId() == this.props.userId){
                                 
                                 this.props.save(this.props._id, this.props.slides)
