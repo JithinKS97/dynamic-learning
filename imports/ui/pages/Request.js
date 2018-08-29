@@ -224,25 +224,27 @@ export default class Request extends React.Component {
         this.update()
     }
 
-    deleteSim(index) {
+    deleteSim(index, userId) {
 
         /* This function decides what to do when cross Button is pressed in the
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
         */
+
+
+        if(Meteor.userId() != userId)
+            return
+
         const confirmation = confirm('Are you sure you want to delete this sim')
         if(!confirmation)
             return
 
-        const isOwner = this.state.userId == Meteor.userId()
 
-        if(isOwner) {
-            const { slides, curSlide }  = this.state
-            const iframes = slides[curSlide].iframes        
-            iframes.splice(index,1)
-            slides[this.state.curSlide].iframes = iframes
-            this.saveChanges(slides)
-        }
+        const { slides, curSlide }  = this.state
+        const iframes = slides[curSlide].iframes        
+        iframes.splice(index,1)
+        slides[this.state.curSlide].iframes = iframes
+        this.saveChanges(slides)
         
     }
 
@@ -283,7 +285,7 @@ export default class Request extends React.Component {
                         }} 
                         style = {{width:'100%', textAlign:'left'}}>{sim.title}</Button>
                         {Meteor.userId()==sim.userId?<Button onClick = {()=>{
-                            this.deleteSim(index)
+                            this.deleteSim(index, sim.userId)
                         }}><FaTrash/></Button>:null}
                     </Menu.Item>
                 )

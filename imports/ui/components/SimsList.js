@@ -165,7 +165,7 @@ export default class SimsList extends React.Component {
                     return (
               
                  
-                            <div style = {{marginBottom:'13rem'}} key = {index}>
+                            <div style = {{marginBottom:iframes.length-1!=index?'13rem':'8rem'}} key = {index}>
 
                                 <Button                                 
                                     
