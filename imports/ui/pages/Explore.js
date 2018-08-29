@@ -22,15 +22,15 @@ export default class Explore extends React.Component {
                 <Grid style = {{marginTop:'0.8rem'}} columns = {3} divided>
                     <Grid.Row>
                         <Grid.Column>
-                            <Header>Lessonplans</Header>
+                            <Header as='h3'>Lessonplans</Header>
                             <SharedLessonPlans/>
                         </Grid.Column>
                         <Grid.Column>
-                            <Header>Lessons</Header>
+                            <Header as='h3'>Lessons</Header>
                             <SharedLessons/>
                         </Grid.Column>
                         <Grid.Column>
-                            <Header>Help make simulations</Header>
+                            <Header as='h3'>Help make simulations</Header>
                             <RequestsList/>
                         </Grid.Column>
                     </Grid.Row>

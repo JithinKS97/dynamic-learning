@@ -330,7 +330,16 @@ export default class Request extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Content>
-                        <SimPreview userId = {this.state.selectedSim?this.state.selectedSim.userId:null} index = {this.state.selectedSimIndex} slides = {this.state.slides} curSlide = {this.state.curSlide} save = {this.update.bind(this)} w = {this.state.selectedSim?this.state.selectedSim.w:640} h = {this.state.selectedSim?this.state.selectedSim.h:360} src = {this.state.selectedSim?this.state.selectedSim.src:null}/>
+                        <SimPreview
+                            userId = {this.state.selectedSim?this.state.selectedSim.userId:null} 
+                            index = {this.state.selectedSimIndex} 
+                            slides = {this.state.slides} 
+                            curSlide = {this.state.curSlide} 
+                            save = {this.update.bind(this)} 
+                            w = {this.state.selectedSim?this.state.selectedSim.w:640} 
+                            h = {this.state.selectedSim?this.state.selectedSim.h:360} 
+                            src = {this.state.selectedSim?this.state.selectedSim.src:null}
+                        />
                     </Modal.Content>
                 </Modal>
 
