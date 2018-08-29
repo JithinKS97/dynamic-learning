@@ -157,6 +157,11 @@ class CreateLessonPlan extends React.Component {
                 }
                 else {
                     this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+
+                    /* The size of the page is set first, then we completely reset the canvas
+                        And the notes are drawn back to the canvas
+                    */
+
                     this.setSizeOfPage(this.pageCount)
                     this.db.reset('0');
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
@@ -171,6 +176,14 @@ class CreateLessonPlan extends React.Component {
     }
     
     setSizeOfPage(pageCount) {
+
+        /* This function sets the size of the canvas. By default the size of the page is
+            900px. The user can add extra poges. With each addition the size of the page
+            increases by 300px.
+
+            First the size of the container is incremented, then the canvas's size is
+            incremented
+        */
 
         $('#container')[0].style.height=(900+pageCount*300)+'px';
         $('canvas')[0].style.height=$('#container')[0].style.height;
@@ -391,6 +404,9 @@ class CreateLessonPlan extends React.Component {
                 slides,
                 curSlide
             },()=>{
+
+                
+                
               this.setSizeOfPage(0)
               this.db.reset('0');
               this.db.setImg(this.state.slides[this.state.curSlide].note)

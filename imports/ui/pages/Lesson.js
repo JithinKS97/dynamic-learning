@@ -186,7 +186,7 @@ class Lesson extends React.Component {
 
             <Grid divided='vertically' style = {{height:'100vh', boxSizing: 'border-box'}}>
                 <Grid.Row style = {{height:'80vh'}}>
-                    <Grid.Column style = {{padding:'1.6rem', width:'50vw'}}>
+                    <Grid.Column style = {{padding:'2.4rem', width:'50vw'}}>
                         
                             <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Back to dashboard</Button></Link>
                             {this.props.lesson.userId == Meteor.userId()?<Checkbox
@@ -198,27 +198,27 @@ class Lesson extends React.Component {
                                 style = {{paddingLeft:'1.6rem'}} 
                                 label = 'share the lesson'
                             />:null}
-                            <VideoContainer userId = {this.props.lesson.userId} addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
+                            <div style = {{ height:'100%', border:'1px dashed #cccccc', display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                <VideoContainer userId = {this.props.lesson.userId} addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
+                            </div>
+                    </Grid.Column>
+                    <Grid.Column  style = {{padding:'2.4rem', width:'50vw', textAlign:'center'}}>
+                        
+                            <Button style = {{marginBottom:'0.8rem', visibility:this.props.lesson.userId == Meteor.userId()?'visible':'hidden'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:
+                            <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
+                            <div style = {{height:'100%', border:'1px dashed #cccccc', overflow:'auto'}}>
+                                <SimsList userId = {this.props.lesson.userId} isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
+                            </div>
                         
                     </Grid.Column>
-                    <Grid.Column  style = {{padding:'1.6rem', overflowY:'auto', width:'50vw'}}>
-                        <Container >
-                            {this.props.lesson.userId == Meteor.userId()?<Button style = {{marginBottom:'0.8rem'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:null}
-                            <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
-                            <SimsList userId = {this.props.lesson.userId} isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
-                        </Container>
-                    </Grid.Column>
                 </Grid.Row>
-                <Grid.Row style = {{height:'20vh', padding:'1.6rem'}} >
+                <Grid.Row style = {{height:'20vh', padding:'1.6rem', display:'flex', alignItems:'center'}} >
                     <h1 style = {{padding:'1.6rem', border:'auto auto'}}>{this.state.curSlide+1}</h1>
                     <HorizontalList userId = {this.props.lesson.userId} deleteSlide = {this.deleteSlide.bind(this)} saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides}/>
                     {this.props.lesson.userId == Meteor.userId()?<Button 
                         onClick = {this.addNewSlide.bind(this)}
-                        style = {{
-
-                            margin:'auto 0.8rem', 
-
-                        }}>
+                        style = {{marginLeft:'1.6rem'}}
+                        >
                         +
                     </Button>:null}
                 </Grid.Row>

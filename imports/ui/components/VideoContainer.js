@@ -51,13 +51,16 @@ export default class VideoContainer extends React.Component {
         
         if(this.props.userId == Meteor.userId())
             return (
-                <div>
-                    <Button onClick = {()=>{
+                
+                    
+                    <Button style = {{
+                        
+                    }} onClick = {()=>{
                         this.setState({
                             open:true
                         })
                     }}>Add youtube link</Button>
-                </div>
+
             )
         else
             return null
@@ -130,6 +133,7 @@ export default class VideoContainer extends React.Component {
                     </Modal.Content>
                     
                 </Modal>
+
                 {
                     this.props.url?
                     <Container>

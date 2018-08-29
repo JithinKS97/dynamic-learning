@@ -37,8 +37,7 @@ export default class SimsList extends React.Component {
 
         if(slides.length!=0) {
 
-            const iframes = slides[curSlide].iframes
-            
+            const iframes = slides[curSlide].iframes            
             
             return iframes.map((iframe,index)=>{
 
@@ -166,11 +165,16 @@ export default class SimsList extends React.Component {
                     return (
               
                  
-                            <div style = {{marginBottom:'16rem'}} key = {index}>
+                            <div style = {{marginBottom:'13rem'}} key = {index}>
 
-                                {this.props.userId == Meteor.userId()?<Button                                 
+                                <Button                                 
                                     
-                                    style = {{marginTop:'0.8rem', marginBottom:'0.8rem', float:'center'}}
+                                    style = {{
+                                        visibility:this.props.userId == Meteor.userId()?'visible':'hidden',
+                                        marginTop:'0.8rem', 
+                                        marginBottom:'0.8rem', 
+                                        float:'center'
+                                    }}
                                     onClick = {()=>{
 
                                         const confirmation = confirm('Are you sure you want to remove this?')
@@ -178,7 +182,7 @@ export default class SimsList extends React.Component {
                                             this.props.delete(index)
                                     }}>X
 
-                                </Button>:null}               
+                                </Button>              
                                                                
                                 <div>
                                     <SimPreview

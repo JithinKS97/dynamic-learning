@@ -345,9 +345,8 @@ class LessonPlansDirectories extends Component {
                         <button
                         onClick = {()=>{
 
-                                console.log(node)
-
                                 this.setState({
+                                    
                                     node,
                                     selectedLessonPlanId:node._id,
                                     title:node.title,
