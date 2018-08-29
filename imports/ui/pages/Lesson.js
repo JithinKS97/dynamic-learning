@@ -26,7 +26,6 @@ class Lesson extends React.Component {
 
         let {curSlide} = this.state
         slides = this.props.lesson.slides
-        console.log(slides)
         this.pushSlide(slides)
         curSlide = slides.length-1
         this.setState({
@@ -207,7 +206,7 @@ class Lesson extends React.Component {
                             <Button style = {{marginBottom:'0.8rem', visibility:this.props.lesson.userId == Meteor.userId()?'visible':'hidden'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:
                             <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
                             <div style = {{height:'100%', border:'1px dashed #cccccc', overflow:'auto'}}>
-                                <SimsList userId = {this.props.lesson.userId} isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
+                                <SimsList save = {this.save.bind(this)} userId = {this.props.lesson.userId} isRndRequired = {false} delete = {this.deleteSim.bind(this)} {...this.props.lesson} curSlide = {this.state.curSlide}/>
                             </div>
                         
                     </Grid.Column>

@@ -42,6 +42,7 @@ export default class Request extends React.Component {
             slides: [],
             curSlide: 0,
             selectedSim:null,
+            selectedSimIndex:null,
             requestTitle: true,
             loading:true
         }
@@ -127,7 +128,8 @@ export default class Request extends React.Component {
         if(!Meteor.userId())
             return
 
-        const { slides, requestTitle }  = this.state
+        const { slides }  = this.state
+
 
         Meteor.call('requests.update',this.state._id, slides)
 
@@ -207,8 +209,8 @@ export default class Request extends React.Component {
         const objectToPush = {
             userId:Meteor.userId(),
             src,
-            w,
-            h,
+            w:640,
+            h:360,
             x:0,
             y:0,
             title,
@@ -275,7 +277,8 @@ export default class Request extends React.Component {
                     <Menu.Item style = {{display:'flex', justifyContent:'space-between'}} key = {index}>
                         <Button onClick = {()=>{
                             this.setState({
-                                selectedSim:sim
+                                selectedSim:sim,
+                                selectedSimIndex:index
                             })
                         }} 
                         style = {{width:'100%', textAlign:'left'}}>{sim.title}</Button>
@@ -325,7 +328,7 @@ export default class Request extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Content>
-                        <SimPreview src = {this.state.selectedSim?this.state.selectedSim.src:null}/>
+                        <SimPreview userId = {this.state.selectedSim?this.state.selectedSim.userId:null} index = {this.state.selectedSimIndex} slides = {this.state.slides} curSlide = {this.state.curSlide} save = {this.update.bind(this)} w = {this.state.selectedSim?this.state.selectedSim.w:640} h = {this.state.selectedSim?this.state.selectedSim.h:360} src = {this.state.selectedSim?this.state.selectedSim.src:null}/>
                     </Modal.Content>
                 </Modal>
 

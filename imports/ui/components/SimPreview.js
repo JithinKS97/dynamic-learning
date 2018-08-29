@@ -16,12 +16,47 @@ export default class SimPreview extends React.Component {
         }
     }
 
+    componentDidMount() {
+
+        this.setState({
+
+            h:this.props.h,
+            w:this.props.w
+        })
+    }
+
     iframeLoaded = () => {
 
         this.setState({
             loading:false
         })
         
+    }
+
+    getHeight() {
+
+        
+        if(!this.props.slides) {
+            return 360
+        }
+        else {
+            this.setState({
+                h:this.props.h
+            })
+        }
+    }
+
+    getWidth() {
+
+        if(!this.props.slides) {
+            return 640
+        }
+        else {
+            this.setState({
+                w:this.props.w
+            })
+        }
+
     }
 
     render() {
@@ -57,6 +92,19 @@ export default class SimPreview extends React.Component {
                             
                             h: ref.offsetHeight,
                             w: ref.offsetWidth
+                        },()=>{
+
+
+                            this.props.slides[this.props.curSlide].iframes[this.props.index].w = ref.offsetWidth
+                            this.props.slides[this.props.curSlide].iframes[this.props.index].h = ref.offsetHeight
+
+                            console.log(Meteor.userId(), this.props.userId)
+
+                            if(Meteor.userId() == this.props.userId){
+                                
+                                this.props.save(this.props._id, this.props.slides)
+                            }
+                            
                         })
                     }}
                 
@@ -71,8 +119,8 @@ export default class SimPreview extends React.Component {
                         scrolling = 'no'
                         onLoad = {this.iframeLoaded.bind(this)}
                         ref = {e => this.iframe = e} 
-                        height = {this.state.h+'px'} 
-                        width = {this.state.w+'px'}
+                        width = {(this.state.w|| 640)+'px'} 
+                        height = {(this.state.h|| 360)+'px'}
                         src={this.props.src}>
                     </iframe>
                 </Rnd>

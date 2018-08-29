@@ -21,50 +21,50 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized')
         }
 
-        new SimpleSchema({
+        // new SimpleSchema({
 
-            _id: {
-                type: String,
-                min:1
-            }
+        //     _id: {
+        //         type: String,
+        //         min:1
+        //     }
 
-        }).validate({_id})
-
-
-        new SimpleSchema({
-
-            title: {
-                type: String,
-                optional:true
-            },
-
-            comments: {
-                type:Array,
-                optional: true,
-            },
-
-            'comments.$':{type:Object},
-            'comments.$.comment':{type:String},
-            'comments.$.userId':{type:String},
-            'comments.$.time':{type:Number},
-
-            iframes: {
-                type:Array,
-                optional: true,
-            },
-
-            'iframes.$':{type:Object},
-            'iframes.$.src':{type:String},
-            'iframes.$.w':{type:String},
-            'iframes.$.h':{type:String},
-            'iframes.$.x':{type:Number},
-            'iframes.$.y':{type:Number},
-            'iframes.$.userId':{type:String},
-            'iframes.$.title':{type:String},
-            'iframes.$.linkToCode':{type:String}
+        // }).validate({_id})
 
 
-        }).validate(slides)
+        // new SimpleSchema({
+
+        //     title: {
+        //         type: String,
+        //         optional:true
+        //     },
+
+        //     comments: {
+        //         type:Array,
+        //         optional: true,
+        //     },
+
+        //     'comments.$':{type:Object},
+        //     'comments.$.comment':{type:String},
+        //     'comments.$.userId':{type:String},
+        //     'comments.$.time':{type:Number},
+
+        //     iframes: {
+        //         type:Array,
+        //         optional: true,
+        //     },
+
+        //     'iframes.$':{type:Object},
+        //     'iframes.$.src':{type:String},
+        //     'iframes.$.w':{type:String},
+        //     'iframes.$.h':{type:String},
+        //     'iframes.$.x':{type:Number},
+        //     'iframes.$.y':{type:Number},
+        //     'iframes.$.userId':{type:String},
+        //     'iframes.$.title':{type:String},
+        //     'iframes.$.linkToCode':{type:String}
+
+
+        // }).validate(slides)
 
         Requests.update({_id}, {$set:{slides,  updatedAt: moment().valueOf()}})
     },

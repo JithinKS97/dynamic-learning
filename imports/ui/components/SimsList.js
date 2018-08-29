@@ -191,6 +191,8 @@ export default class SimsList extends React.Component {
                                         index = {index} 
                                         src = {iframe.src}
                                         {...iframe}
+                                        w = {iframe.w}
+                                        h = {iframe.h}
                                     />
                                 </div>
                                 <div>

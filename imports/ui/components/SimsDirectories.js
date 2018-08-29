@@ -178,6 +178,7 @@ class SimsDirectories extends React.Component {
 
 
                     generateNodeProps = {({ node }) => ({
+                        
 
                         onClick: ()=>{
 
@@ -191,6 +192,8 @@ class SimsDirectories extends React.Component {
                                 this.props.getNode(this.state.node)
                             }) 
                         },
+
+
 
                         buttons: [
                           
