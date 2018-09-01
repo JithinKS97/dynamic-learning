@@ -51,7 +51,8 @@ class CreateLessonPlan extends React.Component {
             redirectToDashboard:false,
             redirectToForked:false,
             forkedLessonPlanId:null,
-            creator:''
+            creator:'',
+            scale:1
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -65,6 +66,18 @@ class CreateLessonPlan extends React.Component {
         this.handleKeyDown = this.handleKeyDown.bind(this)
 
         this.changePageCount.bind(this)
+
+        this.setState({
+                
+            scale:1/*Math.min($('.twelve.wide.column').width()/1377, $('.twelve.wide.column').height()/931)*/
+        })
+
+        window.onresize = ()=>{
+            this.setState({
+
+                scale:1/*Math.min($('.twelve.wide.column').width()/1377, $('.twelve.wide.column').height()/931)*/
+            })
+        }
 
     }
 
@@ -368,8 +381,6 @@ class CreateLessonPlan extends React.Component {
                 else
                     return
             }
-
-
         }
     }
 
@@ -538,6 +549,8 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
+        
+
         if(this.state.redirectToForked) {
 
             return <Redirect to = {`/dashboard/lessonplans`}/>
@@ -595,7 +608,14 @@ class CreateLessonPlan extends React.Component {
                             <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                         </Grid.Column>
 
-                        <Grid.Column style = {{overflow:'auto', margin:0, padding:0}} width = {12}>
+                        <Grid.Column style = {{
+
+                                overflow:'auto', 
+                                margin:0, 
+                                padding:0
+
+                            }} width = {12}
+                        >
                             
                                 <SimsList
 

@@ -11,6 +11,8 @@ const CommentsList  = (props) => {
         
         const { slides, curSlide } = props
 
+
+
         if(slides.length>0) {
             comments = slides[curSlide].comments
             return comments.map((comment, index)=>{

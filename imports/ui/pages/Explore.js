@@ -23,6 +23,8 @@ export default class Explore extends React.Component {
                     <Grid.Row>
                         <Grid.Column>
                             <Header as='h3'>Lessonplans</Header>
+                            <p>Search for lessonplans or create your own</p>
+                            <Link to ='/createlessonplan'><Button style = {{marginBottom:'1.6rem'}}>Create a new Lessonplan</Button></Link>
                             <SharedLessonPlans/>
                         </Grid.Column>
                         <Grid.Column>
