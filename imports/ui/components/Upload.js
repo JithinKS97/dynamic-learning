@@ -41,15 +41,16 @@ export default class Upload extends React.Component {
 
         /* The link.match checks if the iframe entered is valid by using regular
            expression. The src should be set only if the entered tag is valid.
+           Change
         */
 
         const tag = entry.match(`<iframe.+?src="https://editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
         const link = linkToCode.match(`https://editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/sketches/[ A-Za-z0-9_@./#&+-]*`)
 
 
-        
+
         if(tag && link) {
-            
+
             const validTag = tag[0]
             const validLink = link[0]
             
