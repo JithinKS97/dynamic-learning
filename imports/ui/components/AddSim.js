@@ -59,8 +59,8 @@ export default class AddSim extends React.Component {
                 src:this.state.node.src,
                 w:this.state.node.w,
                 h:this.state.node.h,
-                x:640,
-                y:360,
+                x:50,
+                y:50,
                 data:{},
                 pane:null
             }
