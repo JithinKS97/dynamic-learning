@@ -178,7 +178,7 @@ class Lesson extends React.Component {
 
 
         return (
-            <div>
+            <div> 
             <Dimmer inverted active = {!this.props.lessonExists}>
                 <Loader />
             </Dimmer>
