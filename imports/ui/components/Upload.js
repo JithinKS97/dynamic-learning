@@ -49,6 +49,7 @@ export default class Upload extends React.Component {
 
         
         if(tag && link) {
+            
             const validTag = tag[0]
             const validLink = link[0]
             
