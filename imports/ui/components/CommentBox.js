@@ -1,7 +1,8 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
 import moment from 'moment'
-
+import CommentReplies from './CommentReplies'
+import CommentForm from './CommentForm'
 import { Comment, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
@@ -18,7 +19,7 @@ export default class CommentBox extends React.Component {
         }
 
         Tracker.autorun(()=>{
-            
+
             Meteor.call('getUsername', this.props.comment.userId, (err, username) => {
 
                 this.setState({username})
@@ -27,10 +28,25 @@ export default class CommentBox extends React.Component {
 
     }
 
+    print_replies(){
+
+      let replies=this.props.replies
+      if(replies){
+        return replies.map((reply, index)=>{
+            return (
+              <CommentReplies {...this.props} subIndex = {index} reply={reply}/>
+            )
+        })
+      }
+    }
 
     render() {
+
+        console.log(this.props)
+
         return (
-            <Comment style = {{padding:'0.8rem', backgroundColor:'#eeeeee'}}>
+          <div>
+            <Comment style = {{padding:'0.8rem',marginBottom:'0.9rem',marginTop:'0.9rem', backgroundColor:'#eeeeee'}}>
                 <Comment.Content style = {{width:'100%'}}>
                     {/* <Comment.Avatar src='/images/avatar/small/matt.jpg' /> */}
                     {this.props.comment.userId == Meteor.userId()?<Button style = {{float:'right', padding:'0.5rem'}} onClick = {() =>{
@@ -53,7 +69,16 @@ export default class CommentBox extends React.Component {
                     </Comment.Actions> */}
                 </Comment.Content>
             </Comment>
-                 
+            <div>
+              {
+              this.print_replies()
+              }
+            </div>
+            <div>
+              <CommentForm option = {this.props.index} {...this.props}/>
+
+            </div>
+        </div>
         )
     }
 }

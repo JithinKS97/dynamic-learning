@@ -162,6 +162,7 @@ class LessonPlansDirectories extends Component {
         }
 
         if(node.children.length == 0) {
+            
             return
         }
         else {

@@ -13,7 +13,7 @@ import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment, Menu} fr
 import 'semantic-ui-css/semantic.min.css';
 import { Tracker } from 'meteor/tracker'
 
-/* This component renders the page where the teachers post the requests for the new simulation 
+/* This component renders the page where the teachers post the requests for the new simulation
     and the teachers and the other users have discussions about the simulations that they are trying to make.
 */
 
@@ -37,7 +37,7 @@ export default class Request extends React.Component {
          */
 
         this.state = {
-            
+
             show:false,
             slides: [],
             curSlide: 0,
@@ -74,7 +74,7 @@ export default class Request extends React.Component {
                 }
             }
 
-            const show = !!request.slides[0].title  
+            const show = !!request.slides[0].title
 
             this.setState({
                 ...request,
@@ -86,7 +86,7 @@ export default class Request extends React.Component {
     }
 
     componentWillUnmount() {
-        
+
         this.requestsTracker.stop()
     }
 
@@ -101,9 +101,9 @@ export default class Request extends React.Component {
             const curSlide = slides.length
 
             if(this.state.show == false) {
-                            
+
                 slides[0].title = this.title.value
-                this.setState({slides, show:true})            
+                this.setState({slides, show:true})
             }
             else {
                 const slide = {
@@ -113,7 +113,7 @@ export default class Request extends React.Component {
                 }
                 slides.push(slide)
                 this.setState({
-                   title, 
+                   title,
                    slides,
                    curSlide
                 })
@@ -144,18 +144,18 @@ export default class Request extends React.Component {
             const { slides } = this.state
 
             if(slides.length!=1) {
-                slides.splice(index, 1)    
-                let { curSlide } = this.state   
+                slides.splice(index, 1)
+                let { curSlide } = this.state
                 if(index == 0) {
                     curSlide = 0
-                }    
+                }
                 if(curSlide == slides.length)
                     curSlide = slides.length-1
                 this.saveChanges(slides, curSlide)
             }
             else
-                this.reset()  
-        }                
+                this.reset()
+        }
     }
 
     reset() {
@@ -178,7 +178,7 @@ export default class Request extends React.Component {
 
         },()=>{
             this.update()
-            
+
         })
     }
 
@@ -188,12 +188,12 @@ export default class Request extends React.Component {
             this.setState({
                 curSlide
             })
-        }        
+        }
         else if(curSlide == undefined) {
             this.setState({
                 slides
             })
-        }        
+        }
         else {
             this.setState({
                 slides,
@@ -202,7 +202,7 @@ export default class Request extends React.Component {
         }
         this.update()
     }
-    
+
     pushSim(title, src, w, h, linkToCode) {
         const { slides, curSlide }  = this.state
 
@@ -241,18 +241,25 @@ export default class Request extends React.Component {
 
 
         const { slides, curSlide }  = this.state
-        const iframes = slides[curSlide].iframes        
+        const iframes = slides[curSlide].iframes
         iframes.splice(index,1)
         slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
-        
+
     }
 
     deleteComment(index) {
-        
+
         const { slides, curSlide }  = this.state
         slides[curSlide].comments.splice(index,1)
         this.saveChanges(slides)
+    }
+
+    deleteReplyComment(index, subIndex) {
+
+      const { slides, curSlide }  = this.state
+      slides[curSlide].comments[index].replies.splice(subIndex, 1)
+      this.saveChanges(slides)
     }
 
     setTitle(e) {
@@ -262,7 +269,7 @@ export default class Request extends React.Component {
         this.setState({
             requestTitle:this.requestTitle.value
         },()=>{
-            
+
             Meteor.call('requests.title.update', this.state._id, this.state.requestTitle)
         })
 
@@ -282,7 +289,7 @@ export default class Request extends React.Component {
                                 selectedSim:sim,
                                 selectedSimIndex:index
                             })
-                        }} 
+                        }}
                         style = {{width:'100%', textAlign:'left'}}>{sim.title}</Button>
                         {Meteor.userId()==sim.userId?<Button onClick = {()=>{
                             this.deleteSim(index, sim.userId)
@@ -299,9 +306,9 @@ export default class Request extends React.Component {
         if(sim) {
             if(sim.iframes.length>0) {
                 return (
-                
+
                     <Menu style = {{display:'flex', width:'100%'}} vertical>
-                        {this.displaySims()}        
+                        {this.displaySims()}
                     </Menu>
                 )
             }
@@ -316,7 +323,7 @@ export default class Request extends React.Component {
         return (
 
             <Segment>
-            
+
                 <Dimmer inverted active = {this.state.loading}>
                     <Loader />
                 </Dimmer>
@@ -325,19 +332,19 @@ export default class Request extends React.Component {
                     <Modal.Header>
                         Preview
                         <div className ='close-button'>
-                            <a className = 'link-to-code' target = '_blank' href = {this.state.selectedSim?this.state.selectedSim.linkToCode:''}><Button><FaCode/></Button></a>                  
-                            <Button  onClick = {()=>{this.setState({selectedSim:null})}}>X</Button>                        
+                            <a className = 'link-to-code' target = '_blank' href = {this.state.selectedSim?this.state.selectedSim.linkToCode:''}><Button><FaCode/></Button></a>
+                            <Button  onClick = {()=>{this.setState({selectedSim:null})}}>X</Button>
                         </div>
                     </Modal.Header>
                     <Modal.Content>
                         <SimPreview
-                            userId = {this.state.selectedSim?this.state.selectedSim.userId:null} 
-                            index = {this.state.selectedSimIndex} 
-                            slides = {this.state.slides} 
-                            curSlide = {this.state.curSlide} 
-                            save = {this.update.bind(this)} 
-                            w = {this.state.selectedSim?this.state.selectedSim.w:640} 
-                            h = {this.state.selectedSim?this.state.selectedSim.h:360} 
+                            userId = {this.state.selectedSim?this.state.selectedSim.userId:null}
+                            index = {this.state.selectedSimIndex}
+                            slides = {this.state.slides}
+                            curSlide = {this.state.curSlide}
+                            save = {this.update.bind(this)}
+                            w = {this.state.selectedSim?this.state.selectedSim.w:640}
+                            h = {this.state.selectedSim?this.state.selectedSim.h:360}
                             src = {this.state.selectedSim?this.state.selectedSim.src:null}
                         />
                     </Modal.Content>
@@ -346,7 +353,7 @@ export default class Request extends React.Component {
                 <div>
                     <Grid style = {{height:'100vh'}}  columns={3} divided>
                         <Grid.Row>
-                            <Grid.Column width = {4} style = {{overflow:'auto'}}>                                
+                            <Grid.Column width = {4} style = {{overflow:'auto'}}>
                                     <div style = {{margin:'1.6rem'}}>
 
                                         <Button onClick = {()=>{
@@ -354,24 +361,24 @@ export default class Request extends React.Component {
                                             }}>Back</Button>
 
                                             {isOwner?<Button onClick = {()=>{
-                                            
+
                                             const confirmation = confirm('Are you sure you want to close this forum?')
 
                                             if(confirmation && isOwner) {
                                                 Meteor.call('requests.reset', this.state._id)
                                                 history.back()
-                                            }   
+                                            }
 
-                                            }}>Close this request forum</Button>:null}                         
-                                                                
-                                        <h1>{this.state.requestTitle}</h1>                     
+                                            }}>Close this request forum</Button>:null}
+
+                                        <h1>{this.state.requestTitle}</h1>
 
                                     </div>
 
                                     {isOwner?
-                                    
+
                                         <Form onSubmit = {this.push.bind(this)}>
-                                        
+
                                             <Form.Field>
                                                 <input placeholder = 'Title for the new topic' ref = {e => this.title = e}/>
                                             </Form.Field>
@@ -385,24 +392,24 @@ export default class Request extends React.Component {
                                     null}
 
                                     {this.state.show?<List userId = {this.state.userId} from = {'request'} showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
-                                
+
                             </Grid.Column>
                             <Grid.Column width = {7} style = {{overflow:'auto', padding:'1.6rem'}}>
-                        
-                                    {this.state.show?<CommentsList  deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
+
+                                    {this.state.show?<CommentsList {...this.state} saveChanges= {this.saveChanges.bind(this)} deleteReplyComment = {this.deleteReplyComment.bind(this)} deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
                                     <br/>
-                                    {this.state.show && !!Meteor.userId()?<CommentForm {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
+                                    {this.state.show && !!Meteor.userId()?<CommentForm option = {-1} {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
                                     null}
-                        
+
                             </Grid.Column>
                             <Grid.Column width = {5} style = {{overflow:'auto', padding:'1.6rem'}}>
-                                        
+
                                 {Meteor.userId()?<div style = {{marginBottom:'1.6rem'}}>
                                     {this.state.show?<Upload methodToRun = {this.pushSim.bind(this)}/>:null}
                                 </div>:null}
-                                    
+
                                     {this.state.show?this.displayMenu.bind(this)():null}
-                                    
+
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
@@ -412,22 +419,22 @@ export default class Request extends React.Component {
 
                     <Modal
                         open = {!!!this.state.requestTitle}
-                        size = 'tiny'                        
+                        size = 'tiny'
                     >
 
                         <Modal.Header>
 
-                            Title for the request forum                         
-   
+                            Title for the request forum
+
                             <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
-                                <Button link className = 'close-button'>X</Button> 
-                            </Link>                                       
+                                <Button link className = 'close-button'>X</Button>
+                            </Link>
 
                         </Modal.Header>
 
                         <Modal.Content>
 
-                                <Modal.Description> 
+                                <Modal.Description>
 
                                     <Form onSubmit = {this.setTitle.bind(this)}>
                                         <Form.Field>
@@ -442,11 +449,11 @@ export default class Request extends React.Component {
 
                                 </Modal.Description>
 
-                            </Modal.Content> 
+                            </Modal.Content>
 
-                    </Modal>:null}             
+                    </Modal>:null}
 
-                </div>            
+                </div>
             </Segment>
         )
     }
