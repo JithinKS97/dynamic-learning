@@ -19,7 +19,6 @@ export default class CommentForm extends React.Component {
 
     postComment(e, {value}) {
 
-
         if(this.comment.value) {
             const slides = this.props.slides
             const curSlide = this.props.curSlide            
@@ -28,21 +27,19 @@ export default class CommentForm extends React.Component {
             this.props.saveChanges(slides)
             this.comment.value = ''
         }
-
     }
         
     render() {
         return (
        
-                <Form style = {{maxWidth:'650px'}} onSubmit = {this.postComment.bind(this)}>
-                    <Form.Field>
-                        <textarea rows = '4' placeholder = 'Comment' ref = {e => this.comment = e}/>
-                    </Form.Field>
-                    <Form.Field>
-                        <Button type = 'submit'>Submit</Button>
-                    </Form.Field>
-                </Form>
-     
+            <Form style = {{maxWidth:'650px'}} onSubmit = {this.postComment.bind(this)}>
+                <Form.Field>
+                    <textarea rows = '4' placeholder = 'Comment' ref = {e => this.comment = e}/>
+                </Form.Field>
+                <Form.Field>
+                    <Button type = 'submit'>Submit</Button>
+                </Form.Field>
+            </Form>    
         )
     }
 }
