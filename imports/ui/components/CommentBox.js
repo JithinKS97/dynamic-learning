@@ -1,7 +1,8 @@
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
 import moment from 'moment'
-
+import CommentReplies from './CommentReplies'
+import CommentForm from './CommentForm'
 import { Comment, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
@@ -12,13 +13,13 @@ export default class CommentBox extends React.Component {
     constructor(props) {
 
         super(props)
-        this.momentNow = moment(this.props.comment.time)
+        
         this.state = {
             username:''
         }
 
         Tracker.autorun(()=>{
-            
+
             Meteor.call('getUsername', this.props.comment.userId, (err, username) => {
 
                 this.setState({username})
@@ -27,10 +28,28 @@ export default class CommentBox extends React.Component {
 
     }
 
+    print_replies(){
+
+      let replies=this.props.replies
+      if(replies){
+        return replies.map((reply, index)=>{
+            return (
+              <CommentReplies {...this.props} subIndex = {index} reply={reply}/>
+            )
+        })
+      }
+    }
+
+    findTime() {
+
+        return moment(this.props.comment.time)
+    }
 
     render() {
+
         return (
-            <Comment style = {{padding:'0.8rem', backgroundColor:'#eeeeee'}}>
+          <div>
+            <Comment style = {{padding:'0.8rem',marginBottom:'0.9rem',marginTop:'0.9rem', backgroundColor:'#eeeeee'}}>
                 <Comment.Content style = {{width:'100%'}}>
                     {/* <Comment.Avatar src='/images/avatar/small/matt.jpg' /> */}
                     {this.props.comment.userId == Meteor.userId()?<Button style = {{float:'right', padding:'0.5rem'}} onClick = {() =>{
@@ -43,7 +62,7 @@ export default class CommentBox extends React.Component {
                     <div style = {{display:'flex', flexDirection:'row'}}>
                         <Comment.Author>{this.state.username}</Comment.Author>
                         <Comment.Metadata style = {{paddingLeft:'0.8rem', paddingTop:'0.15rem'}}>
-                            <div>{this.momentNow.fromNow()}</div>
+                            <div>{this.findTime().fromNow()}</div>
                         </Comment.Metadata>
                     </div>
                     <div></div>
@@ -53,7 +72,16 @@ export default class CommentBox extends React.Component {
                     </Comment.Actions> */}
                 </Comment.Content>
             </Comment>
-                 
+            <div>
+              {
+              this.print_replies()
+              }
+            </div>
+            <div>
+              <CommentForm option = {this.props.index} {...this.props}/>
+
+            </div>
+        </div>
         )
     }
 }
