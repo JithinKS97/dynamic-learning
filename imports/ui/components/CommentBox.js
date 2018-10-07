@@ -71,7 +71,7 @@ export default class CommentBox extends React.Component {
                 else {
 
                     return (
-                        <FaAngleDown style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+                        <FaAngleDown className = 'arrow' style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
 
                             this.setState(prev=>{
     
@@ -87,7 +87,8 @@ export default class CommentBox extends React.Component {
             else {
 
                 return (
-                    <FaAngleDown style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+
+                    <FaAngleDown className = 'arrow' style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
 
                         this.setState(prev=>{
 
@@ -128,7 +129,7 @@ export default class CommentBox extends React.Component {
                     {this.showDownArrow()}
 
 
-                    {this.state.replyVis?<FaAngleUp style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+                    {this.state.replyVis?<FaAngleUp className = 'arrow'style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
 
                         this.setState(prev=>{
 
