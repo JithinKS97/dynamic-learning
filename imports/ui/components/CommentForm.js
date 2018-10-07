@@ -50,7 +50,7 @@ export default class CommentForm extends React.Component {
 
                 <Form style = {{ marginLeft: this.props.option == -1? '0rem' :'1.6rem', maxWidth:'650px'}} onSubmit = {this.postComment.bind(this)}>
                     <Form.Field>
-                        <textarea rows = '2' placeholder = 'Comment' ref = {e => this.comment = e}/>
+                        <textarea rows = '3' placeholder = 'Comment' ref = {e => this.comment = e}/>
                     </Form.Field>
                     <Form.Field>
                         <Button type = 'submit'>Submit</Button>

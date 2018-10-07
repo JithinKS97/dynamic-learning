@@ -5,6 +5,8 @@ import CommentReplies from './CommentReplies'
 import CommentForm from './CommentForm'
 import { Comment, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import FaAngleDown from 'react-icons/lib/fa/angle-down'
+import FaAngleUp from 'react-icons/lib/fa/angle-up'
 
 import { Tracker } from 'meteor/tracker'
 
@@ -15,7 +17,8 @@ export default class CommentBox extends React.Component {
         super(props)
         
         this.state = {
-            username:''
+            username:'',
+            replyVis: false
         }
 
         Tracker.autorun(()=>{
@@ -28,13 +31,13 @@ export default class CommentBox extends React.Component {
 
     }
 
-    print_replies(){
+    showReplies(){
 
       let replies=this.props.replies
       if(replies){
         return replies.map((reply, index)=>{
             return (
-              <CommentReplies {...this.props} subIndex = {index} reply={reply}/>
+              <CommentReplies key = {index} {...this.props} subIndex = {index} reply={reply}/>
             )
         })
       }
@@ -65,22 +68,43 @@ export default class CommentBox extends React.Component {
                             <div>{this.findTime().fromNow()}</div>
                         </Comment.Metadata>
                     </div>
-                    <div></div>
+                    
                     <Comment.Text style = {{paddingTop:'0.8rem', width:'95%'}}>{this.props.comment.comment}</Comment.Text>
+
+                    {this.state.replyVis?null:<FaAngleDown style = {{marginTop:'0.4rem'}} label size={17} onClick = {()=>{
+
+                        this.setState(prev=>{
+
+                            return {
+
+                                replyVis:!prev.replyVis
+                            }
+                        })
+                    }}>Show</FaAngleDown>}
+
+
+                    {this.state.replyVis?<FaAngleUp style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+
+                        this.setState(prev=>{
+
+                            return {
+
+                                replyVis:!prev.replyVis
+                            }
+                        })
+                    }}>Show</FaAngleUp>:null}
+
+
+
                     {/* <Comment.Actions>
                     <Comment.Action>Reply</Comment.Action>
                     </Comment.Actions> */}
                 </Comment.Content>
             </Comment>
-            <div>
-              {
-              this.print_replies()
-              }
-            </div>
-            <div>
-              <CommentForm option = {this.props.index} {...this.props}/>
-
-            </div>
+            {this.state.replyVis?<div>
+                <div>{this.showReplies()}</div>
+                {Meteor.userId()?<div><CommentForm option = {this.props.index} {...this.props}/></div>:null}
+            </div>:null}
         </div>
         )
     }
