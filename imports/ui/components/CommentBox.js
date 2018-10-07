@@ -58,6 +58,50 @@ export default class CommentBox extends React.Component {
         return moment(this.props.comment.time)
     }
 
+    showDownArrow() {
+
+        if(this.state.replyVis == false) {
+
+            if(!Meteor.userId()) {
+                
+                if(this.props.replies.length == 0) {
+
+                    return null
+                }
+                else {
+
+                    return (
+                        <FaAngleDown style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+
+                            this.setState(prev=>{
+    
+                                return {
+    
+                                    replyVis:!prev.replyVis
+                                }
+                            })
+                        }}>Show</FaAngleDown>
+                    )
+                }
+            }
+            else {
+
+                return (
+                    <FaAngleDown style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+
+                        this.setState(prev=>{
+
+                            return {
+
+                                replyVis:!prev.replyVis
+                            }
+                        })
+                    }}>Show</FaAngleDown>
+                )
+            }
+        }
+    }
+
     render() {
 
         return (
@@ -81,16 +125,7 @@ export default class CommentBox extends React.Component {
                     
                     <Comment.Text style = {{paddingTop:'0.8rem', width:'95%'}}>{this.props.comment.comment}</Comment.Text>
 
-                    {this.state.replyVis?null:<FaAngleDown style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
-
-                        this.setState(prev=>{
-
-                            return {
-
-                                replyVis:!prev.replyVis
-                            }
-                        })
-                    }}>Show</FaAngleDown>}
+                    {this.showDownArrow()}
 
 
                     {this.state.replyVis?<FaAngleUp style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{

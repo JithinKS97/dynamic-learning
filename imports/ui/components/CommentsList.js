@@ -18,6 +18,7 @@ export default class commentsList extends React.Component {
 
         if(!this.commentRefs)
             return
+            
         this.commentRefs.map(comment=>{
 
             if(comment) {
