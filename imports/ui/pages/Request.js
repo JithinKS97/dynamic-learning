@@ -182,11 +182,15 @@ export default class Request extends React.Component {
         })
     }
 
+
     saveChanges(slides, curSlide) {
 
         if(slides == undefined) {
             this.setState({
                 curSlide
+            },()=>{
+
+                this.commentsList.collapse()
             })
         }
         else if(curSlide == undefined) {
@@ -399,7 +403,19 @@ export default class Request extends React.Component {
                             </Grid.Column>
                             <Grid.Column width = {7} style = {{overflow:'auto', padding:'1.6rem'}}>
 
-                                    {this.state.show?<CommentsList {...this.state} saveChanges= {this.saveChanges.bind(this)} deleteReplyComment = {this.deleteReplyComment.bind(this)} deleteComment = {this.deleteComment.bind(this)} {...this.state}/>:null}
+                                    {
+                                        
+                                        this.state.show?
+                                            <CommentsList 
+                                                ref = { el => this.commentsList = el} 
+                                                {...this.state} 
+                                                saveChanges= {this.saveChanges.bind(this)} 
+                                                deleteReplyComment = {this.deleteReplyComment.bind(this)} 
+                                                deleteComment = {this.deleteComment.bind(this)}
+                                            />
+                                        :null
+                                    
+                                    }
                                     <br/>
                                     {this.state.show && !!Meteor.userId()?<CommentForm option = {-1} {...this.state} saveChanges= {this.saveChanges.bind(this)}/>:
                                     null}

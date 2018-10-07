@@ -12,6 +12,16 @@ import { Tracker } from 'meteor/tracker'
 
 export default class CommentBox extends React.Component {
 
+    componentDidMount() {
+
+        this.setState({
+
+            retplyVis: false
+        })
+    }   
+
+
+
     constructor(props) {
 
         super(props)
@@ -71,7 +81,7 @@ export default class CommentBox extends React.Component {
                     
                     <Comment.Text style = {{paddingTop:'0.8rem', width:'95%'}}>{this.props.comment.comment}</Comment.Text>
 
-                    {this.state.replyVis?null:<FaAngleDown style = {{marginTop:'0.4rem'}} label size={17} onClick = {()=>{
+                    {this.state.replyVis?null:<FaAngleDown style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
 
                         this.setState(prev=>{
 
