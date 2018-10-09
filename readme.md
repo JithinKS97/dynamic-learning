@@ -7,9 +7,9 @@ Dynamic Learning is meant to be an online platform where teachers and programmer
 
 The three core objectives of the web app are-
 
-1) Teachers should be able to create, present, save and share lessons which make use of interactive visualisations.
-2) Teachers should be able to collaborate with programmers to produce new visualisations.
-3) Students should be able to view the video lessons prepared by teachers and should be able to use the simulations
+1) Teachers are able to create, present, save and share lessons which make use of interactive visualisations.
+2) Teachers are able to collaborate with programmers to produce new visualisations.
+3) Students are able to view the video lessons prepared by teachers and should be able to use the simulations
 the same time they watch it.
 
 ## Link to the webapp
