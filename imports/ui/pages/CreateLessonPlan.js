@@ -414,9 +414,7 @@ class CreateLessonPlan extends React.Component {
             this.setState({
                 slides,
                 curSlide
-            },()=>{
-
-                
+            },()=>{                
                 
               this.setSizeOfPage(0)
               this.db.reset('0');
@@ -624,13 +622,13 @@ class CreateLessonPlan extends React.Component {
                                     saveChanges = {this.saveChanges.bind(this)}
                                     delete = {this.deleteSim.bind(this)}
                                     {...this.state}
-
                                     next = {this.next.bind(this)}
                                     previous = {this.previous.bind(this)}
                                     save = {this.save.bind(this)}
                                     interact = {this.interact.bind(this)}
                                     undo = {this.undo.bind(this)}
                                 />
+                                
                                 <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
                         
                         </Grid.Column>
@@ -640,9 +638,6 @@ class CreateLessonPlan extends React.Component {
                             <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
                             <Menu color = {'blue'} icon vertical>
-                                {this.state.userId !=Meteor.userId()?<Menu.Item>
-                                    {`${this.state.title} created by ${this.state.creator}`}
-                                </Menu.Item>:null}
                                 <Menu.Item>
                                     <Button toggle active = {!this.state.checked} onClick = {this.interact.bind(this)}>{this.state.checked?'Draw':'Interact'}</Button>
                                 </Menu.Item>

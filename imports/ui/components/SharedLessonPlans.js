@@ -133,7 +133,6 @@ export default class SharedLessonPlans extends React.Component {
                     </Modal.Header>
                     <Modal.Content>                      
                         <LessonPlanViewer _id = {this.getId.bind(this)()}/>
-                        {this.state.lessonplan?<p style = {{paddingTop:'0.8rem', paddingLeft:'0.8rem', fontSize:'1.2rem'}}>{`Created by ${this.state.username}`}</p>:null}
                     </Modal.Content>
                 </Modal>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
