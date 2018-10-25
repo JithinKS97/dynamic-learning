@@ -37,7 +37,7 @@ export default class commentsList extends React.Component {
 
         if(slides.length>0) {
 
-            comments = slides[curSlide].comments
+            let comments = slides[curSlide].comments
 
             return comments.map((comment, index)=>{
 
