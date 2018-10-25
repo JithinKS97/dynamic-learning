@@ -132,7 +132,7 @@ class Lesson extends React.Component {
         if(this.props.lesson.userId != Meteor.userId())
             return
 
-        slides = this.props.lesson.slides
+        let slides = this.props.lesson.slides
         slides[this.state.curSlide].url = url
         this.save(this.props.lesson._id, slides)
     }
