@@ -122,6 +122,7 @@ class CreateLessonPlan extends React.Component {
 
 
     componentWillReceiveProps(nextProps) {
+        
 
         if(this.props == nextProps)
             return
@@ -130,6 +131,10 @@ class CreateLessonPlan extends React.Component {
             return
 
         const lessonplan = nextProps.lessonplan
+
+        /*
+            Anupam - Add here what are we doing
+        */
 
         if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
 
@@ -179,9 +184,11 @@ class CreateLessonPlan extends React.Component {
         window.removeEventListener("keydown", this.handleKeyDown, false)
     }
     
+    
     setSizeOfPage(pageCount) {
 
-        /* This function sets the size of the canvas. By default the size of the page is
+        /* 
+            This function sets the size of the canvas. By default the size of the page is
             900px. The user can add extra poges. With each addition the size of the page
             increases by 300px.
 
@@ -195,11 +202,13 @@ class CreateLessonPlan extends React.Component {
     }
 
     onChange() {
+
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
             Here we retrieve the current slide no. and note from the states. The notes are
             updated and stored back to the state.
         */
+
         if(arguments[0][0]=='0')
           return;
           
@@ -243,6 +252,10 @@ class CreateLessonPlan extends React.Component {
     }
 
     addNewSlide(e) {
+
+        /* 
+            Used for creating a new slide
+        */
 
         let {curSlide, slides} = this.state
         this.pushSlide(slides)
@@ -412,7 +425,6 @@ class CreateLessonPlan extends React.Component {
               this.db.setImg(this.state.slides[this.state.curSlide].note)
             })
         }
-
     }
 
     deleteSlide(index) {
@@ -485,33 +497,45 @@ class CreateLessonPlan extends React.Component {
 
     checkCanvasSize(){
 
-      var i=$('iframe').length, iframe;
-      var maxHeight=-Infinity;
-      while(i--){
+        /*
+            This function ensures that the the size of the Canvas is not reduced to a value less
+            than the bottom most point of the last simulation.
+
+            Anupam - Explain the working
+
+        */
+
+        var i=$('iframe').length, iframe;
+        var maxHeight=-Infinity;
+        while(i--){
         iframe=$('iframe').eq(i-1).parents().eq(3);
         if((iframe.position().top+iframe.height())>maxHeight)
-          maxHeight=iframe.position().top+iframe.height();
-      }
-      if($('canvas')[0].height-300<maxHeight)
+            maxHeight=iframe.position().top+iframe.height();
+        }
+        if($('canvas')[0].height-300<maxHeight)
         return 1;
-      return 0;
+        return 0;
     }
 
     undo(e) {
 
-      if(this.addSim.state.isOpen)
+        /*
+            Anupam - Explain the working of Undo        
+        */
+
+        if(this.addSim.state.isOpen)
         return
-      if(this.curPosition[this.state.curSlide]<=0)
+        if(this.curPosition[this.state.curSlide]<=0)
         return
 
-      this.curPosition[this.state.curSlide]--
-      const slides = this.state.slides
-      slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
-      this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]])
-      this.undoArray[this.state.curSlide].pop()
-      this.setState({
+        this.curPosition[this.state.curSlide]--
+        const slides = this.state.slides
+        slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
+        this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]])
+        this.undoArray[this.state.curSlide].pop()
+        this.setState({
         slides
-      })
+        })
     }
 
     headToRequestPage() {
@@ -522,7 +546,14 @@ class CreateLessonPlan extends React.Component {
 
     changePageCount(option) {
 
-        
+        /*
+            The function is used for increasing or decreasing the size of the page.
+            Option will receive either 1 or -1, 1 means to increase the size, -1 means to decrease
+            The height attrubute of the canvas is obtained and 300 is added / subtracted to it
+            The image is restored to the canvas
+            The page count value is added to the slide
+        */
+
         var temp=this.db.getImg();
         this.pageCount+=option;
         $('canvas')[0].style.height=($('canvas')[0].height+option*300).toString()+'px';
@@ -767,22 +798,46 @@ class CreateLessonPlan extends React.Component {
 export default CreatelessonPlanContainer = withTracker(({ match }) => {
 
     let lessonplansHandle
+
+    /*
+        If the user is logged in, we fetch his lessonplans.
+        Otherwise, we fetch every public lessonplans.
+    */
+
     if(Meteor.userId()) {
+
         lessonplansHandle = Meteor.subscribe('lessonplans')
     }
     else {
+
         lessonplansHandle = Meteor.subscribe('lessonplans.public')
     }
+
+    /*
+        loading becomes false when we get the lessonplans collection.
+    */
+
     const loading = !lessonplansHandle.ready()
+
     let lessonplan, lessonplanExists
 
     if(match.params._id === undefined) {
+
+        /*
+            If lessonplan creator is taken by creating a new lessonplan,
+            the id will be undefined, so an empty list of slides is created with title null.
+        */
 
         lessonplanExists = true
         const slides = []
         lessonplan = {slides, title:null}
     }
     else {
+
+        /*
+            If _id is not null, we are trying to open an existing lessonplans, so it is fetched from the database.
+            If the lessonplan exists for the id provided, loading is set to false.          
+        */
         
         lessonplan = LessonPlans.findOne(match.params._id)
         lessonplanExists = !loading && !!lessonplan
@@ -790,6 +845,13 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
 
 
     return {
+
+        /* 
+            LessonplanExists is returned for determining if the loading screen display.
+            If lessonplan exists, it is returned, otherwise an empty array is returned.
+
+            Go to the componentWillReceiveProps to see what we do with the returned lessonplan.
+        */
 
         lessonplanExists,
         lessonplan: lessonplanExists? lessonplan : []

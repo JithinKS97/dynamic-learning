@@ -12,12 +12,13 @@ import FaCode from 'react-icons/lib/fa/code'
 import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment, Menu} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { Tracker } from 'meteor/tracker'
+import { withTracker } from 'meteor/react-meteor-data';
 
 /* This component renders the page where the teachers post the requests for the new simulation
     and the teachers and the other users have discussions about the simulations that they are trying to make.
 */
 
-export default class Request extends React.Component {
+class Request extends React.Component {
 
     constructor(props) {
 
@@ -44,7 +45,8 @@ export default class Request extends React.Component {
             selectedSim:null,
             selectedSimIndex:null,
             requestTitle: true,
-            loading:true
+            loading:true,
+            initialized: false
         }
         this.update.bind(this)
         this.pushSim.bind(this)
@@ -54,40 +56,22 @@ export default class Request extends React.Component {
     }
 
 
-    componentDidMount() {
 
-        this.requestsTracker = Tracker.autorun(()=>{
+    componentWillReceiveProps(nextProps) {
+        
 
-            const requestsHandle = Meteor.subscribe('requests')
-            const loading = !requestsHandle.ready()
-            const request = Requests.findOne(this.props.match.params._id)
+        if(this.props == nextProps)
+            return
 
-            if(!request)
-                return
+        const show = !!nextProps.request.slides[0].title
 
-            if(request.slides.length == 0) {
+        this.setState({
 
-                request.slides[0] = {
-                    title:'',
-                    comments:[],
-                    iframes:[]
-                }
-            }
-
-            const show = !!request.slides[0].title
-
-            this.setState({
-                ...request,
-                show,
-                loading
-            })
-
+            ...nextProps.request,
+            loading: nextProps.loading,
+            show,
+            initialized: true
         })
-    }
-
-    componentWillUnmount() {
-
-        this.requestsTracker.stop()
     }
 
     push(e) {
@@ -331,7 +315,7 @@ export default class Request extends React.Component {
 
             <Segment>
 
-                <Dimmer inverted active = {this.state.loading}>
+                <Dimmer inverted active = {!this.props.requestExists}>
                     <Loader />
                 </Dimmer>
 
@@ -477,3 +461,34 @@ export default class Request extends React.Component {
         )
     }
 }
+
+export default RequestContainer = withTracker(({ match }) => {
+
+    const requestsHandle = Meteor.subscribe('requests')
+    const loading = !requestsHandle.ready()
+    let request = Requests.findOne(match.params._id)
+    requestExists = !loading && !!request
+
+    if(!request) {
+
+        request = {}
+        request.slides = []
+    }
+
+    if(request.slides.length == 0) {
+
+        request.slides[0] = {
+            title:'',
+            comments:[],
+            iframes:[]
+        }
+    }
+
+    return {
+
+        request,
+        loading,
+        requestExists
+    }
+
+})(Request)
