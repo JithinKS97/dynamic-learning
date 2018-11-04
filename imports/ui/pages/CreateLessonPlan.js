@@ -67,18 +67,6 @@ class CreateLessonPlan extends React.Component {
 
         this.changePageCount.bind(this)
 
-        this.setState({
-                
-            scale:1/*Math.min($('.twelve.wide.column').width()/1377, $('.twelve.wide.column').height()/931)*/
-        })
-
-        window.onresize = ()=>{
-            this.setState({
-
-                scale:1/*Math.min($('.twelve.wide.column').width()/1377, $('.twelve.wide.column').height()/931)*/
-            })
-        }
-
     }
 
     handleKeyDown(event){
@@ -132,55 +120,58 @@ class CreateLessonPlan extends React.Component {
 
     }
 
-    componentDidUpdate() {
 
+    componentWillReceiveProps(nextProps) {
 
-        if(!this.state.initialized && this.props.lessonplanExists) {
+        if(this.props == nextProps)
+            return
+            
+        if(nextProps.lessonplanExists == false)
+            return
 
-            const lessonplan = this.props.lessonplan
+        const lessonplan = nextProps.lessonplan
 
-            if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
+        if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
 
-                this.undoArray = lessonplan.slides.map((slide) => {
+            this.undoArray = lessonplan.slides.map((slide) => {
 
-                    this.curPosition.push(0);
-                    return [slide.note];
-                });
-            }
-
-            this.setState({
-                ...lessonplan,
-                initialized:true,
-                
-            },() => {
-
-                Meteor.call('getUsername', this.state.userId, (err,name)=>{
-
-                    this.setState({
-                        creator:name
-                    })
-                })
-
-                if(this.state.slides.length == 0) {
-
-                    this.pushSlide(this.state.slides)                    
-                    this.setSizeOfPage(0)
-                    this.db.reset('0')
-                   
-                }
-                else {
-                    this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-
-                    /* The size of the page is set first, then we completely reset the canvas
-                        And the notes are drawn back to the canvas
-                    */
-
-                    this.setSizeOfPage(this.pageCount)
-                    this.db.reset('0');
-                    this.db.setImg(this.state.slides[this.state.curSlide].note)
-                }
-            })
+                this.curPosition.push(0);
+                return [slide.note];
+            });
         }
+
+        this.setState({
+            ...lessonplan,
+            initialized:true,
+            
+        },() => {
+
+            Meteor.call('getUsername', this.state.userId, (err,name)=>{
+
+                this.setState({
+                    creator:name
+                })
+            })
+
+            if(this.state.slides.length == 0) {
+
+                this.pushSlide(this.state.slides)                    
+                this.setSizeOfPage(0)
+                this.db.reset('0')
+                
+            }
+            else {
+                this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+
+                /* The size of the page is set first, then we completely reset the canvas
+                    And the notes are drawn back to the canvas
+                */
+
+                this.setSizeOfPage(this.pageCount)
+                this.db.reset('0');
+                this.db.setImg(this.state.slides[this.state.curSlide].note)
+            }
+        })        
     }
 
     componentWillUnmount() {
