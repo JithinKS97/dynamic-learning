@@ -599,17 +599,12 @@ class CreateLessonPlan extends React.Component {
                 </Dimmer>
 
                 <Modal size= 'tiny' open = {this.state.loginNotification}>
-                
                     <Modal.Header>
-
                         You need to login to save changes
-
                         <Button style = {{float:'right'}} onClick = {()=>{
                             this.setState({loginNotification:false})
                         }}>X</Button>
-
                     </Modal.Header>
-
                     <Modal.Content>
                         <Modal.Description style = {{textAlign:'center'}}>
 
@@ -632,15 +627,7 @@ class CreateLessonPlan extends React.Component {
                         <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>
-
-                            <List 
-                                from = {'createLessonplan'} 
-                                showTitle = {false} 
-                                {...this.state} 
-                                delete = {this.deleteSlide.bind(this)} 
-                                saveChanges= {this.saveChanges.bind(this)}
-                            />
-                            
+                            <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                         </Grid.Column>
 
                         <Grid.Column style = {{
