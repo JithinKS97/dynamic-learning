@@ -5,6 +5,7 @@ const chai = require('chai')
 import { expect } from 'chai';
 import { Router, Route } from 'react-router-dom'
 import { createMemoryHistory } from 'history';
+import { debug } from 'util';
 
 if(Meteor.isClient) {
 
@@ -18,17 +19,27 @@ configure({ adapter: new Adapter() });
         
         it('should pass', function() {
 
+            routeProps = {
+
+                match: {
+
+                    params: {
+
+                        _id: undefined
+                    }
+                }
+            }
+
+            debug()
+
             const wrapper = mount (
 
                 <Router history={createMemoryHistory()}>
-                    <Route path="/" component={CreateLessonPlan}/>
+                    <Route path="/"  render={(routeProps) => (
+                        <CreateLessonPlan {...routeProps} />
+                    )}/>
                  </Router>
             )
-        })
-
-        it('should call the function', function() {
-
-            console.log(chai)
         })
 
     })
@@ -37,6 +48,8 @@ configure({ adapter: new Adapter() });
 
 /*
     Unit tests needed
+
+    How do we test
 
     1) Navigation between the slides, going to the next and previous slide
     2) Moving to any slide by pressing it

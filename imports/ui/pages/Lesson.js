@@ -2,7 +2,7 @@ import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Lessons } from '../../api/lessons'
 import HorizontalList from '../components/HorizontalList'
-import { Grid, Button, Container, Dimmer, Loader, Checkbox } from 'semantic-ui-react'
+import { Grid, Button, Dimmer, Loader, Checkbox } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import VideoContainer from '../components/VideoContainer'
 import SimsList from '../components/SimsList'
@@ -25,7 +25,7 @@ class Lesson extends React.Component {
     addNewSlide() {
 
         let {curSlide} = this.state
-        slides = this.props.lesson.slides
+        let slides = this.props.lesson.slides
         this.pushSlide(slides)
         curSlide = slides.length-1
         this.setState({

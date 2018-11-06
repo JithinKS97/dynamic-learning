@@ -198,6 +198,7 @@ class Request extends React.Component {
         const { slides, curSlide }  = this.state
 
         const objectToPush = {
+
             userId:Meteor.userId(),
             src,
             w:640,
@@ -329,6 +330,7 @@ class Request extends React.Component {
                     </Modal.Header>
                     <Modal.Content>
                         <SimPreview
+                        
                             userId = {this.state.selectedSim?this.state.selectedSim.userId:null}
                             index = {this.state.selectedSimIndex}
                             slides = {this.state.slides}

@@ -74,7 +74,6 @@ Meteor.methods({
                 requestTitle:'',
                 updatedAt: moment().valueOf()
             })
-
         })
     },
 

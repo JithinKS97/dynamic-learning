@@ -51,7 +51,7 @@ class CreateLessonPlan extends React.Component {
             redirectToDashboard:false,
             redirectToForked:false,
             forkedLessonPlanId:null,
-            creator:'',
+            author:'',
             scale:1
         }
 
@@ -106,7 +106,7 @@ class CreateLessonPlan extends React.Component {
         this.db = this.drawingBoard.b
 
         /* board:reset and board:stopDrawing are events associated with the drawing
-           board. They are triggered whenever the we press the reset button or stop
+           board. They are triggered whenever we press the reset button or stop
            the drawing. Whenever these events are triggered, the onChange method is
            called. See the definition below.
         */
@@ -154,7 +154,7 @@ class CreateLessonPlan extends React.Component {
             Meteor.call('getUsername', this.state.userId, (err,name)=>{
 
                 this.setState({
-                    creator:name
+                    author:name
                 })
             })
 
@@ -506,14 +506,18 @@ class CreateLessonPlan extends React.Component {
         */
 
         var i=$('iframe').length, iframe;
+
         var maxHeight=-Infinity;
-        while(i--){
-        iframe=$('iframe').eq(i-1).parents().eq(3);
-        if((iframe.position().top+iframe.height())>maxHeight)
-            maxHeight=iframe.position().top+iframe.height();
+
+        while(i--) {
+            iframe=$('iframe').eq(i-1).parents().eq(3);
+            if((iframe.position().top+iframe.height())>maxHeight)
+                maxHeight=iframe.position().top+iframe.height();
         }
+
         if($('canvas')[0].height-300<maxHeight)
-        return 1;
+            return 1;
+
         return 0;
     }
 
@@ -524,9 +528,9 @@ class CreateLessonPlan extends React.Component {
         */
 
         if(this.addSim.state.isOpen)
-        return
+            return
         if(this.curPosition[this.state.curSlide]<=0)
-        return
+            return
 
         this.curPosition[this.state.curSlide]--
         const slides = this.state.slides
@@ -534,7 +538,7 @@ class CreateLessonPlan extends React.Component {
         this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]])
         this.undoArray[this.state.curSlide].pop()
         this.setState({
-        slides
+            slides
         })
     }
 
@@ -588,21 +592,24 @@ class CreateLessonPlan extends React.Component {
 
         return (
 
-            <Segment onClick = {()=>{
-
-            }} style = {{padding:0, margin:0}}>
+            <Segment style = {{padding:0, margin:0}}>
 
                 <Dimmer active = {!this.state.initialized}>
                     <Loader />
                 </Dimmer>
 
                 <Modal size= 'tiny' open = {this.state.loginNotification}>
+                
                     <Modal.Header>
+
                         You need to login to save changes
+
                         <Button style = {{float:'right'}} onClick = {()=>{
                             this.setState({loginNotification:false})
                         }}>X</Button>
+
                     </Modal.Header>
+
                     <Modal.Content>
                         <Modal.Description style = {{textAlign:'center'}}>
 
@@ -625,7 +632,15 @@ class CreateLessonPlan extends React.Component {
                         <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>
-                            <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+
+                            <List 
+                                from = {'createLessonplan'} 
+                                showTitle = {false} 
+                                {...this.state} 
+                                delete = {this.deleteSlide.bind(this)} 
+                                saveChanges= {this.saveChanges.bind(this)}
+                            />
+                            
                         </Grid.Column>
 
                         <Grid.Column style = {{
