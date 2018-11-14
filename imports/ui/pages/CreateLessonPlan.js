@@ -51,8 +51,7 @@ class CreateLessonPlan extends React.Component {
             redirectToDashboard:false,
             redirectToForked:false,
             forkedLessonPlanId:null,
-            author:'',
-            scale:1
+            author:''
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -75,30 +74,20 @@ class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
+        if(event.key == 'z' || event.key == 'Z' )
+            this.previous()
 
-        if(event.key == 'z' || event.key == 'Z' ) {
+        if(event.key == 'x' || event.key == 'X')
+            this.next()
 
-          this.previous()
-        }
-        if(event.key == 'x' || event.key == 'X') {
-
-          this.next()
-        }
-        if((event.key == 's' || event.key == 'S') && !!this.state.title ) {
-
+        if((event.key == 's' || event.key == 'S') && !!this.state.title )
             this.save()
-        }
 
-        if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0) {
-
+        if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
             this.undo()
-        }
 
-        if(event.key == 'd' || event.key == 'D') {
-
+        if(event.key == 'd' || event.key == 'D')
             this.interact()
-
-        }
     }
 
     componentDidMount() {
@@ -112,9 +101,7 @@ class CreateLessonPlan extends React.Component {
         */
 
         this.db.ev.bind('board:reset', this.onChange.bind(this));
-        this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
-
-        this.canvasSize=$('canvas')[0].height;        
+        this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));        
 
         window.addEventListener("keydown", this.handleKeyDown, false);
 

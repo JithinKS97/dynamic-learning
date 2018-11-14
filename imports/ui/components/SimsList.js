@@ -18,7 +18,6 @@ export default class SimsList extends React.Component {
 
         super(props)
         this.renderSims.bind(this)
-        this.opacity = 0
     }
 
     
@@ -106,7 +105,7 @@ export default class SimsList extends React.Component {
                                     slides[curSlide].iframes[index].x = d.lastX
                                     slides[curSlide].iframes[index].y = d.lastY
     
-                                    this.props.saveChanges(slides, undefined)
+                                    this.props.saveChanges(slides)
                                     
                                 }}
 
@@ -127,7 +126,7 @@ export default class SimsList extends React.Component {
                                   
                                     slides[curSlide].iframes[index].w = this.props.navVisibility?ref.offsetWidth-40:ref.offsetWidth
                                     slides[curSlide].iframes[index].h = ref.offsetHeight
-                                    this.props.saveChanges(slides, undefined)
+                                    this.props.saveChanges(slides)
                                 }}
     
                             > 

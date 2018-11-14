@@ -32,6 +32,7 @@ export default class Upload extends React.Component {
     onEnter(e) {
         
         e.preventDefault()
+
         let entry = this.src.value
         let linkToCode = this.linkToCode.value
         this.setState({
@@ -43,10 +44,8 @@ export default class Upload extends React.Component {
            expression. The src should be set only if the entered tag is valid.
         */
 
-        const tag = entry.match(`<iframe.+?src="https://editor.p5js.org/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
+        const tag = entry.match(`<iframe.+?src="https://editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
         const link = linkToCode.match(`https://editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/sketches/[ A-Za-z0-9_@./#&+-]*`)
-
-
 
         if(tag && link) {
 
@@ -60,8 +59,11 @@ export default class Upload extends React.Component {
             const srcEnding = validTag.match(`embed/(.*)"></iframe>`)
             const linkEnding = validLink.match(`sketches/(.*)`)
 
+            const tagUser = validTag.match(`org/(.*)/embed`)
+            const linkUser = validLink.match(`org/(.*)/sketches`)     
 
-            if(src && srcEnding[1] === linkEnding[1]) {
+
+            if(src && srcEnding[1] === linkEnding[1] && tagUser[1] === linkUser[1]) {
 
                 const validSrc = src[1]
                 this.setState({
