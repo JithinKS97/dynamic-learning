@@ -92,6 +92,8 @@ export default class Signup extends React.Component {
         })
     }
 
+    onSubmit = () => {}
+
     render() {
         return (
             <div className = 'boxed-view'>

@@ -1,0 +1,15 @@
+.textbox-floating {
+    position: relative;
+    z-index:2;
+}
+
+.textbox-handle {
+
+    transition: 0.1s ease-in;
+  }
+  
+  
+.textbox-handle:hover {
+    color: #e8e8e8;
+    transition: 0.1s ease-in;
+}

@@ -11,6 +11,8 @@ import { withTracker } from 'meteor/react-meteor-data';
 import {  Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
+import TextBoxes from '../components/TextBoxes'
+
 
 
 /* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
@@ -74,20 +76,20 @@ class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
-        if(event.key == 'z' || event.key == 'Z' )
-            this.previous()
+        // if(event.key == 'z' || event.key == 'Z' )
+        //     this.previous()
 
-        if(event.key == 'x' || event.key == 'X')
-            this.next()
+        // if(event.key == 'x' || event.key == 'X')
+        //     this.next()
 
-        if((event.key == 's' || event.key == 'S') && !!this.state.title )
-            this.save()
+        // if((event.key == 's' || event.key == 'S') && !!this.state.title )
+        //     this.save()
 
-        if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
-            this.undo()
+        // if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
+        //     this.undo()
 
-        if(event.key == 'd' || event.key == 'D')
-            this.interact()
+        // if(event.key == 'd' || event.key == 'D')
+        //     this.interact()
     }
 
     componentDidMount() {
@@ -280,7 +282,8 @@ class CreateLessonPlan extends React.Component {
         const newSlide = {
             note: '',
             iframes: [],
-            pageCount:0
+            pageCount:0,
+            textboxes:[]
         }
 
         slides.push(newSlide)
@@ -457,6 +460,15 @@ class CreateLessonPlan extends React.Component {
         this.saveChanges(slides)
     }
 
+    deleteTextBox = (index) => {
+
+        const {slides, curSlide} = this.state
+        const textboxes = slides[curSlide].textboxes
+        textboxes.splice(index,1)
+        slides[this.state.curSlide].textboxes = textboxes
+        this.saveChanges(slides)
+    }
+
     interact() {
 
       /*
@@ -557,10 +569,33 @@ class CreateLessonPlan extends React.Component {
         this.setState({slides});
     }
 
+    addTextBox = () => {
+
+        const { slides, curSlide } = this.state
+
+        if(!slides[curSlide].textboxes) {
+
+            slides[curSlide].textboxes = []
+        }
+
+        const newTextBox = {
+
+            value:'new text box'
+        }
+
+        slides[curSlide].textboxes.push(newTextBox)
+
+        this.setState({
+
+            slides
+        })
+
+    }
+
+    
 
     render() {
 
-        
 
         if(this.state.redirectToForked) {
 
@@ -625,7 +660,16 @@ class CreateLessonPlan extends React.Component {
 
                             }} width = {12}
                         >
-                            
+                                
+                                <TextBoxes 
+
+                                    deleteTextBox = {this.deleteTextBox.bind(this)}
+                                    slides = {this.state.slides}
+                                    curSlide = {this.state.curSlide}
+                                    saveChanges = {this.saveChanges.bind(this)}
+                                />
+                                
+
                                 <SimsList
 
                                     navVisibility = {true}
@@ -643,8 +687,11 @@ class CreateLessonPlan extends React.Component {
                                 <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
                         
                         </Grid.Column>
+                        
 
                         <Grid.Column width = {2}>
+
+                            
 
                             <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
 
@@ -740,6 +787,17 @@ class CreateLessonPlan extends React.Component {
                                     Login
                                 </Menu.Item>:null}
                                 {!Meteor.userId()?<Link to = {`/explore`}><Menu.Item link>Back</Menu.Item></Link>:null}
+
+                                <Menu.Item onClick = {() => {
+
+                                    this.addTextBox()
+
+                                }}>
+                                    Add textbox
+                                </Menu.Item>
+
+     
+
                             </Menu>
 
                         </Grid.Column>

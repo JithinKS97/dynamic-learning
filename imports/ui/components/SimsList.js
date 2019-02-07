@@ -146,7 +146,9 @@ export default class SimsList extends React.Component {
                                         <a style = {{marginLeft:'0.5rem', display:this.props.navVisibility?'none':'block'}} className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                     </div>
                                     <div className = 'sim-nav' style = {{ marginLeft:'0.5rem', visibility:this.props.navVisibility?'visible':'hidden'}}>
+
                                         <div style = {{display:'flex', flexDirection:'column'}}>
+                                            
                                             <FaClose
                                                 className = 'sim-delete'
                                                 onClick = {()=>{
@@ -163,6 +165,7 @@ export default class SimsList extends React.Component {
 
                                             <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                         </div>
+
                                         <div style = {{float:'right', marginLeft:'0.8rem', marginBottom:'0.1rem'}}><MdNetworkCell/></div>   
 
                                     </div>                    
@@ -175,8 +178,7 @@ export default class SimsList extends React.Component {
                 else {
 
   
-                    return (
-              
+                    return (              
                  
                             <div style = {{marginBottom:calcMargin(iframes, index)}} key = {index}>
 

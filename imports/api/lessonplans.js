@@ -1,202 +1,191 @@
-import { Mongo } from 'meteor/mongo'
-import { Meteor } from 'meteor/meteor'
-import { Requests} from './requests'
-import SimpleSchema from 'simpl-schema'
-import moment from 'moment'
-import { Index, MongoDBEngine } from 'meteor/easy:search'
+import { Mongo } from "meteor/mongo";
+import { Meteor } from "meteor/meteor";
+import { Requests } from "./requests";
+import SimpleSchema from "simpl-schema";
+import moment from "moment";
+import { Index, MongoDBEngine } from "meteor/easy:search";
 
-export const LessonPlans = new Mongo.Collection('lessonplans')
+export const LessonPlans = new Mongo.Collection("lessonplans");
 
 export const LessonPlansIndex = new Index({
-    collection: LessonPlans,
-    fields: ['title', 'tags'],
-    engine: new MongoDBEngine({
-        selector: function (searchObject, options, aggregation) {
-            // selector contains the default mongo selector that Easy Search would use
-            let selector = this.defaultConfiguration().selector(searchObject, options, aggregation)
+  collection: LessonPlans,
+  fields: ["title", "tags"],
+  engine: new MongoDBEngine({
+    selector: function(searchObject, options, aggregation) {
+      // selector contains the default mongo selector that Easy Search would use
+      let selector = this.defaultConfiguration().selector(
+        searchObject,
+        options,
+        aggregation
+      );
 
-            // modify the selector to only match documents
-            selector.isPublic = true
-            selector.isFile = true
+      // modify the selector to only match documents
+      selector.isPublic = true;
+      selector.isFile = true;
 
-            return selector
-        }
-    })
+      return selector;
+    }
+  })
+});
 
-})
+if (Meteor.isServer) {
+  Meteor.publish("lessonplans", function() {
+    return LessonPlans.find({
+      $or: [{ userId: this.userId }, { isPublic: true }]
+    });
+  });
 
-if(Meteor.isServer) {
-
-    Meteor.publish('lessonplans',function(){
-        
-        return LessonPlans.find({ $or: [ { userId:this.userId }, { isPublic:true } ] })
-    })
-
-    Meteor.publish('lessonplans.public',function(){
-
-        return LessonPlans.find({isPublic:true})
-    })
+  Meteor.publish("lessonplans.public", function() {
+    return LessonPlans.find({ isPublic: true });
+  });
 }
 
 Meteor.methods({
+  "lessonplans.insert"(title) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-    'lessonplans.insert'(title) {
-
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        return LessonPlans.insert({
-
-
-            /* There will be a Request document for each Lessonplan document.
+    return LessonPlans.insert(
+      {
+        /* There will be a Request document for each Lessonplan document.
                 It is created along with Lessonplan document.
                 So it is given the same id as the Lessonplan document, docs is the
                 id of the inserted LessonPlan document.
             */
 
-            title,
-            slides:[],
-            userId:this.userId,
-            updatedAt: moment().valueOf(),
-            isFile:true,
-            isPublic:false,
-            parent_id:'0',
-            tags:[]
+        title,
+        slides: [],
+        userId: this.userId,
+        updatedAt: moment().valueOf(),
+        isFile: true,
+        isPublic: false,
+        parent_id: "0",
+        tags: []
+      },
+      (err, docs) => {
+        Requests.insert({
+          userId: this.userId,
+          _id: docs,
+          slides: [],
+          requestTitle: "",
+          updatedAt: moment().valueOf()
+        });
+      }
+    );
+  },
 
-        },(err, docs)=>{
+  "lessonplans.tagsChange"(_id, tags) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-            Requests.insert({
+    LessonPlans.update({ _id }, { $set: { tags } });
+  },
 
-                userId:this.userId,
-                _id:docs,
-                slides:[],
-                requestTitle:'',
-                updatedAt: moment().valueOf()
-            })
-        })
-    },
+  "lessonplans.folder.insert"(title) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-    'lessonplans.tagsChange'(_id, tags) {
+    return LessonPlans.insert({
+      userId: this.userId,
+      title,
+      isFile: false,
+      parent_id: "0",
+      children: [],
+      expanded: false
+    });
+  },
 
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
+  "lessonplans.remove"(_id) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-        LessonPlans.update({_id}, {$set:{tags}})
-    },
+    new SimpleSchema({
+      _id: {
+        type: String,
+        min: 1
+      }
+    }).validate({ _id });
 
-    'lessonplans.folder.insert'(title) {
+    LessonPlans.remove({ _id, userId: this.userId });
+    Requests.remove({ _id, userId: this.userId });
+  },
 
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
+  "lessonplans.directoryChange"(_id, parent_id) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-        return LessonPlans.insert({
+    LessonPlans.update({ _id }, { $set: { parent_id } });
+  },
 
-            userId:this.userId,
-            title,
-            isFile:false,
-            parent_id:'0',
-            children:[],
-            expanded:false
+  "lessonplans.folder.visibilityChange"(_id, expanded) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-        })
-    },
+    LessonPlans.update({ _id }, { $set: { expanded } });
+  },
 
+  "lessonplans.update"(_id, slides) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-    'lessonplans.remove'(_id) {
+    new SimpleSchema({
+      _id: {
+        type: String,
+        min: 1
+      }
+    }).validate({ _id });
 
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
+    new SimpleSchema({
+      note: {
+        type: String,
+        optional: true
+      },
+      pageCount: {
+        type: Number,
+        optional: true
+      },
+      iframes: {
+        type: Array,
+        optional: true
+      },
+      textboxes: {
+        type: Array,
+        optional: true
+      },
 
-        new SimpleSchema({
-            _id: {
-                type: String,
-                min: 1
-            }
-        }).validate({_id})
+      "iframes.$": { type: Object, blackbox: true },
+      "textboxes.$": { type: Object, blackbox: true }
+    }).validate(slides);
 
-        LessonPlans.remove({_id, userId:this.userId})
-        Requests.remove({_id, userId:this.userId})
-    },
+    LessonPlans.update(
+      { _id, userId: this.userId },
+      { $set: { slides, updatedAt: moment().valueOf() } }
+    );
+  },
 
-    'lessonplans.directoryChange'(_id, parent_id) {
+  "lessonplans.updateTitle"(_id, title) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
+    LessonPlans.update(
+      { _id, userId: this.userId },
+      { $set: { title, updatedAt: moment().valueOf() } }
+    );
+  },
 
-        LessonPlans.update({_id}, {$set:{parent_id}})
-    },
+  "lessonplans.visibilityChange"(_id, isPublic) {
+    if (!this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
 
-    'lessonplans.folder.visibilityChange'(_id, expanded) {
-
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        LessonPlans.update({_id}, {$set:{expanded}})
-    },
-
-    'lessonplans.update'(_id, slides) {
-
-
-        if(!this.userId) {
-
-            throw new Meteor.Error('not-authorized')
-        }
-
-        new SimpleSchema({
-
-            _id: {
-
-               type: String,
-               min:1
-           }
-        }).validate({_id})
-
-        new SimpleSchema({
-            
-            note: {
-
-               type: String,
-               optional:true
-           },
-            pageCount: {
-
-             type: Number,
-             optional: true
-           },
-            iframes: {
-
-               type:Array,
-               optional: true,
-           },
-           
-            'iframes.$':{type:Object, blackbox:true}
-
-        }).validate(slides)
-
-        LessonPlans.update({_id, userId:this.userId}, {$set:{slides, updatedAt: moment().valueOf()}})
-    },
-
-    'lessonplans.updateTitle'(_id, title) {
-
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        LessonPlans.update({_id, userId:this.userId}, {$set:{title, updatedAt: moment().valueOf()}})
-    },
-
-    'lessonplans.visibilityChange'(_id, isPublic) {
-
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        LessonPlans.update({_id}, {$set:{isPublic}})
-    },
-})
+    LessonPlans.update({ _id }, { $set: { isPublic } });
+  }
+});
