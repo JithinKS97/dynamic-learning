@@ -9,9 +9,6 @@ export default class TextBoxes extends React.Component {
         super(props)
     }
 
-    componentDidMount() {
-        
-    }
 
     renderTextBoxes = () => {
 

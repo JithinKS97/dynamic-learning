@@ -97,6 +97,11 @@ export default class TextBox extends React.Component {
 
                                 <FaClose className = 'sim-delete' size = '20' onClick = {()=>{
 
+                                    const confirmation = confirm('Are you sure you want to delete the textbox?')
+
+                                    if(!confirmation)
+                                        return
+
                                     this.props.deleteTextBox(this.props.index)
 
                                 }}>X</FaClose>
