@@ -663,6 +663,7 @@ class CreateLessonPlan extends React.Component {
                                 
                                 <TextBoxes 
 
+                                    isPreview = {false}
                                     deleteTextBox = {this.deleteTextBox.bind(this)}
                                     slides = {this.state.slides}
                                     curSlide = {this.state.curSlide}

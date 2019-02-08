@@ -29,6 +29,7 @@ export default class TextBoxes extends React.Component {
             return (
                 <div key = {index}>
                     <TextBox 
+                        isPreview = {this.props.isPreview}
                         saveChanges = {this.props.saveChanges}
                         deleteTextBox = {this.props.deleteTextBox}
                         index = {index}

@@ -8,6 +8,7 @@ import { Meteor } from 'meteor/meteor'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Dimmer, Loader, Segment, Grid } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import TextBoxes from './TextBoxes'
 
 
 
@@ -279,6 +280,15 @@ class LessonPlanViewer extends React.Component {
                     </Grid.Column>
 
                     <Grid.Column style = {{overflow:'auto', padding:0, margin:0}} width = {14}>
+
+                        <TextBoxes 
+                            isPreview = {true}
+                            deleteTextBox = {()=>{}}
+                            slides = {this.state.slides}
+                            curSlide = {this.state.curSlide}
+                            saveChanges = {this.saveChanges.bind(this)}
+                        />
+
                         <SimsList
                             navVisibility = {false}
                             isRndRequired = {true}

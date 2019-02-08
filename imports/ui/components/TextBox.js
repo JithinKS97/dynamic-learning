@@ -16,6 +16,8 @@ export default class TextBox extends React.Component {
         }
     }
 
+    
+
     render() {
 
         const { slides, curSlide, index } = this.props
@@ -44,7 +46,13 @@ export default class TextBox extends React.Component {
 
                 }}
             >   
-                <div style ={{display:'flex', flexDirection:'row'}}>
+                <div className = 'textArea' style ={{
+                    
+                    display:'flex', 
+                    flexDirection:'row',
+                    pointerEvents:this.props.isPreview?'none':'unset'
+                    
+                }}>
                     <textarea
 
                         ref = {e => this.textarea = e}
@@ -83,7 +91,7 @@ export default class TextBox extends React.Component {
                         }}
 
                     />
-                    <div className = 'sim-nav' style = {{display:'flex', flexDirection:'column'}}>
+                    {this.props.isPreview?null:<div className = 'sim-nav' style = {{display:'flex', flexDirection:'column'}}>
 
                             <div style = {{display:'flex', flexDirection:'column'}}>
 
@@ -96,7 +104,7 @@ export default class TextBox extends React.Component {
                                 <TiArrowMove size = '22' className = 'textbox-handle'/>
 
                             </div>
-                    </div>
+                    </div>}
                 </div>
             </Rnd>
         )
