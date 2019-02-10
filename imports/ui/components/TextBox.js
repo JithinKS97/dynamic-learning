@@ -30,6 +30,8 @@ export default class TextBox extends React.Component {
                 // style = {{backgroundColor:'red'}}
                 className = 'textbox-floating'
                 bounds = '.drawing-board-canvas'
+
+                enableResizing = {this.props.isPreview?false:true}
                 
                 dragHandleClassName = '.textbox-handle'
 
@@ -53,7 +55,7 @@ export default class TextBox extends React.Component {
                                     
                     bottom: false,
                     bottomLeft: false,
-                    bottomRight: true,
+                    bottomRight: this.props.isPreview?false:true,
                     left: false,
                     right: false,
                     top: false,
@@ -120,7 +122,7 @@ export default class TextBox extends React.Component {
                     />
                     {this.props.isPreview?null:<div className = 'sim-nav' style = {{display:'flex', flexDirection:'column'}}>
 
-                            <div style = {{display:'flex', flexDirection:'column',justifyContent:'space-between', height:'100%'}}>
+                            <div style = {{display:'flex', flexDirection:'column',justifyContent:'space-between', height:'100%', marginLeft:'0.5rem'}}>
                                 
                                 <div style = {{display:'flex', flexDirection:'column', marginLeft:'0.1rem'}}>
                                     <FaClose className = 'sim-delete' size = '20' onClick = {()=>{
@@ -137,7 +139,7 @@ export default class TextBox extends React.Component {
                                     <TiArrowMove size = '22' className = 'textbox-handle'/>
                                 </div>
 
-                                <div style = {{marginLeft:'0.8rem', float:'right'}}><MdNetworkCell/></div>
+                                <div style = {{marginLeft:'0.6rem', float:'right'}}><MdNetworkCell/></div>
 
                             </div>
                     </div>}

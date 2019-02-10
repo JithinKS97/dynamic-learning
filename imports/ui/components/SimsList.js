@@ -113,7 +113,7 @@ export default class SimsList extends React.Component {
                                     
                                     bottom: false,
                                     bottomLeft: false,
-                                    bottomRight: true,
+                                    bottomRight: this.props.isPreview?false:true,
                                     left: false,
                                     right: false,
                                     top: false,
@@ -166,7 +166,7 @@ export default class SimsList extends React.Component {
                                             <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                         </div>
 
-                                        <div style = {{float:'right', marginLeft:'0.8rem', marginBottom:'0.1rem'}}><MdNetworkCell/></div>   
+                                        <div style = {{float:'right', marginLeft:'0.6rem', marginBottom:'0.1rem'}}><MdNetworkCell/></div>   
 
                                     </div>                    
 
