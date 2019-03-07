@@ -406,9 +406,9 @@ class CreateLessonPlan extends React.Component {
             },()=>{
 
                 /**
-                 * shouldLoad is true only when sim individually is updated and saved
-                 * explicitly, we need not load data to the sims in this case
-                 * So id shouldLoad is true, we return without calling loadDatatoSketches
+                 * shouldNotLoad is true only when a sim individually is updated and saved
+                 * Here, we need not load data to all the sims
+                 * So if shouldNotLoad is true, we return without calling loadDatatoSketches
                  */
 
                 if(shouldNotLoad)

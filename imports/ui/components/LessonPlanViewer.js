@@ -189,7 +189,7 @@ class LessonPlanViewer extends React.Component {
                 $('canvas')[0].height=900+this.pageCount*300;
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
-                this.simsList.loadDataToP5Sketches()
+                this.simsList.loadDataToSketches()
             })
         }
         else if(curSlide == undefined) {
@@ -197,7 +197,7 @@ class LessonPlanViewer extends React.Component {
                 slides
             },()=>{
 
-                this.simsList.loadDataToP5Sketches()
+                this.simsList.loadDataToSketches()
             })
         }
         else {
@@ -211,7 +211,7 @@ class LessonPlanViewer extends React.Component {
               $('canvas')[0].height=900;
               this.db.reset();
               this.db.setImg(this.state.slides[this.state.curSlide].note)
-              this.simsList.loadDataToP5Sketches()
+              this.simsList.loadDataToSketches()
             })
         }
     }
