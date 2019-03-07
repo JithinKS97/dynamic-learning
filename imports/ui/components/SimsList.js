@@ -8,7 +8,7 @@ import TiArrowMove from 'react-icons/lib/ti/arrow-move'
 import FaClose from 'react-icons/lib/fa/close'
 import FaCode from 'react-icons/lib/fa/code'
 import MdNetworkCell from 'react-icons/lib/md/network-cell'
-import { Button } from 'semantic-ui-react'
+import { Button, Popup } from 'semantic-ui-react'
 
 import FaCopy from "react-icons/lib/fa/copy";
 
@@ -30,6 +30,8 @@ export default class SimsList extends React.Component {
         copiedSim.y = 50
 
         this.props.setCopiedState(true)
+
+        alert('Sim copied')
 
         Session.set('simCopied', copiedSim)
     }

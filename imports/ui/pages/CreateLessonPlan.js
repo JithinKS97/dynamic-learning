@@ -816,24 +816,28 @@ class CreateLessonPlan extends React.Component {
                                     Add textbox
                                 </Menu.Item>
 
-                                {this.state.copied?<Menu.Item onClick = {()=>{
+                                {this.state.copied?<Menu.Item>
+                                
+                                    <Button onClick = {()=>{
 
-                                    if(Session.get('simCopied')) {
+                                        if(Session.get('simCopied')) {
 
-                                        const copiedSim = Session.get('simCopied')
+                                            const copiedSim = Session.get('simCopied')
 
-                                        const {slides, curSlide} = this.state
-                                        slides[curSlide].iframes.push(copiedSim)
+                                            const {slides, curSlide} = this.state
+                                            slides[curSlide].iframes.push(copiedSim)
 
-                                        Session.set('simCopied', null)
+                                            Session.set('simCopied', null)
 
-                                        this.setCopiedState(false)
+                                            this.setCopiedState(false)
 
-                                        this.saveChanges(slides)
-                                    }
+                                            this.saveChanges(slides)
+                                        }
 
-                                }}>
-                                    Paste
+                                    }} color='blue'>
+                                        Paste
+                                    </Button>
+                                    
                                 </Menu.Item>:null}
      
 
