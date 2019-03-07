@@ -20,6 +20,7 @@ export default class SimsList extends React.Component {
 
         super(props)
         this.renderSims.bind(this)
+        this.simsRefArray = []
     }
 
     handleCopy(slides, curSlide, index) {
@@ -34,6 +35,15 @@ export default class SimsList extends React.Component {
         alert('Sim copied')
 
         Session.set('simCopied', copiedSim)
+    }
+
+    loadDataToP5Sketches() {
+
+        this.simsRefArray.map(sim=>{
+
+            sim.loadDataToP5Sketch()
+
+        })
     }
     
     renderSims() {
@@ -156,6 +166,7 @@ export default class SimsList extends React.Component {
                                         index = {index} 
                                         src = {iframe.src}
                                         {...iframe}
+                                        ref = {e => this.simsRefArray[index] = e}
                                     />
                                     <div>
                                         <a style = {{marginLeft:'0.5rem', display:this.props.navVisibility?'none':'block'}} className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>

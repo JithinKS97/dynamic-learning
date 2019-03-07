@@ -459,6 +459,9 @@ class CreateLessonPlan extends React.Component {
         iframes.splice(index,1)
         slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
+
+        this.simsList.loadDataToP5Sketches()
+
     }
 
     deleteTextBox = (index) => {
@@ -701,6 +704,7 @@ class CreateLessonPlan extends React.Component {
                                     save = {this.save.bind(this)}
                                     interact = {this.interact.bind(this)}
                                     undo = {this.undo.bind(this)}
+                                    ref = {e => this.simsList = e}
                                 />
                                 
                                 <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>

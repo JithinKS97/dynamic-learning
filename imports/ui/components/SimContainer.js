@@ -42,6 +42,17 @@ export default class SimContainer extends React.Component{
 
     }
 
+    loadDataToP5Sketch() {
+
+        let {slides, curSlide, index} = this.props
+
+        if(slides[curSlide].iframes[index]) {
+
+            this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
+        }      
+        
+    }
+
     handleMessage(e) {
 
         /* If the iframe is just a preview, we need not have the message operations.
@@ -53,7 +64,7 @@ export default class SimContainer extends React.Component{
         let {slides, curSlide, index} = this.props
 
         if(e.data.operation == 'save') {
-            console.log('data to be saved:',e.data.data)
+            
             slides[curSlide].iframes[index].data = e.data.data
             this.props.saveChanges(slides, undefined)
         }
