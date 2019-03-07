@@ -37,14 +37,20 @@ export default class SimsList extends React.Component {
         Session.set('simCopied', copiedSim)
     }
 
-    loadDataToP5Sketches() {
+    loadDataToP5Sketches(index) {
 
         this.simsRefArray.map(sim=>{
 
             if(!sim)
                 return
 
-            sim.loadDataToP5Sketch()
+            /**
+             * 
+             * index is the index of the sim which we are going to load data
+             * 
+             */
+
+            sim.loadDataToP5Sketch(index)
 
         })
     }

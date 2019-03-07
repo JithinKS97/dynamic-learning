@@ -77,20 +77,20 @@ class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
-        if(event.key == 'z' || event.key == 'Z' )
-            this.previous()
+        // if(event.key == 'z' || event.key == 'Z' )
+        //     this.previous()
 
-        if(event.key == 'x' || event.key == 'X')
-            this.next()
+        // if(event.key == 'x' || event.key == 'X')
+        //     this.next()
 
-        if((event.key == 's' || event.key == 'S') && !!this.state.title )
-            this.save()
+        // if((event.key == 's' || event.key == 'S') && !!this.state.title )
+        //     this.save()
 
-        if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
-            this.undo()
+        // if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
+        //     this.undo()
 
-        if(event.key == 'd' || event.key == 'D')
-            this.interact()
+        // if(event.key == 'd' || event.key == 'D')
+        //     this.interact()
     }
 
     componentDidMount() {
@@ -358,7 +358,7 @@ class CreateLessonPlan extends React.Component {
             const lessonplan = LessonPlans.findOne({_id: this.state._id})
 
             /* If the slides in the state has the same values as that of the slides
-                in the database, we need not save, expect to deep include by chai checks this equality.
+                in the database, we need not save, expect to deep include from chai checks this equality.
                 If they are not same, an error is thrown. When we catch the error, we can see that the
                 data are different and we initiate the save.
             */
@@ -379,7 +379,7 @@ class CreateLessonPlan extends React.Component {
         }
     }
 
-    saveChanges(slides, curSlide) {
+    saveChanges(slides, curSlide, index) {
 
         /* This function is used in multiple places to save the changes (not in the database, but
             in the react state).
@@ -405,7 +405,14 @@ class CreateLessonPlan extends React.Component {
                 slides
             },()=>{
 
-                this.simsList.loadDataToP5Sketches()
+                /**
+                 *  
+                 * We have obtained the index of the sketch of which we want to load data to
+                 * We need not load data to any other sim
+                 * 
+                 */
+
+                this.simsList.loadDataToP5Sketches(index)
             })
         }
         else {
