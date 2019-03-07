@@ -10,7 +10,9 @@ import FaCode from 'react-icons/lib/fa/code'
 import MdNetworkCell from 'react-icons/lib/md/network-cell'
 import { Button } from 'semantic-ui-react'
 
+import FaCopy from "react-icons/lib/fa/copy";
 
+import { Session } from 'meteor/session'
 
 export default class SimsList extends React.Component {
 
@@ -20,6 +22,17 @@ export default class SimsList extends React.Component {
         this.renderSims.bind(this)
     }
 
+    handleCopy(slides, curSlide, index) {
+
+        let copiedSim = JSON.parse(JSON.stringify(slides[curSlide].iframes[index]))
+
+        copiedSim.x = 50
+        copiedSim.y = 50
+
+        this.props.setCopiedState(true)
+
+        Session.set('simCopied', copiedSim)
+    }
     
     renderSims() {
 
@@ -164,6 +177,9 @@ export default class SimsList extends React.Component {
                                             <TiArrowMove size = '22' className = 'sim-handle'/>
 
                                             <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+
+                                            <FaCopy style = {{marginTop:'0.5rem'}} onClick = {()=>{this.handleCopy(slides, curSlide, index)}} className = 'sim-copy' size = '18' /> 
+
                                         </div>
 
                                         <div style = {{float:'right', marginLeft:'0.6rem', marginBottom:'0.1rem'}}><MdNetworkCell/></div>   
@@ -190,7 +206,7 @@ export default class SimsList extends React.Component {
                                         marginBottom:'0.8rem', 
                                         float:'center'
                                     }}
-                                    onClick = {()=>{
+                                    onClick = {()=>{console.log('hello')
 
                                         const confirmation = confirm('Are you sure you want to remove this?')
                                         if(confirmation == true)

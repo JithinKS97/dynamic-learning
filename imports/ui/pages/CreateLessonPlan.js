@@ -53,7 +53,8 @@ class CreateLessonPlan extends React.Component {
             redirectToDashboard:false,
             redirectToForked:false,
             forkedLessonPlanId:null,
-            author:''
+            author:'',
+            copied:false
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -76,20 +77,20 @@ class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
-        // if(event.key == 'z' || event.key == 'Z' )
-        //     this.previous()
+        if(event.key == 'z' || event.key == 'Z' )
+            this.previous()
 
-        // if(event.key == 'x' || event.key == 'X')
-        //     this.next()
+        if(event.key == 'x' || event.key == 'X')
+            this.next()
 
-        // if((event.key == 's' || event.key == 'S') && !!this.state.title )
-        //     this.save()
+        if((event.key == 's' || event.key == 'S') && !!this.state.title )
+            this.save()
 
-        // if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
-        //     this.undo()
+        if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
+            this.undo()
 
-        // if(event.key == 'd' || event.key == 'D')
-        //     this.interact()
+        if(event.key == 'd' || event.key == 'D')
+            this.interact()
     }
 
     componentDidMount() {
@@ -592,6 +593,23 @@ class CreateLessonPlan extends React.Component {
 
     }
 
+    setCopiedState(set) {
+
+        if(set) {
+
+            this.setState({
+
+                copied: true
+            })
+        }
+        else {
+
+            this.setState({
+
+                copied:false
+            })
+        }
+    }
     
 
     render() {
@@ -672,7 +690,7 @@ class CreateLessonPlan extends React.Component {
                                 
 
                                 <SimsList
-
+                                    setCopiedState = {this.setCopiedState.bind(this)}
                                     navVisibility = {true}
                                     isRndRequired = {true}
                                     saveChanges = {this.saveChanges.bind(this)}
@@ -706,6 +724,7 @@ class CreateLessonPlan extends React.Component {
                                         Add simulation
                                     </Button>
                                 </Menu.Item>
+                                
 
                                 {Meteor.userId()?
                                     <Menu.Item onClick = {()=>{
@@ -797,6 +816,25 @@ class CreateLessonPlan extends React.Component {
                                     Add textbox
                                 </Menu.Item>
 
+                                {this.state.copied?<Menu.Item onClick = {()=>{
+
+                                    if(Session.get('simCopied')) {
+
+                                        const copiedSim = Session.get('simCopied')
+
+                                        const {slides, curSlide} = this.state
+                                        slides[curSlide].iframes.push(copiedSim)
+
+                                        Session.set('simCopied', null)
+
+                                        this.setCopiedState(false)
+
+                                        this.saveChanges(slides)
+                                    }
+
+                                }}>
+                                    Paste
+                                </Menu.Item>:null}
      
 
                             </Menu>

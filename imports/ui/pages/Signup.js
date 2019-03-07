@@ -41,6 +41,9 @@ export default class Signup extends React.Component {
     }
 
     onSubmit(e) {
+
+        console.log('hello')
+
         e.preventDefault()
 
         const email = this.email.value.trim()
@@ -56,6 +59,8 @@ export default class Signup extends React.Component {
         }
 
         Accounts.createUser({email,username,password},(err) => {
+
+            console.log(err)
 
             if(err) {
                 this.setState({
@@ -91,8 +96,6 @@ export default class Signup extends React.Component {
             }
         })
     }
-
-    onSubmit = () => {}
 
     render() {
         return (
