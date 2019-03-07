@@ -397,11 +397,15 @@ class CreateLessonPlan extends React.Component {
                 this.setSizeOfPage(this.pageCount)
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
+                this.simsList.loadDataToP5Sketches()
             })
         }
         else if(curSlide == undefined) {
             this.setState({
                 slides
+            },()=>{
+
+                this.simsList.loadDataToP5Sketches()
             })
         }
         else {
@@ -414,8 +418,12 @@ class CreateLessonPlan extends React.Component {
               this.setSizeOfPage(0)
               this.db.reset('0');
               this.db.setImg(this.state.slides[this.state.curSlide].note)
+              this.simsList.loadDataToP5Sketches()
             })
         }
+
+        
+        
     }
 
     deleteSlide(index) {
@@ -459,8 +467,6 @@ class CreateLessonPlan extends React.Component {
         iframes.splice(index,1)
         slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
-
-        this.simsList.loadDataToP5Sketches()
 
     }
 

@@ -189,11 +189,15 @@ class LessonPlanViewer extends React.Component {
                 $('canvas')[0].height=900+this.pageCount*300;
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
+                this.simsList.loadDataToP5Sketches()
             })
         }
         else if(curSlide == undefined) {
             this.setState({
                 slides
+            },()=>{
+
+                this.simsList.loadDataToP5Sketches()
             })
         }
         else {
@@ -207,9 +211,9 @@ class LessonPlanViewer extends React.Component {
               $('canvas')[0].height=900;
               this.db.reset();
               this.db.setImg(this.state.slides[this.state.curSlide].note)
+              this.simsList.loadDataToP5Sketches()
             })
         }
-
     }
 
     deleteSlide(index) {
@@ -295,6 +299,7 @@ class LessonPlanViewer extends React.Component {
                             saveChanges = {this.saveChanges.bind(this)}
                             delete = {this.deleteSim.bind(this)}
                             {...this.state}
+                            ref = {e => this.simsList = e}
                         />                   
                         <DrawingBoardCmp toolbarVisible = {false} ref = {e => this.drawingBoard = e}/>                   
                     </Grid.Column>

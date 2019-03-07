@@ -41,6 +41,9 @@ export default class SimsList extends React.Component {
 
         this.simsRefArray.map(sim=>{
 
+            if(!sim)
+                return
+
             sim.loadDataToP5Sketch()
 
         })

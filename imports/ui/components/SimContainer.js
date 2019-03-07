@@ -46,11 +46,14 @@ export default class SimContainer extends React.Component{
 
         let {slides, curSlide, index} = this.props
 
-        if(slides[curSlide].iframes[index]) {
+        if(slides[curSlide].iframes[index].data) {
 
             this.otherWindow.postMessage({operation:'load', data:slides[curSlide].iframes[index].data}, '*')
-        }      
-        
+        }
+        else {
+
+            this.otherWindow.postMessage({operation:'load', data:{}}, '*')
+        }        
     }
 
     handleMessage(e) {
