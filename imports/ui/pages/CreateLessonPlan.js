@@ -379,7 +379,7 @@ class CreateLessonPlan extends React.Component {
         }
     }
 
-    saveChanges(slides, curSlide, index) {
+    saveChanges(slides, curSlide, shouldLoad) {
 
         /* This function is used in multiple places to save the changes (not in the database, but
             in the react state).
@@ -387,8 +387,13 @@ class CreateLessonPlan extends React.Component {
            Depending upon the changes made, they are saved looking upon arguments given when the
            function was called.
         */
+       
 
         if(slides == undefined) {
+
+            /**
+             * Movement between the slides
+             */
 
             this.setState({
                 curSlide
@@ -401,21 +406,23 @@ class CreateLessonPlan extends React.Component {
             })
         }
         else if(curSlide == undefined) {
+
+            /**
+             * When the change happening does not involve slide change
+             * All the changes are happening within the current slide itself
+             */
+
             this.setState({
                 slides
-            },()=>{
-
-                /**
-                 *  
-                 * We have obtained the index of the sketch of which we want to load data to
-                 * We need not load data to any other sim
-                 * 
-                 */
-
-                this.simsList.loadDataToP5Sketches(index)
             })
         }
         else {
+
+            /**
+             * When the change involves change in slides and the curSlide
+             * For example we are in the last slide (total no. of slide > 1)
+             * The deleted slide is the last one
+             */
 
             this.setState({
                 slides,
@@ -427,10 +434,7 @@ class CreateLessonPlan extends React.Component {
               this.db.setImg(this.state.slides[this.state.curSlide].note)
               this.simsList.loadDataToP5Sketches()
             })
-        }
-
-        
-        
+        }         
     }
 
     deleteSlide(index) {

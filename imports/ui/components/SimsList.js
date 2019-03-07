@@ -44,13 +44,7 @@ export default class SimsList extends React.Component {
             if(!sim)
                 return
 
-            /**
-             * 
-             * index is the index of the sim which we are going to load data
-             * 
-             */
-
-            sim.loadDataToP5Sketch(index)
+            sim.loadDataToP5Sketch()
 
         })
     }

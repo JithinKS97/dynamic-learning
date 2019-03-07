@@ -42,21 +42,10 @@ export default class SimContainer extends React.Component{
 
     }
 
-    loadDataToP5Sketch(index2) {
+    loadDataToP5Sketch() {
 
 
         let {slides, curSlide, index} = this.props
-
-        if(index2!==undefined && index2!=index)
-            return
-
-        /**
-         * 
-         * Only if the index2 that is the index of the sim which we updated and saved
-         * and the current sim under consideration are same, we should update the data
-         * Otherwise we return
-         * 
-         */
 
         if(slides[curSlide].iframes[index].data) {
 
@@ -81,17 +70,8 @@ export default class SimContainer extends React.Component{
         if(e.data.operation == 'save') {
             
             slides[curSlide].iframes[index].data = e.data.data
-            
-            /**
-             * 
-             * This is a bit complicated.
-             * We are saving the state of a sim.
-             * But while we call save changes we need not load data to the other sims
-             * So we are passing the index as the third parameter to the saveChanges function
-             * 
-             */
 
-            this.props.saveChanges(slides, undefined, index)
+            this.props.saveChanges(slides, undefined)
         }
         else if(e.data.operation == 'load') {
 
