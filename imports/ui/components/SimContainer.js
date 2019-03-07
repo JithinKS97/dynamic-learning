@@ -42,7 +42,7 @@ export default class SimContainer extends React.Component{
 
     }
 
-    loadDataToP5Sketch() {
+    loadDataToSketch() {
 
 
         let {slides, curSlide, index} = this.props
@@ -71,7 +71,13 @@ export default class SimContainer extends React.Component{
             
             slides[curSlide].iframes[index].data = e.data.data
 
-            this.props.saveChanges(slides, undefined)
+            /**
+             * Here we are changing the state of a single sim and so
+             * we need not load data to the all the sims when this happens
+             * To indicate this, a third parameter true is passed
+             */
+
+            this.props.saveChanges(slides, undefined, true)
         }
         else if(e.data.operation == 'load') {
 

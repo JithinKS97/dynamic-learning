@@ -77,20 +77,20 @@ class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
-        // if(event.key == 'z' || event.key == 'Z' )
-        //     this.previous()
+        if(event.key == 'z' || event.key == 'Z' )
+            this.previous()
 
-        // if(event.key == 'x' || event.key == 'X')
-        //     this.next()
+        if(event.key == 'x' || event.key == 'X')
+            this.next()
 
-        // if((event.key == 's' || event.key == 'S') && !!this.state.title )
-        //     this.save()
+        if((event.key == 's' || event.key == 'S') && !!this.state.title )
+            this.save()
 
-        // if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
-        //     this.undo()
+        if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
+            this.undo()
 
-        // if(event.key == 'd' || event.key == 'D')
-        //     this.interact()
+        if(event.key == 'd' || event.key == 'D')
+            this.interact()
     }
 
     componentDidMount() {
@@ -358,7 +358,7 @@ class CreateLessonPlan extends React.Component {
             const lessonplan = LessonPlans.findOne({_id: this.state._id})
 
             /* If the slides in the state has the same values as that of the slides
-                in the database, we need not save, expect to deep include from chai checks this equality.
+                in the database, we need not save, expect to deep include by chai checks this equality.
                 If they are not same, an error is thrown. When we catch the error, we can see that the
                 data are different and we initiate the save.
             */
@@ -379,7 +379,7 @@ class CreateLessonPlan extends React.Component {
         }
     }
 
-    saveChanges(slides, curSlide, shouldLoad) {
+    saveChanges(slides, curSlide, shouldNotLoad) {
 
         /* This function is used in multiple places to save the changes (not in the database, but
             in the react state).
@@ -387,13 +387,8 @@ class CreateLessonPlan extends React.Component {
            Depending upon the changes made, they are saved looking upon arguments given when the
            function was called.
         */
-       
 
         if(slides == undefined) {
-
-            /**
-             * Movement between the slides
-             */
 
             this.setState({
                 curSlide
@@ -402,27 +397,27 @@ class CreateLessonPlan extends React.Component {
                 this.setSizeOfPage(this.pageCount)
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
-                this.simsList.loadDataToP5Sketches()
+                this.simsList.loadDataToSketches()
             })
         }
         else if(curSlide == undefined) {
-
-            /**
-             * When the change happening does not involve slide change
-             * All the changes are happening within the current slide itself
-             */
-
             this.setState({
                 slides
+            },()=>{
+
+                /**
+                 * shouldLoad is true only when sim individually is updated and saved
+                 * explicitly, we need not load data to the sims in this case
+                 * So id shouldLoad is true, we return without calling loadDatatoSketches
+                 */
+
+                if(shouldNotLoad)
+                    return
+
+                this.simsList.loadDataToSketches()
             })
         }
         else {
-
-            /**
-             * When the change involves change in slides and the curSlide
-             * For example we are in the last slide (total no. of slide > 1)
-             * The deleted slide is the last one
-             */
 
             this.setState({
                 slides,
@@ -432,9 +427,12 @@ class CreateLessonPlan extends React.Component {
               this.setSizeOfPage(0)
               this.db.reset('0');
               this.db.setImg(this.state.slides[this.state.curSlide].note)
-              this.simsList.loadDataToP5Sketches()
+              this.simsList.loadDataToSketches()
             })
-        }         
+        }
+
+        
+        
     }
 
     deleteSlide(index) {
