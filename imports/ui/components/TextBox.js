@@ -6,6 +6,8 @@ import FaClose from 'react-icons/lib/fa/close'
 
 import MdNetworkCell from 'react-icons/lib/md/network-cell'
 
+import FaCopy from "react-icons/lib/fa/copy";
+
 export default class TextBox extends React.Component {
 
     constructor(props) {
@@ -16,9 +18,23 @@ export default class TextBox extends React.Component {
 
             value:''
         }
+
+        this.handleCopy = this.handleCopy.bind(this)
     }
 
-    
+    handleCopy(slides, curSlide, index) {
+
+        let copiedText = JSON.parse(JSON.stringify(slides[curSlide].textboxes[index]))
+
+        copiedText.x = 50
+        copiedText.y = 50
+
+        this.props.setCopiedState(true)
+
+        alert('text copied')
+
+        Session.set('copiedObject', {type:'text', copiedObject:copiedText})
+    }
 
     render() {
 
@@ -137,6 +153,15 @@ export default class TextBox extends React.Component {
                                     }}>X</FaClose>
                             
                                     <TiArrowMove size = '22' className = 'textbox-handle'/>
+
+                                    <FaCopy style = {{marginTop:'0.5rem'}} onClick = {()=>{
+
+                                        const {slides, curSlide, index} = this.props
+
+                                        this.handleCopy(slides, curSlide, index)                                        
+
+                                    }} className = 'sim-copy' size = '18' /> 
+
                                 </div>
 
                                 <div style = {{marginLeft:'0.6rem', float:'right'}}><MdNetworkCell/></div>

@@ -34,10 +34,10 @@ export default class SimsList extends React.Component {
 
         alert('Sim copied')
 
-        Session.set('simCopied', copiedSim)
+        Session.set('copiedObject', {type:'sim', copiedObject:copiedSim})
     }
 
-    loadDataToSketches(shouldLoad) {
+    loadDataToSketches() {
         
 
         this.simsRefArray.map(sim=>{

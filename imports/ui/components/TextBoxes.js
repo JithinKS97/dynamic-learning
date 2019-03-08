@@ -33,6 +33,7 @@ export default class TextBoxes extends React.Component {
                         value = {textbox.value}
                         slides = {this.props.slides}
                         curSlide = {this.props.curSlide}
+                        setCopiedState = {this.props.setCopiedState}
                     />
                 </div>
             )

@@ -406,7 +406,7 @@ class CreateLessonPlan extends React.Component {
             },()=>{
 
                 /**
-                 * shouldNotLoad is true only when a sim individually is updated and saved
+                 * shouldNotLoad is true only when a sim is individually updated and saved
                  * Here, we need not load data to all the sims
                  * So if shouldNotLoad is true, we return without calling loadDatatoSketches
                  */
@@ -704,6 +704,7 @@ class CreateLessonPlan extends React.Component {
                                     slides = {this.state.slides}
                                     curSlide = {this.state.curSlide}
                                     saveChanges = {this.saveChanges.bind(this)}
+                                    setCopiedState = {this.setCopiedState.bind(this)}
                                 />
                                 
 
@@ -839,19 +840,37 @@ class CreateLessonPlan extends React.Component {
                                 
                                     <Button onClick = {()=>{
 
-                                        if(Session.get('simCopied')) {
+                                        if(Session.get('copiedObject')) {
 
-                                            const copiedSim = Session.get('simCopied')
+                                            const object = Session.get('copiedObject')
 
                                             const {slides, curSlide} = this.state
-                                            slides[curSlide].iframes.push(copiedSim)
 
-                                            Session.set('simCopied', null)
+                                            if(object.type === 'sim') {
 
-                                            this.setCopiedState(false)
+                                                slides[curSlide].iframes.push(object.copiedObject)
+    
+                                                Session.set('copiedObject', null)
+    
+                                                this.setCopiedState(false)
+                                            }
+                                            else {
+
+                                               
+                                                slides[curSlide].textboxes.push(object.copiedObject)
+    
+                                                Session.set('copiedObject', null)
+    
+                                                this.setCopiedState(false)
+                                            }
 
                                             this.saveChanges(slides)
                                         }
+                                        else {
+                                            
+                                        }
+
+
 
                                     }} color='blue'>
                                         Paste
