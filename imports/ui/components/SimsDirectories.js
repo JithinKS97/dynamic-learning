@@ -153,6 +153,8 @@ class SimsDirectories extends React.Component {
                     {Meteor.userId()?null:<h3>You need to login to add your own simulations</h3>}
                     {this.simulationsNotAddedMessage()}
 
+                    
+
                     <SortableTree
                         onVisibilityToggle = {({ node, expanded}) => {
                             Meteor.call('sims.folder.visibilityChange', node._id, expanded)
@@ -175,6 +177,8 @@ class SimsDirectories extends React.Component {
 
                         }
                     }
+
+                    
 
 
                     generateNodeProps = {({ node }) => ({
@@ -237,6 +241,9 @@ class SimsDirectories extends React.Component {
                     })}
 
                     />
+
+                    {this.props.isPreview?<p>Note: Go to dashboard to organize the sims into folders</p>:null}
+
                 </div>
             </div>
         )
