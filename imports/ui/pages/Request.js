@@ -410,7 +410,7 @@ class Request extends React.Component {
             <Grid.Row style={{ height: "80vh" }}>
               <Grid.Column
                 width={4}
-                style={{ overflow: "auto", padding: "1.6rem" }}
+                style={{ overflow: "auto", padding: "0 1.6rem" }}
               >
                 {isOwner ? (
                   <Button
@@ -437,7 +437,7 @@ class Request extends React.Component {
               </Grid.Column>
               <Grid.Column
                 width={7}
-                style={{ overflow: "auto", padding: "1.6rem" }}
+                style={{ overflow: "auto", padding: "0 1.6rem" }}
               >
                 {this.state.show ? (
                   <CommentsList
@@ -459,7 +459,7 @@ class Request extends React.Component {
               </Grid.Column>
               <Grid.Column
                 width={5}
-                style={{ overflow: "auto", padding: "1.6rem" }}
+                style={{ overflow: "auto", padding: "0 1.6rem" }}
               >
                 {Meteor.userId() ? (
                   <div style={{ marginBottom: "1.6rem" }}>
