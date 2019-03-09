@@ -447,7 +447,7 @@ class Request extends React.Component {
                     deleteReplyComment={this.deleteReplyComment.bind(this)}
                     deleteComment={this.deleteComment.bind(this)}
                   />
-                ) : null}
+                ) : <h2>Create a topic to start the discussion</h2>}
                 <br />
                 {this.state.show && !!Meteor.userId() ? (
                   <CommentForm

@@ -111,7 +111,7 @@ class SimsDirectories extends React.Component {
                 <Loader />
             </Dimmer>
 
-                <Upload isPreview = {this.props.isPreview} methodToRun = 'sims.insert' />
+                <Upload isPreview = {false} methodToRun = 'sims.insert' />
 
                 <Modal
                 
@@ -216,7 +216,6 @@ class SimsDirectories extends React.Component {
         
                           <button
                           
-                            style = {{display: this.props.isPreview?'none':'block'}}
                             className = 'icon__button'
                             onClick={() =>{
         

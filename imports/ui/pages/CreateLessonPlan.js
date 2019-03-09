@@ -632,6 +632,8 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
+        console.log(this.state.slides[this.state.curSlide])
+
 
         if(this.state.redirectToForked) {
 
@@ -837,7 +839,9 @@ class CreateLessonPlan extends React.Component {
                                 </Menu.Item>
 
                                 {this.state.copied?<Menu.Item>
-                                
+                                    
+                                    <div style = {{display:'flex', flexDirection:'row'}}>
+                                    
                                     <Button onClick = {()=>{
 
                                         if(Session.get('copiedObject')) {
@@ -850,18 +854,17 @@ class CreateLessonPlan extends React.Component {
 
                                                 slides[curSlide].iframes.push(object.copiedObject)
     
-                                                Session.set('copiedObject', null)
+                                                
     
-                                                this.setCopiedState(false)
+                                                
                                             }
                                             else if(object.type === 'text') {
 
                                                
                                                 slides[curSlide].textboxes.push(object.copiedObject)
     
-                                                Session.set('copiedObject', null)
+                                                
     
-                                                this.setCopiedState(false)
                                             }
 
                                             this.saveChanges(slides)
@@ -875,6 +878,14 @@ class CreateLessonPlan extends React.Component {
                                     }} color='blue'>
                                         Paste
                                     </Button>
+                                    <Button onClick = {()=>{
+
+                                        this.setCopiedState(false)
+                                        Session.set('copiedObject', null)
+
+                                    }} color= 'red'>X</Button>
+
+                                    </div>
                                     
                                 </Menu.Item>:null}
      
