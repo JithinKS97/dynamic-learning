@@ -52,7 +52,9 @@ class Request extends React.Component {
             loading:true,
             initialized: false,
 
-            topicTitleModalOpen: false
+            topicTitleModalOpen: false,
+
+            topicTitle:''
         }
         this.update.bind(this)
         this.pushSim.bind(this)
@@ -85,17 +87,16 @@ class Request extends React.Component {
         if(title) {
 
             const { slides } = this.state
-            const title = this.title.value
             const curSlide = slides.length
 
             if(this.state.show == false) {
 
-                slides[0].title = this.title.value
+                slides[0].title = title
                 this.setState({slides, show:true})
             }
             else {
                 const slide = {
-                    title: this.title.value,
+                    title: title,
                     comments: [],
                     iframes: []
                 }
@@ -103,10 +104,11 @@ class Request extends React.Component {
                 this.setState({
                    title,
                    slides,
-                   curSlide
+                   curSlide,
+                   topicTitleModalOpen:false
                 })
             }
-            this.title.value = ''
+
             this.update()
         }
     }
@@ -359,8 +361,8 @@ class Request extends React.Component {
                 <div>
                     <Grid style = {{height:'100vh'}}  columns={3} divided>
                         <Grid.Row>
-                            <Grid.Column width = {4} style = {{overflow:'auto'}}>
-                                    <div style = {{margin:'1.6rem'}}>
+                            <Grid.Column width = {4} style = {{overflow:'auto', padding:'1.6rem'}}>
+                                    <div>
 
                                         <Button onClick = {()=>{
                                             history.back()
@@ -377,28 +379,22 @@ class Request extends React.Component {
 
                                             }}>Close this request forum</Button>:null}
 
-                                        <h1>{this.state.requestTitle}</h1>
+                                        <h1 style={{margin:'0.8rem 0'}}>{this.state.requestTitle}</h1>
 
                                     </div>
 
                                     {isOwner?
 
-                                        <Form onSubmit = {this.push.bind(this)}>
+                                        <Button onClick = {()=>{
 
-                                            <Form.Field>
-                                                <Button onClick = {()=>{
+                                            this.setState({
 
-                                                    this.setState({
+                                                topicTitleModalOpen:true
+                                            })
 
-                                                        topicTitleModalOpen:true
-                                                    })
+                                        }}>Create new topic</Button>
 
-                                                }}>Create new topic</Button>
-                                            </Form.Field>
-
-                                        </Form>:
-
-                                    null}
+                                    :null}
 
                                     {this.state.show?<List userId = {this.state.userId} from = {'request'} showTitle = {true} {...this.state} saveChanges= {this.saveChanges.bind(this)} delete = {this.deleteSlide.bind(this)}  />:null}
 
@@ -445,10 +441,28 @@ class Request extends React.Component {
                             <Form>
                                 <Form.Field>
                                     <label>Title for the topic</label>
-                                    <Input></Input>
+                                    <Input ref = {e => this.topicTitle = e} onChange = {(e, {value})=>{
+
+
+                                        this.setState({
+
+                                            topicTitle:value
+                                        })
+
+                                    }} ></Input>
                                 </Form.Field>
                                 <Form.Field>
-                                    <Button>Submit</Button>
+                                    <Button onClick = {()=>{
+
+                                        this.push(this.state.topicTitle)                                       
+
+                                        this.setState({
+
+                                            topicTitle:'',
+                                            topicTitleModalOpen:false
+                                        })
+
+                                    }}>Submit</Button>
                                 </Form.Field>
                             </Form>
                         </Modal.Content>
