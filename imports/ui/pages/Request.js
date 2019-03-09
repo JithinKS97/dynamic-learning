@@ -9,7 +9,7 @@ import { Meteor } from 'meteor/meteor'
 import SimPreview from '../components/SimPreview'
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaCode from 'react-icons/lib/fa/code'
-import { Grid, Button, Form, Modal, Container, Dimmer, Loader, Segment, Menu} from 'semantic-ui-react'
+import { Grid, Button, Form, Modal, Dimmer, Loader, Segment, Menu, Input, TextArea} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { Tracker } from 'meteor/tracker'
 import { withTracker } from 'meteor/react-meteor-data';
@@ -45,8 +45,14 @@ class Request extends React.Component {
             selectedSim:null,
             selectedSimIndex:null,
             requestTitle: true,
+
+            titleInTheForm:'',
+            descriptionInTheForm:'',
+
             loading:true,
-            initialized: false
+            initialized: false,
+
+            topicTitleModalOpen: false
         }
         this.update.bind(this)
         this.pushSim.bind(this)
@@ -74,11 +80,9 @@ class Request extends React.Component {
         })
     }
 
-    push(e) {
+    push(title) {
 
-        e.preventDefault();
-
-        if(this.title.value) {
+        if(title) {
 
             const { slides } = this.state
             const title = this.title.value
@@ -258,8 +262,17 @@ class Request extends React.Component {
 
         e.preventDefault()
 
+        if(!(this.state.descriptionInTheForm && this.state.titleInTheForm)) {
+
+            alert('Fill the details')
+
+            return
+        }
+
         this.setState({
-            requestTitle:this.requestTitle.value
+
+            requestTitle:this.state.titleInTheForm
+
         },()=>{
 
             Meteor.call('requests.title.update', this.state._id, this.state.requestTitle)
@@ -373,11 +386,14 @@ class Request extends React.Component {
                                         <Form onSubmit = {this.push.bind(this)}>
 
                                             <Form.Field>
-                                                <input placeholder = 'Title for the new topic' ref = {e => this.title = e}/>
-                                            </Form.Field>
+                                                <Button onClick = {()=>{
 
-                                            <Form.Field>
-                                                <Button >Create new topic</Button>
+                                                    this.setState({
+
+                                                        topicTitleModalOpen:true
+                                                    })
+
+                                                }}>Create new topic</Button>
                                             </Form.Field>
 
                                         </Form>:
@@ -419,6 +435,26 @@ class Request extends React.Component {
                         </Grid.Row>
                     </Grid>
 
+                    <Modal size = 'tiny' open = {this.state.topicTitleModalOpen}>
+
+                        <Modal.Header>
+                            Topic title
+                        </Modal.Header>
+
+                        <Modal.Content>
+                            <Form>
+                                <Form.Field>
+                                    <label>Title for the topic</label>
+                                    <Input></Input>
+                                </Form.Field>
+                                <Form.Field>
+                                    <Button>Submit</Button>
+                                </Form.Field>
+                            </Form>
+                        </Modal.Content>
+
+                    </Modal>
+
 
                     {isOwner?
 
@@ -429,7 +465,7 @@ class Request extends React.Component {
 
                         <Modal.Header>
 
-                            Title for the request forum
+                            Details for the request
 
                             <Link to={{ pathname: `/createlessonplan/${this.state._id}`}}>
                                 <Button link className = 'close-button'>X</Button>
@@ -444,8 +480,29 @@ class Request extends React.Component {
                                     <Form onSubmit = {this.setTitle.bind(this)}>
                                         <Form.Field>
                                             <label>Title</label>
-                                            <input ref = {e => this.requestTitle = e}/>
+                                            <Input name = 'title' onChange = {(e,{value})=>{
+
+                                                this.setState({
+
+                                                    titleInTheForm:value
+                                                })
+
+                                            }} value = {this.state.titleInTheForm}/>
                                         </Form.Field>
+
+                                        <Form.Field>
+                                            <label>Add a description</label>
+                                            <TextArea name = 'description' onChange = {(e, {value})=>{
+
+                                                this.setState({
+
+                                                    descriptionInTheForm:value
+                                                })
+
+                                            }} value = {this.state.descriptionInTheForm}/>
+                                        </Form.Field>
+
+                                        <p>Note: You can edit these details later</p>
 
                                         <Form.Field>
                                             <Button>Submit</Button>
