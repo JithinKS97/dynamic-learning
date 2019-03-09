@@ -71,7 +71,8 @@ export default class CommentBox extends React.Component {
                 else {
 
                     return (
-                        <FaAngleDown className = 'arrow' style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+                        
+                        <FaAngleDown className = 'arrow' size={17} onClick = {()=>{
 
                             this.setState(prev=>{
     
@@ -88,7 +89,7 @@ export default class CommentBox extends React.Component {
 
                 return (
 
-                    <FaAngleDown className = 'arrow' style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+                    <a className = 'arrow' size={17} onClick = {()=>{
 
                         this.setState(prev=>{
 
@@ -97,7 +98,7 @@ export default class CommentBox extends React.Component {
                                 replyVis:!prev.replyVis
                             }
                         })
-                    }}>Show</FaAngleDown>
+                    }}>Reply</a>
                 )
             }
         }
@@ -124,12 +125,12 @@ export default class CommentBox extends React.Component {
                         </Comment.Metadata>
                     </div>
                     
-                    <Comment.Text style = {{paddingTop:'0.8rem', width:'95%'}}>{this.props.comment.comment}</Comment.Text>
+                    <Comment.Text style = {{padding:'0.4rem 0', width:'95%'}}>{this.props.comment.comment}</Comment.Text>
 
                     {this.showDownArrow()}
 
 
-                    {this.state.replyVis?<FaAngleUp className = 'arrow'style = {{marginTop:'0.4rem'}} size={17} onClick = {()=>{
+                    {this.state.replyVis?<a className = 'arrow' size={17} onClick = {()=>{
 
                         this.setState(prev=>{
 
@@ -138,7 +139,7 @@ export default class CommentBox extends React.Component {
                                 replyVis:!prev.replyVis
                             }
                         })
-                    }}>Show</FaAngleUp>:null}
+                    }}>Hide</a>:null}
 
 
 

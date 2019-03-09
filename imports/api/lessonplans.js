@@ -69,7 +69,8 @@ Meteor.methods({
           _id: docs,
           slides: [],
           requestTitle: "",
-          updatedAt: moment().valueOf()
+          updatedAt: moment().valueOf(),
+          description:''
         });
       }
     );

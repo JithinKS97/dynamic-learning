@@ -80,27 +80,27 @@ Meteor.methods({
         Requests.update({_id, userId:this.userId}, {$set: {requestTitle:'',slides:[], updatedAt: moment().valueOf()}})
     }, 
 
-    'requests.title.update'(_id, requestTitle) {
+    'requests.title.update'(_id, requestTitle, description) {
 
         if(!this.userId) {
             
             throw new Meteor.Error('not-authorized')
         }
 
-        new SimpleSchema({
+        // new SimpleSchema({
 
-            _id: {
-                type: String,
-                min:1
-            },
-            requestTitle: {
-                type: String,
-                optional:true
-            }
+        //     _id: {
+        //         type: String,
+        //         min:1
+        //     },
+        //     requestTitle: {
+        //         type: String,
+        //         optional:true
+        //     }
 
-        }).validate({_id, requestTitle})
+        // }).validate({_id, requestTitle})
                 
-        Requests.update({_id, userId:this.userId}, {$set: {requestTitle, updatedAt: moment().valueOf()}})
+        Requests.update({_id, userId:this.userId}, {$set: {requestTitle, description, updatedAt: moment().valueOf()}})
     }
     
 })
