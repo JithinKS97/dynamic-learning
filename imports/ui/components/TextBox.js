@@ -61,7 +61,7 @@ export default class TextBox extends React.Component {
 
                 onResize={(e, direction, ref, delta, position) => {
                                   
-                    const {slides, curSlide, index} = this.props
+                    const {index} = this.props
 
                     slides[curSlide].textboxes[index].w = ref.offsetWidth
                     slides[curSlide].textboxes[index].h = ref.offsetHeight
