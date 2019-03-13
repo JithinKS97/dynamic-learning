@@ -73,7 +73,9 @@ export default class SimsList extends React.Component {
            The iframes of the current slide are obtained and rendered.
            On clicking the X button the delete function passed in the props is called.
         */  
-        const {slides, curSlide} = this.props
+        const {curSlide} = this.props
+
+        const slides = JSON.parse(JSON.stringify(this.props.slides))  
         
 
         if(slides.length!=0) {

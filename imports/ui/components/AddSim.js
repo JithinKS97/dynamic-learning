@@ -52,7 +52,9 @@ export default class AddSim extends React.Component {
 
         if(this.state.node) {
 
-            const { slides, curSlide } = this.props                                
+            const slides = JSON.parse(JSON.stringify(this.props.slides)) 
+
+            const { curSlide } = this.props                                
 
             const sim = {
                 linkToCode:this.state.node.linkToCode,

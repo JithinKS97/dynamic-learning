@@ -38,7 +38,9 @@ export default class TextBox extends React.Component {
 
     render() {
 
-        const { slides, curSlide, index } = this.props
+        const slides = JSON.parse(JSON.stringify(this.props.slides))
+
+        const { curSlide, index } = this.props
 
         return (
             
@@ -81,8 +83,6 @@ export default class TextBox extends React.Component {
 
                 onDragStop = {(e,d)=>{
 
-                    const {slides, curSlide, index} = this.props
-
                     slides[curSlide].textboxes[index].x = d.lastX
                     slides[curSlide].textboxes[index].y = d.lastY
 
@@ -116,7 +116,7 @@ export default class TextBox extends React.Component {
 
                         onChange = {(e)=>{
 
-                            const {slides, curSlide, index, saveChanges} = this.props
+                            const {saveChanges} = this.props
                             
                             slides[curSlide].textboxes[index].value = e.target.value
 
@@ -126,7 +126,7 @@ export default class TextBox extends React.Component {
 
                         onDrag = {()=>{
 
-                            const {slides, curSlide, index, saveChanges} = this.props
+                            const {saveChanges} = this.props
                             
                             slides[curSlide].textboxes[index].w = this.textarea.offsetWidth
                             slides[curSlide].textboxes[index].h = this.textarea.offsetHeight

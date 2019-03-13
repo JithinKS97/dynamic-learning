@@ -44,8 +44,9 @@ export default class SimContainer extends React.Component{
 
     loadDataToSketch() {
 
+        const slides = JSON.parse(JSON.stringify(this.props.slides))  
 
-        let {slides, curSlide, index} = this.props
+        let {curSlide, index} = this.props
 
         if(slides[curSlide].iframes[index].data) {
 
@@ -65,7 +66,9 @@ export default class SimContainer extends React.Component{
            If the opration property is load, the data stored is send back.
         */
 
-        let {slides, curSlide, index} = this.props
+        const slides = JSON.parse(JSON.stringify(this.props.slides))  
+
+        let {curSlide, index} = this.props
 
         if(e.data.operation == 'save') {
             
@@ -87,16 +90,8 @@ export default class SimContainer extends React.Component{
             console.log(e.data.data)
         }
         else if(e.data.operation == 'keyPress') {
-            if(e.data.Key == 'a')
+            if(e.data.Key == 'z')
                 this.props.undo()
-            else if(e.data.Key == 'x')
-                this.props.next()
-            else if(e.data.Key == 'z')
-                this.props.previous()
-            else if(e.data.Key == 's')
-                this.props.save()
-            else if(e.data.Key == 'd')
-                this.props.interact()
         }
 
     }

@@ -69,28 +69,17 @@ class CreateLessonPlan extends React.Component {
 
         this.changePageCount.bind(this)
 
+        this.undoStacks = []
     }
 
-    handleKeyDown(event){
+    handleKeyDown(e){
 
         /*
             This function handles the shortcut key functionalities.
          */
 
-        // if(event.key == 'z' || event.key == 'Z' )
-        //     this.previous()
-
-        // if(event.key == 'x' || event.key == 'X')
-        //     this.next()
-
-        // if((event.key == 's' || event.key == 'S') && !!this.state.title )
-        //     this.save()
-
-        // if(((event.key == 'a' || event.key == 'A') && !!this.state.title) && !this.curPosition[this.state.curSlide] == 0)
-        //     this.undo()
-
-        // if(event.key == 'd' || event.key == 'D')
-        //     this.interact()
+        if( e.keyCode===90 && e.ctrlKey )
+            this.undo()
     }
 
     componentDidMount() {
@@ -109,6 +98,7 @@ class CreateLessonPlan extends React.Component {
         window.addEventListener("keydown", this.handleKeyDown, false);
 
     }
+    
 
 
     componentWillReceiveProps(nextProps) {
@@ -193,29 +183,23 @@ class CreateLessonPlan extends React.Component {
 
     onChange() {
 
+        if(this.preventUndo)
+            return
+
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
             Here we retrieve the current slide no. and note from the states. The notes are
             updated and stored back to the state.
         */
 
-        if(arguments[0][0]=='0')
-          return;
-          
-        const {curSlide, slides} = this.state
+        const slides = JSON.parse(JSON.stringify(this.state.slides)) 
+        
+        const {curSlide} = this.state
 
         const note = this.db.getImg()
-        slides[curSlide].note = note
-        slides[curSlide].pageCount=this.pageCount;
 
-        if(this.undoArray[curSlide]){
-          this.undoArray[curSlide].push(note);
-          this.curPosition[curSlide]++;
-        }
-        else{
-          this.undoArray.push([note]);
-          this.curPosition.push(0);
-        }
+        slides[curSlide].note = note
+        slides[curSlide].pageCount=this.pageCount
 
         this.saveChanges(slides)
     }
@@ -379,6 +363,24 @@ class CreateLessonPlan extends React.Component {
         }
     }
 
+    pushToUndoStacks = (oldSlide) => {
+
+        if(!this.undoStacks[this.state.curSlide]) {
+
+            this.undoStacks[this.state.curSlide] = []
+        }
+
+        try {
+            expect(oldSlide).to.deep.include(this.undoStacks[this.state.curSlide][this.undoStacks[this.state.curSlide].length-1])
+        }
+        catch(error) {
+            
+            if(error) {
+                this.undoStacks[this.state.curSlide].push(oldSlide)
+            }
+        }        
+    }
+
     saveChanges(slides, curSlide, shouldNotLoad) {
 
         /* This function is used in multiple places to save the changes (not in the database, but
@@ -387,20 +389,45 @@ class CreateLessonPlan extends React.Component {
            Depending upon the changes made, they are saved looking upon arguments given when the
            function was called.
         */
+       
 
         if(slides == undefined) {
+
+           
+
+            const slide = this.state.slides[this.state.curSlide]
+
+            if(this.undoStacks[this.state.curSlide]) {
+
+                if(this.undoStacks[this.state.curSlide].length===0)
+                    this.pushToUndoStacks(slide)
+            }            
 
             this.setState({
                 curSlide
             },()=>{
+                
                 this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
                 this.setSizeOfPage(this.pageCount)
-                this.db.reset('0');
+
+                this.preventUndo = true
+
+                this.db.reset('0')
+
+                this.preventUndo = false
+
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
                 this.simsList.loadDataToSketches()
             })
         }
         else if(curSlide == undefined) {
+
+            
+
+            const slide = this.state.slides[this.state.curSlide]
+
+            this.pushToUndoStacks(slide)
+
             this.setState({
                 slides
             },()=>{
@@ -419,19 +446,26 @@ class CreateLessonPlan extends React.Component {
         }
         else {
 
+            const slide = this.state.slides[this.state.curSlide]
+            this.pushToUndoStacks(slide)
+
             this.setState({
                 slides,
                 curSlide
-            },()=>{                
+            },()=>{
                 
               this.setSizeOfPage(0)
-              this.db.reset('0');
+
+              this.preventUndo = true
+              
+              this.db.reset('0')
+
+              this.preventUndo = false
+
               this.db.setImg(this.state.slides[this.state.curSlide].note)
               this.simsList.loadDataToSketches()
             })
-        }
-
-        
+        }     
         
     }
 
@@ -443,23 +477,25 @@ class CreateLessonPlan extends React.Component {
         */
        
 
-        const {slides} = this.state
+       const slides = JSON.parse(JSON.stringify(this.state.slides)) 
 
         if(slides.length!=1) {
 
             slides.splice(index, 1)
+
             let { curSlide } = this.state
-            this.undoArray.splice(index,1);
-            this.curPosition.splice(index,1);
+            this.undoStacks.splice(index,1)
+            
             if(index == 0) {
                 curSlide = 0
             }
             if(curSlide == slides.length)
                 curSlide = slides.length-1
+                
             this.saveChanges(slides, curSlide)
         }
         else{
-          this.undoArray=[], this.curPosition=[];
+          this.undoStacks=[]
           this.reset()
         }
     }
@@ -471,7 +507,9 @@ class CreateLessonPlan extends React.Component {
             current slide and the changes are saved.
         */
 
-        const {slides, curSlide} = this.state
+        const slides = JSON.parse(JSON.stringify(this.state.slides)) 
+
+        const {curSlide} = this.state
         const iframes = slides[curSlide].iframes
         iframes.splice(index,1)
         slides[this.state.curSlide].iframes = iframes
@@ -481,7 +519,9 @@ class CreateLessonPlan extends React.Component {
 
     deleteTextBox = (index) => {
 
-        const {slides, curSlide} = this.state
+        const slides = JSON.parse(JSON.stringify(this.state.slides)) 
+
+        const {curSlide} = this.state
         const textboxes = slides[curSlide].textboxes
         textboxes.splice(index,1)
         slides[this.state.curSlide].textboxes = textboxes
@@ -539,25 +579,63 @@ class CreateLessonPlan extends React.Component {
         return 0;
     }
 
-    undo(e) {
+    undo = () => {
 
         /*
             Anupam - Explain the working of Undo        
         */
 
-        if(this.addSim.state.isOpen)
-            return
-        if(this.curPosition[this.state.curSlide]<=0)
-            return
+        // if(this.addSim.state.isOpen)
+        //     return
+        // if(this.curPosition[this.state.curSlide]<=0)
+        //     return
 
-        this.curPosition[this.state.curSlide]--
-        const slides = this.state.slides
-        slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
-        this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]])
-        this.undoArray[this.state.curSlide].pop()
-        this.setState({
-            slides
-        })
+        // this.curPosition[this.state.curSlide]--
+        // const slides = this.state.slides
+        // slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
+        // this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]])
+        // this.undoArray[this.state.curSlide].pop()
+        // this.setState({
+        //     slides
+        // })
+
+        
+
+        const slide = this.undoStacks[this.state.curSlide].pop()
+
+        const slides = JSON.parse(JSON.stringify(this.state.slides))        
+
+        if(slide) {
+
+            slides[this.state.curSlide] = slide
+            this.setState({
+
+                slides
+            },()=>{
+
+                this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                this.setSizeOfPage(this.pageCount)
+
+                this.simsList.loadDataToSketches()
+            
+                this.preventUndo = true
+
+                this.db.reset('0')  
+                
+                this.preventUndo = false
+
+                this.db.setImg(this.state.slides[this.state.curSlide].note)
+
+                if(!this.state.slides[this.state.curSlide].note) {
+
+                    this.preventUndo = true
+
+                    this.db.reset({ webStorage: false, history: false, background: true });
+
+                    this.preventUndo = false
+                }
+            })
+        }
     }
 
     headToRequestPage() {
@@ -583,14 +661,16 @@ class CreateLessonPlan extends React.Component {
         $('#container')[0].style.height=$('canvas')[0].style.height;
         this.db.reset('0');
         this.db.setImg(temp);
-        var slides = this.state.slides;
+        const slides = JSON.parse(JSON.stringify(this.state.slides))   
         slides[this.state.curSlide].pageCount=this.pageCount;
-        this.setState({slides});
+        this.saveChanges(slides)
     }
 
     addTextBox = () => {
 
-        const { slides, curSlide } = this.state
+        const slides = JSON.parse(JSON.stringify(this.state.slides))   
+
+        const { curSlide } = this.state
 
         if(!slides[curSlide].textboxes) {
 
@@ -604,10 +684,7 @@ class CreateLessonPlan extends React.Component {
 
         slides[curSlide].textboxes.push(newTextBox)
 
-        this.setState({
-
-            slides
-        })
+        this.saveChanges(slides)
 
     }
 
@@ -631,8 +708,6 @@ class CreateLessonPlan extends React.Component {
     
 
     render() {
-
-        console.log(this.state.slides[this.state.curSlide])
 
 
         if(this.state.redirectToForked) {
@@ -848,32 +923,23 @@ class CreateLessonPlan extends React.Component {
 
                                             const object = Session.get('copiedObject')
 
-                                            const {slides, curSlide} = this.state
+                                            const slides = JSON.parse(JSON.stringify(this.state.slides))   
+
+                                            const {curSlide} = this.state
 
                                             if(object.type === 'sim') {
 
-                                                slides[curSlide].iframes.push(object.copiedObject)
-    
-                                                
-    
+                                                slides[curSlide].iframes.push(object.copiedObject)   
                                                 
                                             }
                                             else if(object.type === 'text') {
 
                                                
-                                                slides[curSlide].textboxes.push(object.copiedObject)
-    
-                                                
-    
+                                                slides[curSlide].textboxes.push(object.copiedObject)   
                                             }
 
                                             this.saveChanges(slides)
                                         }
-                                        else {
-                                            
-                                        }
-
-
 
                                     }} color='blue'>
                                         Paste
