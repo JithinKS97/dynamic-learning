@@ -8,27 +8,28 @@
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55",
     "bcrypt": "^2.0.1",
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "meteor-node-stubs": "^0.3.2",
-    "moment": "^2.22.2",
-    "react": "^16.4.0",
+    "moment": "^2.24.0",
+    "react": "^16.8.5",
     "react-addons-pure-render-mixin": "^15.6.2",
     "react-addons-test-utils": "^15.6.2",
-    "react-dom": "^16.4.0",
+    "react-dom": "^16.8.5",
     "react-icons": "^2.2.7",
     "react-meteor-data": "^0.2.11",
-    "react-rnd": "^7.4.0",
-    "react-router-dom": "^4.2.2",
-    "react-sortable-tree": "^2.2.0",
+    "react-rnd": "^7.4.3",
+    "react-router-dom": "^4.3.1",
+    "react-sizeme": "^2.5.2",
+    "react-sortable-tree": "^2.6.2",
     "react-sortable-tree-theme-file-explorer": "^1.1.2",
     "react-tagsinput": "^3.19.0",
-    "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.81.1",
-    "simpl-schema": "^1.5.0"
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.81.3",
+    "simpl-schema": "^1.5.5"
   },
   "devDependencies": {
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1"
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.11.2"
   },
   "engines": {
     "node": "8.11.1"

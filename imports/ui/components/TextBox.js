@@ -49,9 +49,7 @@ export default class TextBox extends React.Component {
                 className = 'textbox-floating'
                 bounds = '.drawing-board-canvas'
 
-                size={{ width: slides[curSlide].textboxes[index].w?slides[curSlide].textboxes[index].w:400,  height:  slides[curSlide].textboxes[index].h?slides[curSlide].textboxes[index].h:200}}
-
-                enableResizing = {this.props.isPreview?false:true}
+                size={{ width: slides[curSlide].textboxes[index].w?slides[curSlide].textboxes[index].w:400,  height:  slides[curSlide].textboxes[index].h?slides[curSlide].textboxes[index].h:200}}     
                 
                 dragHandleClassName = '.textbox-handle'
 
@@ -70,6 +68,7 @@ export default class TextBox extends React.Component {
 
                     this.props.saveChanges(slides)
                 }}
+                
 
                 enableResizing = {{
                                     
