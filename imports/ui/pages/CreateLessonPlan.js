@@ -54,7 +54,8 @@ class CreateLessonPlan extends React.Component {
             redirectToForked:false,
             forkedLessonPlanId:null,
             author:'',
-            copied:false
+            copied:false,
+            scaleX:1
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -70,6 +71,17 @@ class CreateLessonPlan extends React.Component {
         this.changePageCount.bind(this)
 
         this.undoStacks = []
+
+        window.onresize = this.handleWindowResize
+        window.onload = this.handleWindowResize
+    }
+
+    handleWindowResize = () => {
+
+        this.setState({
+
+            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
+        })
     }
 
     handleKeyDown(e){
@@ -597,9 +609,7 @@ class CreateLessonPlan extends React.Component {
         // this.undoArray[this.state.curSlide].pop()
         // this.setState({
         //     slides
-        // })
-
-        
+        // })        
 
         const slide = this.undoStacks[this.state.curSlide].pop()
 
@@ -709,7 +719,6 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
-
         if(this.state.redirectToForked) {
 
             return <Redirect to = {`/dashboard/lessonplans`}/>
@@ -769,38 +778,43 @@ class CreateLessonPlan extends React.Component {
 
                                 overflow:'auto', 
                                 margin:0, 
-                                padding:0
+                                padding:0,
+                                overflowX:'none'                             
 
                             }} width = {12}
                         >
-                                
-                                <TextBoxes 
+                                <div style = {{transform:`scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
 
-                                    isPreview = {false}
-                                    deleteTextBox = {this.deleteTextBox.bind(this)}
-                                    slides = {this.state.slides}
-                                    curSlide = {this.state.curSlide}
-                                    saveChanges = {this.saveChanges.bind(this)}
-                                    setCopiedState = {this.setCopiedState.bind(this)}
-                                />
-                                
+                                    <TextBoxes 
 
-                                <SimsList
-                                    setCopiedState = {this.setCopiedState.bind(this)}
-                                    navVisibility = {true}
-                                    isRndRequired = {true}
-                                    saveChanges = {this.saveChanges.bind(this)}
-                                    delete = {this.deleteSim.bind(this)}
-                                    {...this.state}
-                                    next = {this.next.bind(this)}
-                                    previous = {this.previous.bind(this)}
-                                    save = {this.save.bind(this)}
-                                    interact = {this.interact.bind(this)}
-                                    undo = {this.undo.bind(this)}
-                                    ref = {e => this.simsList = e}
-                                />
-                                
-                                <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
+                                        isPreview = {false}
+                                        deleteTextBox = {this.deleteTextBox.bind(this)}
+                                        slides = {this.state.slides}
+                                        curSlide = {this.state.curSlide}
+                                        saveChanges = {this.saveChanges.bind(this)}
+                                        setCopiedState = {this.setCopiedState.bind(this)}
+                                    />
+                                    
+
+                                    <SimsList
+                                        setCopiedState = {this.setCopiedState.bind(this)}
+                                        navVisibility = {true}
+                                        isRndRequired = {true}
+                                        saveChanges = {this.saveChanges.bind(this)}
+                                        delete = {this.deleteSim.bind(this)}
+                                        {...this.state}
+                                        next = {this.next.bind(this)}
+                                        previous = {this.previous.bind(this)}
+                                        save = {this.save.bind(this)}
+                                        interact = {this.interact.bind(this)}
+                                        undo = {this.undo.bind(this)}
+                                        ref = {e => this.simsList = e}
+                                    />
+                               
+                                    <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
+
+                                </div>
+                            
                         
                         </Grid.Column>
                         
