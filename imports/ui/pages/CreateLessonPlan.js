@@ -73,7 +73,6 @@ class CreateLessonPlan extends React.Component {
         this.undoStacks = []
 
         window.onresize = this.handleWindowResize
-        window.onload = this.handleWindowResize
     }
 
     handleWindowResize = () => {
@@ -108,6 +107,9 @@ class CreateLessonPlan extends React.Component {
         this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));        
 
         window.addEventListener("keydown", this.handleKeyDown, false);
+        this.setState({
+            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
+        })
 
     }
     
@@ -776,11 +778,10 @@ class CreateLessonPlan extends React.Component {
 
                         <Grid.Column style = {{
 
-                                overflow:'auto', 
+                                overflow:'hidden', 
                                 margin:0, 
                                 padding:0,
-                                overflowX:'hidden'
-                                                            
+                                overflowY:'auto'         
 
                             }} width = {12}
                         >
