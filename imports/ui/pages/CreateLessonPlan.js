@@ -786,7 +786,7 @@ class CreateLessonPlan extends React.Component {
                                 margin:0, 
                                 padding:0,
                                 overflowX:'hidden',
-                                overflowY:'auto'
+                                overflowY:'scroll'
 
                             }} width = {12}
                         >
