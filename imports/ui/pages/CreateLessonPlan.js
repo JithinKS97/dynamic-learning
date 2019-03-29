@@ -73,6 +73,8 @@ class CreateLessonPlan extends React.Component {
         this.undoStacks = []
 
         window.onresize = this.handleWindowResize
+
+        
     }
 
     handleWindowResize = () => {
@@ -110,14 +112,10 @@ class CreateLessonPlan extends React.Component {
         this.handleWindowResize()
 
     }
-    
 
 
-    componentWillReceiveProps(nextProps) {
-        
-
-        if(this.props == nextProps)
-            return
+    componentWillReceiveProps(nextProps, nextState) {
+ 
             
         if(nextProps.lessonplanExists == false)
             return
@@ -127,6 +125,9 @@ class CreateLessonPlan extends React.Component {
         /*
             Anupam - Add here what are we doing
         */
+
+        if(this.state.initialized === true)
+            return
 
         if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
 
@@ -152,7 +153,8 @@ class CreateLessonPlan extends React.Component {
 
             if(this.state.slides.length == 0) {
 
-                this.pushSlide(this.state.slides)                    
+                this.pushSlide(this.state.slides) 
+
                 this.setSizeOfPage(0)
                 this.db.reset('0')
                 
@@ -167,6 +169,7 @@ class CreateLessonPlan extends React.Component {
                 this.setSizeOfPage(this.pageCount)
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
+
             }
         })        
     }
@@ -178,6 +181,7 @@ class CreateLessonPlan extends React.Component {
     
     
     setSizeOfPage(pageCount) {
+        
 
         /* 
             This function sets the size of the canvas. By default the size of the page is
@@ -213,7 +217,7 @@ class CreateLessonPlan extends React.Component {
         slides[curSlide].note = note
         slides[curSlide].pageCount=this.pageCount
 
-        this.saveChanges(slides)
+        this.saveChanges(slides, undefined, undefined, undefined, true)
     }
 
     next() {
@@ -239,7 +243,7 @@ class CreateLessonPlan extends React.Component {
 
     addNewSlide(e) {
 
-        /* 
+        /* this.savethis.savethis.savethis.savethis.savethis.savethis.savethis.save
             Used for creating a new slide
         */
 
@@ -315,11 +319,18 @@ class CreateLessonPlan extends React.Component {
         /* This function is intended for saving the slides to the database.
             If not logged in, user is asked to login first.
         */
+
+
+        
+
         if(!Meteor.userId()) {
 
             this.setState({loginNotification:true})
             return
         }
+
+        if(this.addSim.state.isOpen)
+            return
 
         if(this.state.userId != Meteor.userId()) {
 
@@ -342,11 +353,6 @@ class CreateLessonPlan extends React.Component {
             }) 
             return
         }
-
-        if(this.addSim.state.isOpen)
-            return
-
-
         else {
 
             const {_id, slides} = this.state
@@ -363,19 +369,21 @@ class CreateLessonPlan extends React.Component {
                 expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
             }
             catch(error) {
+               
 
                 if(error) {
                     Meteor.call('lessonplans.update', _id, slides,(err)=>{
                         alert('Saved successfully')
                     })
                 }
-                else
-                    return
             }
         }
     }
 
     pushToUndoStacks = (oldSlide) => {
+
+        if(this.shouldNotUndo)
+            return
 
         if(!this.undoStacks[this.state.curSlide]) {
 
@@ -402,7 +410,6 @@ class CreateLessonPlan extends React.Component {
            function was called.
         */
        
-
         if(slides == undefined) {
 
            
