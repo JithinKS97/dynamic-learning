@@ -107,9 +107,7 @@ class CreateLessonPlan extends React.Component {
         this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));        
 
         window.addEventListener("keydown", this.handleKeyDown, false);
-        this.setState({
-            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
-        })
+        this.handleWindowResize()
 
     }
     
@@ -768,9 +766,9 @@ class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style = {{height:'100vh', padding:0, margin:0, overflow:'hidden'}}  columns={3} divided>
+                <Grid style = {{height:'100vh', padding:0, margin:0}}  columns={3} divided>
                     <Grid.Row>        
-                        <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
+                        <Grid.Column style = {{textAlign:'center'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>
                             <List from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
