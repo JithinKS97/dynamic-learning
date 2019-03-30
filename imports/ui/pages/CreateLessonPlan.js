@@ -772,7 +772,6 @@ class CreateLessonPlan extends React.Component {
                     </Modal.Content>
                 </Modal>
 
-
                 <Grid style = {{height:'100vh', padding:0, margin:0, overflow:'hidden'}}  columns={3} divided>
                     <Grid.Row>        
                         <Grid.Column style = {{textAlign:'center'}} width = {2}>
@@ -786,7 +785,7 @@ class CreateLessonPlan extends React.Component {
                                 margin:0, 
                                 padding:0,
                                 overflowX:'hidden',
-                                overflowY:'scroll'
+                                overflowY:'auto'
 
                             }} width = {12}
                         >
