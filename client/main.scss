@@ -1,5 +1,9 @@
 @import '../imports/client/styles/main';
 
 .mq-editable-field {
-  color: white;  
+  color: white;
+}
+
+.drawing-board-canvas-wrapper{
+  overflow-y: scroll;
 }

@@ -55,7 +55,8 @@ class CreateLessonPlan extends React.Component {
             redirectToForked:false,
             forkedLessonPlanId:null,
             author:'',
-            copied:false
+            copied:false,
+            scaleX:1
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -71,6 +72,18 @@ class CreateLessonPlan extends React.Component {
         this.changePageCount.bind(this)
 
         this.undoStacks = []
+
+        window.onresize = this.handleWindowResize
+
+
+    }
+
+    handleWindowResize = () => {
+
+        this.setState({
+
+            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
+        })
     }
 
     handleKeyDown(e){
@@ -97,16 +110,13 @@ class CreateLessonPlan extends React.Component {
         this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
 
         window.addEventListener("keydown", this.handleKeyDown, false);
+        this.handleWindowResize()
 
     }
 
 
+    componentWillReceiveProps(nextProps, nextState) {
 
-    componentWillReceiveProps(nextProps) {
-
-
-        if(this.props == nextProps)
-            return
 
         if(nextProps.lessonplanExists == false)
             return
@@ -116,6 +126,9 @@ class CreateLessonPlan extends React.Component {
         /*
             Anupam - Add here what are we doing
         */
+
+        if(this.state.initialized === true)
+            return
 
         if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
 
@@ -142,6 +155,7 @@ class CreateLessonPlan extends React.Component {
             if(this.state.slides.length == 0) {
 
                 this.pushSlide(this.state.slides)
+
                 this.setSizeOfPage(0)
                 this.db.reset('0')
 
@@ -156,6 +170,7 @@ class CreateLessonPlan extends React.Component {
                 this.setSizeOfPage(this.pageCount)
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
+
             }
         })
     }
@@ -167,6 +182,7 @@ class CreateLessonPlan extends React.Component {
 
 
     setSizeOfPage(pageCount) {
+
 
         /*
             This function sets the size of the canvas. By default the size of the page is
@@ -201,7 +217,7 @@ class CreateLessonPlan extends React.Component {
         slides[curSlide].note = note
         slides[curSlide].pageCount=this.pageCount
 
-        this.saveChanges(slides)
+        this.saveChanges(slides, undefined, undefined, undefined, true)
     }
 
     next() {
@@ -225,7 +241,7 @@ class CreateLessonPlan extends React.Component {
 
     addNewSlide(e) {
 
-        /*
+        /* this.savethis.savethis.savethis.savethis.savethis.savethis.savethis.save
             Used for creating a new slide
         */
 
@@ -308,11 +324,18 @@ class CreateLessonPlan extends React.Component {
         /* This function is intended for saving the slides to the database.
             If not logged in, user is asked to login first.
         */
+
+
+
+
         if(!Meteor.userId()) {
 
             this.setState({loginNotification:true})
             return
         }
+
+        if(this.addSim.state.isOpen)
+            return
 
         if(this.state.userId != Meteor.userId()) {
 
@@ -335,11 +358,6 @@ class CreateLessonPlan extends React.Component {
             })
             return
         }
-
-        if(this.addSim.state.isOpen)
-            return
-
-
         else {
 
             const {_id, slides} = this.state
@@ -357,18 +375,20 @@ class CreateLessonPlan extends React.Component {
             }
             catch(error) {
 
+
                 if(error) {
                     Meteor.call('lessonplans.update', _id, slides,(err)=>{
                         alert('Saved successfully')
                     })
                 }
-                else
-                    return
             }
         }
     }
 
     pushToUndoStacks = (oldSlide) => {
+
+        if(this.shouldNotUndo)
+            return
 
         if(!this.undoStacks[this.state.curSlide]) {
 
@@ -393,7 +413,6 @@ class CreateLessonPlan extends React.Component {
            Depending upon the changes made, they are saved looking upon arguments given when the
            function was called.
         */
-
 
         if(slides == undefined) {
 
@@ -601,8 +620,6 @@ class CreateLessonPlan extends React.Component {
         //     slides
         // })
 
-
-
         const slide = this.undoStacks[this.state.curSlide].pop()
 
         const slides = JSON.parse(JSON.stringify(this.state.slides))
@@ -711,7 +728,6 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
-
         if(this.state.redirectToForked) {
 
             return <Redirect to = {`/dashboard/lessonplans`}/>
@@ -759,8 +775,8 @@ class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style = {{height:'100vh', padding:0, margin:0}}  columns={3} divided>
-                    <Grid.Row>
+                <Grid style = {{height:'100vh', padding:0, margin:0, overflow:'hidden'}}  columns={3} divided>
+                    <Grid.Row style = {{overflow: 'hidden'}}>
                         <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>
@@ -769,42 +785,45 @@ class CreateLessonPlan extends React.Component {
 
                         <Grid.Column style = {{
 
-                                overflow:'auto',
                                 margin:0,
-                                padding:0
+                                padding:0,
+                                overflowX:'hidden',
+                                overflowY:'auto'
 
                             }} width = {12}
                         >
+                                <div style = {{transform:`scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
 
-                                <MathQuill />                              
+                                    <TextBoxes
 
-                                <TextBoxes
-
-                                    isPreview = {false}
-                                    deleteTextBox = {this.deleteTextBox.bind(this)}
-                                    slides = {this.state.slides}
-                                    curSlide = {this.state.curSlide}
-                                    saveChanges = {this.saveChanges.bind(this)}
-                                    setCopiedState = {this.setCopiedState.bind(this)}
-                                />
+                                        isPreview = {false}
+                                        deleteTextBox = {this.deleteTextBox.bind(this)}
+                                        slides = {this.state.slides}
+                                        curSlide = {this.state.curSlide}
+                                        saveChanges = {this.saveChanges.bind(this)}
+                                        setCopiedState = {this.setCopiedState.bind(this)}
+                                    />
 
 
-                                <SimsList
-                                    setCopiedState = {this.setCopiedState.bind(this)}
-                                    navVisibility = {true}
-                                    isRndRequired = {true}
-                                    saveChanges = {this.saveChanges.bind(this)}
-                                    delete = {this.deleteSim.bind(this)}
-                                    {...this.state}
-                                    next = {this.next.bind(this)}
-                                    previous = {this.previous.bind(this)}
-                                    save = {this.save.bind(this)}
-                                    interact = {this.interact.bind(this)}
-                                    undo = {this.undo.bind(this)}
-                                    ref = {e => this.simsList = e}
-                                />
+                                    <SimsList
+                                        setCopiedState = {this.setCopiedState.bind(this)}
+                                        navVisibility = {true}
+                                        isRndRequired = {true}
+                                        saveChanges = {this.saveChanges.bind(this)}
+                                        delete = {this.deleteSim.bind(this)}
+                                        {...this.state}
+                                        next = {this.next.bind(this)}
+                                        previous = {this.previous.bind(this)}
+                                        save = {this.save.bind(this)}
+                                        interact = {this.interact.bind(this)}
+                                        undo = {this.undo.bind(this)}
+                                        ref = {e => this.simsList = e}
+                                    />
 
-                                <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
+                                    <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
+
+                                </div>
+
 
                         </Grid.Column>
 
