@@ -14,13 +14,15 @@ import {
 // </ul>
 
 
-const SortableItem = SortableElement(({slide,slideNo, props}) => {
+const SortableItem = SortableElement(({slide,slideNo, props, index}) => {
+
+
   return (
     <Menu.Item
      style = {{display:'flex', justifyContent:'space-between'}}
      key = {slideNo}
     >
-        <div className="ui button" style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, slideNo)}}>{props.showTitle?slide.title:slideNo+1}</div>
+        <div className="ui button" style = {{width:'100%', textAlign:'left', backgroundColor:index === props.curSlide?'lightGreen':'#e0e1e2'}} onClick = {()=>{props.saveChanges(undefined, slideNo)}}>{props.showTitle?slide.title:slideNo+1}</div>
 
         {!props.isPreview?<div className="ui button" onClick = {()=>{
 
@@ -76,8 +78,10 @@ const List = (props) => {
                         <Menu.Item
                          style = {{display:'flex', justifyContent:'space-between'}}
                          key = {index}
+                         color 
                         >
-                            <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index+1}</Button>
+                        
+                            <Button color = 'black' style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index+1}</Button>
 
                             {Meteor.userId() == props.userId && !props.isPreview?<Button onClick = {()=>{
 
