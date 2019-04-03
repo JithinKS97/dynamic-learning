@@ -48,10 +48,7 @@ const List = (props) => {
     const isOwner = Meteor.userId() == props.userId
     const onSortEnd = ({oldIndex, newIndex}) => {
       const slidesCopy = [...props.slides];
-      console.log("Old props",slidesCopy);
-      console.log(oldIndex, newIndex);
-      console.log("New props",arrayMove(slidesCopy, oldIndex, newIndex));
-      props.setStateAfterRearranging(arrayMove(slidesCopy, oldIndex, newIndex));
+      props.setStateAfterRearranging(arrayMove(slidesCopy, oldIndex, newIndex), newIndex);
     };
     const renderSlides = () => {
 

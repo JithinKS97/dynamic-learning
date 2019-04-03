@@ -260,11 +260,15 @@ class CreateLessonPlan extends React.Component {
               this.db.reset('0');
         })
     }
-    setStateAfterRearranging(slides){
+
+
+    setStateAfterRearranging(slides, newIndex){
+
+
       this.setState({
         slides
       }, ()=>{
-        this.saveChanges(undefined, this.state.curSlide)
+        this.saveChanges(undefined, newIndex)
       })
     }
     previous() {
