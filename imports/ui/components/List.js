@@ -102,7 +102,11 @@ const List = (props) => {
 
 
     return (
-        <SortableList pressDelay={200} items={renderSlides()} onSortEnd={onSortEnd}/>
+        <SortableList pressDelay={200} items={renderSlides()} updateBeforeSortStart = {(node, index)=>{
+
+          props.saveChanges(undefined, node.index)
+
+        }} onSortEnd={onSortEnd}/>
     )
 }
 
