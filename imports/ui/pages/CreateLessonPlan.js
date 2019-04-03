@@ -159,6 +159,8 @@ class CreateLessonPlan extends React.Component {
                 this.setSizeOfPage(0)
                 this.db.reset('0')
 
+                this.saveChanges(this.state.slides)
+
             }
             else {
                 this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
@@ -170,6 +172,8 @@ class CreateLessonPlan extends React.Component {
                 this.setSizeOfPage(this.pageCount)
                 this.db.reset('0');
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
+
+                this.saveChanges(this.state.slides)
 
             }
         })
@@ -262,7 +266,6 @@ class CreateLessonPlan extends React.Component {
       }, ()=>{
         this.saveChanges(undefined, this.state.curSlide)
       })
-      console.log(slides);
     }
     previous() {
 
@@ -484,7 +487,6 @@ class CreateLessonPlan extends React.Component {
               this.db.reset('0')
 
               this.preventUndo = false
-
               this.db.setImg(this.state.slides[this.state.curSlide].note)
               this.simsList.loadDataToSketches()
             })
