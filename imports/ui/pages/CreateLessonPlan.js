@@ -221,7 +221,7 @@ class CreateLessonPlan extends React.Component {
         slides[curSlide].note = note
         slides[curSlide].pageCount=this.pageCount
 
-        this.saveChanges(slides, undefined, undefined, undefined, true)
+        this.saveChanges(slides)
     }
 
     next() {
@@ -413,7 +413,7 @@ class CreateLessonPlan extends React.Component {
         }
     }
 
-    saveChanges(slides, curSlide, shouldNotLoad) {
+    saveChanges(slides, curSlide, shouldNotLoad, shouldNotPushToUndoStack) {
 
         /* This function is used in multiple places to save the changes (not in the database, but
             in the react state).
@@ -430,7 +430,8 @@ class CreateLessonPlan extends React.Component {
             if(this.undoStacks[this.state.curSlide]) {
 
                 if(this.undoStacks[this.state.curSlide].length===0)
-                    this.pushToUndoStacks(slide)
+                    if(!shouldNotPushToUndoStack)
+                        this.pushToUndoStacks(slide)
             }
 
             this.setState({
@@ -455,8 +456,8 @@ class CreateLessonPlan extends React.Component {
 
 
             const slide = this.state.slides[this.state.curSlide]
-
-            this.pushToUndoStacks(slide)
+            if(!shouldNotPushToUndoStack)
+                this.pushToUndoStacks(slide)
 
             this.setState({
                 slides
@@ -477,7 +478,9 @@ class CreateLessonPlan extends React.Component {
         else {
 
             const slide = this.state.slides[this.state.curSlide]
-            this.pushToUndoStacks(slide)
+            
+            if(!shouldNotPushToUndoStack)
+                this.pushToUndoStacks(slide)
 
             this.setState({
                 slides,
