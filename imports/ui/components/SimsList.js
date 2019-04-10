@@ -111,7 +111,7 @@ export default class SimsList extends React.Component {
                                 bounds = '.drawing-board-canvas'
                                 dragHandleClassName = '.sim-handle'
                                 resizeHandleClasses = '.sim-resize'
-                                size={{ width: this.props.navVisibility?iframe.w+40:iframe.w,  height: iframe.h}}
+                                size={{ width: this.props.isPreview?iframe.w:iframe.w+40,  height: iframe.h}}
                                 position={{ x: iframe.x, y: iframe.y }}
 
                                 onDragStart={()=>{
@@ -155,7 +155,7 @@ export default class SimsList extends React.Component {
 
                                 onResize={(e, direction, ref, delta, position) => {
                                   
-                                    slides[curSlide].iframes[index].w = this.props.navVisibility?ref.offsetWidth-40:ref.offsetWidth
+                                    slides[curSlide].iframes[index].w = this.props.isPreview?ref.offsetWidth:ref.offsetWidth-40
                                     slides[curSlide].iframes[index].h = ref.offsetHeight
                                     this.props.saveChanges(slides)
                                 }}
@@ -175,9 +175,9 @@ export default class SimsList extends React.Component {
                                         ref = {e => this.simsRefArray[index] = e}
                                     />
                                     <div>
-                                        <a style = {{marginLeft:'0.5rem', display:this.props.navVisibility?'none':'block'}} className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+                                        <a style = {{marginLeft:'0.5rem', display:this.props.isPreview?'block':'none'}} className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                     </div>
-                                    <div className = 'sim-nav' style = {{ marginLeft:'0.5rem', visibility:this.props.navVisibility?'visible':'hidden'}}>
+                                    <div className = 'sim-nav' style = {{ marginLeft:'0.5rem', visibility:!this.props.isPreview?'visible':'hidden'}}>
 
                                         <div style = {{display:'flex', flexDirection:'column'}}>
                                             
@@ -246,7 +246,7 @@ export default class SimsList extends React.Component {
                                     />
                                 </div>
                                 <div>
-                                    <a style = {{marginLeft:'0.5rem', display:this.props.navVisibility?'none':'block'}} className = 'link-to-code-lesson' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+                                    <a style = {{marginLeft:'0.5rem', display:this.props.isPreview?'block':'none'}} className = 'link-to-code-lesson' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
                                 </div>
                                 
                                     

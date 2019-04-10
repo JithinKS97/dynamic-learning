@@ -22,7 +22,7 @@ const SortableItem = SortableElement(({slide,slideNo, props, index}) => {
      style = {{display:'flex', justifyContent:'space-between'}}
      key = {slideNo}
     >
-        <div className="ui button" style = {{width:'100%', textAlign:'left', backgroundColor:index === props.curSlide?'lightGreen':'#e0e1e2'}} onClick = {()=>{props.saveChanges(undefined, slideNo)}}>{props.showTitle?slide.title:slideNo+1}</div>
+        <div className="ui button" style = {{width:'100%', textAlign:'left', backgroundColor:index === props.curSlide?'lightGreen':'#e0e1e2'}} onClick = {()=>{props.saveChanges(undefined, slideNo)}}>{props.isPreview?slide.title:slideNo+1}</div>
 
         {!props.isPreview?<div className="ui button" onClick = {()=>{
 
@@ -59,7 +59,8 @@ const List = (props) => {
         const slides = props.slides
         if(slides.length!=0) {
             let slideslist = slides.map((slide, index)=>{
-                /* There first button is intended for displaying the contents
+                /* 
+                  There first button is intended for displaying the contents
                    withrespect to the current slide.
 
                    The second button is intended for the deletion of the slide.
@@ -76,12 +77,12 @@ const List = (props) => {
 
                     return (
                         <Menu.Item
-                         style = {{display:'flex', justifyContent:'space-between'}}
-                         key = {index}
-                         color 
+                          style = {{display:'flex', justifyContent:'space-between'}}
+                          key = {index}
+                          color
                         >
                         
-                            <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{props.showTitle?slide.title:index+1}</Button>
+                            <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{!props.isPreview?slide.title:index+1}</Button>
 
                             {Meteor.userId() == props.userId && !props.isPreview?<Button onClick = {()=>{
 

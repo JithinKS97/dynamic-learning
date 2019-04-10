@@ -12,8 +12,6 @@ import {  Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid } from 'seman
 import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 import TextBoxes from '../components/TextBoxes'
-import MathQuill from '../components/MathQuill';
-
 
 
 /* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
@@ -28,15 +26,11 @@ class CreateLessonPlan extends React.Component {
     constructor(props) {
 
         super(props)
-        this.undoArray= []
-        this.curPosition= []
-        this.isInteractEnabled=false
-        this.lessonplanExists = false
 
         this.state = {
 
             /*Title holds the title of the lessonplan. CurSlide holds the current slide on which we are in.
-                _id holds the id of the current lessonplan. Initialzed is set to true once data is fetched from the
+                id holds the id of the current lessonplan. Initialzed is set to true once data is fetched from the
                 database and is filled in the state. loginNotification becomes true when save button is pressed
                 and the user is not logged in. Checked holds the interact checkbox value. RedirectToLogin is set to
                 true if we want to redirect the user to the login page. Checked holds the interact checkbox value.
@@ -46,13 +40,12 @@ class CreateLessonPlan extends React.Component {
             title:true,
             curSlide:0,
             slides: [],
-            _id: '',
+            id: '',
             initialized:false,
             loginNotification:false,
             redirectToLogin:false,
-            checked: false,
+            interactEnabled: false,
             redirectToDashboard:false,
-            redirectToForked:false,
             forkedLessonPlanId:null,
             author:'',
             copied:false,
@@ -73,17 +66,14 @@ class CreateLessonPlan extends React.Component {
 
         this.undoStacks = []
 
-        window.onresize = this.handleWindowResize
-
-
     }
 
     handleWindowResize = () => {
 
-        this.setState({
+        // this.setState({
 
-            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
-        })
+        //     scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
+        // })
     }
 
     handleKeyDown(e){
@@ -99,6 +89,8 @@ class CreateLessonPlan extends React.Component {
     componentDidMount() {
 
         this.db = this.drawingBoard.b
+
+        window.onresize = this.handleWindowResize
 
         /* board:reset and board:stopDrawing are events associated with the drawing
            board. They are triggered whenever we press the reset button or stop
@@ -123,21 +115,8 @@ class CreateLessonPlan extends React.Component {
 
         const lessonplan = nextProps.lessonplan
 
-        /*
-            Anupam - Add here what are we doing
-        */
-
         if(this.state.initialized === true)
             return
-
-        if (this.undoArray.length == 0 && lessonplan.slides.length!=0){
-
-            this.undoArray = lessonplan.slides.map((slide) => {
-
-                this.curPosition.push(0);
-                return [slide.note];
-            });
-        }
 
         this.setState({
             ...lessonplan,
@@ -224,25 +203,6 @@ class CreateLessonPlan extends React.Component {
         this.saveChanges(slides)
     }
 
-    next() {
-
-        /*
-            If the current slide is the last slide, we cannot move forward.
-            If the current slide is not the last slide, current slide no. is incremented and
-            and the notes of that particular slide is set to the board.
-        */
-
-        let {curSlide, slides} = this.state
-
-        if(curSlide === slides.length-1) {
-            return
-        }
-        else {
-            curSlide++
-            this.saveChanges(slides, curSlide)
-        }
-    }
-
     addNewSlide(e) {
 
         /* this.savethis.savethis.savethis.savethis.savethis.savethis.savethis.save
@@ -270,20 +230,6 @@ class CreateLessonPlan extends React.Component {
       }, ()=>{
         this.saveChanges(undefined, newIndex)
       })
-    }
-    previous() {
-
-        /*
-            If the current slide is not the beggining slide, The current slide no. is decremented
-            and the notes of that particular slide is set to the board.
-        */
-
-       let {curSlide, slides} = this.state
-
-        if(curSlide!=0) {
-            curSlide--
-            this.saveChanges(slides,curSlide)
-        }
     }
 
     pushSlide(slides) {
@@ -351,13 +297,13 @@ class CreateLessonPlan extends React.Component {
             if(!confirmation)
                 return
 
-            Meteor.call('lessonplans.insert', this.state.title, (err, _id)=>{
+            Meteor.call('lessonplans.insert', this.state.title, (err, id)=>{
 
-                Meteor.call('lessonplans.update', _id, this.state.slides)
+                Meteor.call('lessonplans.update', id, this.state.slides)
                 this.setState({
 
-                    redirectToForked:true,
-                    forkedLessonPlanId:_id
+                    redirectToDashboard:true,
+                    forkedLessonPlanId:id
                 },()=>{
 
                     confirm('Forked succesfully')
@@ -367,9 +313,9 @@ class CreateLessonPlan extends React.Component {
         }
         else {
 
-            const {_id, slides} = this.state
+            const {id, slides} = this.state
 
-            const lessonplan = LessonPlans.findOne({_id: this.state._id})
+            const lessonplan = LessonPlans.findOne({id: this.state.id})
 
             /* If the slides in the state has the same values as that of the slides
                 in the database, we need not save, expect to deep include by chai checks this equality.
@@ -384,7 +330,7 @@ class CreateLessonPlan extends React.Component {
 
 
                 if(error) {
-                    Meteor.call('lessonplans.update', _id, slides,(err)=>{
+                    Meteor.call('lessonplans.update', id, slides,(err)=>{
                         alert('Saved successfully')
                     })
                 }
@@ -571,7 +517,7 @@ class CreateLessonPlan extends React.Component {
       if(this.addSim.state.isOpen)
         return
 
-      if(!this.state.checked) {
+      if(!this.state.interactEnabled) {
         $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
       }
       else {
@@ -580,7 +526,7 @@ class CreateLessonPlan extends React.Component {
 
       this.setState((state) => {
             return {
-                checked: !state.checked
+                interactEnabled: !state.interactEnabled
             }
       })
     }
@@ -737,11 +683,6 @@ class CreateLessonPlan extends React.Component {
 
     render() {
 
-        if(this.state.redirectToForked) {
-
-            return <Redirect to = {`/dashboard/lessonplans`}/>
-        }
-
         if(this.state.redirectToLogin) {
 
             return <Redirect to = {`/login`}/>
@@ -789,7 +730,16 @@ class CreateLessonPlan extends React.Component {
                         <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>
-                            <List setStateAfterRearranging = {this.setStateAfterRearranging.bind(this)} from = {'createLessonplan'} showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
+                            <List 
+
+                                slides = {this.state.slides}
+                                curSlide = {this.state.curSlide}
+                                saveChanges= {this.saveChanges.bind(this)}
+                                delete = {this.deleteSlide.bind(this)} 
+                                setStateAfterRearranging = {this.setStateAfterRearranging.bind(this)}
+                                from = {'createLessonplan'} 
+                                isPreview = {false}     
+                            />
                         </Grid.Column>
 
                         <Grid.Column style = {{
@@ -805,31 +755,32 @@ class CreateLessonPlan extends React.Component {
 
                                     <TextBoxes
 
-                                        isPreview = {false}
-                                        deleteTextBox = {this.deleteTextBox.bind(this)}
                                         slides = {this.state.slides}
                                         curSlide = {this.state.curSlide}
                                         saveChanges = {this.saveChanges.bind(this)}
+                                        delete = {this.deleteTextBox.bind(this)}
+                                        isPreview = {false}                                    
                                         setCopiedState = {this.setCopiedState.bind(this)}
                                     />
 
 
                                     <SimsList
-                                        setCopiedState = {this.setCopiedState.bind(this)}
-                                        navVisibility = {true}
-                                        isRndRequired = {true}
+                                            
+                                        slides = {this.state.slides}
+                                        curSlide = {this.state.curSlide}
                                         saveChanges = {this.saveChanges.bind(this)}
                                         delete = {this.deleteSim.bind(this)}
-                                        {...this.state}
-                                        next = {this.next.bind(this)}
-                                        previous = {this.previous.bind(this)}
-                                        save = {this.save.bind(this)}
-                                        interact = {this.interact.bind(this)}
+                                        isPreview = {false}
+                                        setCopiedState = {this.setCopiedState.bind(this)}                                        
+                                        isRndRequired = {true}
                                         undo = {this.undo.bind(this)}
                                         ref = {e => this.simsList = e}
                                     />
 
-                                    <DrawingBoardCmp toolbarVisible = {true} ref = {e => this.drawingBoard = e}/>
+                                    <DrawingBoardCmp 
+                                        toolbarVisible = {true} 
+                                        ref = {e => this.drawingBoard = e}
+                                    />
 
                                 </div>
 
@@ -845,7 +796,7 @@ class CreateLessonPlan extends React.Component {
 
                             <Menu color = {'blue'} icon vertical>
                                 <Menu.Item>
-                                    <Button toggle active = {!this.state.checked} onClick = {this.interact.bind(this)}>{this.state.checked?'Draw':'Interact'}</Button>
+                                    <Button toggle active = {!this.state.interactEnabled} onClick = {this.interact.bind(this)}>{this.state.interactEnabled?'Draw':'Interact'}</Button>
                                 </Menu.Item>
 
                                 <Menu.Item>
@@ -858,7 +809,7 @@ class CreateLessonPlan extends React.Component {
                                 {Meteor.userId()?
                                     <Menu.Item onClick = {()=>{
 
-                                        const lessonplan = LessonPlans.findOne({_id: this.state._id})
+                                        const lessonplan = LessonPlans.findOne({id: this.state.id})
 
                                         try {
                                             expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
@@ -885,7 +836,7 @@ class CreateLessonPlan extends React.Component {
                                 :null}
 
                                 {!!Meteor.userId() && this.state.userId == Meteor.userId()?
-                                    <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
+                                    <Link to = {`/request/${this.state.id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
                                 :null}
 
 
@@ -1058,7 +1009,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
 
     let lessonplan, lessonplanExists
 
-    if(match.params._id === undefined) {
+    if(match.params.id === undefined) {
 
         /*
             If lessonplan creator is taken by creating a new lessonplan,
@@ -1072,11 +1023,11 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     else {
 
         /*
-            If _id is not null, we are trying to open an existing lessonplans, so it is fetched from the database.
+            If id is not null, we are trying to open an existing lessonplans, so it is fetched from the database.
             If the lessonplan exists for the id provided, loading is set to false.
         */
 
-        lessonplan = LessonPlans.findOne(match.params._id)
+        lessonplan = LessonPlans.findOne(match.params.id)
         lessonplanExists = !loading && !!lessonplan
     }
 

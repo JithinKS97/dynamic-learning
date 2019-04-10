@@ -149,7 +149,7 @@ export default class TextBox extends React.Component {
                                         if(!confirmation)
                                             return
 
-                                        this.props.deleteTextBox(this.props.index)
+                                        this.props.delete(this.props.index)
 
                                     }}>X</FaClose>
                             

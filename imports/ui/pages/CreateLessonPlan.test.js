@@ -30,8 +30,6 @@ configure({ adapter: new Adapter() });
                 }
             }
 
-            debug()
-
             const wrapper = mount (
 
                 <Router history={createMemoryHistory()}>
