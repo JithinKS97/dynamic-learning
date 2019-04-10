@@ -29,6 +29,7 @@ export const LessonPlansIndex = new Index({
 });
 
 if (Meteor.isServer) {
+  
   Meteor.publish("lessonplans", function() {
     return LessonPlans.find({
       $or: [{ userId: this.userId }, { isPublic: true }]
@@ -38,6 +39,7 @@ if (Meteor.isServer) {
   Meteor.publish("lessonplans.public", function() {
     return LessonPlans.find({ isPublic: true });
   });
+
 }
 
 Meteor.methods({

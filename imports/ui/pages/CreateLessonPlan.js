@@ -115,6 +115,8 @@ class CreateLessonPlan extends React.Component {
 
         const lessonplan = nextProps.lessonplan
 
+        console.log(lessonplan)
+
         if(this.state.initialized === true)
             return
 
@@ -300,6 +302,7 @@ class CreateLessonPlan extends React.Component {
             Meteor.call('lessonplans.insert', this.state.title, (err, id)=>{
 
                 Meteor.call('lessonplans.update', id, this.state.slides)
+
                 this.setState({
 
                     redirectToDashboard:true,
@@ -1009,7 +1012,8 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
 
     let lessonplan, lessonplanExists
 
-    if(match.params.id === undefined) {
+
+    if(match.params._id === undefined) {
 
         /*
             If lessonplan creator is taken by creating a new lessonplan,
@@ -1027,7 +1031,8 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
             If the lessonplan exists for the id provided, loading is set to false.
         */
 
-        lessonplan = LessonPlans.findOne(match.params.id)
+        lessonplan = LessonPlans.findOne(match.params._id)
+
         lessonplanExists = !loading && !!lessonplan
     }
 
