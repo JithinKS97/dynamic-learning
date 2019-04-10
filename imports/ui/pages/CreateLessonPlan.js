@@ -40,7 +40,7 @@ class CreateLessonPlan extends React.Component {
             title:true,
             curSlide:0,
             slides: [],
-            id: '',
+            _id: '',
             initialized:false,
             loginNotification:false,
             redirectToLogin:false,
@@ -318,7 +318,7 @@ class CreateLessonPlan extends React.Component {
 
             const {id, slides} = this.state
 
-            const lessonplan = LessonPlans.findOne({id: this.state.id})
+            const lessonplan = LessonPlans.findOne({id: this.state._id})
 
             /* If the slides in the state has the same values as that of the slides
                 in the database, we need not save, expect to deep include by chai checks this equality.
@@ -812,7 +812,7 @@ class CreateLessonPlan extends React.Component {
                                 {Meteor.userId()?
                                     <Menu.Item onClick = {()=>{
 
-                                        const lessonplan = LessonPlans.findOne({id: this.state.id})
+                                        const lessonplan = LessonPlans.findOne({id: this.state._id})
 
                                         try {
                                             expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
@@ -839,7 +839,7 @@ class CreateLessonPlan extends React.Component {
                                 :null}
 
                                 {!!Meteor.userId() && this.state.userId == Meteor.userId()?
-                                    <Link to = {`/request/${this.state.id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
+                                    <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
                                 :null}
 
 
