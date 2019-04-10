@@ -28,7 +28,7 @@ export default class TextBoxes extends React.Component {
                     <TextBox 
                         isPreview = {this.props.isPreview}
                         saveChanges = {this.props.saveChanges}
-                        deleteTextBox = {this.props.deleteTextBox}
+                        delete = {this.props.delete}
                         index = {index}
                         value = {textbox.value}
                         slides = {this.props.slides}

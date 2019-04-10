@@ -38,6 +38,8 @@ configure({ adapter: new Adapter() });
                     )}/>
                  </Router>
             )
+            
+            wrapper.find
         })
 
     })
