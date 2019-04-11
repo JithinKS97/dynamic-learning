@@ -70,10 +70,10 @@ class CreateLessonPlan extends React.Component {
 
     handleWindowResize = () => {
 
-        // this.setState({
+        this.setState({
 
-        //     scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
-        // })
+            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
+        })
     }
 
     handleKeyDown(e){
@@ -427,7 +427,7 @@ class CreateLessonPlan extends React.Component {
         else {
 
             const slide = this.state.slides[this.state.curSlide]
-            
+
             if(!shouldNotPushToUndoStack)
                 this.pushToUndoStacks(slide)
 
@@ -728,20 +728,20 @@ class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style = {{height:'100vh', padding:0, margin:0, overflow:'hidden'}}  columns={3} divided>
+                <Grid style = {{height:'100vh', padding:0, margin:0}}  columns={3} divided>
                     <Grid.Row style = {{overflow: 'hidden'}}>
                         <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
                             <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide+1}</h1>
-                            <List 
+                            <List
 
                                 slides = {this.state.slides}
                                 curSlide = {this.state.curSlide}
                                 saveChanges= {this.saveChanges.bind(this)}
-                                delete = {this.deleteSlide.bind(this)} 
+                                delete = {this.deleteSlide.bind(this)}
                                 setStateAfterRearranging = {this.setStateAfterRearranging.bind(this)}
-                                from = {'createLessonplan'} 
-                                isPreview = {false}     
+                                from = {'createLessonplan'}
+                                isPreview = {false}
                             />
                         </Grid.Column>
 
@@ -762,26 +762,26 @@ class CreateLessonPlan extends React.Component {
                                         curSlide = {this.state.curSlide}
                                         saveChanges = {this.saveChanges.bind(this)}
                                         delete = {this.deleteTextBox.bind(this)}
-                                        isPreview = {false}                                    
+                                        isPreview = {false}
                                         setCopiedState = {this.setCopiedState.bind(this)}
                                     />
 
 
                                     <SimsList
-                                            
+
                                         slides = {this.state.slides}
                                         curSlide = {this.state.curSlide}
                                         saveChanges = {this.saveChanges.bind(this)}
                                         delete = {this.deleteSim.bind(this)}
                                         isPreview = {false}
-                                        setCopiedState = {this.setCopiedState.bind(this)}                                        
+                                        setCopiedState = {this.setCopiedState.bind(this)}
                                         isRndRequired = {true}
                                         undo = {this.undo.bind(this)}
                                         ref = {e => this.simsList = e}
                                     />
 
-                                    <DrawingBoardCmp 
-                                        toolbarVisible = {true} 
+                                    <DrawingBoardCmp
+                                        toolbarVisible = {true}
                                         ref = {e => this.drawingBoard = e}
                                     />
 
