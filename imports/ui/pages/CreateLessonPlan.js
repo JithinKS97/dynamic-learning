@@ -812,10 +812,6 @@ class CreateLessonPlan extends React.Component {
 
                                         const lessonplan = LessonPlans.findOne({id: this.state._id})
 
-                                        console.log(lessonplan.slides)
-
-                                        console.log(this.state.slides)
-
                                         try {
                                             expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
                                         }
