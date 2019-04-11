@@ -115,8 +115,6 @@ class CreateLessonPlan extends React.Component {
 
         const lessonplan = nextProps.lessonplan
 
-        console.log(lessonplan)
-
         if(this.state.initialized === true)
             return
 
@@ -316,7 +314,7 @@ class CreateLessonPlan extends React.Component {
         }
         else {
 
-            const {id, slides} = this.state
+            const {_id, slides} = this.state
 
             const lessonplan = LessonPlans.findOne({id: this.state._id})
 
@@ -333,7 +331,7 @@ class CreateLessonPlan extends React.Component {
 
 
                 if(error) {
-                    Meteor.call('lessonplans.update', id, slides,(err)=>{
+                    Meteor.call('lessonplans.update', _id, slides,(err)=>{
                         alert('Saved successfully')
                     })
                 }
@@ -813,6 +811,10 @@ class CreateLessonPlan extends React.Component {
                                     <Menu.Item onClick = {()=>{
 
                                         const lessonplan = LessonPlans.findOne({id: this.state._id})
+
+                                        console.log(lessonplan.slides)
+
+                                        console.log(this.state.slides)
 
                                         try {
                                             expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
