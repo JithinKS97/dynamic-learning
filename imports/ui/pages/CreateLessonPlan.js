@@ -316,7 +316,9 @@ class CreateLessonPlan extends React.Component {
 
             const {_id, slides} = this.state
 
-            const lessonplan = LessonPlans.findOne({id: this.state._id})
+            const lessonplan = LessonPlans.findOne({_id: this.state._id})
+
+            console.log(lessonplan)
 
             /* If the slides in the state has the same values as that of the slides
                 in the database, we need not save, expect to deep include by chai checks this equality.
@@ -352,7 +354,7 @@ class CreateLessonPlan extends React.Component {
         try {
             expect(oldSlide).to.deep.include(this.undoStacks[this.state.curSlide][this.undoStacks[this.state.curSlide].length-1])
         }
-        catch(error) {
+        catch(error) {LessonPlans.find
 
             if(error) {
                 this.undoStacks[this.state.curSlide].push(oldSlide)
@@ -810,7 +812,7 @@ class CreateLessonPlan extends React.Component {
                                 {Meteor.userId()?
                                     <Menu.Item onClick = {()=>{
 
-                                        const lessonplan = LessonPlans.findOne({id: this.state._id})
+                                        const lessonplan = LessonPlans.findOne({_id: this.state._id})
 
                                         try {
                                             expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
