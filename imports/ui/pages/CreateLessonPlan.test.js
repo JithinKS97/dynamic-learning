@@ -9,7 +9,7 @@ import { debug } from 'util';
 
 if(Meteor.isClient) {
 
-import CreateLessonPlan from './CreateLessonPlan'
+import { CreateLessonPlan } from './CreateLessonPlan'
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
@@ -19,27 +19,20 @@ configure({ adapter: new Adapter() });
         
         it('should pass', function() {
 
-            routeProps = {
-
-                match: {
-
-                    params: {
-
-                        _id: undefined
-                    }
-                }
-            }
+            const div = global.document.createElement('div');
+            global.document.body.appendChild(div);
 
             const wrapper = mount (
 
                 <Router history={createMemoryHistory()}>
-                    <Route path="/"  render={(routeProps) => (
-                        <CreateLessonPlan {...routeProps} />
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
                     )}/>
                  </Router>
+                 
             )
-            
-            wrapper.find
+
+            console.log(wrapper.exists('.lessonplan'))
         })
 
     })

@@ -69,11 +69,11 @@ if(Meteor.isServer) {
             }).to.throw()
         })
 
-        it('should not update requestTitle if id is invalid', function() {
-            expect(function(){
-                Meteor.server.method_handlers['requests.title.update'].apply({userId:requestOne.userId})
-            }).to.throw()
-        })      
+        // it('should not update requestTitle if id is invalid', function() {
+        //     expect(function(){
+        //         Meteor.server.method_handlers['requests.title.update'].apply({userId:requestOne.userId})
+        //     }).to.throw()
+        // })      
 
     })
 

@@ -43,12 +43,15 @@ class LessonPlanViewer extends React.Component {
             _id: '',
             initialized:false,
             createAccount:false,
-            redirectToLogin:false
+            redirectToLogin:false,
+            scaleX:1
         }
     }
 
 
     componentDidMount() {
+
+        window.onresize = this.handleWindowResize
 
         this.db = this.drawingBoard.b
         this.undoArray= [];
@@ -61,7 +64,21 @@ class LessonPlanViewer extends React.Component {
         */
 
         $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+        this.handleWindowResize()
 
+    }
+
+
+    handleWindowResize = () => {
+        
+        // console.log(document.getElementsByClassName('fourteen wide column')[0])
+
+        // return
+
+        this.setState({
+
+            scaleX: (document.getElementsByClassName('fourteen wide column')[0].offsetWidth/1366)
+        })
     }
 
     componentDidUpdate() {
@@ -286,25 +303,27 @@ class LessonPlanViewer extends React.Component {
                         <ListWithoutDelete showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                     </Grid.Column>
 
-                    <Grid.Column style = {{overflow:'auto', padding:0, margin:0}} width = {14}>
+                    <Grid.Column style = {{overflowX:'hidden', overflowY:'auto', padding:0, margin:0}} width = {14}>
+                            <div style = {{margin:'0px', transform:`scale(${this.state.scaleX},${this.state.scaleX})`}}>
+                                <TextBoxes 
+                                    isPreview = {true}
+                                    deleteTextBox = {()=>{}}
+                                    slides = {this.state.slides}
+                                    curSlide = {this.state.curSlide}
+                                    saveChanges = {this.saveChanges.bind(this)}
+                                />
 
-                        <TextBoxes 
-                            isPreview = {true}
-                            deleteTextBox = {()=>{}}
-                            slides = {this.state.slides}
-                            curSlide = {this.state.curSlide}
-                            saveChanges = {this.saveChanges.bind(this)}
-                        />
-
-                        <SimsList
-                            navVisibility = {false}
-                            isRndRequired = {true}
-                            saveChanges = {this.saveChanges.bind(this)}
-                            delete = {this.deleteSim.bind(this)}
-                            {...this.state}
-                            ref = {e => this.simsList = e}
-                        />                   
-                        <DrawingBoardCmp toolbarVisible = {false} ref = {e => this.drawingBoard = e}/>                   
+                                <SimsList
+                                    navVisibility = {false}
+                                    isRndRequired = {true}
+                                    saveChanges = {this.saveChanges.bind(this)}
+                                    delete = {this.deleteSim.bind(this)}
+                                    {...this.state}
+                                    ref = {e => this.simsList = e}
+                                />         
+                                    
+                                <DrawingBoardCmp toolbarVisible = {false} ref = {e => this.drawingBoard = e}/>   
+                            </div>                 
                     </Grid.Column>
                 </Grid.Row> 
             </Grid>

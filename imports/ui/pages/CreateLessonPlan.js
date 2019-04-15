@@ -21,7 +21,7 @@ import TextBoxes from '../components/TextBoxes'
 */
 
 
-class CreateLessonPlan extends React.Component {
+export class CreateLessonPlan extends React.Component {
 
     constructor(props) {
 

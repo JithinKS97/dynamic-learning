@@ -44,9 +44,6 @@ if(Meteor.isServer) {
             const userId = lessonplanOne.userId                          
             const _id = Meteor.server.method_handlers['lessonplans.insert'].apply({userId})
 
-            console.log(LessonPlans.findOne({_id, userId}))
-            console.log(Requests.findOne({_id, userId}))
-
             expect(LessonPlans.findOne({_id, userId})).to.exist
             expect(Requests.findOne({_id, userId})).to.exist 
         })
