@@ -566,24 +566,6 @@ export class CreateLessonPlan extends React.Component {
 
     undo = () => {
 
-        /*
-            Anupam - Explain the working of Undo
-        */
-
-        // if(this.addSim.state.isOpen)
-        //     return
-        // if(this.curPosition[this.state.curSlide]<=0)
-        //     return
-
-        // this.curPosition[this.state.curSlide]--
-        // const slides = this.state.slides
-        // slides[this.state.curSlide].note = this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]]
-        // this.db.setImg(this.undoArray[this.state.curSlide][this.curPosition[this.state.curSlide]])
-        // this.undoArray[this.state.curSlide].pop()
-        // this.setState({
-        //     slides
-        // })
-
         const slide = this.undoStacks[this.state.curSlide].pop()
 
         const slides = JSON.parse(JSON.stringify(this.state.slides))

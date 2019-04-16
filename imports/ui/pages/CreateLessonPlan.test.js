@@ -40,7 +40,7 @@ configure({ adapter: new Adapter() });
                  
             )
                         
-            wrapper.find(CreateLessonPlan).setState({slides:[{notes:'', iframes:[], textBoxes:[]}]})
+            wrapper.find(CreateLessonPlan).setState({slides:[{notes:'', iframes:[], textboxes:[]}]})
             wrapper.unmount()
 
         })
@@ -76,7 +76,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textBoxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textboxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
 
             const instance = CreateLessonPlanWrapper.instance()
 
@@ -112,7 +112,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:0, slides:[{notes:'', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:0, slides:[{notes:'', iframes:[], textboxes:[]}]})
 
             const instance = CreateLessonPlanWrapper.instance()
 
@@ -148,7 +148,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textBoxes:[]}, {notes:'1', iframes:[], textBoxes:[]}, {notes:'2', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textboxes:[]}, {notes:'1', iframes:[], textBoxes:[]}, {notes:'2', iframes:[], textBoxes:[]}]})
 
             const instance = CreateLessonPlanWrapper.instance()
 
@@ -183,7 +183,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textBoxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textboxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
 
             const instance = CreateLessonPlanWrapper.instance()
 
@@ -203,7 +203,7 @@ configure({ adapter: new Adapter() });
 
     })
 
-    describe('Navigation between', function() {
+    describe('Navigation between slides', function() {
 
         let div
         
@@ -230,7 +230,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textBoxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textboxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
 
             const instance = CreateLessonPlanWrapper.instance()
 
@@ -244,6 +244,92 @@ configure({ adapter: new Adapter() });
 
             expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0)
             expect(CreateLessonPlanWrapper.state().slides[0].notes).to.equal('0')
+
+            wrapper.unmount()
+           
+        })
+
+    })
+
+    describe('Textbox', function() {
+
+        let div
+        
+        before(() => {
+            div = document.createElement('div');
+            window.domNode = div;
+            document.body.appendChild(div);
+        })
+        
+        it('should insert a textbox', function() {
+
+
+            const wrapper = mount (
+
+                <Router history={createMemoryHistory()}>
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
+                    )}/>
+                 </Router>,
+
+                 { attachTo: window.domNode }
+                 
+            )
+
+            const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
+
+            CreateLessonPlanWrapper.setState({slides:[{notes:'0', iframes:[], textboxes:[]}]})
+
+            const instance = CreateLessonPlanWrapper.instance()
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            instance.addTextBox()
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            //console.log(CreateLessonPlanWrapper.state().slides[0])
+
+            expect(CreateLessonPlanWrapper.state().slides[0].textboxes[0].value).to.equal('new text box')
+
+            wrapper.unmount()
+           
+        })
+
+        it('should delete a textbox', function() {
+
+
+            const wrapper = mount (
+
+                <Router history={createMemoryHistory()}>
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
+                    )}/>
+                 </Router>,
+
+                 { attachTo: window.domNode }
+                 
+            )
+
+            const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
+
+            CreateLessonPlanWrapper.setState({slides:[{notes:'0', iframes:[], textboxes:[{value:'sample value'}]}]})
+
+            const instance = CreateLessonPlanWrapper.instance()
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            instance.deleteTextBox(0)
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            //console.log(CreateLessonPlanWrapper.state().slides[0])
+
+            expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0)
 
             wrapper.unmount()
            
