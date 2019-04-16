@@ -84,7 +84,7 @@ const List = (props) => {
                         
                             <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{!props.isPreview?slide.title:index+1}</Button>
 
-                            {Meteor.userId() == props.userId && !props.isPreview?<Button onClick = {()=>{
+                            {Meteor.userId() == props.userId && !props.isPreview?<Button className = 'deleteButton' onClick = {()=>{
 
                                 const confirmation = confirm('Are you sure you want to delete?')
 
