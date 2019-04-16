@@ -166,8 +166,6 @@ configure({ adapter: new Adapter() });
            
         })
 
-        
-
     })
 
 }
