@@ -749,11 +749,14 @@ export class CreateLessonPlan extends React.Component {
     }
 
     checkDescExist = () => {
-        var a = LessonPlans.find({ description: { "$exists": true } }).fetch()
+        var a = LessonPlans.find({ _id:this.state._id , description: { "$exists": true } }).fetch()
         if (a.length != 0)
             return true
-        else
-            return false
+        else{
+            Meteor.call('lessonplans.addDescriptionField', this.state._id, (err) => {
+                return true
+            }) 
+        }    
     }
 
     checkDescription = () => {
