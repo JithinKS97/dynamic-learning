@@ -13,6 +13,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 import TextBoxes from '../components/TextBoxes'
 
+import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
 
 /* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
@@ -1146,19 +1147,30 @@ export class CreateLessonPlan extends React.Component {
                                                     </Modal.Content>
                                                 </Modal>
                                                 : null}
+
+                                            <FaTrash
+                                                style={{ cursor: "pointer", marginLeft: "15px" }}
+                                                size={17}
+                                                color="black"
+                                                onClick={() => {
+                                                    Meteor.call('lessonplans.removeDescription', this.state._id, (err) => {
+                                                        this.setState({description:[]})
+                                                        alert("Description removed successfully")
+                                                        
+                                                    })
+                                                }}
+                                            />
+
                                         </Modal.Header>
 
                                         <Modal.Content>
                                             <Modal.Description>
-
                                                 {this.renderDescription()}
-
                                             </Modal.Description>
                                         </Modal.Content>
                                     </Modal>
 
                                 }
-
 
 
                                 {this.state.copied ? <Menu.Item>

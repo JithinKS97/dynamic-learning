@@ -197,5 +197,9 @@ Meteor.methods({
 
     LessonPlans.update({ _id: _id }, { $set: { description: description } })
 
+  },
+
+  "lessonplans.removeDescription"(_id){
+    LessonPlans.update({ _id: _id }, { $set: { description: {} } })
   }
 });
