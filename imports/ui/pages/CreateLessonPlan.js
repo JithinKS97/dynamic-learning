@@ -748,17 +748,24 @@ export class CreateLessonPlan extends React.Component {
 
     }
 
+    checkDescExist = () => {
+        var a = LessonPlans.find({ description: { "$exists": true } }).fetch()
+        if (a.length != 0)
+            return true
+        else
+            return false
+    }
+
     checkDescription = () => {
         var res = LessonPlans.find({ _id: this.state._id }).fetch()
         var desc = res[0].description
-        //console.log(Object.keys(desc).length === 0 && desc.constructor === Object)
         return (Object.keys(desc).length === 0 && desc.constructor === Object)
     }
 
     renderDescription = () => {
         if (Object.keys(this.state.description).length === 0 && this.state.description.constructor === Object) {
             return (
-                <p>No description to show...hehe!</p>
+                <p>No description to show</p>
             )
         }
         else {
@@ -1021,155 +1028,159 @@ export class CreateLessonPlan extends React.Component {
                                     Add textbox
                                 </Menu.Item>
 
-
-                                {!!Meteor.userId() && this.state.userId == Meteor.userId() && this.checkDescription() ?
-                                    <Modal
-                                        size="small"
-                                        onClose={() => { this.setState({ addDescription: false }) }}
-                                        open={addDescription}
-                                        trigger={<Menu.Item onClick={() => { this.setState({ addDescription: true }) }}>Add description</Menu.Item>} >
-                                        <Modal.Header>
-                                            Lesson Description
+                                {this.checkDescExist() ?
+                                    !!Meteor.userId() && this.state.userId == Meteor.userId() && this.checkDescription() ?
+                                        <Modal
+                                            size="small"
+                                            onClose={() => { this.setState({ addDescription: false }) }}
+                                            open={addDescription}
+                                            trigger={<Menu.Item onClick={() => { this.setState({ addDescription: true }) }}>Add description</Menu.Item>} >
+                                            <Modal.Header>
+                                                Lesson Description
                                             <Button className='close-button' onClick={() => { this.setState({ addDescription: false }) }}>
-                                                X
+                                                    X
                                             </Button>
-                                        </Modal.Header>
+                                            </Modal.Header>
 
-                                        <Modal.Content>
-                                            <Modal.Description>
-                                                <Form onSubmit={this.addDescription}>
-                                                    <Form.Field>
-                                                        <label>Subject</label>
-                                                        <input ref={e => this.subject = e} required />
-                                                    </Form.Field>
-                                                    <Form.Field>
-                                                        <label>Topic</label>
-                                                        <input ref={e => this.topic = e} required />
-                                                    </Form.Field>
-                                                    <Form.Field>
-                                                        <label>Learning Objective(s)</label>
-                                                        <textArea rows={1} ref={e => this.learningObjectives = e} required />
-                                                    </Form.Field>
-                                                    <Form.Field>
-                                                        <label>In-class Activities</label>
-                                                        <textArea rows={1} ref={e => this.inClassActivities = e} required />
-                                                    </Form.Field>
-                                                    <Form.Field>
-                                                        <label>References/Resources</label>
-                                                        <textArea rows={1} ref={e => this.resources = e} required />
-                                                    </Form.Field>
-                                                    <Form.Field>
-                                                        <label>Assessments</label>
-                                                        <input ref={e => this.assessments = e} required />
-                                                    </Form.Field>
-                                                    <Form.Field>
-                                                        <label>Standards</label>
-                                                        <input ref={e => this.standards = e} required />
-                                                    </Form.Field>
-                                                    <Form.Field>
-                                                        <Button type='submit'>Submit</Button>
-                                                    </Form.Field>
-                                                </Form>
-                                            </Modal.Description>
-                                        </Modal.Content>
-                                    </Modal>
-                                    :
-                                    <Modal
-                                        size="small"
-                                        onClose={() => { this.setState({ showDescription: false }) }}
-                                        open={showDescription}
-                                        trigger={<Menu.Item onClick={() => {
-                                            this.setState({ showDescription: true })
-                                            var res = LessonPlans.find({ _id: this.state._id }).fetch()
-                                            this.setState({ description: res[0].description })
-                                        }}>View description</Menu.Item>} >
-                                        <Modal.Header>
-                                            Lesson Description
+                                            <Modal.Content>
+                                                <Modal.Description>
+                                                    <Form onSubmit={this.addDescription}>
+                                                        <Form.Field>
+                                                            <label>Subject</label>
+                                                            <input ref={e => this.subject = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Topic</label>
+                                                            <input ref={e => this.topic = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Learning Objective(s)</label>
+                                                            <textArea rows={1} ref={e => this.learningObjectives = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>In-class Activities</label>
+                                                            <textArea rows={1} ref={e => this.inClassActivities = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>References/Resources</label>
+                                                            <textArea rows={1} ref={e => this.resources = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Assessments</label>
+                                                            <input ref={e => this.assessments = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Standards</label>
+                                                            <input ref={e => this.standards = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <Button type='submit'>Submit</Button>
+                                                        </Form.Field>
+                                                    </Form>
+                                                </Modal.Description>
+                                            </Modal.Content>
+                                        </Modal>
+                                        :
+                                        <Modal
+                                            size="small"
+                                            onClose={() => { this.setState({ showDescription: false }) }}
+                                            open={showDescription}
+                                            trigger={<Menu.Item onClick={() => {
+                                                this.setState({ showDescription: true })
+                                                var res = LessonPlans.find({ _id: this.state._id }).fetch()
+                                                this.setState({ description: res[0].description })
+                                            }}>View description</Menu.Item>} >
+                                            <Modal.Header>
+                                                Lesson Description
 
                                             <Button className='close-button' onClick={() => { this.setState({ showDescription: false }) }}>
-                                                X
+                                                    X
                                             </Button>
 
-                                            {(!!Meteor.userId() && this.state.userId == Meteor.userId()) ?
-                                                <Modal
-                                                    size="small"
-                                                    onClose={() => { this.setState({ addDescription: false }) }}
-                                                    open={addDescription}
-                                                    trigger={
-                                                        <FaEdit
-                                                            style={{ cursor: "pointer", marginLeft: "15px" }}
-                                                            size={17} color="black"
-                                                            onClick={() => { this.setState({ addDescription: true }) }} />} >
-                                                    <Modal.Header>
-                                                        Lesson Description
+                                                {(!!Meteor.userId() && this.state.userId == Meteor.userId()) ?
+                                                    <Modal
+                                                        size="small"
+                                                        onClose={() => { this.setState({ addDescription: false }) }}
+                                                        open={addDescription}
+                                                        trigger={
+                                                            <FaEdit
+                                                                style={{ cursor: "pointer", marginLeft: "15px" }}
+                                                                size={17} color="black"
+                                                                onClick={() => { this.setState({ addDescription: true }) }} />} >
+                                                        <Modal.Header>
+                                                            Lesson Description
                                                         <Button className='close-button' onClick={() => { this.setState({ addDescription: false }) }}>
-                                                            X
+                                                                X
                                                         </Button>
-                                                    </Modal.Header>
+                                                        </Modal.Header>
 
-                                                    <Modal.Content>
-                                                        <Modal.Description>
-                                                            <Form onSubmit={this.addDescription}>
-                                                                <Form.Field>
-                                                                    <label>Subject</label>
-                                                                    <input ref={e => this.subject = e} placeholder={this.state.description.subject} />
-                                                                </Form.Field>
-                                                                <Form.Field>
-                                                                    <label>Topic</label>
-                                                                    <input ref={e => this.topic = e} placeholder={this.state.description.topic} />
-                                                                </Form.Field>
-                                                                <Form.Field>
-                                                                    <label>Learning Objective(s)</label>
-                                                                    <textArea rows={1} ref={e => this.learningObjectives = e} placeholder={this.state.description.learningObjectives} />
-                                                                </Form.Field>
-                                                                <Form.Field>
-                                                                    <label>In-class Activities</label>
-                                                                    <textArea rows={1} ref={e => this.inClassActivities = e} placeholder={this.state.description.inClassActivities} />
-                                                                </Form.Field>
-                                                                <Form.Field>
-                                                                    <label>References/Resources</label>
-                                                                    <textArea rows={1} ref={e => this.resources = e} placeholder={this.state.description.resources} />
-                                                                </Form.Field>
-                                                                <Form.Field>
-                                                                    <label>Assessments</label>
-                                                                    <input ref={e => this.assessments = e} placeholder={this.state.description.assessments} />
-                                                                </Form.Field>
-                                                                <Form.Field>
-                                                                    <label>Standards</label>
-                                                                    <input ref={e => this.standards = e} placeholder={this.state.description.standards} />
-                                                                </Form.Field>
-                                                                <Form.Field>
-                                                                    <Button type='submit'>Update</Button>
-                                                                </Form.Field>
-                                                            </Form>
+                                                        <Modal.Content>
+                                                            <Modal.Description>
+                                                                <Form onSubmit={this.addDescription}>
+                                                                    <Form.Field>
+                                                                        <label>Subject</label>
+                                                                        <input ref={e => this.subject = e} placeholder={this.state.description.subject} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Topic</label>
+                                                                        <input ref={e => this.topic = e} placeholder={this.state.description.topic} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Learning Objective(s)</label>
+                                                                        <textArea rows={1} ref={e => this.learningObjectives = e} placeholder={this.state.description.learningObjectives} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>In-class Activities</label>
+                                                                        <textArea rows={1} ref={e => this.inClassActivities = e} placeholder={this.state.description.inClassActivities} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>References/Resources</label>
+                                                                        <textArea rows={1} ref={e => this.resources = e} placeholder={this.state.description.resources} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Assessments</label>
+                                                                        <input ref={e => this.assessments = e} placeholder={this.state.description.assessments} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Standards</label>
+                                                                        <input ref={e => this.standards = e} placeholder={this.state.description.standards} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <Button type='submit'>Update</Button>
+                                                                    </Form.Field>
+                                                                </Form>
 
-                                                        </Modal.Description>
-                                                    </Modal.Content>
-                                                </Modal>
-                                                : null}
+                                                            </Modal.Description>
+                                                        </Modal.Content>
+                                                    </Modal>
+                                                    : null}
+                                                {(!!Meteor.userId() && this.state.userId == Meteor.userId()) ?
+                                                    <FaTrash
+                                                        style={{ cursor: "pointer", marginLeft: "15px" }}
+                                                        size={17}
+                                                        color="black"
+                                                        onClick={() => {
+                                                            Meteor.call('lessonplans.removeDescription', this.state._id, (err) => {
+                                                                this.setState({ description: [] })
+                                                                alert("Description removed successfully")
 
-                                            <FaTrash
-                                                style={{ cursor: "pointer", marginLeft: "15px" }}
-                                                size={17}
-                                                color="black"
-                                                onClick={() => {
-                                                    Meteor.call('lessonplans.removeDescription', this.state._id, (err) => {
-                                                        this.setState({description:[]})
-                                                        alert("Description removed successfully")
-                                                        
-                                                    })
-                                                }}
-                                            />
+                                                            })
+                                                        }}
+                                                    />
+                                                    :
+                                                    null}
 
-                                        </Modal.Header>
+                                            </Modal.Header>
 
-                                        <Modal.Content>
-                                            <Modal.Description>
-                                                {this.renderDescription()}
-                                            </Modal.Description>
-                                        </Modal.Content>
-                                    </Modal>
+                                            <Modal.Content>
+                                                <Modal.Description>
+                                                    {this.renderDescription()}
+                                                </Modal.Description>
+                                            </Modal.Content>
+                                        </Modal>
 
+                                    :
+                                    null
                                 }
 
 
