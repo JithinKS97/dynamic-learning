@@ -63,7 +63,8 @@ Meteor.methods({
         isFile: true,
         isPublic: false,
         parent_id: "0",
-        tags: []
+        tags: [],
+        description: {}
       },
       (err, docs) => {
         Requests.insert({
@@ -190,5 +191,19 @@ Meteor.methods({
     }
 
     LessonPlans.update({ _id }, { $set: { isPublic } });
+  },
+
+  "lessonplans.description"(_id, description) {
+
+    LessonPlans.update({ _id: _id }, { $set: { description: description } })
+
+  },
+
+  "lessonplans.removeDescription"(_id){
+    LessonPlans.update({ _id: _id }, { $set: { description: {} } })
+  },
+
+  "lessonplans.addDescriptionField"(_id){
+    LessonPlans.update({ _id: _id }, { $set: { "description": {} } }) 
   }
 });

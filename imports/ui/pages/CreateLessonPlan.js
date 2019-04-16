@@ -2,17 +2,19 @@ import React from 'react'
 import DrawingBoardCmp from '../components/DrawingBoardCmp'
 import { LessonPlans } from '../../api/lessonplans'
 import SimsList from '../components/SimsList'
-import List from '../components/List'
+import Lists from '../components/List'
 import AddSim from '../components/AddSim'
 import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { withTracker } from 'meteor/react-meteor-data';
-import {  Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid } from 'semantic-ui-react'
+import { Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid, List, ModalDescription } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 import TextBoxes from '../components/TextBoxes'
 
+import FaTrash from 'react-icons/lib/fa/trash'
+import FaEdit from 'react-icons/lib/fa/edit'
 
 /* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
     is composed of a sequence of slides. Each slide contains a note (the drawing on the canvas which is
@@ -37,19 +39,22 @@ export class CreateLessonPlan extends React.Component {
                 RedirectToDashboard set to true if we want to redirect the user to the dashboard
             */
 
-            title:true,
-            curSlide:0,
+            title: true,
+            curSlide: 0,
             slides: [],
             _id: '',
-            initialized:false,
-            loginNotification:false,
-            redirectToLogin:false,
+            initialized: false,
+            loginNotification: false,
+            redirectToLogin: false,
             interactEnabled: false,
-            redirectToDashboard:false,
-            forkedLessonPlanId:null,
-            author:'',
-            copied:false,
-            scaleX:1
+            redirectToDashboard: false,
+            forkedLessonPlanId: null,
+            author: '',
+            copied: false,
+            scaleX: 1,
+            description: [],
+            showDescription: false,
+            addDescription: false
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -57,7 +62,7 @@ export class CreateLessonPlan extends React.Component {
             handleKeyDown for dealing with shortcuts (See the definitions below)
         */
 
-        this.pageCount=0;
+        this.pageCount = 0;
         this.pushSlide.bind(this)
         this.save.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -72,17 +77,17 @@ export class CreateLessonPlan extends React.Component {
 
         this.setState({
 
-            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth/1366)
+            scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth / 1366)
         })
     }
 
-    handleKeyDown(e){
+    handleKeyDown(e) {
 
         /*
             This function handles the shortcut key functionalities.
          */
 
-        if( e.keyCode===90 && e.ctrlKey )
+        if (e.keyCode === 90 && e.ctrlKey)
             this.undo()
     }
 
@@ -110,28 +115,28 @@ export class CreateLessonPlan extends React.Component {
     componentWillReceiveProps(nextProps, nextState) {
 
 
-        if(nextProps.lessonplanExists == false)
+        if (nextProps.lessonplanExists == false)
             return
 
         const lessonplan = nextProps.lessonplan
 
-        if(this.state.initialized === true)
+        if (this.state.initialized === true)
             return
 
         this.setState({
             ...lessonplan,
-            initialized:true,
+            initialized: true,
 
-        },() => {
+        }, () => {
 
-            Meteor.call('getUsername', this.state.userId, (err,name)=>{
+            Meteor.call('getUsername', this.state.userId, (err, name) => {
 
                 this.setState({
-                    author:name
+                    author: name
                 })
             })
 
-            if(this.state.slides.length == 0) {
+            if (this.state.slides.length == 0) {
 
                 this.pushSlide(this.state.slides)
 
@@ -142,7 +147,7 @@ export class CreateLessonPlan extends React.Component {
 
             }
             else {
-                this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
 
                 /* The size of the page is set first, then we completely reset the canvas
                     And the notes are drawn back to the canvas
@@ -175,14 +180,14 @@ export class CreateLessonPlan extends React.Component {
             incremented
         */
 
-        $('#container')[0].style.height=(900+pageCount*300)+'px';
-        $('canvas')[0].style.height=$('#container')[0].style.height;
-        $('canvas')[0].height=900+pageCount*300;
+        $('#container')[0].style.height = (900 + pageCount * 300) + 'px';
+        $('canvas')[0].style.height = $('#container')[0].style.height;
+        $('canvas')[0].height = 900 + pageCount * 300;
     }
 
     onChange() {
 
-        if(this.preventUndo)
+        if (this.preventUndo)
             return
 
         /*
@@ -193,12 +198,12 @@ export class CreateLessonPlan extends React.Component {
 
         const slides = JSON.parse(JSON.stringify(this.state.slides))
 
-        const {curSlide} = this.state
+        const { curSlide } = this.state
 
         const note = this.db.getImg()
 
         slides[curSlide].note = note
-        slides[curSlide].pageCount=this.pageCount
+        slides[curSlide].pageCount = this.pageCount
 
         this.saveChanges(slides)
     }
@@ -209,27 +214,27 @@ export class CreateLessonPlan extends React.Component {
             Used for creating a new slide
         */
 
-        let {curSlide, slides} = this.state
+        let { curSlide, slides } = this.state
         this.pushSlide(slides)
-            curSlide = slides.length-1
-            this.setState({
-                curSlide
-            },()=>{
+        curSlide = slides.length - 1
+        this.setState({
+            curSlide
+        }, () => {
 
-              this.setSizeOfPage(0)
-              this.db.reset('0');
+            this.setSizeOfPage(0)
+            this.db.reset('0');
         })
     }
 
 
-    setStateAfterRearranging(slides, newIndex){
+    setStateAfterRearranging(slides, newIndex) {
 
 
-      this.setState({
-        slides
-      }, ()=>{
-        this.saveChanges(undefined, newIndex)
-      })
+        this.setState({
+            slides
+        }, () => {
+            this.saveChanges(undefined, newIndex)
+        })
     }
 
     pushSlide(slides) {
@@ -241,8 +246,8 @@ export class CreateLessonPlan extends React.Component {
         const newSlide = {
             note: '',
             iframes: [],
-            pageCount:0,
-            textboxes:[]
+            pageCount: 0,
+            textboxes: []
         }
 
         slides.push(newSlide)
@@ -261,9 +266,9 @@ export class CreateLessonPlan extends React.Component {
 
         this.setState({
 
-            curSlide:0,
-            slides:[]
-        },()=>{
+            curSlide: 0,
+            slides: []
+        }, () => {
 
             const { slides } = this.state
             this.pushSlide(slides)
@@ -281,31 +286,31 @@ export class CreateLessonPlan extends React.Component {
 
 
 
-        if(!Meteor.userId()) {
+        if (!Meteor.userId()) {
 
-            this.setState({loginNotification:true})
+            this.setState({ loginNotification: true })
             return
         }
 
-        if(this.addSim.state.isOpen)
+        if (this.addSim.state.isOpen)
             return
 
-        if(this.state.userId != Meteor.userId()) {
+        if (this.state.userId != Meteor.userId()) {
 
             const confirmation = confirm("Are you sure you want to fork this lessonplan?")
 
-            if(!confirmation)
+            if (!confirmation)
                 return
 
-            Meteor.call('lessonplans.insert', this.state.title, (err, id)=>{
+            Meteor.call('lessonplans.insert', this.state.title, (err, id) => {
 
                 Meteor.call('lessonplans.update', id, this.state.slides)
 
                 this.setState({
 
-                    redirectToDashboard:true,
-                    forkedLessonPlanId:id
-                },()=>{
+                    redirectToDashboard: true,
+                    forkedLessonPlanId: id
+                }, () => {
 
                     confirm('Forked succesfully')
                 })
@@ -314,9 +319,9 @@ export class CreateLessonPlan extends React.Component {
         }
         else {
 
-            const {_id, slides} = this.state
+            const { _id, slides } = this.state
 
-            const lessonplan = LessonPlans.findOne({_id: this.state._id})
+            const lessonplan = LessonPlans.findOne({ _id: this.state._id })
 
             console.log(lessonplan)
 
@@ -327,13 +332,13 @@ export class CreateLessonPlan extends React.Component {
             */
 
             try {
-                expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
+                expect({ slides: lessonplan.slides }).to.deep.include({ slides: this.state.slides })
             }
-            catch(error) {
+            catch (error) {
 
 
-                if(error) {
-                    Meteor.call('lessonplans.update', _id, slides,(err)=>{
+                if (error) {
+                    Meteor.call('lessonplans.update', _id, slides, (err) => {
                         alert('Saved successfully')
                     })
                 }
@@ -343,20 +348,21 @@ export class CreateLessonPlan extends React.Component {
 
     pushToUndoStacks = (oldSlide) => {
 
-        if(this.shouldNotUndo)
+        if (this.shouldNotUndo)
             return
 
-        if(!this.undoStacks[this.state.curSlide]) {
+        if (!this.undoStacks[this.state.curSlide]) {
 
             this.undoStacks[this.state.curSlide] = []
         }
 
         try {
-            expect(oldSlide).to.deep.include(this.undoStacks[this.state.curSlide][this.undoStacks[this.state.curSlide].length-1])
+            expect(oldSlide).to.deep.include(this.undoStacks[this.state.curSlide][this.undoStacks[this.state.curSlide].length - 1])
         }
-        catch(error) {LessonPlans.find
+        catch (error) {
+            LessonPlans.find
 
-            if(error) {
+            if (error) {
                 this.undoStacks[this.state.curSlide].push(oldSlide)
             }
         }
@@ -370,24 +376,24 @@ export class CreateLessonPlan extends React.Component {
            function was called.
         */
 
-        if(slides == undefined) {
+        if (slides == undefined) {
 
 
 
             const slide = this.state.slides[this.state.curSlide]
 
-            if(this.undoStacks[this.state.curSlide]) {
+            if (this.undoStacks[this.state.curSlide]) {
 
-                if(this.undoStacks[this.state.curSlide].length===0)
-                    if(!shouldNotPushToUndoStack)
+                if (this.undoStacks[this.state.curSlide].length === 0)
+                    if (!shouldNotPushToUndoStack)
                         this.pushToUndoStacks(slide)
             }
 
             this.setState({
                 curSlide
-            },()=>{
+            }, () => {
 
-                this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
                 this.setSizeOfPage(this.pageCount)
 
                 this.preventUndo = true
@@ -400,17 +406,17 @@ export class CreateLessonPlan extends React.Component {
                 this.simsList.loadDataToSketches()
             })
         }
-        else if(curSlide == undefined) {
+        else if (curSlide == undefined) {
 
 
 
             const slide = this.state.slides[this.state.curSlide]
-            if(!shouldNotPushToUndoStack)
+            if (!shouldNotPushToUndoStack)
                 this.pushToUndoStacks(slide)
 
             this.setState({
                 slides
-            },()=>{
+            }, () => {
 
                 /**
                  * shouldNotLoad is true only when a sim is individually updated and saved
@@ -418,7 +424,7 @@ export class CreateLessonPlan extends React.Component {
                  * So if shouldNotLoad is true, we return without calling loadDatatoSketches
                  */
 
-                if(shouldNotLoad)
+                if (shouldNotLoad)
                     return
 
                 this.simsList.loadDataToSketches()
@@ -428,23 +434,23 @@ export class CreateLessonPlan extends React.Component {
 
             const slide = this.state.slides[this.state.curSlide]
 
-            if(!shouldNotPushToUndoStack)
+            if (!shouldNotPushToUndoStack)
                 this.pushToUndoStacks(slide)
 
             this.setState({
                 slides,
                 curSlide
-            },()=>{
+            }, () => {
 
-              this.setSizeOfPage(0)
+                this.setSizeOfPage(0)
 
-              this.preventUndo = true
+                this.preventUndo = true
 
-              this.db.reset('0')
+                this.db.reset('0')
 
-              this.preventUndo = false
-              this.db.setImg(this.state.slides[this.state.curSlide].note)
-              this.simsList.loadDataToSketches()
+                this.preventUndo = false
+                this.db.setImg(this.state.slides[this.state.curSlide].note)
+                this.simsList.loadDataToSketches()
             })
         }
 
@@ -458,26 +464,26 @@ export class CreateLessonPlan extends React.Component {
         */
 
 
-       const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = JSON.parse(JSON.stringify(this.state.slides))
 
-        if(slides.length!=1) {
+        if (slides.length != 1) {
 
             slides.splice(index, 1)
 
             let { curSlide } = this.state
-            this.undoStacks.splice(index,1)
+            this.undoStacks.splice(index, 1)
 
-            if(index == 0) {
+            if (index == 0) {
                 curSlide = 0
             }
-            if(curSlide == slides.length)
-                curSlide = slides.length-1
+            if (curSlide == slides.length)
+                curSlide = slides.length - 1
 
             this.saveChanges(slides, curSlide)
         }
-        else{
-          this.undoStacks=[]
-          this.reset()
+        else {
+            this.undoStacks = []
+            this.reset()
         }
     }
 
@@ -490,9 +496,9 @@ export class CreateLessonPlan extends React.Component {
 
         const slides = JSON.parse(JSON.stringify(this.state.slides))
 
-        const {curSlide} = this.state
+        const { curSlide } = this.state
         const iframes = slides[curSlide].iframes
-        iframes.splice(index,1)
+        iframes.splice(index, 1)
         slides[this.state.curSlide].iframes = iframes
         this.saveChanges(slides)
 
@@ -502,39 +508,39 @@ export class CreateLessonPlan extends React.Component {
 
         const slides = JSON.parse(JSON.stringify(this.state.slides))
 
-        const {curSlide} = this.state
+        const { curSlide } = this.state
         const textboxes = slides[curSlide].textboxes
-        textboxes.splice(index,1)
+        textboxes.splice(index, 1)
         slides[this.state.curSlide].textboxes = textboxes
         this.saveChanges(slides)
     }
 
     interact() {
 
-      /*
-        To interact with the simulation, interact should be enabled which disables the pointer events in the canvas,
-         so that when we interact with the simulation, no drawings are made. Unchecking the interact, unsets the
-         pointer events.
-       */
+        /*
+          To interact with the simulation, interact should be enabled which disables the pointer events in the canvas,
+           so that when we interact with the simulation, no drawings are made. Unchecking the interact, unsets the
+           pointer events.
+         */
 
-      if(this.addSim.state.isOpen)
-        return
+        if (this.addSim.state.isOpen)
+            return
 
-      if(!this.state.interactEnabled) {
-        $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
-      }
-      else {
-        $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
-      }
+        if (!this.state.interactEnabled) {
+            $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+        }
+        else {
+            $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
+        }
 
-      this.setState((state) => {
+        this.setState((state) => {
             return {
                 interactEnabled: !state.interactEnabled
             }
-      })
+        })
     }
 
-    checkCanvasSize(){
+    checkCanvasSize() {
 
         /*
             This function ensures that the the size of the Canvas is not reduced to a value less
@@ -542,17 +548,17 @@ export class CreateLessonPlan extends React.Component {
             Anupam - Explain the working
         */
 
-        var i=$('iframe').length, iframe;
+        var i = $('iframe').length, iframe;
 
-        var maxHeight=-Infinity;
+        var maxHeight = -Infinity;
 
-        while(i--) {
-            iframe=$('iframe').eq(i-1).parents().eq(3);
-            if((iframe.position().top+iframe.height())>maxHeight)
-                maxHeight=iframe.position().top+iframe.height();
+        while (i--) {
+            iframe = $('iframe').eq(i - 1).parents().eq(3);
+            if ((iframe.position().top + iframe.height()) > maxHeight)
+                maxHeight = iframe.position().top + iframe.height();
         }
 
-        if($('canvas')[0].height-300<maxHeight)
+        if ($('canvas')[0].height - 300 < maxHeight)
             return 1;
 
         return 0;
@@ -582,15 +588,15 @@ export class CreateLessonPlan extends React.Component {
 
         const slides = JSON.parse(JSON.stringify(this.state.slides))
 
-        if(slide) {
+        if (slide) {
 
             slides[this.state.curSlide] = slide
             this.setState({
 
                 slides
-            },()=>{
+            }, () => {
 
-                this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
+                this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
                 this.setSizeOfPage(this.pageCount)
 
                 this.simsList.loadDataToSketches()
@@ -603,7 +609,7 @@ export class CreateLessonPlan extends React.Component {
 
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
 
-                if(!this.state.slides[this.state.curSlide].note) {
+                if (!this.state.slides[this.state.curSlide].note) {
 
                     this.preventUndo = true
 
@@ -617,7 +623,7 @@ export class CreateLessonPlan extends React.Component {
 
     headToRequestPage() {
 
-        this.setState({redirectToRequest:true})
+        this.setState({ redirectToRequest: true })
     }
 
 
@@ -631,15 +637,15 @@ export class CreateLessonPlan extends React.Component {
             The page count value is added to the slide
         */
 
-        var temp=this.db.getImg();
-        this.pageCount+=option;
-        $('canvas')[0].style.height=($('canvas')[0].height+option*300).toString()+'px';
-        $('canvas')[0].height+=option*300;
-        $('#container')[0].style.height=$('canvas')[0].style.height;
+        var temp = this.db.getImg();
+        this.pageCount += option;
+        $('canvas')[0].style.height = ($('canvas')[0].height + option * 300).toString() + 'px';
+        $('canvas')[0].height += option * 300;
+        $('#container')[0].style.height = $('canvas')[0].style.height;
         this.db.reset('0');
         this.db.setImg(temp);
         const slides = JSON.parse(JSON.stringify(this.state.slides))
-        slides[this.state.curSlide].pageCount=this.pageCount;
+        slides[this.state.curSlide].pageCount = this.pageCount;
         this.saveChanges(slides)
     }
 
@@ -649,14 +655,14 @@ export class CreateLessonPlan extends React.Component {
 
         const { curSlide } = this.state
 
-        if(!slides[curSlide].textboxes) {
+        if (!slides[curSlide].textboxes) {
 
             slides[curSlide].textboxes = []
         }
 
         const newTextBox = {
 
-            value:'new text box'
+            value: 'new text box'
         }
 
         slides[curSlide].textboxes.push(newTextBox)
@@ -667,7 +673,7 @@ export class CreateLessonPlan extends React.Component {
 
     setCopiedState(set) {
 
-        if(set) {
+        if (set) {
 
             this.setState({
 
@@ -678,49 +684,173 @@ export class CreateLessonPlan extends React.Component {
 
             this.setState({
 
-                copied:false
+                copied: false
             })
         }
     }
 
+    addDescription = () => {
+
+        this.setState({ showDescription: false })
+        this.setState({ addDescription: false })
+
+        if (this.subject.value === '')
+            var subject = this.subject.placeholder
+        else
+            var subject = this.subject.value
+
+        if (this.topic.value === '')
+            var topic = this.topic.placeholder
+        else
+            var topic = this.topic.value
+
+        if (this.learningObjectives.value === '')
+            var learningObjectives = this.learningObjectives.placeholder
+        else
+            var learningObjectives = this.learningObjectives.value
+
+        if (this.inClassActivities.value === '')
+            var inClassActivities = this.inClassActivities.placeholder
+        else
+            var inClassActivities = this.inClassActivities.value
+
+        if (this.resources.value === '')
+            var resources = this.resources.placeholder
+        else
+            var resources = this.resources.value
+
+        if (this.assessments.value === '')
+            var assessments = this.assessments.placeholder
+        else
+            var assessments = this.assessments.value
+
+        if (this.standards.value === '')
+            var standards = this.standards.placeholder
+        else
+            var standards = this.standards.value
+
+        console.log(this.topic.placeholder)
+        console.log(this.topic.value)
+
+        var description = {
+            subject: subject,
+            topic: topic,
+            learningObjectives: learningObjectives,
+            inClassActivities: inClassActivities,
+            resources: resources,
+            assessments: assessments,
+            standards: standards
+        }
+
+        Meteor.call('lessonplans.description', this.state._id, description, (err) => {
+            alert("Description addedd successfully")
+        })
+
+    }
+
+    checkDescExist = () => {
+        var a = LessonPlans.find({ _id:this.state._id , description: { "$exists": true } }).fetch()
+        if (a.length != 0)
+            return true
+        else{
+            Meteor.call('lessonplans.addDescriptionField', this.state._id, (err) => {
+                return true
+            }) 
+        }    
+    }
+
+    checkDescription = () => {
+        var res = LessonPlans.find({ _id: this.state._id }).fetch()
+        var desc = res[0].description
+        return (Object.keys(desc).length === 0 && desc.constructor === Object)
+    }
+
+    renderDescription = () => {
+        if (Object.keys(this.state.description).length === 0 && this.state.description.constructor === Object) {
+            return (
+                <p>No description to show</p>
+            )
+        }
+        else {
+            return (
+                <List>
+                    <List.Item>
+                        <List.Header>Subject</List.Header>
+                        {this.state.description.subject}
+                    </List.Item>
+                    <List.Item>
+                        <List.Header>Topic</List.Header>
+                        {this.state.description.topic}
+                    </List.Item>
+                    <List.Item>
+                        <List.Header>Learning Objectives</List.Header>
+                        {this.state.description.learningObjectives}
+                    </List.Item>
+                    <List.Item>
+                        <List.Header>inClassActivites</List.Header>
+                        {this.state.description.inClassActivities}
+                    </List.Item>
+                    <List.Item>
+                        <List.Header>In Class Activites</List.Header>
+                        {this.state.description.inClassActivities}
+                    </List.Item>
+                    <List.Item>
+                        <List.Header>Resources</List.Header>
+                        {this.state.description.resources}
+                    </List.Item>
+                    <List.Item>
+                        <List.Header>Assessments</List.Header>
+                        {this.state.description.assessments}
+                    </List.Item>
+                    <List.Item>
+                        <List.Header>Standards</List.Header>
+                        {this.state.description.standards}
+                    </List.Item>
+                </List>
+
+            )
+        }
+    }
 
     render() {
 
-        if(this.state.redirectToLogin) {
+        const { showDescription, addDescription } = this.state
 
-            return <Redirect to = {`/login`}/>
+        if (this.state.redirectToLogin) {
+
+            return <Redirect to={`/login`} />
         }
 
-        if(this.state.redirectToDashboard) {
+        if (this.state.redirectToDashboard) {
 
-            return <Redirect to = {`/dashboard/lessonplans`}/>
+            return <Redirect to={`/dashboard/lessonplans`} />
         }
 
         return (
 
-            <Segment style = {{padding:0, margin:0}}>
+            <Segment style={{ padding: 0, margin: 0 }}>
 
-                <Dimmer active = {!this.state.initialized}>
+                <Dimmer active={!this.state.initialized}>
                     <Loader />
                 </Dimmer>
 
-                <Modal size= 'tiny' open = {this.state.loginNotification}>
+                <Modal size='tiny' open={this.state.loginNotification}>
                     <Modal.Header>
                         You need to login to save changes
-                        <Button style = {{float:'right'}} onClick = {()=>{
-                            this.setState({loginNotification:false})
+                        <Button style={{ float: 'right' }} onClick={() => {
+                            this.setState({ loginNotification: false })
                         }}>X</Button>
                     </Modal.Header>
                     <Modal.Content>
-                        <Modal.Description style = {{textAlign:'center'}}>
+                        <Modal.Description style={{ textAlign: 'center' }}>
 
-                            <Button onClick = {()=>{
+                            <Button onClick={() => {
 
                                 Session.set('stateToSave', this.state)
 
-                                this.setState({redirectToLogin:true})
+                                this.setState({ redirectToLogin: true })
 
-                            }} style = {{marginTop:'1.6rem'}}>Login</Button>
+                            }} style={{ marginTop: '1.6rem' }}>Login</Button>
 
 
                         </Modal.Description>
@@ -728,102 +858,103 @@ export class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style = {{height:'100vh', padding:0, margin:0}}  columns={3} divided>
-                    <Grid.Row style = {{overflow: 'hidden'}}>
-                        <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
-                            <Button style = {{marginTop:'0.8rem'}} onClick = {this.addNewSlide.bind(this)}>Create Slide</Button>
-                            <h1>{this.state.curSlide+1}</h1>
-                            <List
+                <Grid style={{ height: '100vh', padding: 0, margin: 0 }} columns={3} divided>
+                    <Grid.Row style={{ overflow: 'hidden' }}>
+                        <Grid.Column style={{ textAlign: 'center', overflow: 'auto' }} width={2}>
+                            <Link to={`/dashboard/lessonplans`}><Button color="green">Home</Button></Link>
+                            <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
+                            <h1>{this.state.curSlide + 1}</h1>
+                            <Lists
 
-                                slides = {this.state.slides}
-                                curSlide = {this.state.curSlide}
-                                saveChanges= {this.saveChanges.bind(this)}
-                                delete = {this.deleteSlide.bind(this)}
-                                setStateAfterRearranging = {this.setStateAfterRearranging.bind(this)}
-                                from = {'createLessonplan'}
-                                isPreview = {false}
+                                slides={this.state.slides}
+                                curSlide={this.state.curSlide}
+                                saveChanges={this.saveChanges.bind(this)}
+                                delete={this.deleteSlide.bind(this)}
+                                setStateAfterRearranging={this.setStateAfterRearranging.bind(this)}
+                                from={'createLessonplan'}
+                                isPreview={false}
                             />
                         </Grid.Column>
 
-                        <Grid.Column style = {{
+                        <Grid.Column style={{
 
-                                margin:0,
-                                padding:0,
-                                overflowX:'hidden',
-                                overflowY:'auto'
+                            margin: 0,
+                            padding: 0,
+                            overflowX: 'hidden',
+                            overflowY: 'auto'
 
-                            }} width = {12}
+                        }} width={12}
                         >
-                                <div style = {{transform:`scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
+                            <div style={{ transform: `scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
 
-                                    <TextBoxes
+                                <TextBoxes
 
-                                        slides = {this.state.slides}
-                                        curSlide = {this.state.curSlide}
-                                        saveChanges = {this.saveChanges.bind(this)}
-                                        delete = {this.deleteTextBox.bind(this)}
-                                        isPreview = {false}
-                                        setCopiedState = {this.setCopiedState.bind(this)}
-                                    />
+                                    slides={this.state.slides}
+                                    curSlide={this.state.curSlide}
+                                    saveChanges={this.saveChanges.bind(this)}
+                                    delete={this.deleteTextBox.bind(this)}
+                                    isPreview={false}
+                                    setCopiedState={this.setCopiedState.bind(this)}
+                                />
 
 
-                                    <SimsList
+                                <SimsList
 
-                                        slides = {this.state.slides}
-                                        curSlide = {this.state.curSlide}
-                                        saveChanges = {this.saveChanges.bind(this)}
-                                        delete = {this.deleteSim.bind(this)}
-                                        isPreview = {false}
-                                        setCopiedState = {this.setCopiedState.bind(this)}
-                                        isRndRequired = {true}
-                                        undo = {this.undo.bind(this)}
-                                        ref = {e => this.simsList = e}
-                                    />
+                                    slides={this.state.slides}
+                                    curSlide={this.state.curSlide}
+                                    saveChanges={this.saveChanges.bind(this)}
+                                    delete={this.deleteSim.bind(this)}
+                                    isPreview={false}
+                                    setCopiedState={this.setCopiedState.bind(this)}
+                                    isRndRequired={true}
+                                    undo={this.undo.bind(this)}
+                                    ref={e => this.simsList = e}
+                                />
 
-                                    <DrawingBoardCmp
-                                        toolbarVisible = {true}
-                                        ref = {e => this.drawingBoard = e}
-                                    />
+                                <DrawingBoardCmp
+                                    toolbarVisible={true}
+                                    ref={e => this.drawingBoard = e}
+                                />
 
-                                </div>
+                            </div>
 
 
                         </Grid.Column>
 
 
-                        <Grid.Column width = {2}>
+                        <Grid.Column width={2}>
 
 
 
-                            <AddSim isPreview = {true} ref = { e => this.addSim = e } {...this.state} saveChanges = {this.saveChanges.bind(this)}/>
+                            <AddSim isPreview={true} ref={e => this.addSim = e} {...this.state} saveChanges={this.saveChanges.bind(this)} />
 
-                            <Menu color = {'blue'} icon vertical>
+                            <Menu color={'blue'} icon vertical>
                                 <Menu.Item>
-                                    <Button toggle active = {!this.state.interactEnabled} onClick = {this.interact.bind(this)}>{this.state.interactEnabled?'Draw':'Interact'}</Button>
+                                    <Button toggle active={!this.state.interactEnabled} onClick={this.interact.bind(this)}>{this.state.interactEnabled ? 'Draw' : 'Interact'}</Button>
                                 </Menu.Item>
 
                                 <Menu.Item>
-                                    <Button onClick = {()=>{this.addSim.addSim()}} color='black'>
+                                    <Button onClick={() => { this.addSim.addSim() }} color='black'>
                                         Add simulation
                                     </Button>
                                 </Menu.Item>
 
 
-                                {Meteor.userId()?
-                                    <Menu.Item onClick = {()=>{
+                                {Meteor.userId() ?
+                                    <Menu.Item onClick={() => {
 
-                                        const lessonplan = LessonPlans.findOne({_id: this.state._id})
+                                        const lessonplan = LessonPlans.findOne({ _id: this.state._id })
 
                                         try {
-                                            expect({slides:lessonplan.slides}).to.deep.include({slides:this.state.slides})
+                                            expect({ slides: lessonplan.slides }).to.deep.include({ slides: this.state.slides })
                                         }
-                                        catch(error) {
+                                        catch (error) {
 
-                                            if(error) {
+                                            if (error) {
 
                                                 const confirmation = confirm('Are you sure you want to leave. Any unsaved changes will be lost!')
 
-                                                if(!confirmation)
+                                                if (!confirmation)
                                                     return
                                             }
                                             else
@@ -832,66 +963,67 @@ export class CreateLessonPlan extends React.Component {
 
                                         this.setState({
 
-                                            redirectToDashboard:true
+                                            redirectToDashboard: true
                                         })
                                     }}
                                     >Dashboard</Menu.Item>
-                                :null}
+                                    : null}
 
-                                {!!Meteor.userId() && this.state.userId == Meteor.userId()?
-                                    <Link to = {`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
-                                :null}
+                                {!!Meteor.userId() && this.state.userId == Meteor.userId() ?
+                                    <Link to={`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
+                                    : null}
 
 
-                                <Menu.Item onClick = {()=>{
-                                        const confirmation = confirm('Are you sure you want to reset all?')
-                                        if(confirmation == true)
+                                <Menu.Item onClick={() => {
+                                    const confirmation = confirm('Are you sure you want to reset all?')
+                                    if (confirmation == true)
                                         this.reset()
-                                    }}>
+                                }}>
                                     Reset everything
                                 </Menu.Item>
 
-                                <Menu.Item onClick = {()=>{this.undo()}}>
+                                <Menu.Item onClick={() => { this.undo() }}>
                                     Undo
                                 </Menu.Item>
 
-                                <Menu.Item onClick = {()=>{
-                                        this.save()
-                                    }}>
-                                    {Meteor.userId()==this.state.userId || !Meteor.userId()?'Save':'Fork and Save'}
+                                <Menu.Item onClick={() => {
+                                    this.save()
+                                }}>
+                                    {Meteor.userId() == this.state.userId || !Meteor.userId() ? 'Save' : 'Fork and Save'}
                                 </Menu.Item>
 
-                                <Menu.Item onClick = {()=>{
+                                <Menu.Item onClick={() => {
                                     this.changePageCount(1)
                                 }}>
                                     Increase Canvas size
                                 </Menu.Item>
 
-                                <Menu.Item onClick = {()=>{
-                                if (this.pageCount==0 || this.checkCanvasSize()){
-                                    alert("Canvas size cannot be decreased further!");
-                                    return;
-                                }
+                                <Menu.Item onClick={() => {
+                                    if (this.pageCount == 0 || this.checkCanvasSize()) {
+                                        alert("Canvas size cannot be decreased further!");
+                                        return;
+                                    }
                                     this.changePageCount(-1)
                                 }}>
                                     Decrease Canvas size
                                 </Menu.Item>
 
-                                {!!!Meteor.userId()?<Menu.Item onClick = {()=>{
+                                {!!!Meteor.userId() ? <Menu.Item onClick={() => {
 
-                                        const confirmation = confirm('You will be redirected to login page. Changes will be saved for you.')
-                                        if(!confirmation)
-                                            return
+                                    const confirmation = confirm('You will be redirected to login page. Changes will be saved for you.')
+                                    if (!confirmation)
+                                        return
 
-                                        Session.set('stateToSave', this.state)
+                                    Session.set('stateToSave', this.state)
 
-                                        this.setState({redirectToLogin:true}
-                                )}}>
+                                    this.setState({ redirectToLogin: true }
+                                    )
+                                }}>
                                     Login
-                                </Menu.Item>:null}
-                                {!Meteor.userId()?<Link to = {`/explore`}><Menu.Item link>Back</Menu.Item></Link>:null}
+                                </Menu.Item> : null}
+                                {!Meteor.userId() ? <Link to={`/explore`}><Menu.Item link>Back</Menu.Item></Link> : null}
 
-                                <Menu.Item onClick = {() => {
+                                <Menu.Item onClick={() => {
 
                                     this.addTextBox()
 
@@ -899,47 +1031,203 @@ export class CreateLessonPlan extends React.Component {
                                     Add textbox
                                 </Menu.Item>
 
-                                {this.state.copied?<Menu.Item>
+                                {this.checkDescExist() ?
+                                    !!Meteor.userId() && this.state.userId == Meteor.userId() && this.checkDescription() ?
+                                        <Modal
+                                            size="small"
+                                            onClose={() => { this.setState({ addDescription: false }) }}
+                                            open={addDescription}
+                                            trigger={<Menu.Item onClick={() => { this.setState({ addDescription: true }) }}>Add description</Menu.Item>} >
+                                            <Modal.Header>
+                                                Lesson Description
+                                            <Button className='close-button' onClick={() => { this.setState({ addDescription: false }) }}>
+                                                    X
+                                            </Button>
+                                            </Modal.Header>
 
-                                    <div style = {{display:'flex', flexDirection:'row'}}>
+                                            <Modal.Content>
+                                                <Modal.Description>
+                                                    <Form onSubmit={this.addDescription}>
+                                                        <Form.Field>
+                                                            <label>Subject</label>
+                                                            <input ref={e => this.subject = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Topic</label>
+                                                            <input ref={e => this.topic = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Learning Objective(s)</label>
+                                                            <textArea rows={1} ref={e => this.learningObjectives = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>In-class Activities</label>
+                                                            <textArea rows={1} ref={e => this.inClassActivities = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>References/Resources</label>
+                                                            <textArea rows={1} ref={e => this.resources = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Assessments</label>
+                                                            <input ref={e => this.assessments = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <label>Standards</label>
+                                                            <input ref={e => this.standards = e} required />
+                                                        </Form.Field>
+                                                        <Form.Field>
+                                                            <Button type='submit'>Submit</Button>
+                                                        </Form.Field>
+                                                    </Form>
+                                                </Modal.Description>
+                                            </Modal.Content>
+                                        </Modal>
+                                        :
+                                        <Modal
+                                            size="small"
+                                            onClose={() => { this.setState({ showDescription: false }) }}
+                                            open={showDescription}
+                                            trigger={<Menu.Item onClick={() => {
+                                                this.setState({ showDescription: true })
+                                                var res = LessonPlans.find({ _id: this.state._id }).fetch()
+                                                this.setState({ description: res[0].description })
+                                            }}>View description</Menu.Item>} >
+                                            <Modal.Header>
+                                                Lesson Description
 
-                                    <Button onClick = {()=>{
+                                            <Button className='close-button' onClick={() => { this.setState({ showDescription: false }) }}>
+                                                    X
+                                            </Button>
 
-                                        if(Session.get('copiedObject')) {
+                                                {(!!Meteor.userId() && this.state.userId == Meteor.userId()) ?
+                                                    <Modal
+                                                        size="small"
+                                                        onClose={() => { this.setState({ addDescription: false }) }}
+                                                        open={addDescription}
+                                                        trigger={
+                                                            <FaEdit
+                                                                style={{ cursor: "pointer", marginLeft: "15px" }}
+                                                                size={17} color="black"
+                                                                onClick={() => { this.setState({ addDescription: true }) }} />} >
+                                                        <Modal.Header>
+                                                            Lesson Description
+                                                        <Button className='close-button' onClick={() => { this.setState({ addDescription: false }) }}>
+                                                                X
+                                                        </Button>
+                                                        </Modal.Header>
 
-                                            const object = Session.get('copiedObject')
+                                                        <Modal.Content>
+                                                            <Modal.Description>
+                                                                <Form onSubmit={this.addDescription}>
+                                                                    <Form.Field>
+                                                                        <label>Subject</label>
+                                                                        <input ref={e => this.subject = e} placeholder={this.state.description.subject} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Topic</label>
+                                                                        <input ref={e => this.topic = e} placeholder={this.state.description.topic} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Learning Objective(s)</label>
+                                                                        <textArea rows={1} ref={e => this.learningObjectives = e} placeholder={this.state.description.learningObjectives} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>In-class Activities</label>
+                                                                        <textArea rows={1} ref={e => this.inClassActivities = e} placeholder={this.state.description.inClassActivities} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>References/Resources</label>
+                                                                        <textArea rows={1} ref={e => this.resources = e} placeholder={this.state.description.resources} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Assessments</label>
+                                                                        <input ref={e => this.assessments = e} placeholder={this.state.description.assessments} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <label>Standards</label>
+                                                                        <input ref={e => this.standards = e} placeholder={this.state.description.standards} />
+                                                                    </Form.Field>
+                                                                    <Form.Field>
+                                                                        <Button type='submit'>Update</Button>
+                                                                    </Form.Field>
+                                                                </Form>
 
-                                            const slides = JSON.parse(JSON.stringify(this.state.slides))
+                                                            </Modal.Description>
+                                                        </Modal.Content>
+                                                    </Modal>
+                                                    : null}
+                                                {(!!Meteor.userId() && this.state.userId == Meteor.userId()) ?
+                                                    <FaTrash
+                                                        style={{ cursor: "pointer", marginLeft: "15px" }}
+                                                        size={17}
+                                                        color="black"
+                                                        onClick={() => {
+                                                            Meteor.call('lessonplans.removeDescription', this.state._id, (err) => {
+                                                                this.setState({ description: [] })
+                                                                alert("Description removed successfully")
 
-                                            const {curSlide} = this.state
+                                                            })
+                                                        }}
+                                                    />
+                                                    :
+                                                    null}
 
-                                            if(object.type === 'sim') {
+                                            </Modal.Header>
 
-                                                slides[curSlide].iframes.push(object.copiedObject)
+                                            <Modal.Content>
+                                                <Modal.Description>
+                                                    {this.renderDescription()}
+                                                </Modal.Description>
+                                            </Modal.Content>
+                                        </Modal>
 
+                                    :
+                                    null
+                                }
+
+
+                                {this.state.copied ? <Menu.Item>
+
+                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+
+                                        <Button onClick={() => {
+
+                                            if (Session.get('copiedObject')) {
+
+                                                const object = Session.get('copiedObject')
+
+                                                const slides = JSON.parse(JSON.stringify(this.state.slides))
+
+                                                const { curSlide } = this.state
+
+                                                if (object.type === 'sim') {
+
+                                                    slides[curSlide].iframes.push(object.copiedObject)
+
+                                                }
+                                                else if (object.type === 'text') {
+
+
+                                                    slides[curSlide].textboxes.push(object.copiedObject)
+                                                }
+
+                                                this.saveChanges(slides)
                                             }
-                                            else if(object.type === 'text') {
 
-
-                                                slides[curSlide].textboxes.push(object.copiedObject)
-                                            }
-
-                                            this.saveChanges(slides)
-                                        }
-
-                                    }} color='blue'>
-                                        Paste
+                                        }} color='blue'>
+                                            Paste
                                     </Button>
-                                    <Button onClick = {()=>{
+                                        <Button onClick={() => {
 
-                                        this.setCopiedState(false)
-                                        Session.set('copiedObject', null)
+                                            this.setCopiedState(false)
+                                            Session.set('copiedObject', null)
 
-                                    }} color= 'red'>X</Button>
+                                        }} color='red'>X</Button>
 
                                     </div>
 
-                                </Menu.Item>:null}
+                                </Menu.Item> : null}
 
 
                             </Menu>
@@ -950,30 +1238,30 @@ export class CreateLessonPlan extends React.Component {
 
 
 
-                <Modal size = 'tiny' open = {!!!this.state.title}>
+                <Modal size='tiny' open={!!!this.state.title}>
                     <Modal.Header>
                         Enter the title for the lessonplan
                     </Modal.Header>
 
                     <Modal.Content>
                         <Modal.Description>
-                            <Form onSubmit = {()=>{
+                            <Form onSubmit={() => {
 
-                                if(!this.title.value)
+                                if (!this.title.value)
                                     return
 
                                 this.setState({
 
-                                    title:this.title.value
+                                    title: this.title.value
                                 })
 
                             }}>
                                 <Form.Field>
                                     <label>Title</label>
-                                    <input ref = { e => this.title = e}/>
+                                    <input ref={e => this.title = e} />
                                 </Form.Field>
                                 <Form.Field>
-                                    <Button type = 'submit'>Submit</Button>
+                                    <Button type='submit'>Submit</Button>
                                 </Form.Field>
                             </Form>
                         </Modal.Description>
@@ -995,7 +1283,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
         Otherwise, we fetch every public lessonplans.
     */
 
-    if(Meteor.userId()) {
+    if (Meteor.userId()) {
 
         lessonplansHandle = Meteor.subscribe('lessonplans')
     }
@@ -1013,7 +1301,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     let lessonplan, lessonplanExists
 
 
-    if(match.params._id === undefined) {
+    if (match.params._id === undefined) {
 
         /*
             If lessonplan creator is taken by creating a new lessonplan,
@@ -1022,7 +1310,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
 
         lessonplanExists = true
         const slides = []
-        lessonplan = {slides, title:null}
+        lessonplan = { slides, title: null }
     }
     else {
 
@@ -1046,7 +1334,7 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
         */
 
         lessonplanExists,
-        lessonplan: lessonplanExists? lessonplan : []
+        lessonplan: lessonplanExists ? lessonplan : []
     }
 
 })(CreateLessonPlan)
