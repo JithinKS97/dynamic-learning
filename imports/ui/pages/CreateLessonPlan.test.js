@@ -49,7 +49,7 @@ configure({ adapter: new Adapter() });
 
     })
 
-    describe('Deletion of slide', function() {
+    describe('Addition and deletion of slide', function() {
 
         let div
         
@@ -166,6 +166,89 @@ configure({ adapter: new Adapter() });
            
         })
 
+        it('(no of slides = 2, curSlide = 1), after insertion of slide, slides length = 3', function() {
+
+
+            const wrapper = mount (
+
+                <Router history={createMemoryHistory()}>
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
+                    )}/>
+                 </Router>,
+
+                 { attachTo: window.domNode }
+                 
+            )
+
+            const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
+
+            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textBoxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
+
+            const instance = CreateLessonPlanWrapper.instance()
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            instance.addNewSlide()
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            expect(CreateLessonPlanWrapper.state().slides.length).to.equal(3)
+
+            wrapper.unmount()
+           
+        })
+
+    })
+
+    describe('Navigation between', function() {
+
+        let div
+        
+        before(() => {
+            div = document.createElement('div');
+            window.domNode = div;
+            document.body.appendChild(div);
+        })
+        
+        it('(no of slides = 2, curSlide = 1), after navigation to slide 0, contents of slide 0 should be displayed', function() {
+
+
+            const wrapper = mount (
+
+                <Router history={createMemoryHistory()}>
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
+                    )}/>
+                 </Router>,
+
+                 { attachTo: window.domNode }
+                 
+            )
+
+            const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
+
+            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textBoxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
+
+            const instance = CreateLessonPlanWrapper.instance()
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            instance.saveChanges(undefined, 0)
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0)
+            expect(CreateLessonPlanWrapper.state().slides[0].notes).to.equal('0')
+
+            wrapper.unmount()
+           
+        })
+
     })
 
 }
@@ -175,10 +258,10 @@ configure({ adapter: new Adapter() });
 
     How do we test
 
-    1) Navigation between the slides, going to the next and previous slide
-    2) Moving to any slide by pressing it
-    3) Deletion of a slide
-    4) Addition of new slide
+    1) Navigation between the slides, going to the next and previous slide - check
+    2) Moving to any slide by pressing it - check
+    3) Deletion of a slide - check
+    4) Addition of new slide - check
     5) Interact and draw
     6) Addition of simulations
     7) Undo and redo
