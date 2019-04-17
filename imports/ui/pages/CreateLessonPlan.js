@@ -8,10 +8,11 @@ import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { withTracker } from 'meteor/react-meteor-data';
-import { Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid, List, ModalDescription } from 'semantic-ui-react'
+import { Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid, List } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 import TextBoxes from '../components/TextBoxes'
+import DOMPurify from 'dompurify'
 
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
@@ -689,19 +690,19 @@ export class CreateLessonPlan extends React.Component {
 
         if (this.learningObjectives.value === '')
             var learningObjectives = this.learningObjectives.placeholder
-        else
-            var learningObjectives = this.learningObjectives.value
+        else 
+            var learningObjectives = DOMPurify.sanitize(this.learningObjectives.value.replace(new RegExp('\r?\n', 'g'), '<br />'))
 
         if (this.inClassActivities.value === '')
             var inClassActivities = this.inClassActivities.placeholder
-        else
-            var inClassActivities = this.inClassActivities.value
+        else 
+            var inClassActivities = DOMPurify.sanitize(this.inClassActivities.value.replace(new RegExp('\r?\n', 'g'), '<br />'))
 
         if (this.resources.value === '')
             var resources = this.resources.placeholder
-        else
-            var resources = this.resources.value
-
+        else 
+            var resources = DOMPurify.sanitize(this.resources.value.replace(new RegExp('\r?\n', 'g'), '<br />'))
+        
         if (this.assessments.value === '')
             var assessments = this.assessments.placeholder
         else
@@ -711,9 +712,6 @@ export class CreateLessonPlan extends React.Component {
             var standards = this.standards.placeholder
         else
             var standards = this.standards.value
-
-        console.log(this.topic.placeholder)
-        console.log(this.topic.value)
 
         var description = {
             subject: subject,
@@ -732,19 +730,19 @@ export class CreateLessonPlan extends React.Component {
     }
 
     checkDescExist = () => {
-        
-        var a = LessonPlans.find({ _id:this.state._id , description: { "$exists": true } }).fetch()
+
+        var a = LessonPlans.find({ _id: this.state._id, description: { "$exists": true } }).fetch()
         if (a.length != 0)
             return true
-        else{
+        else {
             Meteor.call('lessonplans.addDescriptionField', this.state._id, (err) => {
                 return true
-            }) 
-        }    
+            })
+        }
     }
 
     checkDescription = () => {
-        
+
         var res = LessonPlans.find({ _id: this.state._id }).fetch()
         var desc = res[0].description
         return (Object.keys(desc).length === 0 && desc.constructor === Object)
@@ -758,7 +756,7 @@ export class CreateLessonPlan extends React.Component {
         }
         else {
             return (
-                <List>
+                <List divided relaxed>
                     <List.Item>
                         <List.Header>Subject</List.Header>
                         {this.state.description.subject}
@@ -769,15 +767,16 @@ export class CreateLessonPlan extends React.Component {
                     </List.Item>
                     <List.Item>
                         <List.Header>Learning Objectives</List.Header>
-                        {this.state.description.learningObjectives}
+                        <div dangerouslySetInnerHTML={{ __html: this.state.description.learningObjectives }} />
+
                     </List.Item>
                     <List.Item>
-                        <List.Header>In Class Activites</List.Header>
-                        {this.state.description.inClassActivities}
+                        <List.Header>In-Class Activites</List.Header>
+                        <div dangerouslySetInnerHTML={{ __html: this.state.description.inClassActivities }} />
                     </List.Item>
                     <List.Item>
                         <List.Header>Resources</List.Header>
-                        {this.state.description.resources}
+                        <div dangerouslySetInnerHTML={{ __html: this.state.description.resources }} />
                     </List.Item>
                     <List.Item>
                         <List.Header>Assessments</List.Header>
@@ -842,7 +841,6 @@ export class CreateLessonPlan extends React.Component {
                 <Grid style={{ height: '100vh', padding: 0, margin: 0 }} columns={3} divided>
                     <Grid.Row style={{ overflow: 'hidden' }}>
                         <Grid.Column style={{ textAlign: 'center', overflow: 'auto' }} width={2}>
-                            {/* <Link to={`/dashboard/lessonplans`}><Button color="green">Home</Button></Link> */}
                             <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide + 1}</h1>
                             <Lists
@@ -922,7 +920,7 @@ export class CreateLessonPlan extends React.Component {
 
 
                                 {Meteor.userId() ?
-                                    <Menu.Item> <Button color = 'blue' onClick={() => {
+                                    <Menu.Item> <Button color='blue' onClick={() => {
 
                                         const lessonplan = LessonPlans.findOne({ _id: this.state._id })
 
@@ -1028,33 +1026,33 @@ export class CreateLessonPlan extends React.Component {
                                             <Modal.Content>
                                                 <Modal.Description>
                                                     <Form onSubmit={this.addDescription}>
-                                                        <Form.Field>
+                                                        <Form.Field required>
                                                             <label>Subject</label>
                                                             <input ref={e => this.subject = e} required />
                                                         </Form.Field>
                                                         <Form.Field>
                                                             <label>Topic</label>
-                                                            <input ref={e => this.topic = e} required />
+                                                            <input ref={e => this.topic = e} placeholder="-" />
                                                         </Form.Field>
                                                         <Form.Field>
                                                             <label>Learning Objective(s)</label>
-                                                            <textArea rows={1} ref={e => this.learningObjectives = e} required />
+                                                            <textArea rows={1} ref={e => this.learningObjectives = e} placeholder="-" />
                                                         </Form.Field>
                                                         <Form.Field>
-                                                            <label>In-class Activities</label>
-                                                            <textArea rows={1} ref={e => this.inClassActivities = e} required />
+                                                            <label>In-Class Activities</label>
+                                                            <textArea rows={1} ref={e => this.inClassActivities = e} placeholder="-" />
                                                         </Form.Field>
                                                         <Form.Field>
                                                             <label>References/Resources</label>
-                                                            <textArea rows={1} ref={e => this.resources = e} required />
+                                                            <textArea rows={1} ref={e => this.resources = e} placeholder="-" />
                                                         </Form.Field>
                                                         <Form.Field>
                                                             <label>Assessments</label>
-                                                            <input ref={e => this.assessments = e} required />
+                                                            <input ref={e => this.assessments = e} placeholder="-" />
                                                         </Form.Field>
                                                         <Form.Field>
                                                             <label>Standards</label>
-                                                            <input ref={e => this.standards = e} required />
+                                                            <input ref={e => this.standards = e} placeholder="-" />
                                                         </Form.Field>
                                                         <Form.Field>
                                                             <Button type='submit'>Submit</Button>
@@ -1113,7 +1111,7 @@ export class CreateLessonPlan extends React.Component {
                                                                         <textArea rows={1} ref={e => this.learningObjectives = e} placeholder={this.state.description.learningObjectives} />
                                                                     </Form.Field>
                                                                     <Form.Field>
-                                                                        <label>In-class Activities</label>
+                                                                        <label>In-Class Activities</label>
                                                                         <textArea rows={1} ref={e => this.inClassActivities = e} placeholder={this.state.description.inClassActivities} />
                                                                     </Form.Field>
                                                                     <Form.Field>
@@ -1143,10 +1141,13 @@ export class CreateLessonPlan extends React.Component {
                                                         size={17}
                                                         color="black"
                                                         onClick={() => {
+                                                            const confirmation = confirm('Are you sure you want to perform this deletion?')
+
+                                                            if (!confirmation)
+                                                                return
+
                                                             Meteor.call('lessonplans.removeDescription', this.state._id, (err) => {
                                                                 this.setState({ description: [] })
-                                                                alert("Description removed successfully")
-
                                                             })
                                                         }}
                                                     />
