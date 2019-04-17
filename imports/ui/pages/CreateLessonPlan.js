@@ -771,10 +771,6 @@ export class CreateLessonPlan extends React.Component {
                         {this.state.description.learningObjectives}
                     </List.Item>
                     <List.Item>
-                        <List.Header>inClassActivites</List.Header>
-                        {this.state.description.inClassActivities}
-                    </List.Item>
-                    <List.Item>
                         <List.Header>In Class Activites</List.Header>
                         {this.state.description.inClassActivities}
                     </List.Item>
