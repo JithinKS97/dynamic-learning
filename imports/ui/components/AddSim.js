@@ -104,6 +104,20 @@ export default class AddSim extends React.Component {
         ]
 
 
+        // if(Meteor.userId())
+        //     panes = [
+                
+        //         { menuItem: 'Shared simulations', render: () => <Tab.Pane style = {{height:'429px'}}><SharedSims getNode = {this.getNode.bind(this)}/></Tab.Pane> },
+        //         { menuItem: 'My simulations', render: () => <Tab.Pane><SimsDirectories height = {400} getNode = {this.getNode.bind(this)} isPreview= {true}/></Tab.Pane> }
+        //     ]
+        // else
+        //     panes = [
+                
+        //         { menuItem: 'Shared simulations', render: () => <Tab.Pane style = {{height:'429px'}}><SharedSims getNode = {this.getNode.bind(this)}/></Tab.Pane> },
+                
+        //     ]
+
+
         return(
             <div>
 

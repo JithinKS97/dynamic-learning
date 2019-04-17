@@ -34,3 +34,13 @@ export default class DrawingBoardCmp extends React.Component {
         return(<div ref = {e => this.container = e} id="container"></div>)
     }
 }
+
+/**
+ * db.getImg()
+ * db.setImg()
+ * db.reset()
+ * 
+ * These are the three functions which this component makes available to CreateLessonPlan
+ * 
+ * If we want to replace drawingboard.js someday, all it takes is to replace the above three functions
+ */

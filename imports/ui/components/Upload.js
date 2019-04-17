@@ -148,7 +148,7 @@ export default class Upload extends React.Component {
                             
                     closeOnRootNodeClick={false}
                     style = {{height:'auto', width:'auto', minWidth: '36rem'}}
-                    trigger = {this.props.isPreview?null:<Button onClick={this.handleOpen} >Add simulation</Button>}
+                    trigger = {this.props.isPreview?null:<Button style = {{display:Meteor.userId()?'block':'none'}} onClick={this.handleOpen} >Add simulation</Button>}
                     open={this.state.modalOpen}
                     onClose={this.handleClose}
                     size='tiny'

@@ -42,9 +42,7 @@ configure({ adapter: new Adapter() });
             wrapper.find(CreateLessonPlan).setState({slides:[{notes:'', iframes:[], textboxes:[]}]})
             wrapper.unmount()
 
-        })
-
-        
+        })    
 
     })
 
