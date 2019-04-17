@@ -1,11 +1,10 @@
 import { Meteor } from 'meteor/meteor'
 import React from'react'
 import { mount } from 'enzyme'
-const chai = require('chai')
+require('chai')
 import { expect } from 'chai';
 import { Router, Route } from 'react-router-dom'
 import { createMemoryHistory } from 'history';
-import { debug } from 'util';
 
 if(Meteor.isClient) {
 

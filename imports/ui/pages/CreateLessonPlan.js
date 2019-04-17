@@ -731,6 +731,7 @@ export class CreateLessonPlan extends React.Component {
     }
 
     checkDescExist = () => {
+        
         var a = LessonPlans.find({ _id:this.state._id , description: { "$exists": true } }).fetch()
         if (a.length != 0)
             return true
@@ -742,6 +743,7 @@ export class CreateLessonPlan extends React.Component {
     }
 
     checkDescription = () => {
+        
         var res = LessonPlans.find({ _id: this.state._id }).fetch()
         var desc = res[0].description
         return (Object.keys(desc).length === 0 && desc.constructor === Object)
@@ -843,7 +845,7 @@ export class CreateLessonPlan extends React.Component {
                 <Grid style={{ height: '100vh', padding: 0, margin: 0 }} columns={3} divided>
                     <Grid.Row style={{ overflow: 'hidden' }}>
                         <Grid.Column style={{ textAlign: 'center', overflow: 'auto' }} width={2}>
-                            <Link to={`/dashboard/lessonplans`}><Button color="green">Home</Button></Link>
+                            {/* <Link to={`/dashboard/lessonplans`}><Button color="green">Home</Button></Link> */}
                             <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide + 1}</h1>
                             <Lists
@@ -923,7 +925,7 @@ export class CreateLessonPlan extends React.Component {
 
 
                                 {Meteor.userId() ?
-                                    <Menu.Item onClick={() => {
+                                    <Menu.Item> <Button color = 'blue' onClick={() => {
 
                                         const lessonplan = LessonPlans.findOne({ _id: this.state._id })
 
@@ -947,8 +949,7 @@ export class CreateLessonPlan extends React.Component {
 
                                             redirectToDashboard: true
                                         })
-                                    }}
-                                    >Dashboard</Menu.Item>
+                                    }}>Home</Button></Menu.Item>
                                     : null}
 
                                 {!!Meteor.userId() && this.state.userId == Meteor.userId() ?
