@@ -124,6 +124,19 @@ export default class TextBox extends React.Component {
                             
                             slides[curSlide].textboxes[index].value = e.target.value
 
+                            /**
+                             * The below code ensures that slide is pushed to the undo stack only when there is 
+                             * a pause in the key stroke sequence. Otherwise for every keypress we should push
+                             * to the undo stack
+                             * 
+                             * For every keysroke, this.keystroke is incremented
+                             * 
+                             * Function in setTimeout runs 1.5s after every ketstroke
+                             * 
+                             * If no of keystrokes within that time is greater than 0, it means a sequence of 
+                             * keystrokes have occured
+                             */
+
                             this.keyStrokes++
 
                             setTimeout(()=>{
@@ -131,10 +144,9 @@ export default class TextBox extends React.Component {
                                 if(this.keyStrokes > 0)  {
 
                                     saveChanges(this.props.slides, undefined, undefined, false)
+                                    this.keyStrokes = 0
 
                                 }
-
-                                this.keyStrokes = 0
 
                             }, 1500)
 
