@@ -323,8 +323,6 @@ export class CreateLessonPlan extends React.Component {
 
             const lessonplan = LessonPlans.findOne({ _id: this.state._id })
 
-            console.log(lessonplan)
-
             /* If the slides in the state has the same values as that of the slides
                 in the database, we need not save, expect to deep include by chai checks this equality.
                 If they are not same, an error is thrown. When we catch the error, we can see that the
@@ -347,6 +345,8 @@ export class CreateLessonPlan extends React.Component {
     }
 
     pushToUndoStacks = (oldSlide) => {
+
+        //console.log('pushed')
 
         if (this.shouldNotUndo)
             return
@@ -545,7 +545,8 @@ export class CreateLessonPlan extends React.Component {
         /*
             This function ensures that the the size of the Canvas is not reduced to a value less
             than the bottom most point of the last simulation.
-            Anupam - Explain the working
+            
+            Code documentation incomplete
         */
 
         var i = $('iframe').length, iframe;

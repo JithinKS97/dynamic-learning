@@ -20,6 +20,9 @@ export default class TextBox extends React.Component {
         }
 
         this.handleCopy = this.handleCopy.bind(this)
+
+        this.keyStrokes = 0
+
     }
 
     handleCopy(slides, curSlide, index) {
@@ -121,7 +124,21 @@ export default class TextBox extends React.Component {
                             
                             slides[curSlide].textboxes[index].value = e.target.value
 
-                            saveChanges(slides)
+                            this.keyStrokes++
+
+                            setTimeout(()=>{
+
+                                if(this.keyStrokes > 0)  {
+
+                                    saveChanges(this.props.slides, undefined, undefined, false)
+
+                                }
+
+                                this.keyStrokes = 0
+
+                            }, 1500)
+
+                            saveChanges(slides, undefined, undefined, true)
                         
                         }}
 
