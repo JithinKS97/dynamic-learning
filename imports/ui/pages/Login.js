@@ -34,7 +34,9 @@ export default class Login extends React.Component {
 
         this.setState({            
             slides:state.slides,
-            title:state.title
+            title:state.title,
+            userId:state.userId,
+            _id:state._id
         })
 
     }
@@ -66,6 +68,12 @@ export default class Login extends React.Component {
                             The values in the states are used to create a new lessonplan and the session variable
                             is set to null.
                         */
+
+                        if(this.state.userId === Meteor.userId()) {
+
+                            Meteor.call('lessonplans.update', this.state._id, this.state.slides)
+                            return
+                        }
 
                         Meteor.call('lessonplans.insert', this.state.title, (err, _id)=>{
                             
