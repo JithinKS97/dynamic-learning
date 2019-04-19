@@ -44,7 +44,7 @@ export default class SimContainer extends React.Component{
 
     loadDataToSketch() {
 
-        const slides = Object.values($.extend(true, {}, this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.props.slides))
 
         let {curSlide, index} = this.props
 
@@ -66,7 +66,7 @@ export default class SimContainer extends React.Component{
            If the opration property is load, the data stored is send back.
         */
 
-        const slides = Object.values($.extend(true, {}, this.state.slides)) 
+        const slides = Object.values($.extend(true, {}, this.props.slides)) 
 
         let {curSlide, index} = this.props
 

@@ -569,11 +569,8 @@ export class CreateLessonPlan extends React.Component {
     undo = () => {
 
         const slide = this.undoStacks[this.state.curSlide].pop()
-
-        const slides = Object.values($.extend(true, {}, this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))       
         
-        
-
         if (slide) {
 
             slides[this.state.curSlide] = slide

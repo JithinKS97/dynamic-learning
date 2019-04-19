@@ -52,7 +52,7 @@ export default class AddSim extends React.Component {
 
         if(this.state.node) {
 
-            const slides = Object.values($.extend(true, {}, this.state.slides))
+            const slides = Object.values($.extend(true, {}, this.props.slides))
 
             const { curSlide } = this.props                                
 
