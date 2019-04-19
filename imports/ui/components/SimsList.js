@@ -25,7 +25,7 @@ export default class SimsList extends React.Component {
 
     handleCopy(slides, curSlide, index) {
 
-        let copiedSim = JSON.parse(JSON.stringify(slides[curSlide].iframes[index]))
+        let copiedSim = $.extend(true, {}, slides[curSlide].iframes[index])        
 
         copiedSim.x = 50
         copiedSim.y = 50
@@ -75,8 +75,7 @@ export default class SimsList extends React.Component {
         */  
         const {curSlide} = this.props
 
-        const slides = JSON.parse(JSON.stringify(this.props.slides))  
-        
+        const slides = Object.values($.extend(true, {}, this.props.slides))        
 
         if(slides.length!=0) {
 

@@ -27,7 +27,7 @@ export default class TextBox extends React.Component {
 
     handleCopy(slides, curSlide, index) {
 
-        let copiedText = JSON.parse(JSON.stringify(slides[curSlide].textboxes[index]))
+        let copiedText = $.extend(true, {}, slides[curSlide].textboxes[index])       
 
         copiedText.x = 50
         copiedText.y = 50

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default class LoadScreen extends React.Component {
     renderVideo(){
       if(window.innerWidth>700)
-        return <video src="/video.mp4" autoPlay="true" loop="true" muted></video>;
+        return <video src="/video.mp4" autoPlay={true} loop={true} muted></video>;
     }
     render() {
         return(

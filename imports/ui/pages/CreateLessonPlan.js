@@ -197,7 +197,7 @@ export class CreateLessonPlan extends React.Component {
             updated and stored back to the state.
         */
 
-        const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))
 
         const { curSlide } = this.state
 
@@ -465,7 +465,7 @@ export class CreateLessonPlan extends React.Component {
         */
 
 
-        const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))
 
         if (slides.length != 1) {
 
@@ -495,7 +495,7 @@ export class CreateLessonPlan extends React.Component {
             current slide and the changes are saved.
         */
 
-        const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))
 
         const { curSlide } = this.state
         const iframes = slides[curSlide].iframes
@@ -507,7 +507,7 @@ export class CreateLessonPlan extends React.Component {
 
     deleteTextBox = (index) => {
 
-        const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))
 
         const { curSlide } = this.state
         const textboxes = slides[curSlide].textboxes
@@ -570,7 +570,9 @@ export class CreateLessonPlan extends React.Component {
 
         const slide = this.undoStacks[this.state.curSlide].pop()
 
-        const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))
+        
+        
 
         if (slide) {
 
@@ -628,14 +630,14 @@ export class CreateLessonPlan extends React.Component {
         $('#container')[0].style.height = $('canvas')[0].style.height;
         this.db.reset('0');
         this.db.setImg(temp);
-        const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))
         slides[this.state.curSlide].pageCount = this.pageCount;
         this.saveChanges(slides)
     }
 
     addTextBox = () => {
 
-        const slides = JSON.parse(JSON.stringify(this.state.slides))
+        const slides = Object.values($.extend(true, {}, this.state.slides))
 
         const { curSlide } = this.state
 
@@ -1178,7 +1180,7 @@ export class CreateLessonPlan extends React.Component {
 
                                                 const object = Session.get('copiedObject')
 
-                                                const slides = JSON.parse(JSON.stringify(this.state.slides))
+                                                const slides = Object.values($.extend(true, {}, this.state.slides))
 
                                                 const { curSlide } = this.state
 
