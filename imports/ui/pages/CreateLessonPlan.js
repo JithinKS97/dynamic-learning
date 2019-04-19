@@ -113,7 +113,7 @@ export class CreateLessonPlan extends React.Component {
     }
 
 
-    componentWillReceiveProps(nextProps, nextState) {
+    componentWillReceiveProps(nextProps) {
 
 
         if (nextProps.lessonplanExists == false)
