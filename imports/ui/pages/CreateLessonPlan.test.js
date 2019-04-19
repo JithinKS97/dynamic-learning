@@ -12,7 +12,7 @@ import { CreateLessonPlan } from './CreateLessonPlan'
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import { Oscillations } from './CreateLessonPlanTestData.js'
+import { Oscillations, Oscillations1 } from './CreateLessonPlanTestData.js'
 
 configure({ adapter: new Adapter() });
 
@@ -75,23 +75,23 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:2, ...Oscillations})
+            CreateLessonPlanWrapper.setState({curSlide:1, ...Oscillations})
 
             const instance = CreateLessonPlanWrapper.instance()
 
             // console.log(CreateLessonPlanWrapper.state().slides)
             // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-            const noteToShowAfterDeletion = instance.state.slides[1].note
+            const slideToShowAfterDeletion = instance.state.slides[0]
 
-            instance.deleteSlide(2)
+            instance.deleteSlide(1)
             
 
             // console.log(CreateLessonPlanWrapper.state().slides)
             // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-            expect(CreateLessonPlanWrapper.state().curSlide).to.equal(1)
-            expect(CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide].note).to.equal(noteToShowAfterDeletion)
+            expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0)
+            expect(CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide]).to.deep.include(slideToShowAfterDeletion)
 
             wrapper.unmount()
            
@@ -150,19 +150,20 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textboxes:[]}, {notes:'1', iframes:[], textBoxes:[]}, {notes:'2', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:1, ...Oscillations1})
 
             const instance = CreateLessonPlanWrapper.instance()
 
             // console.log(CreateLessonPlanWrapper.state().slides)
             // console.log(CreateLessonPlanWrapper.state().curSlide)
 
+            const slideToShowAfterDeletion = instance.state.slides[2]
+
             instance.deleteSlide(1)
 
             // console.log(CreateLessonPlanWrapper.state().slides)
-            // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-            expect(CreateLessonPlanWrapper.state().slides[1].notes).to.equal('2')
+            expect(instance.state.slides[instance.state.curSlide]).to.deep.include(slideToShowAfterDeletion)
 
             wrapper.unmount()
            
@@ -232,7 +233,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textboxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:1, ...Oscillations})
 
             const instance = CreateLessonPlanWrapper.instance()
 
@@ -245,7 +246,7 @@ configure({ adapter: new Adapter() });
             // console.log(CreateLessonPlanWrapper.state().curSlide)
 
             expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0)
-            expect(CreateLessonPlanWrapper.state().slides[0].notes).to.equal('0')
+            expect(CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide]).to.deep.include(CreateLessonPlanWrapper.state().slides[0])
 
             wrapper.unmount()
            
