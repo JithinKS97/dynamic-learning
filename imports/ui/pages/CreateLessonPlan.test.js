@@ -12,6 +12,8 @@ import { CreateLessonPlan } from './CreateLessonPlan'
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
+import { Oscillations } from './CreateLessonPlanTestData.js'
+
 configure({ adapter: new Adapter() });
 
     describe('LessonplanCreator loading', function() {
@@ -26,7 +28,6 @@ configure({ adapter: new Adapter() });
         
         it('should load successfully', function() {
 
-
             const wrapper = mount (
 
                 <Router history={createMemoryHistory()}>
@@ -39,7 +40,8 @@ configure({ adapter: new Adapter() });
                  
             )
                         
-            wrapper.find(CreateLessonPlan).setState({slides:[{notes:'', iframes:[], textboxes:[]}]})
+            wrapper.find(CreateLessonPlan).setState({...Oscillations})
+
             wrapper.unmount()
 
         })    
@@ -73,20 +75,23 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({curSlide:1, slides:[{notes:'0', iframes:[], textboxes:[]}, {notes:'1', iframes:[], textBoxes:[]}]})
+            CreateLessonPlanWrapper.setState({curSlide:2, ...Oscillations})
 
             const instance = CreateLessonPlanWrapper.instance()
 
             // console.log(CreateLessonPlanWrapper.state().slides)
             // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-            instance.deleteSlide(1)
+            const noteToShowAfterDeletion = instance.state.slides[1].note
+
+            instance.deleteSlide(2)
+            
 
             // console.log(CreateLessonPlanWrapper.state().slides)
             // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-            expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0)
-            expect(CreateLessonPlanWrapper.state().slides[0].notes).to.equal('0')
+            expect(CreateLessonPlanWrapper.state().curSlide).to.equal(1)
+            expect(CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide].note).to.equal(noteToShowAfterDeletion)
 
             wrapper.unmount()
            
