@@ -72,6 +72,8 @@ export class CreateLessonPlan extends React.Component {
 
         this.undoStacks = []
 
+        this.savingChanges = false
+
     }
 
     handleWindowResize = () => {
@@ -285,8 +287,6 @@ export class CreateLessonPlan extends React.Component {
         */
 
 
-
-
         if (!Meteor.userId()) {
 
             this.setState({ loginNotification: true })
@@ -377,6 +377,7 @@ export class CreateLessonPlan extends React.Component {
            function was called.
         */
 
+        
         if (slides == undefined) {
 
 
