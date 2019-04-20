@@ -3,7 +3,7 @@
 
 ## Overview of the app
 
-Dynamic Learning is meant to be an online platform where teachers and programmers collaborate to create and share STEM lessons which makes use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
+Dynamic Learning is an online platform where teachers and programmers collaborate to create and share STEM lessons which makes use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
 
 The three core objectives of the web app are-
 
@@ -33,10 +33,9 @@ https://medium.com/processing-foundation/improving-science-and-math-education-us
 5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
 6) Use the command `TEST_WATCH=1 meteor test --driver-package meteortesting:mocha` to run unit tests
 
-## Frameworks used
+## Build using Meteor.js
 
-The webapp is build on top of full stack Javascript framework Meteor.js along with React.js. Meteor.js comes with inbuilt Mongo DB database which is used in the app. Semantic UI React is used for obtaining styled ui components used throughout for making the ui of the app.
-
+The webapp is build on top of full stack Javascript framework Meteor.js with React.js in the view layer. Meteor.js comes with inbuilt Mongo DB database which is used in the app. Semantic UI React is used for obtaining styled ui components used throughout for making the ui of the app.
 
 ## Main React components
 
@@ -50,7 +49,7 @@ of the components are provided in the components' js files.
 
 ##### Component - CreateLessonPlan
 
-This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations can be embedded and annotations can be made. Each lessonplan consists of a sequence of slides which is implemented as an array. Each element in the array consists of annotations of string type and an array of simulations.
+This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations and textboxes can be added. Each lessonplan consists of a sequence of slides which is an array. Each element in the array consists of annotations of string type, array of simulations, array of textboxes.
 
 Each simulation is an iframe which is obtained from the online p5 text editor export feature.
 
@@ -95,7 +94,9 @@ Users who are not logged in visiting the app will be able to view all the lesson
 ##### Component - SimContainer
 
 Simulations are added to the app by making use of the iframe export feature of the online p5 text editor. One of the challenges that I faced 
-was the implementation of the communication between the webapp and the iframe. [Cassie Tarakajian](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API and it worked. Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
+was the implementation of the communication between the webapp and the iframe. [Cassie Tarakajian](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API.
+
+Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulation in the database. The Javascript object can be saved and loaded using MessageChannel.
 
 #### Above are the main React Components of the app and the you can find the other React Components in the'client/ui/components' folder.
 
@@ -105,7 +106,7 @@ I've provided necessary documentations in the components' js files in all the ar
 
 1) In GSoC 2018, my main target was to develop the overall basic structure of the application on top of which further development can be done. I haven't given much emphasis on the design aspects and didn't go much into the styling (The Components of Semantic UI React comes up with the essential styles that are needed). The app needs a general styling template.
 
-2) Unit testing - Apart from some server side tests, no tests have been written. Adequate test cases for the server side and client side code should be written, so that the future contributors can add features without breaking the existing code.
+2) Unit testing - I've added many server side and client side tests, but more tests are needed.
 
 3) Enhancing the discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users and the ability to reply to the comments, voting for the comments etc.
 
