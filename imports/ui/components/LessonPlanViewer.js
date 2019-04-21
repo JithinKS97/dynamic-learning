@@ -316,6 +316,7 @@ class LessonPlanViewer extends React.Component {
                                 <SimsList
                                     navVisibility = {false}
                                     isRndRequired = {true}
+                                    isPreview = {true}
                                     saveChanges = {this.saveChanges.bind(this)}
                                     delete = {this.deleteSim.bind(this)}
                                     {...this.state}
