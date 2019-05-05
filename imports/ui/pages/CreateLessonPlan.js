@@ -804,6 +804,17 @@ export class CreateLessonPlan extends React.Component {
         }
     }
 
+    calcHeightOfCanvasContainer = () => {
+
+        if(this.state.slides.length>0) {
+
+            return 900 + this.state.slides[this.state.curSlide].pageCount*300
+        }
+        else {
+            return 900
+        }
+    }
+
     render() {
 
         const { showDescription, addDescription } = this.state
@@ -850,7 +861,7 @@ export class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style={{ height: 'fit-content', padding: 0, margin: 0 }} columns={3} divided>
+                <Grid style={{ height: this.calcHeightOfCanvasContainer() + 'px', padding: 0, margin: 0 }} columns={3} divided>
                     <Grid.Row style={{ overflow: 'hidden' }}>
                         <Grid.Column style={{ position:'fixed', textAlign: 'center', overflow: 'auto' }} width={2}>
                             <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
