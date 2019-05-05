@@ -111,7 +111,17 @@ export class CreateLessonPlan extends React.Component {
 
         window.addEventListener("keydown", this.handleKeyDown, false);
         this.handleWindowResize()
+        $(window).scroll(this.handleScroll)
 
+    }
+
+    handleScroll = () => {
+
+        const scrollTop = $(window).scrollTop();
+
+        // console.log(scrollTop)
+
+        $('.drawing-board-controls')[0].style.top = scrollTop/this.state.scaleX + 'px'
     }
 
 
