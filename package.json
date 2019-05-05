@@ -10,6 +10,7 @@
     "bcrypt": "^2.0.1",
     "chai": "^4.2.0",
     "dompurify": "^1.0.10",
+    "lodash": "^4.17.11",
     "meteor-node-stubs": "^0.3.3",
     "moment": "^2.24.0",
     "react": "^16.8.5",

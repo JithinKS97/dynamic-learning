@@ -16,6 +16,7 @@ import DOMPurify from 'dompurify'
 
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
+var _ = require('lodash');
 
 /* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
     is composed of a sequence of slides. Each slide contains a note (the drawing on the canvas which is
@@ -562,10 +563,19 @@ export class CreateLessonPlan extends React.Component {
             
             Code documentation incomplete
         */
-
-        var i = $('iframe').length, iframe;
-
+        
         var maxHeight = -Infinity;
+
+        var j = $('textarea').length, textarea;
+        
+        while(j--) {
+            
+            textarea = $('textarea').eq(j).parents().eq(1)
+            if ((textarea.position().top + textarea.height()) > maxHeight)
+                maxHeight = textarea.position().top + textarea.height()
+        }
+
+        var i = $('iframe').length, iframe;      
 
         while (i--) {
             iframe = $('iframe').eq(i - 1).parents().eq(3);
@@ -573,7 +583,7 @@ export class CreateLessonPlan extends React.Component {
                 maxHeight = iframe.position().top + iframe.height();
         }
 
-        if ($('canvas')[0].height - 300 < maxHeight)
+        if (($('canvas')[0].height - 300)*this.state.scaleX < maxHeight)
             return 1;
 
         return 0;
@@ -993,20 +1003,29 @@ export class CreateLessonPlan extends React.Component {
                                     {Meteor.userId() == this.state.userId || !Meteor.userId() ? 'Save' : 'Fork and Save'}
                                 </Menu.Item>
 
-                                <Menu.Item onClick={() => {
-                                    this.changePageCount(1)
-                                }}>
-                                    Increase Canvas size
+                                <Menu.Item
+                                ref="increaseCanvasButton"
+                                onClick={_.debounce(async () => {
+
+                                    await this.changePageCount(1);;
+                                }, 100)}
+                                >
+                                Increase Canvas size
                                 </Menu.Item>
 
-                                <Menu.Item onClick={() => {
+                                <Menu.Item
+                                onClick={_.debounce(async () => {
+
                                     if (this.pageCount == 0 || this.checkCanvasSize()) {
                                         alert("Canvas size cannot be decreased further!");
                                         return;
                                     }
-                                    this.changePageCount(-1)
-                                }}>
-                                    Decrease Canvas size
+
+                                    await this.changePageCount(-1);
+
+                                }, 100)}
+                                >
+                                Decrease Canvas size
                                 </Menu.Item>
 
                                 {!!!Meteor.userId() ? <Menu.Item onClick={() => {
