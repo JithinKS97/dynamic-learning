@@ -840,9 +840,9 @@ export class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style={{ height: '100vh', padding: 0, margin: 0 }} columns={3} divided>
+                <Grid style={{ height: 'fit-content', padding: 0, margin: 0 }} columns={3} divided>
                     <Grid.Row style={{ overflow: 'hidden' }}>
-                        <Grid.Column style={{ textAlign: 'center', overflow: 'auto' }} width={2}>
+                        <Grid.Column style={{ position:'fixed', textAlign: 'center', overflow: 'auto' }} width={2}>
                             <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide + 1}</h1>
                             <Lists
@@ -859,10 +859,10 @@ export class CreateLessonPlan extends React.Component {
 
                         <Grid.Column style={{
 
-                            margin: 0,
+                            margin: '0 auto',
                             padding: 0,
                             overflowX: 'hidden',
-                            overflowY: 'auto'
+                            overflowY: 'hidden'
 
                         }} width={12}
                         >
@@ -903,7 +903,7 @@ export class CreateLessonPlan extends React.Component {
                         </Grid.Column>
 
 
-                        <Grid.Column width={2}>
+                        <Grid.Column width={2} style={{position:'fixed', right:0}}>
 
 
 
