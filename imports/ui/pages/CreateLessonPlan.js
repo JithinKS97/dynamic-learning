@@ -224,6 +224,7 @@ export class CreateLessonPlan extends React.Component {
             curSlide
         }, () => {
 
+            this.pageCount = 0
             this.setSizeOfPage(0)
             this.db.reset('0');
         })
@@ -444,7 +445,8 @@ export class CreateLessonPlan extends React.Component {
                 curSlide
             }, () => {
 
-                this.setSizeOfPage(0)
+                this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
+                this.setSizeOfPage(this.pageCount)
 
                 this.preventUndo = true
 
