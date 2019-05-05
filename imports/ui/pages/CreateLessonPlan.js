@@ -83,6 +83,7 @@ export class CreateLessonPlan extends React.Component {
 
             scaleX: (document.getElementsByClassName('twelve wide column')[0].offsetWidth / 1366)
         })
+        this.handleScroll()
     }
 
     handleKeyDown(e) {
