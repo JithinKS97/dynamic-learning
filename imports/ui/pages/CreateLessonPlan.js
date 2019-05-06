@@ -72,6 +72,7 @@ export class CreateLessonPlan extends React.Component {
         this.changePageCount.bind(this)
 
         this.undoStacks = []
+        this.redoStacks = []
 
         this.savingChanges = false
 
@@ -94,6 +95,9 @@ export class CreateLessonPlan extends React.Component {
 
         if (e.keyCode === 90 && e.ctrlKey)
             this.undo()
+
+        if (e.keyCode === 89 && e.ctrlKey)
+            this.redo()
     }
 
     componentDidMount() {
@@ -592,40 +596,67 @@ export class CreateLessonPlan extends React.Component {
 
     undo = () => {
 
+        /**
+         * The function is triggered when undo button is pressed or shortcut ctrl+z is pressed
+         * From the undoStacks, from the curSlide, slide object is popped
+         * When this is done, redoStacks is pushed with current state
+         */
+
         const slide = this.undoStacks[this.state.curSlide].pop()
-        const slides = Object.values($.extend(true, {}, this.state.slides))       
+
+        if(!this.redoStacks[this.state.curSlide]) {
+
+            this.redoStacks[this.state.curSlide] = []
+        }                  
         
         if (slide) {
 
-            slides[this.state.curSlide] = slide
-            this.setState({
+            this.redoStacks[this.state.curSlide].push(this.state.slides[this.state.curSlide])
+            this.restoreStateBack(slide)
+        }
+    }
 
-                slides
-            }, () => {
+    redo() {
 
-                this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
-                this.setSizeOfPage(this.pageCount)
+        const slide = this.redoStacks[this.state.curSlide].pop()
+        this.undoStacks[this.state.curSlide].push(this.state.slides[this.state.curSlide])       
+        
+        if (slide) {
 
-                this.simsList.loadDataToSketches()
+            this.restoreStateBack(slide)
+        }
+    }
+
+    restoreStateBack = (slide) => {
+
+        const slides = Object.values($.extend(true, {}, this.state.slides)) 
+
+        slides[this.state.curSlide] = slide
+
+        this.setState({
+            slides
+        }, () => {
+
+            this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
+            this.setSizeOfPage(this.pageCount)
+            this.simsList.loadDataToSketches()
+            this.preventUndo = true
+            this.db.reset('0')
+            this.preventUndo = false
+            this.db.setImg(this.state.slides[this.state.curSlide].note)
+
+            /**
+             * If note has empty string,
+             * we explicitly clear the canvas
+             */
+
+            if (!this.state.slides[this.state.curSlide].note) {
 
                 this.preventUndo = true
-
-                this.db.reset('0')
-
+                this.db.reset({ webStorage: false, history: false, background: true });
                 this.preventUndo = false
-
-                this.db.setImg(this.state.slides[this.state.curSlide].note)
-
-                if (!this.state.slides[this.state.curSlide].note) {
-
-                    this.preventUndo = true
-
-                    this.db.reset({ webStorage: false, history: false, background: true });
-
-                    this.preventUndo = false
-                }
-            })
-        }
+            }
+        })
     }
 
     headToRequestPage() {
@@ -926,6 +957,7 @@ export class CreateLessonPlan extends React.Component {
                                     setCopiedState={this.setCopiedState.bind(this)}
                                     isRndRequired={true}
                                     undo={this.undo.bind(this)}
+                                    redo={this.redo.bind(this)}
                                     ref={e => this.simsList = e}
                                 />
 
@@ -1001,6 +1033,10 @@ export class CreateLessonPlan extends React.Component {
 
                                 <Menu.Item onClick={() => { this.undo() }}>
                                     Undo
+                                </Menu.Item>
+
+                                <Menu.Item onClick={() => { this.redo() }}>
+                                    Redo
                                 </Menu.Item>
 
                                 <Menu.Item onClick={() => {

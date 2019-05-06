@@ -242,7 +242,7 @@ class SimsDirectories extends React.Component {
 
                     />
 
-                    {this.props.isPreview && Meteor.userId()?<p>Note: Go to dashboard to organize the sims into folders</p>:null}
+                    {this.props.isPreview && Meteor.userId() && this.props.treeData.length > 0 ?<p style = {{bottom:'0px'}}>Note: Go to dashboard to organize the sims into folders</p>:null}
 
                 </div>
             </div>

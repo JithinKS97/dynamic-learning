@@ -90,8 +90,16 @@ export default class SimContainer extends React.Component{
             console.log(e.data.data)
         }
         else if(e.data.operation == 'keyPress') {
-            if(e.data.Key == 'z')
+    
+            if(e.data.Key == 'z') {
+
                 this.props.undo()
+
+            }
+            else if(e.data.Key == 'y') {
+
+                this.props.redo()
+            }
         }
 
     }
