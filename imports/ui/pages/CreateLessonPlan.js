@@ -93,11 +93,22 @@ export class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
+        e.preventDefault()
+
         if (e.keyCode === 90 && e.ctrlKey)
             this.undo()
 
         if (e.keyCode === 89 && e.ctrlKey)
             this.redo()
+
+        if(e.keyCode === 83 && e.ctrlKey)
+            this.save()
+
+        if(e.keyCode === 68)
+            this.interact()
+
+        if(e.keyCode === 67 && e.ctrlKey)
+            this.db.reset({ webStorage: false, history: false, background: true });
     }
 
     componentDidMount() {
@@ -118,6 +129,8 @@ export class CreateLessonPlan extends React.Component {
         window.addEventListener("keydown", this.handleKeyDown, false);
         this.handleWindowResize()
         $(window).scroll(this.handleScroll)
+
+        
 
     }
 
@@ -566,9 +579,14 @@ export class CreateLessonPlan extends React.Component {
 
         /*
             This function ensures that the the size of the Canvas is not reduced to a value less
-            than the bottom most point of the last simulation.
+            than the bottom most point of the last sim/textbox
             
-            Code documentation incomplete
+            initially maxHeight is set to the lowest possible value = -Infinity
+            Then we iterate through each object i.e textboxes and sims
+            
+            The y coordinate of bottom of lowest element is found out
+
+            If y > height of canvas after reduction, 1 is returned
         */
         
         var maxHeight = -Infinity;
@@ -646,6 +664,9 @@ export class CreateLessonPlan extends React.Component {
             this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
             this.setSizeOfPage(this.pageCount)
             this.simsList.loadDataToSketches()
+            /**
+             * When reset is called, we need not push the slide to undostack
+             */
             this.preventUndo = true
             this.db.reset('0')
             this.preventUndo = false
@@ -968,6 +989,8 @@ export class CreateLessonPlan extends React.Component {
                                     undo={this.undo.bind(this)}
                                     redo={this.redo.bind(this)}
                                     ref={e => this.simsList = e}
+                                    save={this.save.bind(this)}
+                                    interact = {this.interact.bind(this)}
                                 />
 
                                 <DrawingBoardCmp

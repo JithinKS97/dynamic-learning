@@ -100,6 +100,14 @@ export default class SimContainer extends React.Component{
 
                 this.props.redo()
             }
+            else if(e.data.Key == 's') {
+
+                this.props.save()
+            }
+            else if(e.data.Key == 'd') {
+
+                this.props.interact()
+            }
         }
 
     }
