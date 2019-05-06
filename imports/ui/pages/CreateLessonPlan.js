@@ -123,10 +123,13 @@ export class CreateLessonPlan extends React.Component {
 
     handleScroll = () => {
 
+        /**
+         * When transform is used the fixed value of position of drawing-board-controls is disabled
+         * So as we scroll, the top value is explicitly brought down by changing the top value to
+         * the window.scrollTop
+         */
+
         const scrollTop = $(window).scrollTop();
-
-        // console.log(scrollTop)
-
         $('.drawing-board-controls')[0].style.top = scrollTop/this.state.scaleX + 'px'
     }
 
@@ -163,6 +166,7 @@ export class CreateLessonPlan extends React.Component {
                 this.db.reset('0')
 
                 this.saveChanges(this.state.slides)
+                this.interact()
 
             }
             else {
@@ -177,6 +181,7 @@ export class CreateLessonPlan extends React.Component {
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
 
                 this.saveChanges(this.state.slides)
+                this.interact()
 
             }
         })
@@ -364,7 +369,9 @@ export class CreateLessonPlan extends React.Component {
 
     pushToUndoStacks = (oldSlide) => {
 
-        //console.log('pushed')
+        /**
+         * oldSlide is the object that get pushed to the undoStack
+         */
 
         if (this.shouldNotUndo)
             return
@@ -397,8 +404,6 @@ export class CreateLessonPlan extends React.Component {
         
         if (slides == undefined) {
 
-
-
             const slide = this.state.slides[this.state.curSlide]
 
             if (this.undoStacks[this.state.curSlide]) {
@@ -426,8 +431,6 @@ export class CreateLessonPlan extends React.Component {
             })
         }
         else if (curSlide == undefined) {
-
-
 
             const slide = this.state.slides[this.state.curSlide]
             if (!shouldNotPushToUndoStack)
@@ -482,7 +485,6 @@ export class CreateLessonPlan extends React.Component {
            slide element. If there is only one element. it is not deleted,
            it is just reset. Otherwise, the slide is deleted and the current slide is set.
         */
-
 
         const slides = Object.values($.extend(true, {}, this.state.slides))
 
@@ -598,7 +600,7 @@ export class CreateLessonPlan extends React.Component {
 
         /**
          * The function is triggered when undo button is pressed or shortcut ctrl+z is pressed
-         * From the undoStacks, from the curSlide, slide object is popped
+         * From the undoStacks, from the curSlide, slide object is popped and slide is restored
          * When this is done, redoStacks is pushed with current state
          */
 
@@ -617,6 +619,10 @@ export class CreateLessonPlan extends React.Component {
     }
 
     redo() {
+
+        /**
+         * When undo is called, the current state is saved to redoStack
+         */
 
         const slide = this.redoStacks[this.state.curSlide].pop()
         this.undoStacks[this.state.curSlide].push(this.state.slides[this.state.curSlide])       
@@ -680,6 +686,11 @@ export class CreateLessonPlan extends React.Component {
         $('canvas')[0].style.height = ($('canvas')[0].height + option * 300).toString() + 'px';
         $('canvas')[0].height += option * 300;
         $('#container')[0].style.height = $('canvas')[0].style.height;
+
+        /**
+         * When reset is called here, we need not push to undo stack
+         * preventUndo variable is used for preventing object being added to undoStacks
+         */
 
         this.preventUndo = true
 
@@ -813,7 +824,7 @@ export class CreateLessonPlan extends React.Component {
                 <p>No description to show</p>
             )
         }
-        else {
+        else {wf
             return (
                 <List divided relaxed>
                     <List.Item>
@@ -827,7 +838,6 @@ export class CreateLessonPlan extends React.Component {
                     <List.Item>
                         <List.Header>Learning Objectives</List.Header>
                         <div dangerouslySetInnerHTML={{ __html: this.state.description.learningObjectives }} />
-
                     </List.Item>
                     <List.Item>
                         <List.Header>In-Class Activites</List.Header>
@@ -846,7 +856,6 @@ export class CreateLessonPlan extends React.Component {
                         {this.state.description.standards}
                     </List.Item>
                 </List>
-
             )
         }
     }
@@ -1057,6 +1066,12 @@ export class CreateLessonPlan extends React.Component {
 
                                 <Menu.Item
                                 onClick={_.debounce(async () => {
+
+                                    /**
+                                     * lodash debounce is used to prevent multiple clicks of increase canvas size
+                                     * The multiple clicks within 100ms is converted to a single event trigger
+                                     * of the function passed
+                                     */
 
                                     if (this.pageCount == 0 || this.checkCanvasSize()) {
                                         alert("Canvas size cannot be decreased further!");
