@@ -639,7 +639,7 @@ export class CreateLessonPlan extends React.Component {
         /*
             The function is used for increasing or decreasing the size of the page.
             Option will receive either 1 or -1, 1 means to increase the size, -1 means to decrease
-            Thttps://stackoverflow.com/users/7967571/jithin-kshe height attrubute of the canvas is obtained and 300 is added / subtracted to it
+            Theight attrubute of the canvas is obtained and 300 is added / subtracted to it
             The image is restored to the canvas
             The page count value is added to the slide
         */
@@ -649,7 +649,13 @@ export class CreateLessonPlan extends React.Component {
         $('canvas')[0].style.height = ($('canvas')[0].height + option * 300).toString() + 'px';
         $('canvas')[0].height += option * 300;
         $('#container')[0].style.height = $('canvas')[0].style.height;
+
+        this.preventUndo = true
+
         this.db.reset('0');
+
+        this.preventUndo = false
+
         this.db.setImg(temp);
         const slides = Object.values($.extend(true, {}, this.state.slides))
         slides[this.state.curSlide].pageCount = this.pageCount;
@@ -675,7 +681,6 @@ export class CreateLessonPlan extends React.Component {
         slides[curSlide].textboxes.push(newTextBox)
 
         this.saveChanges(slides)
-
     }
 
     setCopiedState(set) {
