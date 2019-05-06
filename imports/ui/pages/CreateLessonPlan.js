@@ -625,10 +625,10 @@ export class CreateLessonPlan extends React.Component {
          */
 
         const slide = this.redoStacks[this.state.curSlide].pop()
-        this.undoStacks[this.state.curSlide].push(this.state.slides[this.state.curSlide])       
-        
+             
         if (slide) {
 
+            this.undoStacks[this.state.curSlide].push(this.state.slides[this.state.curSlide])  
             this.restoreStateBack(slide)
         }
     }
