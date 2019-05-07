@@ -429,9 +429,8 @@ configure({ adapter: new Adapter() });
 
             const instance = CreateLessonPlanWrapper.instance()
             
-            instance.changePageCount(1)
+            instance.changePageCount(1)          
 
-            wrapper.find('.upper-canvas')
         })    
     })
 }

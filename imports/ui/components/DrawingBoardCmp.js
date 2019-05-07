@@ -55,7 +55,7 @@ export default class DrawingBoardCmp extends React.Component {
             }
         }
 
-        return(<div style = {{backgroundColor:'black'}}><canvas id = 'c'></canvas></div>)
+        return(<canvas id = 'c'></canvas>)
     }
 }
 
