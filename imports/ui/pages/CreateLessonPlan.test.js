@@ -395,9 +395,8 @@ configure({ adapter: new Adapter() });
             instance.undo()
             expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1)
 
-            wrapper.unmount()
-           
-        })        
+            //wrapper.unmount() 
+        })    
     })
 }
 

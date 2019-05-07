@@ -19,7 +19,6 @@ export default class DrawingBoardCmp extends React.Component {
             ],
             webStorage: false
           });
-
     }
 
     render() {
