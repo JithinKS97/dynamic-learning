@@ -104,7 +104,7 @@ export class CreateLessonPlan extends React.Component {
         if(e.keyCode === 83 && e.ctrlKey)
             this.save()
 
-        if(e.keyCode === 68)
+        if(e.keyCode === 68 && e.ctrlKey)
             this.interact()
 
         if(e.keyCode === 67 && e.ctrlKey)
@@ -489,7 +489,6 @@ export class CreateLessonPlan extends React.Component {
                 this.simsList.loadDataToSketches()
             })
         }
-
     }
 
     deleteSlide(index) {

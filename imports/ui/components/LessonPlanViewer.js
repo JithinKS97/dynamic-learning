@@ -304,7 +304,7 @@ class LessonPlanViewer extends React.Component {
                     </Grid.Column>
 
                     <Grid.Column style = {{overflowX:'hidden', overflowY:'auto', padding:0, margin:0}} width = {14}>
-                            <div style = {{margin:'0px', overflowY:'auto', transform:`scale(${this.state.scaleX},${this.state.scaleX})`}}>
+                            <div style = {{paddingLeft:'4.8rem', margin:'0px', overflowY:'auto', transform:`scale(${this.state.scaleX},${this.state.scaleX})`}}>
                                 <TextBoxes 
                                     isPreview = {true}
                                     deleteTextBox = {()=>{}}
