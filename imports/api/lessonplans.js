@@ -139,8 +139,6 @@ Meteor.methods({
       throw new Meteor.Error("not-authorized");
     }
 
-    console.log(slides)
-
     new SimpleSchema({
       _id: {
         type: String,

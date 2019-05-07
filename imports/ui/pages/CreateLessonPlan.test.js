@@ -340,7 +340,7 @@ configure({ adapter: new Adapter() });
 
     })
 
-    describe('Undo', function() {
+    describe('Undo and redo', function() {
 
         let div
         
@@ -397,6 +397,49 @@ configure({ adapter: new Adapter() });
 
             wrapper.unmount() 
         })    
+
+        it('checks the working of redo', function() {
+
+
+            const wrapper = mount (
+
+                <Router history={createMemoryHistory()}>
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
+                    )}/>
+                 </Router>,
+
+                 { attachTo: window.domNode }
+            )
+
+            const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
+
+            CreateLessonPlanWrapper.setState({slides:[{notes:'0', iframes:[], textboxes:[]}]})
+
+            const instance = CreateLessonPlanWrapper.instance()
+
+            // console.log(CreateLessonPlanWrapper.state().slides)
+            // console.log(CreateLessonPlanWrapper.state().curSlide)
+
+            instance.addTextBox()
+
+            instance.undo()
+            
+            expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0)
+
+            instance.redo()
+
+            expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1)
+
+            instance.deleteTextBox(0)
+
+            instance.undo()
+            instance.redo()
+
+            expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0)
+
+            wrapper.unmount() 
+        })    
     })
 
     describe('Changing size of the canvas', function() {
@@ -424,7 +467,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({slides:[{notes:'0', iframes:[], textboxes:[]}]})
+            CreateLessonPlanWrapper.setState({...Oscillations})
 
             const instance = CreateLessonPlanWrapper.instance()
             
@@ -435,7 +478,9 @@ configure({ adapter: new Adapter() });
             instance.changePageCount(1)   
 
             expect(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')).to.equal('1500px')
-            
+
+            expect(CreateLessonPlanWrapper.state().slides[0].note).to.equal(Oscillations.slides[0].note)
+
             wrapper.unmount()
 
         })  
@@ -455,7 +500,7 @@ configure({ adapter: new Adapter() });
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
 
-            CreateLessonPlanWrapper.setState({slides:[{notes:'0', iframes:[], textboxes:[]}]})
+            CreateLessonPlanWrapper.setState({...Oscillations})
 
             const instance = CreateLessonPlanWrapper.instance()
             
@@ -484,6 +529,6 @@ configure({ adapter: new Adapter() });
     5) Interact and draw
     6) Addition of simulations
     7) Undo and redo
-    8) Increasing and decreasing
+    8) Increasing and decreasing - check
     9) According the position of simulation, allow or disallow changing of size of canvas
 */
