@@ -362,7 +362,6 @@ configure({ adapter: new Adapter() });
                  </Router>,
 
                  { attachTo: window.domNode }
-                 
             )
 
             const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
@@ -390,8 +389,6 @@ configure({ adapter: new Adapter() });
             instance.undo()
             expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0)
 
-            
-
             instance.addTextBox()
             instance.deleteTextBox(0)
 
@@ -400,11 +397,8 @@ configure({ adapter: new Adapter() });
 
             wrapper.unmount()
            
-        })
-
-        
+        })        
     })
-
 }
 
 /*

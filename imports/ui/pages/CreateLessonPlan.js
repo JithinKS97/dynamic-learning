@@ -267,7 +267,6 @@ export class CreateLessonPlan extends React.Component {
 
     setStateAfterRearranging(slides, newIndex) {
 
-
         this.setState({
             slides
         }, () => {
@@ -444,6 +443,7 @@ export class CreateLessonPlan extends React.Component {
             })
         }
         else if (curSlide == undefined) {
+            
 
             const slide = this.state.slides[this.state.curSlide]
             if (!shouldNotPushToUndoStack)
@@ -845,7 +845,7 @@ export class CreateLessonPlan extends React.Component {
                 <p>No description to show</p>
             )
         }
-        else {wf
+        else {
             return (
                 <List divided relaxed>
                     <List.Item>
