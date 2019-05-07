@@ -395,7 +395,43 @@ configure({ adapter: new Adapter() });
             instance.undo()
             expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1)
 
-            //wrapper.unmount() 
+            wrapper.unmount() 
+        })    
+    })
+
+    describe('Changing size of the canvas', function() {
+
+        let div
+        
+        before(() => {
+            div = document.createElement('div');
+            window.domNode = div;
+            document.body.appendChild(div);
+        })
+        
+        it('checks the working of undo', function() {
+
+
+            const wrapper = mount (
+
+                <Router history={createMemoryHistory()}>
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
+                    )}/>
+                 </Router>,
+
+                 { attachTo: window.domNode }
+            )
+
+            const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
+
+            CreateLessonPlanWrapper.setState({slides:[{notes:'0', iframes:[], textboxes:[]}]})
+
+            const instance = CreateLessonPlanWrapper.instance()
+            
+            instance.changePageCount(1)
+
+            wrapper.find('.upper-canvas')
         })    
     })
 }

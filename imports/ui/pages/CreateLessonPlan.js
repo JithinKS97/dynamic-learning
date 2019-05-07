@@ -111,7 +111,7 @@ export class CreateLessonPlan extends React.Component {
             this.interact()
         }
         if(e.keyCode === 67 && e.ctrlKey)
-            this.db.reset({ webStorage: false, history: false, background: true });
+            this.db.reset();
     }
 
     componentDidMount() {
@@ -193,7 +193,8 @@ export class CreateLessonPlan extends React.Component {
                 */
 
                 this.setSizeOfPage(this.pageCount)
-                this.db.reset('0');
+
+                this.db.reset();
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
 
                 this.saveChanges(this.state.slides)
@@ -219,10 +220,14 @@ export class CreateLessonPlan extends React.Component {
             First the size of the container is incremented, then the canvas's size is
             incremented
         */
+       
 
-        // $('#container')[0].style.height = (900 + pageCount * 300) + 'px';
-        // $('canvas')[0].style.height = $('#container')[0].style.height;
-        // $('canvas')[0].height = 900 + pageCount * 300;
+        $('.canvas-container')[0].style.height = (900 + pageCount * 300) + 'px';
+        $('.upper-canvas')[0].style.height = $('.canvas-container')[0].style.height;
+        $('.lower-canvas')[0].style.height = $('.canvas-container')[0].style.height;
+        $('.upper-canvas')[0].height = 900 + pageCount * 300;
+        $('.lower-canvas')[0].height = 900 + pageCount * 300;
+        
     }
 
     onChange() {
@@ -288,7 +293,7 @@ export class CreateLessonPlan extends React.Component {
         */
 
         const newSlide = {
-            note: '',
+            note: [],
             iframes: [],
             pageCount: 0,
             textboxes: []
@@ -327,6 +332,7 @@ export class CreateLessonPlan extends React.Component {
             If not logged in, user is asked to login first.
         */
 
+        console.log(this.state.slides)
 
         if (!Meteor.userId()) {
 
@@ -711,11 +717,15 @@ export class CreateLessonPlan extends React.Component {
         */
 
         var temp = this.db.getImg();
+        
         this.pageCount += option;
-        $('canvas')[0].style.height = ($('canvas')[0].height + option * 300).toString() + 'px';
-        $('canvas')[0].height += option * 300;
-        $('#container')[0].style.height = $('canvas')[0].style.height;
-
+        $('.upper-canvas')[0].style.height = ($('.upper-canvas')[0].height + option * 300).toString() + 'px';
+        $('.lower-canvas')[0].style.height = ($('.lower-canvas')[0].height + option * 300).toString() + 'px';
+        $('.upper-canvas')[0].height += option * 300;
+        $('.lower-canvas')[0].height += option * 300;
+        $('.canvas-container')[0].style.height = $('.lower-canvas')[0].style.height;
+        this.db.b.setHeight($('.upper-canvas')[0].height)
+       
         /**
          * When reset is called here, we need not push to undo stack
          * preventUndo variable is used for preventing object being added to undoStacks

@@ -35,11 +35,15 @@ export default class DrawingBoardCmp extends React.Component {
     }
 
     getImg() {
-        return this.b.getObjects()
+
+        return JSON.stringify(this.b)
     }
 
     setImg(canvasObjects) {
-        this.b.add(...canvasObjects)
+
+        if(canvasObjects) {
+            this.b.loadFromJSON((canvasObjects))
+        }
     }
 
     render() {
