@@ -563,21 +563,23 @@ export class CreateLessonPlan extends React.Component {
            pointer events.
          */
 
-        // if (this.addSim.state.isOpen)
-        //     return
+        if (this.addSim.state.isOpen)
+            return
 
-        // if (!this.state.interactEnabled) {
-        //     $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
-        // }
-        // else {
-        //     $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
-        // }
+        if (!this.state.interactEnabled) {
+            $('.upper-canvas')[0].style['pointer-events'] = 'none'
+            $('.lower-canvas')[0].style['pointer-events'] = 'none'
+        }
+        else {
+            $('.upper-canvas')[0].style['pointer-events'] = 'unset'
+            $('.lower-canvas')[0].style['pointer-events'] = 'unset'
+        }
 
-        // this.setState((state) => {
-        //     return {
-        //         interactEnabled: !state.interactEnabled
-        //     }
-        // })
+        this.setState((state) => {
+            return {
+                interactEnabled: !state.interactEnabled
+            }
+        })
     }
 
     checkCanvasSize() {

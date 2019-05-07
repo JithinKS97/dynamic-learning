@@ -23,7 +23,7 @@ export default class DrawingBoardCmp extends React.Component {
         //   });
 
         // create a wrapper around native canvas element (with id="c")
-        this.b = new fabric.Canvas('c', {isDrawingMode:true, width:1920, height:900, backgroundColor:'black'});
+        this.b = new fabric.Canvas('c', {isDrawingMode:true, width:1366, height:900, backgroundColor:'black'});
         this.b.on('mouse:up', ()=>{this.props.onChange()})
     }
 
@@ -32,7 +32,6 @@ export default class DrawingBoardCmp extends React.Component {
         this.b.clear()
         this.b.freeDrawingBrush.color = 'white'
         this.b.freeDrawingBrush.width = 3
-        this.b.setBackgroundColor('black')
     }
 
     getImg() {
@@ -52,7 +51,7 @@ export default class DrawingBoardCmp extends React.Component {
             }
         }
 
-        return(<canvas id = 'c'></canvas>)
+        return(<div style = {{backgroundColor:'black'}}><canvas id = 'c'></canvas></div>)
     }
 }
 
