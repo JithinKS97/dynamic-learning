@@ -106,9 +106,10 @@ export class CreateLessonPlan extends React.Component {
             this.save()
         }
 
-        if(e.keyCode === 68 && e.ctrlKey)
+        if(e.keyCode === 68 && e.ctrlKey) {
+            e.preventDefault()
             this.interact()
-
+        }
         if(e.keyCode === 67 && e.ctrlKey)
             this.db.reset({ webStorage: false, history: false, background: true });
     }
