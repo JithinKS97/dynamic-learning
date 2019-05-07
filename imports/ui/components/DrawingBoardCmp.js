@@ -1,24 +1,46 @@
 import React from 'react'
 import './DrawingBoard/drawingboard.js'
 
+import { fabric } from 'fabric'
+
 export default class DrawingBoardCmp extends React.Component {
 
     componentDidMount() {
 
-        this.b = new DrawingBoard.Board('container', {
-            background: true,
-            color: "#ffffff",
-            size: 2,
-            eraserColor:'transparent',
-            fillTolerance: 100,
-	        fillHack: false,
-            controls: ['Color',
-              { DrawingMode: { filler: false } },
-              { Size: { type: 'dropdown' } },
-              { Navigation: { back: false, forward: false } },
-            ],
-            webStorage: false
-          });
+        // this.b = new DrawingBoard.Board('container', {
+        //     background: true,
+        //     color: "#ffffff",
+        //     size: 2,
+        //     eraserColor:'transparent',
+        //     fillTolerance: 100,
+	    //     fillHack: false,
+        //     controls: ['Color',
+        //       { DrawingMode: { filler: false } },
+        //       { Size: { type: 'dropdown' } },
+        //       { Navigation: { back: false, forward: false } },
+        //     ],
+        //     webStorage: false
+        //   });
+
+        // create a wrapper around native canvas element (with id="c")
+        this.b = new fabric.Canvas('c', {isDrawingMode:true, width:1920, height:900, backgroundColor:'black'});
+        this.b.on('mouse:up', ()=>{this.props.onChange()})
+    }
+
+    reset() {
+
+        this.b.clear()
+        this.b.freeDrawingBrush.color = 'white'
+        this.b.freeDrawingBrush.width = 3
+        this.b.setBackgroundColor('black')
+    }
+
+    getImg() {
+        return this.b.getObjects()
+    }
+
+    setImg(canvasObjects) {
+        this.b.add(...canvasObjects)
     }
 
     render() {
@@ -30,7 +52,7 @@ export default class DrawingBoardCmp extends React.Component {
             }
         }
 
-        return(<div ref = {e => this.container = e} id="container"></div>)
+        return(<canvas id = 'c'></canvas>)
     }
 }
 

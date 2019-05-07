@@ -93,7 +93,7 @@ export class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
-        e.preventDefault()
+        
 
         if (e.keyCode === 90 && e.ctrlKey)
             this.undo()
@@ -101,8 +101,10 @@ export class CreateLessonPlan extends React.Component {
         if (e.keyCode === 89 && e.ctrlKey)
             this.redo()
 
-        if(e.keyCode === 83 && e.ctrlKey)
+        if(e.keyCode === 83 && e.ctrlKey){
+            e.preventDefault()
             this.save()
+        }
 
         if(e.keyCode === 68 && e.ctrlKey)
             this.interact()
@@ -113,7 +115,7 @@ export class CreateLessonPlan extends React.Component {
 
     componentDidMount() {
 
-        this.db = this.drawingBoard.b
+        this.db = this.drawingBoard
 
         window.onresize = this.handleWindowResize
 
@@ -123,8 +125,8 @@ export class CreateLessonPlan extends React.Component {
            called. See the definition below.
         */
 
-        this.db.ev.bind('board:reset', this.onChange.bind(this));
-        this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
+        // this.db.ev.bind('board:reset', this.onChange.bind(this));
+        // this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
 
         window.addEventListener("keydown", this.handleKeyDown, false);
         this.handleWindowResize()
@@ -142,8 +144,8 @@ export class CreateLessonPlan extends React.Component {
          * the window.scrollTop
          */
 
-        const scrollTop = $(window).scrollTop();
-        $('.drawing-board-controls')[0].style.top = scrollTop/this.state.scaleX + 'px'
+        // const scrollTop = $(window).scrollTop();
+        // $('.drawing-board-controls')[0].style.top = scrollTop/this.state.scaleX + 'px'
     }
 
 
@@ -217,15 +219,15 @@ export class CreateLessonPlan extends React.Component {
             incremented
         */
 
-        $('#container')[0].style.height = (900 + pageCount * 300) + 'px';
-        $('canvas')[0].style.height = $('#container')[0].style.height;
-        $('canvas')[0].height = 900 + pageCount * 300;
+        // $('#container')[0].style.height = (900 + pageCount * 300) + 'px';
+        // $('canvas')[0].style.height = $('#container')[0].style.height;
+        // $('canvas')[0].height = 900 + pageCount * 300;
     }
 
     onChange() {
 
-        if (this.preventUndo)
-            return
+        // if (this.preventUndo)
+        //     return
 
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
@@ -237,7 +239,11 @@ export class CreateLessonPlan extends React.Component {
 
         const { curSlide } = this.state
 
+        console.log(this.db)
+
         const note = this.db.getImg()
+
+        console.log(note)
 
         slides[curSlide].note = note
         slides[curSlide].pageCount = this.pageCount
@@ -557,21 +563,21 @@ export class CreateLessonPlan extends React.Component {
            pointer events.
          */
 
-        if (this.addSim.state.isOpen)
-            return
+        // if (this.addSim.state.isOpen)
+        //     return
 
-        if (!this.state.interactEnabled) {
-            $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
-        }
-        else {
-            $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
-        }
+        // if (!this.state.interactEnabled) {
+        //     $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+        // }
+        // else {
+        //     $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
+        // }
 
-        this.setState((state) => {
-            return {
-                interactEnabled: !state.interactEnabled
-            }
-        })
+        // this.setState((state) => {
+        //     return {
+        //         interactEnabled: !state.interactEnabled
+        //     }
+        // })
     }
 
     checkCanvasSize() {
@@ -995,6 +1001,7 @@ export class CreateLessonPlan extends React.Component {
                                 <DrawingBoardCmp
                                     toolbarVisible={true}
                                     ref={e => this.drawingBoard = e}
+                                    onChange = {this.onChange.bind(this)}
                                 />
 
                             </div>
