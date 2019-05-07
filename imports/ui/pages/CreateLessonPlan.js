@@ -982,7 +982,7 @@ export class CreateLessonPlan extends React.Component {
 
                         }} width={12}
                         >
-                            <div style={{ backgroundColor:'black',width:'1366px', transform: `scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
+                            <div className = 'canvas-cont' style={{ backgroundColor:'black',width:'1366px', transform: `scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
 
                                 <TextBoxes
 

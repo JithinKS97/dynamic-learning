@@ -409,8 +409,7 @@ configure({ adapter: new Adapter() });
             document.body.appendChild(div);
         })
         
-        it('checks the working of undo', function() {
-
+        it('checks the working of increase canvas size', function() {
 
             const wrapper = mount (
 
@@ -429,9 +428,47 @@ configure({ adapter: new Adapter() });
 
             const instance = CreateLessonPlanWrapper.instance()
             
-            instance.changePageCount(1)          
+            instance.changePageCount(1)   
+            
+            expect(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')).to.equal('1200px')
 
-        })    
+            instance.changePageCount(1)   
+
+            expect(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')).to.equal('1500px')
+            
+            wrapper.unmount()
+
+        })  
+        
+        it('checks the working of decrease canvas size', function() {
+
+            const wrapper = mount (
+
+                <Router history={createMemoryHistory()}>
+                    <Route path="/"  render={() => (
+                        <CreateLessonPlan/>
+                    )}/>
+                 </Router>,
+
+                 { attachTo: window.domNode }
+            )
+
+            const CreateLessonPlanWrapper =  wrapper.find(CreateLessonPlan)
+
+            CreateLessonPlanWrapper.setState({slides:[{notes:'0', iframes:[], textboxes:[]}]})
+
+            const instance = CreateLessonPlanWrapper.instance()
+            
+            instance.changePageCount(1)   
+            
+            expect(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')).to.equal('1200px')
+
+            instance.changePageCount(-1)   
+
+            expect(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')).to.equal('900px')
+
+            wrapper.unmount()
+        })  
     })
 }
 

@@ -148,27 +148,27 @@ Meteor.methods({
       }
     }).validate({ _id });
 
-    // new SimpleSchema({
-    //   note: {
-    //     type: String,
-    //     optional: true
-    //   },
-    //   pageCount: {
-    //     type: Number,
-    //     optional: true
-    //   },
-    //   iframes: {
-    //     type: Array,
-    //     optional: true
-    //   },
-    //   textboxes: {
-    //     type: Array,
-    //     optional: true
-    //   },
+    new SimpleSchema({
+      note: {
+        type: String,
+        optional: true
+      },
+      pageCount: {
+        type: Number,
+        optional: true
+      },
+      iframes: {
+        type: Array,
+        optional: true
+      },
+      textboxes: {
+        type: Array,
+        optional: true
+      },
 
-    //   "iframes.$": { type: Object, blackbox: true },
-    //   "textboxes.$": { type: Object, blackbox: true }
-    // }).validate(slides);
+      "iframes.$": { type: Object, blackbox: true },
+      "textboxes.$": { type: Object, blackbox: true }
+    }).validate(slides);
 
     LessonPlans.update(
       { _id, userId: this.userId },
