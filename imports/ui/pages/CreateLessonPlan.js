@@ -718,6 +718,7 @@ export class CreateLessonPlan extends React.Component {
 
         var temp = this.db.getImg();
         
+        
         this.pageCount += option;
         $('.upper-canvas')[0].style.height = ($('.upper-canvas')[0].height + option * 300).toString() + 'px';
         $('.lower-canvas')[0].style.height = ($('.lower-canvas')[0].height + option * 300).toString() + 'px';
@@ -766,20 +767,10 @@ export class CreateLessonPlan extends React.Component {
 
     setCopiedState(set) {
 
-        if (set) {
-
-            this.setState({
-
-                copied: true
-            })
-        }
-        else {
-
-            this.setState({
-
-                copied: false
-            })
-        }
+        if(set)
+            this.setState({copied: true})
+        else
+            this.setState({copied: false})
     }
 
     addDescription = () => {
@@ -978,7 +969,8 @@ export class CreateLessonPlan extends React.Component {
                             margin: '0 auto',
                             padding: 0,
                             overflowX: 'hidden',
-                            overflowY: 'hidden'
+                            overflowY: 'hidden',
+                            height: this.calcHeightOfCanvasContainer()*this.state.scaleX + 'px'
 
                         }} width={12}
                         >
@@ -1460,3 +1452,8 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     }
 
 })(CreateLessonPlan)
+
+/**
+ * 1) Create eraser, color selector, brush stroke selector
+ * 2) Remove notes from the previous lessonplans in the database
+ */
