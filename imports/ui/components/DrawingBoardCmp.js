@@ -1,36 +1,106 @@
 import React from 'react'
 import './DrawingBoard/drawingboard.js'
+import { Button, Dropdown } from 'semantic-ui-react'
+
+import { fabric } from 'fabric'
 
 export default class DrawingBoardCmp extends React.Component {
 
+    constructor(props ) {
+
+        super(props)
+        this.state = {
+            mode:'eraser',
+            size:5
+        }
+    }
+
     componentDidMount() {
 
-        this.b = new DrawingBoard.Board('container', {
-            background: true,
-            color: "#ffffff",
-            size: 2,
-            eraserColor:'transparent',
-            fillTolerance: 100,
-	        fillHack: false,
-            controls: ['Color',
-              { DrawingMode: { filler: false } },
-              { Size: { type: 'dropdown' } },
-              { Navigation: { back: false, forward: false } },
-            ],
-            webStorage: false
-          });
+        this.b = new fabric.Canvas('c', {isDrawingMode:true, width:1366, height:900, backgroundColor:'black'});
+        this.b.on('mouse:up', ()=>{this.props.onChange()})
+        
+        this.eraser = new fabric.PencilBrush(this.b)
+        this.eraser.globalCompositeOperation = 'destination-out'
+        this.eraser.width = 5
+        this.eraser.color = 'rgb(0,0,0,1)'
+
+        this.brush = new fabric.PencilBrush(this.b)
+        this.brush.color = 'white'
+        this.brush.width = 5
+
+        this.b.freeDrawingBrush = this.brush
+
+    }
+
+    reset() {
+
+        this.b.clear()
+    }
+
+    getImg() {
+
+        return JSON.stringify(this.b)
+    }
+
+    setImg(canvasObjects) {
+
+        if(canvasObjects) {
+            this.b.loadFromJSON((canvasObjects))
+        }
+    }
+
+    toggleMode() {
+
+        if(this.state.mode === 'eraser') {
+
+            this.setState({
+                mode:'pencil'
+            },()=>{
+
+                this.b.freeDrawingBrush = this.eraser
+            })
+        }
+        else {
+
+            this.setState({
+                mode:'eraser'
+            },()=>{
+
+                this.b.freeDrawingBrush = this.brush
+            })
+        }
     }
 
     render() {
 
-        if(!this.props.toolbarVisible) {
+        const brushSizes = [2,3,4,5,12,16,32]
 
-            if($('.drawing-board-controls').length>0) {
-                $('.drawing-board-controls')[0].style.visibility = 'hidden'
-            }
-        }
+        return(
+            <div>
+                <div style = {{visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}>
+                    <Button onClick = {()=>{this.toggleMode()}} style = {{margin:'1.2rem'}}>{this.state.mode}</Button>
+                    <Dropdown style = {{height:'35px', marginTop:'16.8px'}} button text={this.state.size}>
+                        <Dropdown.Menu>
+                            {brushSizes.map(brushSize=><Dropdown.Item onClick = {(e,d)=>{
+                                
+                                this.brush.width = d.text
+                                this.eraser.width = d.text
 
-        return(<div ref = {e => this.container = e} id="container"></div>)
+                                this.setState({
+
+                                    size:d.text
+                                })
+                                
+                            }} key = {brushSize} text = {brushSize}></Dropdown.Item>)}
+                        </Dropdown.Menu>                        
+                    </Dropdown>
+                    <Button style = {{margin:'1.2rem'}} onClick = {()=>{this.reset()}}>Clear canvas</Button>
+                </div>
+                <canvas id = 'c'></canvas>
+            </div>
+            
+        )
     }
 }
 

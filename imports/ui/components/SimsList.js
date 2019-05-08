@@ -107,7 +107,7 @@ export default class SimsList extends React.Component {
     
                             <Rnd 
                                
-                                bounds = '.drawing-board-canvas'
+                                bounds = '.canvas-container'
                                 dragHandleClassName = '.sim-handle'
                                 resizeHandleClasses = '.sim-resize'
                                 size={{ width: this.props.isPreview?iframe.w:iframe.w+40,  height: iframe.h}}

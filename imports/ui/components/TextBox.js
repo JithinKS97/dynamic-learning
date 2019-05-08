@@ -50,7 +50,7 @@ export default class TextBox extends React.Component {
             <Rnd
                 // style = {{backgroundColor:'red'}}
                 className = 'textbox-floating'
-                bounds = '.drawing-board-canvas'
+                bounds = '.canvas-container'
 
                 size={{ width: slides[curSlide].textboxes[index].w?slides[curSlide].textboxes[index].w:400,  height:  slides[curSlide].textboxes[index].h?slides[curSlide].textboxes[index].h:200}}     
                 
