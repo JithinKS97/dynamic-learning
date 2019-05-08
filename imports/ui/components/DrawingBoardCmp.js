@@ -34,6 +34,7 @@ export default class DrawingBoardCmp extends React.Component {
     reset() {
 
         this.b.clear()
+        this.props.saveAfterReset()
     }
 
     getImg() {

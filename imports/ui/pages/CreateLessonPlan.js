@@ -111,17 +111,18 @@ export class CreateLessonPlan extends React.Component {
             this.interact()
         }
         if(e.keyCode === 67 && e.ctrlKey){
+
             this.db.reset();
-
-            const slides = Object.values($.extend(true, {}, this.state.slides))
-
-            const { curSlide } = this.state
-            
-            slides[curSlide].note = this.db.getImg()
-
-            this.saveChanges(slides)
-
+            this.saveAfterReset()
         }
+    }
+
+    saveAfterReset = () => {
+
+        const slides = Object.values($.extend(true, {}, this.state.slides))
+        const { curSlide } = this.state            
+        slides[curSlide].note = this.db.getImg()
+        this.saveChanges(slides)  
     }
 
     componentDidMount() {
@@ -1002,6 +1003,7 @@ export class CreateLessonPlan extends React.Component {
                                     toolbarVisible={true}
                                     ref={e => this.drawingBoard = e}
                                     onChange = {this.onChange.bind(this)}
+                                    saveAfterReset = {this.saveAfterReset}
                                 />
 
                             </div>
