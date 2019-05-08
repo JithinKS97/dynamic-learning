@@ -161,8 +161,8 @@ export class CreateLessonPlan extends React.Component {
          * the window.scrollTop
          */
 
-        // const scrollTop = $(window).scrollTop();
-        // $('.drawing-board-controls')[0].style.top = scrollTop/this.state.scaleX + 'px'
+        const scrollTop = $(window).scrollTop();
+        $('.drawingBoardControls')[0].style.top = scrollTop/this.state.scaleX + 'px'
     }
 
 

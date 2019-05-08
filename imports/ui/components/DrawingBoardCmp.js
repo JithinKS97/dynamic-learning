@@ -76,7 +76,7 @@ export default class DrawingBoardCmp extends React.Component {
 
         return(
             <div>
-                <div style = {{visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}>
+                <div className = 'drawingBoardControls' style = {{visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}>
                     <Button onClick = {()=>{this.toggleMode()}} style = {{margin:'1.2rem'}}>{this.state.mode}</Button>
                     <Dropdown style = {{height:'35px', marginTop:'16.8px'}} button text={this.state.size}>
                         <Dropdown.Menu>
