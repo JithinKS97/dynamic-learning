@@ -31,14 +31,14 @@ export default class DrawingBoardCmp extends React.Component {
         // create a wrapper around native canvas element (with id="c")
         this.b = new fabric.Canvas('c', {isDrawingMode:true, width:1366, height:900, backgroundColor:'black'});
         this.b.on('mouse:up', ()=>{this.props.onChange()})
-        this.b.freeDrawingBrush.globalCompositeOperation = 'destination-out';
+        //this.b.freeDrawingBrush.globalCompositeOperation = 'destination-out';
     }
 
     reset() {
 
         this.b.clear()
-        this.b.freeDrawingBrush.color = 'rgb(0,0,0,0)'
-        this.b.freeDrawingBrush.width = 10
+        this.b.freeDrawingBrush.color = 'white'
+        this.b.freeDrawingBrush.width = 3
     }
 
     getImg() {

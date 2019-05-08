@@ -87,7 +87,7 @@ export class CreateLessonPlan extends React.Component {
         this.handleScroll()
     }
 
-    handleKeyDown(e) {
+    handleKeyDown = (e) => {
 
         /*
             This function handles the shortcut key functionalities.
@@ -110,8 +110,18 @@ export class CreateLessonPlan extends React.Component {
             e.preventDefault()
             this.interact()
         }
-        if(e.keyCode === 67 && e.ctrlKey)
+        if(e.keyCode === 67 && e.ctrlKey){
             this.db.reset();
+
+            const slides = Object.values($.extend(true, {}, this.state.slides))
+
+            const { curSlide } = this.state
+            
+            slides[curSlide].note = this.db.getImg()
+
+            this.saveChanges(slides)
+
+        }
     }
 
     componentDidMount() {
@@ -332,7 +342,6 @@ export class CreateLessonPlan extends React.Component {
             If not logged in, user is asked to login first.
         */
 
-        console.log(this.state.slides)
 
         if (!Meteor.userId()) {
 
