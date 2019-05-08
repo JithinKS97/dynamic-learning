@@ -16,7 +16,7 @@ import DOMPurify from 'dompurify'
 
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
-var _ = require('lodash');
+
 
 /* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
     is composed of a sequence of slides. Each slide contains a note (the drawing on the canvas which is
@@ -1092,31 +1092,24 @@ export class CreateLessonPlan extends React.Component {
 
                                 <Menu.Item
                                 ref="increaseCanvasButton"
-                                onClick={_.debounce(async () => {
+                                onClick={()=>{
 
-                                    await this.changePageCount(1);;
-                                }, 100)}
+                                    this.changePageCount(1)
+                                }}
                                 >
                                 Increase Canvas size
                                 </Menu.Item>
 
                                 <Menu.Item
-                                onClick={_.debounce(async () => {
-
-                                    /**
-                                     * lodash debounce is used to prevent multiple clicks of increase canvas size
-                                     * The multiple clicks within 100ms is converted to a single event trigger
-                                     * of the function passed
-                                     */
+                                onClick={() => {
 
                                     if (this.pageCount == 0 || this.checkCanvasSize()) {
                                         alert("Canvas size cannot be decreased further!");
                                         return;
                                     }
 
-                                    await this.changePageCount(-1);
-
-                                }, 100)}
+                                    this.changePageCount(-1);
+                                }}
                                 >
                                 Decrease Canvas size
                                 </Menu.Item>
