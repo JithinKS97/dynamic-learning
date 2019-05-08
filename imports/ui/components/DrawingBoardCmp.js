@@ -1,7 +1,5 @@
 import React from 'react'
-import './DrawingBoard/drawingboard.js'
 import { Button, Dropdown } from 'semantic-ui-react'
-
 import { fabric } from 'fabric'
 
 export default class DrawingBoardCmp extends React.Component {
