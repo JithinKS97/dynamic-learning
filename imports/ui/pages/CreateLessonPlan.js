@@ -242,9 +242,6 @@ export class CreateLessonPlan extends React.Component {
 
     onChange() {
 
-        // if (this.preventUndo)
-        //     return
-
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
             Here we retrieve the current slide no. and note from the states. The notes are
@@ -255,11 +252,7 @@ export class CreateLessonPlan extends React.Component {
 
         const { curSlide } = this.state
 
-        console.log(this.db)
-
         const note = this.db.getImg()
-
-        console.log(note)
 
         slides[curSlide].note = note
         slides[curSlide].pageCount = this.pageCount
@@ -454,12 +447,8 @@ export class CreateLessonPlan extends React.Component {
                 this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
                 this.setSizeOfPage(this.pageCount)
 
-                this.preventUndo = true
-
-                this.db.reset('0')
-
-                this.preventUndo = false
-
+                this.db.reset()
+        
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
                 this.simsList.loadDataToSketches()
             })
@@ -502,11 +491,8 @@ export class CreateLessonPlan extends React.Component {
                 this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
                 this.setSizeOfPage(this.pageCount)
 
-                this.preventUndo = true
+                this.db.reset()
 
-                this.db.reset('0')
-
-                this.preventUndo = false
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
                 this.simsList.loadDataToSketches()
             })
