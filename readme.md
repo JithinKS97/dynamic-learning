@@ -31,7 +31,7 @@ https://medium.com/processing-foundation/improving-science-and-math-education-us
 3) Clone the dynamic-learning-app repository
 4) Install the node dependencies by executing the command `meteor npm install --save` from the root directory
 5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
-6) Use the command `TEST_WATCH=1 meteor test --driver-package meteortesting:mocha` to run unit tests
+6) Use the command `npm test` to run unit tests
 
 ## Build using Meteor.js
 

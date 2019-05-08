@@ -87,6 +87,9 @@ export class CreateLessonPlan extends React.Component {
         this.handleScroll()
     }
 
+  
+
+
     handleKeyDown = (e) => {
 
         /*
@@ -113,6 +116,7 @@ export class CreateLessonPlan extends React.Component {
         if(e.keyCode === 67 && e.ctrlKey){
 
             this.db.reset();
+            this.saveAfterReset()
         }
     }
 
@@ -121,7 +125,9 @@ export class CreateLessonPlan extends React.Component {
         const slides = Object.values($.extend(true, {}, this.state.slides))
         const { curSlide } = this.state            
         slides[curSlide].note = this.db.getImg()
-        this.saveChanges(slides)  
+        this.setState({
+            slides
+        })  
     }
 
     componentDidMount() {
@@ -1002,7 +1008,7 @@ export class CreateLessonPlan extends React.Component {
                                     toolbarVisible={true}
                                     ref={e => this.drawingBoard = e}
                                     onChange = {this.onChange.bind(this)}
-                                    saveAfterReset = {this.saveAfterReset}
+                                    saveAfterReset = {this.saveAfterReset.bind(this)}
                                 />
 
                             </div>

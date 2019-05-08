@@ -31,7 +31,7 @@ export default class DrawingBoardCmp extends React.Component {
 
     }
 
-    reset() {
+    reset = () => {
 
         this.b.clear()
     }
@@ -93,7 +93,12 @@ export default class DrawingBoardCmp extends React.Component {
                             }} key = {brushSize} text = {brushSize}></Dropdown.Item>)}
                         </Dropdown.Menu>                        
                     </Dropdown>
-                    <Button style = {{margin:'1.2rem'}} onClick = {()=>{this.reset()}}>Clear canvas</Button>
+                    <Button style = {{margin:'1.2rem'}} onClick = {()=>{
+                        
+                            this.reset()
+                            this.props.saveAfterReset()
+                        
+                        }}>Clear canvas</Button>
                 </div>
                 <canvas id = 'c'></canvas>
             </div>
