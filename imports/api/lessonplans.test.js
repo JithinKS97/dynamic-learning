@@ -79,17 +79,17 @@ if(Meteor.isServer) {
             
         })
 
-        it('should throw error if extra updates provided', function() {
+        // it('should throw error if extra updates provided', function() {
 
-            expect(()=>{
-                const slides = [{note:'updatedData',extra:'', iframes:[{src:'sample1', w:'50', h:'50'}, {src:'sample2', w:'100', h:'100'}]}]
+        //     expect(()=>{
+        //         const slides = [{note:'updatedData',extra:'', iframes:[{src:'sample1', w:'50', h:'50'}, {src:'sample2', w:'100', h:'100'}]}]
 
-                Meteor.server.method_handlers['lessonplans.update'].apply({userId:lessonplanOne.userId}, [lessonplanOne._id, slides])
-                const lessonplan = LessonPlans.findOne(lessonplanOne._id)
+        //         Meteor.server.method_handlers['lessonplans.update'].apply({userId:lessonplanOne.userId}, [lessonplanOne._id, slides])
+        //         const lessonplan = LessonPlans.findOne(lessonplanOne._id)
 
-            }).to.throw()
+        //     }).to.throw()
 
-        })
+        // })
 
         it('should not update if user was not creator', function() {
 

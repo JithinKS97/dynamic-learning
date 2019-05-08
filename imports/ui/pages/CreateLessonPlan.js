@@ -87,13 +87,13 @@ export class CreateLessonPlan extends React.Component {
         this.handleScroll()
     }
 
-    handleKeyDown(e) {
+    handleKeyDown = (e) => {
 
         /*
             This function handles the shortcut key functionalities.
          */
 
-        e.preventDefault()
+        
 
         if (e.keyCode === 90 && e.ctrlKey)
             this.undo()
@@ -101,19 +101,32 @@ export class CreateLessonPlan extends React.Component {
         if (e.keyCode === 89 && e.ctrlKey)
             this.redo()
 
-        if(e.keyCode === 83 && e.ctrlKey)
+        if(e.keyCode === 83 && e.ctrlKey){
+            e.preventDefault()
             this.save()
+        }
 
-        if(e.keyCode === 68 && e.ctrlKey)
+        if(e.keyCode === 68 && e.ctrlKey) {
+            e.preventDefault()
             this.interact()
+        }
+        if(e.keyCode === 67 && e.ctrlKey){
+            this.db.reset();
 
-        if(e.keyCode === 67 && e.ctrlKey)
-            this.db.reset({ webStorage: false, history: false, background: true });
+            const slides = Object.values($.extend(true, {}, this.state.slides))
+
+            const { curSlide } = this.state
+            
+            slides[curSlide].note = this.db.getImg()
+
+            this.saveChanges(slides)
+
+        }
     }
 
     componentDidMount() {
 
-        this.db = this.drawingBoard.b
+        this.db = this.drawingBoard
 
         window.onresize = this.handleWindowResize
 
@@ -123,8 +136,8 @@ export class CreateLessonPlan extends React.Component {
            called. See the definition below.
         */
 
-        this.db.ev.bind('board:reset', this.onChange.bind(this));
-        this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
+        // this.db.ev.bind('board:reset', this.onChange.bind(this));
+        // this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
 
         window.addEventListener("keydown", this.handleKeyDown, false);
         this.handleWindowResize()
@@ -142,8 +155,8 @@ export class CreateLessonPlan extends React.Component {
          * the window.scrollTop
          */
 
-        const scrollTop = $(window).scrollTop();
-        $('.drawing-board-controls')[0].style.top = scrollTop/this.state.scaleX + 'px'
+        // const scrollTop = $(window).scrollTop();
+        // $('.drawing-board-controls')[0].style.top = scrollTop/this.state.scaleX + 'px'
     }
 
 
@@ -190,7 +203,8 @@ export class CreateLessonPlan extends React.Component {
                 */
 
                 this.setSizeOfPage(this.pageCount)
-                this.db.reset('0');
+
+                this.db.reset();
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
 
                 this.saveChanges(this.state.slides)
@@ -216,16 +230,17 @@ export class CreateLessonPlan extends React.Component {
             First the size of the container is incremented, then the canvas's size is
             incremented
         */
+       
 
-        $('#container')[0].style.height = (900 + pageCount * 300) + 'px';
-        $('canvas')[0].style.height = $('#container')[0].style.height;
-        $('canvas')[0].height = 900 + pageCount * 300;
+        $('.canvas-container')[0].style.height = (900 + pageCount * 300) + 'px';
+        $('.upper-canvas')[0].style.height = $('.canvas-container')[0].style.height;
+        $('.lower-canvas')[0].style.height = $('.canvas-container')[0].style.height;
+        $('.upper-canvas')[0].height = 900 + pageCount * 300;
+        $('.lower-canvas')[0].height = 900 + pageCount * 300;
+        
     }
 
     onChange() {
-
-        if (this.preventUndo)
-            return
 
         /*
             Whenever board:reset or board:StopDrawing event occurs, this function is called.
@@ -281,7 +296,7 @@ export class CreateLessonPlan extends React.Component {
         */
 
         const newSlide = {
-            note: '',
+            note: [],
             iframes: [],
             pageCount: 0,
             textboxes: []
@@ -432,12 +447,8 @@ export class CreateLessonPlan extends React.Component {
                 this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
                 this.setSizeOfPage(this.pageCount)
 
-                this.preventUndo = true
-
-                this.db.reset('0')
-
-                this.preventUndo = false
-
+                this.db.reset()
+        
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
                 this.simsList.loadDataToSketches()
             })
@@ -480,11 +491,8 @@ export class CreateLessonPlan extends React.Component {
                 this.pageCount = this.state.slides[this.state.curSlide].pageCount || 0;
                 this.setSizeOfPage(this.pageCount)
 
-                this.preventUndo = true
+                this.db.reset()
 
-                this.db.reset('0')
-
-                this.preventUndo = false
                 this.db.setImg(this.state.slides[this.state.curSlide].note)
                 this.simsList.loadDataToSketches()
             })
@@ -561,10 +569,12 @@ export class CreateLessonPlan extends React.Component {
             return
 
         if (!this.state.interactEnabled) {
-            $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+            $('.upper-canvas')[0].style['pointer-events'] = 'none'
+            $('.lower-canvas')[0].style['pointer-events'] = 'none'
         }
         else {
-            $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'unset'
+            $('.upper-canvas')[0].style['pointer-events'] = 'unset'
+            $('.lower-canvas')[0].style['pointer-events'] = 'unset'
         }
 
         this.setState((state) => {
@@ -702,11 +712,16 @@ export class CreateLessonPlan extends React.Component {
         */
 
         var temp = this.db.getImg();
+        
+        
         this.pageCount += option;
-        $('canvas')[0].style.height = ($('canvas')[0].height + option * 300).toString() + 'px';
-        $('canvas')[0].height += option * 300;
-        $('#container')[0].style.height = $('canvas')[0].style.height;
-
+        $('.upper-canvas')[0].style.height = ($('.upper-canvas')[0].height + option * 300).toString() + 'px';
+        $('.lower-canvas')[0].style.height = ($('.lower-canvas')[0].height + option * 300).toString() + 'px';
+        $('.upper-canvas')[0].height += option * 300;
+        $('.lower-canvas')[0].height += option * 300;
+        $('.canvas-container')[0].style.height = $('.lower-canvas')[0].style.height;
+        this.db.b.setHeight($('.upper-canvas')[0].height)
+       
         /**
          * When reset is called here, we need not push to undo stack
          * preventUndo variable is used for preventing object being added to undoStacks
@@ -747,20 +762,10 @@ export class CreateLessonPlan extends React.Component {
 
     setCopiedState(set) {
 
-        if (set) {
-
-            this.setState({
-
-                copied: true
-            })
-        }
-        else {
-
-            this.setState({
-
-                copied: false
-            })
-        }
+        if(set)
+            this.setState({copied: true})
+        else
+            this.setState({copied: false})
     }
 
     addDescription = () => {
@@ -937,7 +942,7 @@ export class CreateLessonPlan extends React.Component {
                 </Modal>
 
 
-                <Grid style={{ height: this.calcHeightOfCanvasContainer() + 'px', padding: 0, margin: 0 }} columns={3} divided>
+                <Grid style={{ height: this.calcHeightOfCanvasContainer()*this.state.scaleX + 'px', padding: 0, margin: 0 }} columns={3} divided>
                     <Grid.Row style={{ overflow: 'hidden' }}>
                         <Grid.Column style={{ position:'fixed', textAlign: 'center', overflow: 'auto' }} width={2}>
                             <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
@@ -959,11 +964,12 @@ export class CreateLessonPlan extends React.Component {
                             margin: '0 auto',
                             padding: 0,
                             overflowX: 'hidden',
-                            overflowY: 'hidden'
+                            overflowY: 'hidden',
+                            height: this.calcHeightOfCanvasContainer()*this.state.scaleX + 'px'
 
                         }} width={12}
                         >
-                            <div style={{ transform: `scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
+                            <div className = 'canvas-cont' style={{ backgroundColor:'black',width:'1366px', transform: `scale(${this.state.scaleX},${this.state.scaleX})`, transformOrigin: 'top left' }}>
 
                                 <TextBoxes
 
@@ -995,6 +1001,7 @@ export class CreateLessonPlan extends React.Component {
                                 <DrawingBoardCmp
                                     toolbarVisible={true}
                                     ref={e => this.drawingBoard = e}
+                                    onChange = {this.onChange.bind(this)}
                                 />
 
                             </div>
@@ -1440,3 +1447,8 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     }
 
 })(CreateLessonPlan)
+
+/**
+ * 1) Create eraser, color selector, brush stroke selector
+ * 2) Remove notes from the previous lessonplans in the database
+ */

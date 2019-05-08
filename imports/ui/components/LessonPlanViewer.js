@@ -53,7 +53,7 @@ class LessonPlanViewer extends React.Component {
 
         window.onresize = this.handleWindowResize
 
-        this.db = this.drawingBoard.b
+        this.db = this.drawingBoard
         this.undoArray= [];
         this.curPosition= [];
 
@@ -63,7 +63,7 @@ class LessonPlanViewer extends React.Component {
            called. See the definition below.
         */
 
-        $('.drawing-board-canvas-wrapper')[0].style['pointer-events'] = 'none'
+        $('.canvas-container')[0].style['pointer-events'] = 'none'
         this.handleWindowResize()
 
     }
@@ -104,23 +104,39 @@ class LessonPlanViewer extends React.Component {
 
                 if(this.state.slides.length == 0) {
 
-                    this.pushSlide(this.state.slides)
-                    
-                    $('#container')[0].style.height=900+'px';
-                    $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=900;
-                    this.db.reset('0');
+                    this.pushSlide(this.state.slides)                    
+                    this.setSizeOfPage(0)
+                    this.db.reset();
+                    this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
                 else {
                     this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                    $('#container')[0].style.height=(900+this.pageCount*300)+'px';
-                    $('canvas')[0].style.height=$('#container')[0].style.height;
-                    $('canvas')[0].height=900+this.pageCount*300;
-                    this.db.reset('0');
+                    this.setSizeOfPage(this.pageCount)
+                    this.db.reset();
                     this.db.setImg(this.state.slides[this.state.curSlide].note)
                 }
             })
         }
+    }
+
+    setSizeOfPage(pageCount) {
+
+
+        /*
+            This function sets the size of the canvas. By default the size of the page is
+            900px. The user can add extra poges. With each addition the size of the page
+            increases by 300px.
+            First the size of the container is incremented, then the canvas's size is
+            incremented
+        */
+       
+
+        $('.canvas-container')[0].style.height = (900 + pageCount * 300) + 'px';
+        $('.upper-canvas')[0].style.height = $('.canvas-container')[0].style.height;
+        $('.lower-canvas')[0].style.height = $('.canvas-container')[0].style.height;
+        $('.upper-canvas')[0].height = 900 + pageCount * 300;
+        $('.lower-canvas')[0].height = 900 + pageCount * 300;
+        
     }
 
     componentWillUnmount() {
@@ -201,11 +217,8 @@ class LessonPlanViewer extends React.Component {
                 curSlide
             },()=>{
                 this.pageCount=this.state.slides[this.state.curSlide].pageCount || 0;
-                $('#container')[0].style.height=(900+this.pageCount*300)+'px';
-                $('canvas')[0].style.height=$('#container')[0].style.height;
-                $('canvas')[0].height=900+this.pageCount*300;
-                this.db.reset('0');
-                this.db.setImg(this.state.slides[this.state.curSlide].note)
+                
+                this.setSizeOfPage(this.pageCount)
                 
                 this.simsList.loadDataToSketches()
             })
@@ -224,11 +237,8 @@ class LessonPlanViewer extends React.Component {
                 slides,
                 curSlide
             },()=>{
-              $('#container')[0].style.height=900+'px';
-              $('canvas')[0].style.height=$('#container')[0].style.height;
-              $('canvas')[0].height=900;
-              this.db.reset();
-              this.db.setImg(this.state.slides[this.state.curSlide].note)
+              
+              this.setSizeOfPage(this.pageCount)  
 
               this.simsList.loadDataToSketches()
             })
@@ -304,7 +314,7 @@ class LessonPlanViewer extends React.Component {
                     </Grid.Column>
 
                     <Grid.Column style = {{overflowX:'hidden', overflowY:'auto', padding:0, margin:0}} width = {14}>
-                            <div style = {{paddingLeft:'4.8rem', margin:'0px', overflowY:'auto', transform:`scale(${this.state.scaleX},${this.state.scaleX})`}}>
+                            <div style = {{backgroundColor:'black', paddingLeft:'4.8rem', margin:'0px', overflowY:'auto', transform:`scale(${this.state.scaleX},${this.state.scaleX})`}}>
                                 <TextBoxes 
                                     isPreview = {true}
                                     deleteTextBox = {()=>{}}
