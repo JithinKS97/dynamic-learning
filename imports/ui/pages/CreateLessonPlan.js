@@ -244,6 +244,7 @@ export class CreateLessonPlan extends React.Component {
         $('.lower-canvas')[0].style.height = $('.canvas-container')[0].style.height;
         $('.upper-canvas')[0].height = 900 + pageCount * 300;
         $('.lower-canvas')[0].height = 900 + pageCount * 300;
+        this.db.b.setHeight($('.upper-canvas')[0].height)
         
     }
 
