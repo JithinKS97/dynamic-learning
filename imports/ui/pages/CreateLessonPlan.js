@@ -342,10 +342,6 @@ export class CreateLessonPlan extends React.Component {
             If not logged in, user is asked to login first.
         */
 
-        this.setState({
-
-            saving:true
-        })
 
 
         if (!Meteor.userId()) {
@@ -398,15 +394,22 @@ export class CreateLessonPlan extends React.Component {
 
 
                 if (error) {
+
+                    this.setState({
+                        saving:true
+                    })
+
                     Meteor.call('lessonplans.update', _id, slides, (err) => {
                         alert('Saved successfully')
                         this.setState({
                             saving:false
                         })
+                        
                     })
                 }
             }
         }
+
     }
 
     pushToUndoStacks = (oldSlide) => {

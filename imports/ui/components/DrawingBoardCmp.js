@@ -23,7 +23,7 @@ export default class DrawingBoardCmp extends React.Component {
         this.eraser = new fabric.PencilBrush(this.b)
         this.eraser.globalCompositeOperation = 'destination-out'
         this.eraser.width = 5
-        this.eraser.color = 'rgb(0,0,0,1)'
+        this.eraser.color = 'black'
 
         this.brush = new fabric.PencilBrush(this.b)
         this.brush.color = 'white'
