@@ -15,6 +15,7 @@ import { Grid, Button, Modal, Checkbox, Label, Header } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import FaCode from 'react-icons/lib/fa/code'
 import TagsInput from 'react-tagsinput'
+import { generateSrc } from '../../functions/index.js'
 
 /*
     This is the Component which renders the dashboard of the application.
@@ -193,7 +194,9 @@ export default class Dashboard extends React.Component {
 
                     <Modal.Content>
                         <Modal.Description>                        
-                            <SimPreview {...this.state.node}/>                        
+                            <SimPreview 
+                                src = {this.state.node?generateSrc(this.state.node.username, this.state.node.project_id):''}
+                            />                        
                             <br/>                
                             {this.state.editable?null:<Label style = {{padding:'0.8rem', width:'18rem', textAlign:'center'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
                             {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem', width:'18rem'}} ref = {e => this.title = e}/>:null}

@@ -14,6 +14,8 @@ import FaCopy from "react-icons/lib/fa/copy";
 
 import { Session } from 'meteor/session'
 
+import {generateSrc} from '../../functions/index.js'
+
 export default class SimsList extends React.Component {
 
     constructor(props) {
@@ -169,7 +171,7 @@ export default class SimsList extends React.Component {
                                     <SimContainer
                                         {...this.props} 
                                         index = {index} 
-                                        src = {iframe.src}
+                                        src = {generateSrc(iframe.username, iframe.project_id)}
                                         {...iframe}
                                         ref = {e => this.simsRefArray[index] = e}
                                     />
@@ -194,7 +196,13 @@ export default class SimsList extends React.Component {
                                         
                                             <TiArrowMove size = '22' className = 'sim-handle'/>
 
-                                            <a className = 'link-to-code' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+                                            <a 
+                                                className = 'link-to-code'
+                                                target = '_blank'
+                                                href = {`https://editor.p5js.org/${iframe.username}/sketches/${iframe.project_id}`}
+                                            >
+                                                <FaCode size = '22' />
+                                            </a>
 
                                             <FaCopy style = {{marginTop:'0.5rem'}} onClick = {()=>{this.handleCopy(slides, curSlide, index)}} className = 'sim-copy' size = '18' /> 
 
@@ -238,14 +246,22 @@ export default class SimsList extends React.Component {
                                         isPreview = {false}
                                         {...this.props} 
                                         index = {index} 
-                                        src = {iframe.src}
+                                        src = {generateSrc(iframe.username, iframe.project_id)}
                                         {...iframe}
                                         w = {iframe.w}
                                         h = {iframe.h}
                                     />
                                 </div>
                                 <div>
-                                    <a style = {{marginLeft:'0.5rem', display:this.props.isPreview?'block':'none'}} className = 'link-to-code-lesson' target = '_blank' href = {iframe.linkToCode}><FaCode size = '22' /></a>
+                                    <a 
+                                        style = {{marginLeft:'0.5rem', 
+                                        display:this.props.isPreview?'block':'none'}} 
+                                        className = 'link-to-code-lesson' 
+                                        target = '_blank' 
+                                        href = {`https://editor.p5js.org/${iframe.username}/sketches/${iframe.project_id}`}
+                                    >
+                                        <FaCode size = '22' />
+                                    </a>
                                 </div>
                                 
                                     

@@ -25,6 +25,8 @@ import "semantic-ui-css/semantic.min.css";
 import { Tracker } from "meteor/tracker";
 import { withTracker } from "meteor/react-meteor-data";
 
+import { generateSrc } from '../../functions/index.js'
+
 /* This component renders the page where the teachers post the requests for the new simulation
     and the teachers and the other users have discussions about the simulations that they are trying to make.
 */
@@ -186,18 +188,18 @@ class Request extends React.Component {
     this.update();
   }
 
-  pushSim(title, src, w, h, linkToCode) {
+  pushSim(title, username, project_id) {
     const { slides, curSlide } = this.state;
 
     const objectToPush = {
       userId: Meteor.userId(),
-      src,
+      username,
+      project_id,
       w: 640,
       h: 360,
       x: 0,
       y: 0,
-      title,
-      linkToCode
+      title
     };
 
     slides[curSlide].iframes.push(objectToPush);
@@ -362,7 +364,7 @@ class Request extends React.Component {
               save={this.update.bind(this)}
               w={this.state.selectedSim ? this.state.selectedSim.w : 640}
               h={this.state.selectedSim ? this.state.selectedSim.h : 360}
-              src={this.state.selectedSim ? this.state.selectedSim.src : null}
+              src={this.state.selectedSim ? generateSrc(this.state.selectedSim.username, this.state.selectedSim.project_id) : null}
             />
           </Modal.Content>
         </Modal>
