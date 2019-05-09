@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, Dropdown } from 'semantic-ui-react'
 import { fabric } from 'fabric'
+import FaPencil from 'react-icons/lib/fa/pencil'
+import FaEraser from 'react-icons/lib/fa/eraser'
 
 export default class DrawingBoardCmp extends React.Component {
 
@@ -77,7 +79,9 @@ export default class DrawingBoardCmp extends React.Component {
         return(
             <div>
                 <div className = 'drawingBoardControls' style = {{visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}>
-                    <Button onClick = {()=>{this.toggleMode()}} style = {{margin:'1.2rem'}}>{this.state.mode}</Button>
+                    <Button onClick = {()=>{this.toggleMode()}} style = {{margin:'1.2rem'}}>
+                        {this.state.mode === 'pencil'?<FaPencil/>:<FaEraser/>}
+                    </Button>
                     <Dropdown style = {{height:'35px', marginTop:'16.8px'}} button text={this.state.size}>
                         <Dropdown.Menu>
                             {brushSizes.map(brushSize=><Dropdown.Item onClick = {(e,d)=>{
