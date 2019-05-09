@@ -56,7 +56,8 @@ export class CreateLessonPlan extends React.Component {
             scaleX: 1,
             description: [],
             showDescription: false,
-            addDescription: false
+            addDescription: false,
+            saving:false
         }
 
         /* PageCount holds the the value associated with the extra length of the canvas
@@ -341,6 +342,11 @@ export class CreateLessonPlan extends React.Component {
             If not logged in, user is asked to login first.
         */
 
+        this.setState({
+
+            saving:true
+        })
+
 
         if (!Meteor.userId()) {
 
@@ -394,6 +400,9 @@ export class CreateLessonPlan extends React.Component {
                 if (error) {
                     Meteor.call('lessonplans.update', _id, slides, (err) => {
                         alert('Saved successfully')
+                        this.setState({
+                            saving:false
+                        })
                     })
                 }
             }
@@ -951,6 +960,7 @@ export class CreateLessonPlan extends React.Component {
                 <Grid style={{ height: this.calcHeightOfCanvasContainer()*this.state.scaleX + 'px', padding: 0, margin: 0 }} columns={3} divided>
                     <Grid.Row style={{ overflow: 'hidden' }}>
                         <Grid.Column style={{ position:'fixed', textAlign: 'center', overflow: 'auto' }} width={2}>
+                            {this.state.saving?<p>Saving...</p>:null}
                             <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide + 1}</h1>
                             <Lists
