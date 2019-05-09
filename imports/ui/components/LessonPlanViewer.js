@@ -315,7 +315,7 @@ class LessonPlanViewer extends React.Component {
             </Dimmer>        
 
              <Grid columns={3} divided>
-                <Grid.Row style = {{overflowY:'auto'}}>         
+                <Grid.Row>         
 
                     <Grid.Column style = {{textAlign:'center'}} width = {2}>
                         <h1 style = {{marginTop:'1.6rem'}}>{this.state.curSlide+1}</h1>
