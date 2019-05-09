@@ -37,7 +37,7 @@ if(Meteor.isServer) {
 
 Meteor.methods({    
 
-    'sims.insert'(title, src, w, h, linkToCode) {
+    'sims.insert'(title, username, project_id, w, h) {
 
         if(!this.userId) {
 
@@ -48,13 +48,13 @@ Meteor.methods({
             
             userId:this.userId,
             title, 
-            src, 
+            username,
+            project_id, 
             w, 
             h,
             isFile:true,
             isPublic:false,
             parent_id:'0',
-            linkToCode,
             tags:[]
         })
     },

@@ -6,6 +6,7 @@ import SimPreview from './SimPreview'
 import SharedSims from './SharedSims'
 import FaCode from 'react-icons/lib/fa/code'
 import { Meteor } from 'meteor/meteor'
+import { generateSrc } from '../../functions';
 
 /*
     This component is for the addition of simulations to the lessonplan.
@@ -58,7 +59,8 @@ export default class AddSim extends React.Component {
 
             const sim = {
                 linkToCode:this.state.node.linkToCode,
-                src:this.state.node.src,
+                username:this.state.node.username,
+                project_id:this.state.node.project_id,
                 w:this.state.node.w,
                 h:this.state.node.h,
                 x:50,
@@ -156,7 +158,7 @@ export default class AddSim extends React.Component {
                                 </Grid.Column>
 
                                 {this.state.node?<Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
-                                    <SimPreview  {...this.state.node}/>                 
+                                    <SimPreview  src = {generateSrc(this.state.node.username, this.state.node.project_id)}/>                 
                                 </Grid.Column>:<h2 style = {{margin:'auto'}} >Select a simulation</h2>}
                                 
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem', visibility:this.state.node?'visible':'hidden'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}
