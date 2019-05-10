@@ -102,7 +102,6 @@ export default class DrawingBoardCmp extends React.Component {
                                 this.eraser.width = d.text
 
                                 this.setState({
-
                                     size:d.text
                                 })
                                 
@@ -111,7 +110,11 @@ export default class DrawingBoardCmp extends React.Component {
                     </Dropdown>
                     <Dropdown style = {{backgroundColor:this.state.selectedColor}} pointing className='link item'>
                         <Dropdown.Menu>
-                            <ChromePicker disableAlpha color={ this.state.selectedColor } onChangeComplete={ this.handleChangeComplete } />
+                            <ChromePicker 
+                                disableAlpha 
+                                color={ this.state.selectedColor } 
+                                onChangeComplete={ this.handleChangeComplete } 
+                            />
                         </Dropdown.Menu>                    
                     </Dropdown>
                     <Menu.Item onClick = {()=>{
