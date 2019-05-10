@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Dropdown } from 'semantic-ui-react'
+import { Button, Dropdown, Menu } from 'semantic-ui-react'
 import { fabric } from 'fabric'
 import FaPencil from 'react-icons/lib/fa/pencil'
 import FaEraser from 'react-icons/lib/fa/eraser'
@@ -77,11 +77,14 @@ export default class DrawingBoardCmp extends React.Component {
 
         return(
             <div>
-                <div className = 'drawingBoardControls' style = {{visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}>
-                    <Button onClick = {()=>{this.toggleMode()}} style = {{margin:'1.2rem'}}>
+                <Menu 
+                    className = 'drawingBoardControls' 
+                    style = {{visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}
+                >
+                    <Menu.Item onClick = {()=>{this.toggleMode()}}>
                         {this.state.mode === 'pencil'?<FaPencil/>:<FaEraser/>}
-                    </Button>
-                    <Dropdown style = {{height:'35px', marginTop:'16.8px'}} button text={this.state.size}>
+                    </Menu.Item>
+                    <Dropdown pointing className='link item' text={this.state.size}>
                         <Dropdown.Menu>
                             {brushSizes.map(brushSize=><Dropdown.Item onClick = {(e,d)=>{
                                 
@@ -96,13 +99,14 @@ export default class DrawingBoardCmp extends React.Component {
                             }} key = {brushSize} text = {brushSize}></Dropdown.Item>)}
                         </Dropdown.Menu>                        
                     </Dropdown>
-                    <Button style = {{margin:'1.2rem'}} onClick = {()=>{
+                    <Menu.Item onClick = {()=>{
                         
                             this.reset()
                             this.props.saveAfterReset()
                         
-                        }}>Clear canvas</Button>
-                </div>
+                        }}>Clear canvas
+                    </Menu.Item>
+                </Menu>
                 <canvas id = 'c'></canvas>
             </div>
             
