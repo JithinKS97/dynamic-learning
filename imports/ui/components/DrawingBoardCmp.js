@@ -3,6 +3,7 @@ import { Button, Dropdown, Menu } from 'semantic-ui-react'
 import { fabric } from 'fabric'
 import FaPencil from 'react-icons/lib/fa/pencil'
 import FaEraser from 'react-icons/lib/fa/eraser'
+import { SketchPicker } from 'react-color';
 
 export default class DrawingBoardCmp extends React.Component {
 
@@ -11,7 +12,8 @@ export default class DrawingBoardCmp extends React.Component {
         super(props)
         this.state = {
             mode:'eraser',
-            size:5
+            size:5,
+            selectedColor:'white'
         }
     }
 
@@ -71,6 +73,14 @@ export default class DrawingBoardCmp extends React.Component {
         }
     }
 
+    handleChangeComplete = (color) => {
+        this.setState({ selectedColor: color.hex },()=>{
+
+            this.brush.color = color.hex
+
+        });
+      };
+
     render() {
 
         const brushSizes = [2,3,4,5,12,16,32]
@@ -98,6 +108,11 @@ export default class DrawingBoardCmp extends React.Component {
                                 
                             }} key = {brushSize} text = {brushSize}></Dropdown.Item>)}
                         </Dropdown.Menu>                        
+                    </Dropdown>
+                    <Dropdown style = {{backgroundColor:this.state.selectedColor}} pointing className='link item'>
+                        <Dropdown.Menu>
+                            <SketchPicker onChangeComplete={ this.handleChangeComplete }/>
+                        </Dropdown.Menu>                    
                     </Dropdown>
                     <Menu.Item onClick = {()=>{
                         
