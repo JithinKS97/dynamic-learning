@@ -3,7 +3,7 @@ import { Button, Dropdown, Menu } from 'semantic-ui-react'
 import { fabric } from 'fabric'
 import FaPencil from 'react-icons/lib/fa/pencil'
 import FaEraser from 'react-icons/lib/fa/eraser'
-import { SketchPicker } from 'react-color';
+import { ChromePicker } from 'react-color';
 
 export default class DrawingBoardCmp extends React.Component {
 
@@ -111,7 +111,7 @@ export default class DrawingBoardCmp extends React.Component {
                     </Dropdown>
                     <Dropdown style = {{backgroundColor:this.state.selectedColor}} pointing className='link item'>
                         <Dropdown.Menu>
-                            <SketchPicker onChangeComplete={ this.handleChangeComplete }/>
+                            <ChromePicker disableAlpha color={ this.state.selectedColor } onChangeComplete={ this.handleChangeComplete } />
                         </Dropdown.Menu>                    
                     </Dropdown>
                     <Menu.Item onClick = {()=>{
