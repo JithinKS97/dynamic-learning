@@ -60,6 +60,8 @@ export default class SimPreview extends React.Component {
     }
 
     render() {
+        
+
         return (
  
             
@@ -98,14 +100,7 @@ export default class SimPreview extends React.Component {
                                 return
 
                             this.props.slides[this.props.curSlide].iframes[this.props.index].w = ref.offsetWidth
-                            this.props.slides[this.props.curSlide].iframes[this.props.index].h = ref.offsetHeight
-
-                            
-                            if(Meteor.userId() == this.props.userId){
-                                
-                                this.props.save(this.props._id, this.props.slides)
-                            }
-                            
+                            this.props.slides[this.props.curSlide].iframes[this.props.index].h = ref.offsetHeight                            
                         })
                     }}
                 
@@ -130,3 +125,9 @@ export default class SimPreview extends React.Component {
     }
    
 }
+
+/**
+ * Props
+ * 
+ * h,w,slides,src,userId,slides,index
+ */

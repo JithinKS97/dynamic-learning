@@ -1033,9 +1033,11 @@ export class CreateLessonPlan extends React.Component {
 
                         <Grid.Column width={2} style={{position:'fixed', right:0}}>
 
-
-
-                            <AddSim isPreview={true} ref={e => this.addSim = e} {...this.state} saveChanges={this.saveChanges.bind(this)} />
+                            <AddSim 
+                                isPreview={true} ref={e => this.addSim = e} 
+                                {...this.state} 
+                                saveChanges={this.saveChanges.bind(this)}
+                            />
 
                             <Menu color={'blue'} icon vertical>
                                 <Menu.Item>

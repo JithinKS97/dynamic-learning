@@ -2,9 +2,10 @@ import React from 'react'
 import { Meteor } from 'meteor/meteor'
 import SimPreview from './SimPreview'
 
-
 import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+
+import { generateSrc } from  '../../functions/index.js'
  
 
 export default class Upload extends React.Component {
@@ -21,7 +22,10 @@ export default class Upload extends React.Component {
             src:'',
             error:'',
             modalOpen: false,
-            linkToCode:''
+            linkToCode:'',
+
+            username:'',
+            project_id:''
         }
     }
 
@@ -33,96 +37,60 @@ export default class Upload extends React.Component {
         
         e.preventDefault()
 
-        let entry = this.src.value
-        let linkToCode = this.linkToCode.value
-        this.setState({
-            error:entry
-        })
+        const embedTag = this.src.value
 
+        if(this.isValidp5EmbedTag(embedTag)) {
 
-        /* The link.match checks if the iframe entered is valid by using regular
-           expression. The src should be set only if the entered tag is valid.
-        */
+            this.setState({
 
-        const tag = entry.match(`<iframe.+?src="https://editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`)
-        const link = linkToCode.match(`https://editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/sketches/[ A-Za-z0-9_@./#&+-]*`)
-
-        if(tag && link) {
-
-            const validTag = tag[0]
-            const validLink = link[0]
-            
-            /* The contents in the src is obtained using regular expression */
-
-            const src = validTag.match(`src\s*=\s*"\s*(.*)\s*">`)
-
-            const srcEnding = validTag.match(`embed/(.*)"></iframe>`)
-            const linkEnding = validLink.match(`sketches/(.*)`)
-
-            const tagUser = validTag.match(`org/(.*)/embed`)
-            const linkUser = validLink.match(`org/(.*)/sketches`)     
-
-
-            if(src && srcEnding[1] === linkEnding[1] && tagUser[1] === linkUser[1]) {
-
-                const validSrc = src[1]
-                this.setState({
-                    src: validSrc,
-                    linkToCode: validLink
-                })
-            }
-            else {
-                
-                this.setState({
-                    src:'',
-                    linkToCode:''
-                })
-            }
+                username: embedTag.match(`org/(.*)/embed`)[1],
+                project_id: embedTag.match(`embed/(.*)"`)[1]
+            })
         }
         else {
+
             this.setState({
-                src:'',
-                linkToCode:''
+
+                username:'',
+                project_id:''
             })
         }
     }
-
-    /* Dummy comment */
 
     onSubmit(e) {
 
         e.preventDefault()
 
-        const {src, linkToCode} = this.state
+        const {username, project_id} = this.state
         const w = '640px'
         const h = '360px'
         const name = this.name.value
 
-        if(src && name ) {           
+        if(username && project_id && name ) {           
 
             let uploaded = false;
 
             if(typeof this.props.methodToRun == 'string') {
                    
-                Meteor.call(this.props.methodToRun, name, src, w, h, linkToCode)
+                Meteor.call(this.props.methodToRun, name, username, project_id, w, h)
                 uploaded = true                             
             }
             else if(typeof this.props.methodToRun == 'function') {
 
-                this.props.methodToRun(name, src, w, h, linkToCode)
+                this.props.methodToRun(name, username, project_id)
                 uploaded = true                
             }
             if(uploaded == true) {
                 
                 alert('Uploaded succesfully')
                 this.setState({
-                    src:'',
+                    project_id:'',
                     error:'',
                     modalOpen: false,
                     name:null,
                     w:null,
                     h:null,
-                    linkToCode
+                    username:''
                 }) 
             }
             this.handleClose()      
@@ -130,16 +98,25 @@ export default class Upload extends React.Component {
     }
 
     handleOpen = () => this.setState({ modalOpen: true })
+
     handleClose = () => this.setState({ 
         modalOpen: false,
-        src:'',
+        username:'',
         error:'',
         modalOpen: false,
         name:null,
         w:null,
-        h:null
+        h:null,
+        project_id:''
     })
 
+    isValidp5EmbedTag(embedTag){
+    
+        if(embedTag.match(`<iframe src="https://editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`))
+            return true
+        else
+            return false
+    }
     
     render() {
 
@@ -168,17 +145,15 @@ export default class Upload extends React.Component {
                                     <label>iframe tag from p5 online text editor</label>
                                     <input ref = { e => this.src = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
                                 </Form.Field>
-                                <Form.Field>
-                                    <label>Code edit link</label>
-                                    <input ref = { e => this.linkToCode = e} onChange = {this.onEnter.bind(this)} placeholder='Iframe tag' />
-                                </Form.Field>                           
                             </Form>
 
-                                {this.state.src?
+                                {this.state.project_id && this.state.username?
                                     <Form onSubmit = {this.onSubmit.bind(this)} style = {{marginTop:'0.8rem'}}>
                                         <Form.Field>
                                             <label>Preview</label>                                            
-                                            <SimPreview {...this.state}/>                                           
+                                            <SimPreview
+                                                src = {generateSrc(this.state.username, this.state.project_id)}
+                                            />                                           
                                         </Form.Field>
                                         
                                         <Form.Field>

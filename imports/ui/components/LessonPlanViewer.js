@@ -288,7 +288,16 @@ class LessonPlanViewer extends React.Component {
         this.saveChanges(slides)
     }
 
+    calcHeightOfCanvasContainer = () => {
 
+        if(this.state.slides.length>0) {
+
+            return 900 + this.state.slides[this.state.curSlide].pageCount*300
+        }
+        else {
+            return 900
+        }
+    }
 
     render() {
 
@@ -305,16 +314,16 @@ class LessonPlanViewer extends React.Component {
                 <Loader />
             </Dimmer>        
 
-             <Grid style = {{height:'100vh', overflowY:'auto'}}  columns={3} divided>
-                <Grid.Row style = {{overflowY:'auto'}}>         
+             <Grid columns={3} divided>
+                <Grid.Row>         
 
-                    <Grid.Column style = {{textAlign:'center', overflow:'auto'}} width = {2}>
+                    <Grid.Column style = {{textAlign:'center'}} width = {2}>
                         <h1 style = {{marginTop:'1.6rem'}}>{this.state.curSlide+1}</h1>
                         <ListWithoutDelete showTitle = {false} {...this.state} delete = {this.deleteSlide.bind(this)} saveChanges= {this.saveChanges.bind(this)}/>
                     </Grid.Column>
 
-                    <Grid.Column style = {{overflowX:'hidden', overflowY:'auto', padding:0, margin:0}} width = {14}>
-                            <div style = {{backgroundColor:'black', paddingLeft:'4.8rem', margin:'0px', overflowY:'auto', transform:`scale(${this.state.scaleX},${this.state.scaleX})`}}>
+                    <Grid.Column style = {{height:'100vh', padding:0, overflowY:'auto', overflowX:'auto', margin:0}} width = {14}>
+                            <div style = {{backgroundColor:'black', paddingLeft:'4.8rem', margin:'0px'}}>
                                 <TextBoxes 
                                     isPreview = {true}
                                     deleteTextBox = {()=>{}}
