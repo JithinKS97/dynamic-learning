@@ -42,7 +42,7 @@ export default class DrawingBoardCmp extends React.Component {
 
     handleMouseDown = () => {
 
-        console.log('mouse down')
+        
     }
 
     handleMouseMove = () => {
@@ -52,7 +52,7 @@ export default class DrawingBoardCmp extends React.Component {
 
     handleMouseUp = () => {
 
-        if(this.state.mode === 'pencil' || this.state.mode === 'eraser')
+        if(this.state.option === 'pencil' || this.state.option === 'eraser')
             this.props.onChange()
     }
 

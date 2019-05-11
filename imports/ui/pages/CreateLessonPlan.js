@@ -1468,8 +1468,3 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
     }
 
 })(CreateLessonPlan)
-
-/**
- * 1) Create eraser, color selector, brush stroke selector
- * 2) Remove notes from the previous lessonplans in the database
- */
