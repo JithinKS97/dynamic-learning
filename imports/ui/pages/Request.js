@@ -37,7 +37,7 @@ class Request extends React.Component {
 
     /*
             If there are no topics, some elements need not be displayed, show variable is used to hide them.
-            slides holds the contents of each slides. Each slide constitute the new request topics, the comments
+            slides hold the contents of each slide. Each slide constitute the new request topics, the comments
             of each users and the simulations uploaded by them.
 
             curSlide holds the number of the current slide that is displayed.

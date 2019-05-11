@@ -36,7 +36,6 @@ export default class CommentForm extends React.Component {
               const curSlide = this.props.curSlide
               const comment = this.comment.value
               slides[curSlide].comments[this.props.option].replies.push({comment, userId:Meteor.userId(), time:Date.now()})
-              console.log(slides[curSlide].comments[this.props.option])
               this.props.saveChanges(slides)
               this.comment.value = ''
           }

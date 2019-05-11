@@ -1034,14 +1034,22 @@ export class CreateLessonPlan extends React.Component {
                         <Grid.Column width={2} style={{position:'fixed', right:0}}>
 
                             <AddSim 
-                                isPreview={true} ref={e => this.addSim = e} 
-                                {...this.state} 
+                                isPreview={true} 
+                                ref={e => this.addSim = e} 
+                                curSlide={this.state.curSlide}
+                                slides = {this.state.slides}
                                 saveChanges={this.saveChanges.bind(this)}
                             />
 
                             <Menu color={'blue'} icon vertical>
                                 <Menu.Item>
-                                    <Button toggle active={!this.state.interactEnabled} onClick={this.interact.bind(this)}>{this.state.interactEnabled ? 'Draw' : 'Interact'}</Button>
+                                    <Button 
+                                        toggle 
+                                        active={!this.state.interactEnabled}
+                                        onClick={this.interact.bind(this)}
+                                    >
+                                        {this.state.interactEnabled ? 'Draw' : 'Interact'}
+                                    </Button>
                                 </Menu.Item>
 
                                 <Menu.Item>
@@ -1089,7 +1097,7 @@ export class CreateLessonPlan extends React.Component {
                                     if (confirmation == true)
                                         this.reset()
                                 }}>
-                                    Reset everything
+                                    Reset lessonplan
                                 </Menu.Item>
 
                                 <Menu.Item onClick={() => { this.undo() }}>
@@ -1353,10 +1361,7 @@ export class CreateLessonPlan extends React.Component {
                                     </div>
 
                                 </Menu.Item> : null}
-
-
                             </Menu>
-
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

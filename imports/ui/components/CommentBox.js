@@ -20,8 +20,6 @@ export default class CommentBox extends React.Component {
         })
     }   
 
-
-
     constructor(props) {
 
         super(props)

@@ -15,14 +15,10 @@ export default class HorizontalList extends React.Component {
         return this.props.slides.map((slide, index)=>{
 
             return (
-                <Menu.Item
-                
+                <Menu.Item              
                     key = {index}
                     style = {{height:'100%', display:'flex', flexDirection:'column', justifyContent:this.props.userId == Meteor.userId()?'space-around':'center'}}
-                >   
-                   
-
-                        
+                >                     
                         <Button onClick = {()=>{
 
                             this.props.saveChanges(undefined, index)

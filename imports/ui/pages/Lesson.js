@@ -204,7 +204,12 @@ class Lesson extends React.Component {
                     <Grid.Column  style = {{padding:'2.4rem', width:'50vw', textAlign:'center'}}>
                         
                             <Button style = {{marginBottom:'0.8rem', visibility:this.props.lesson.userId == Meteor.userId()?'visible':'hidden'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:
-                            <AddSim saveChanges = {this.saveChanges.bind(this)} slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} isPreview = {true} ref = { e => this.addSim = e }/>
+                            <AddSim 
+                                saveChanges = {this.saveChanges.bind(this)} 
+                                slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} 
+                                isPreview = {true} 
+                                ref = { e => this.addSim = e }
+                            />
                             <div style = {{height:'100%', border:'1px dashed #cccccc', overflow:'auto'}}>
                                 <SimsList 
                                     save = {this.save.bind(this)} 

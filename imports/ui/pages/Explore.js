@@ -16,11 +16,11 @@ export default class Explore extends React.Component {
 
     render() {
         return(
-            <div style = {{padding:'1.6rem'}}>
+            <div style = {{padding:'1.6rem' }}>
                 <Link to ='/'><Button>Back</Button></Link>
                 
                 <Grid style = {{marginTop:'0.8rem'}} columns = {3} divided>
-                    <Grid.Row>
+                    <Grid.Row style = {{height:'100vh', scrolling:'no'}}>
                         <Grid.Column>
                             <Header as='h3'>Lessonplans</Header>
                             <p>Search for lessonplans or create your own</p>
