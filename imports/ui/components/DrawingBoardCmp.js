@@ -7,6 +7,7 @@ import FaEraser from 'react-icons/lib/fa/eraser'
 import { SwatchesPicker } from 'react-color';
 import FaCircleO from 'react-icons/lib/fa/circle-o'
 import GoDash from 'react-icons/lib/go/dash'
+import MdPhotoSizeSelectSmall from 'react-icons/lib/md/photo-size-select-small'
 
 export default class DrawingBoardCmp extends React.Component {
 
@@ -26,7 +27,7 @@ export default class DrawingBoardCmp extends React.Component {
         this.b = new fabric.Canvas('c', {isDrawingMode:true, width:1366, height:900, backgroundColor:'black'});
 
         this.b.on('mouse:up', this.handleMouseUp)
-        this.b.on('mouse:down', this.handleMouseMove)
+        this.b.on('mouse:down', this.handleMouseDown)
         this.b.on('mouse:move', this.handleMouseMove)
         
         this.eraser = new fabric.PencilBrush(this.b)
@@ -38,22 +39,44 @@ export default class DrawingBoardCmp extends React.Component {
         this.pencil.width = 5
 
         this.b.freeDrawingBrush = this.pencil
+        this.newRect
     }
 
-    handleMouseDown = () => {
+    handleMouseDown = (e) => {
 
-        
+        if(this.state.option === 'rect') {
+
+            this.newRect = new fabric.Rect({
+
+                left:e.pointer.x,
+                top:e.pointer.y,
+                width:0,
+                height:0,
+                fill:'red'
+            })
+        }
     }
 
-    handleMouseMove = () => {
+    handleMouseMove = (e) => {
 
-        
+        if(this.state.option == 'rect') {
+            const width = e.pointer.x - this.newRect.left  
+            const height = e.pointer.y - this.newRect.top
+
+            this.newRect.width = width
+            this.newRect.height = height
+        }
     }
 
     handleMouseUp = () => {
 
         if(this.state.option === 'pencil' || this.state.option === 'eraser')
             this.props.onChange()
+
+        if(this.state.option == 'rect') {
+
+            this.b.add($.extend(true, {}, this.newRect))
+        }
     }
 
     reset = () => {
@@ -79,10 +102,16 @@ export default class DrawingBoardCmp extends React.Component {
             option
         },()=>{
 
-            if(option === 'pencil')
+            if(option === 'pencil') {
                 this.b.freeDrawingBrush = this.pencil
-            else if(option === 'eraser')
+                this.b.isDrawingMode = true
+            }
+            else if(option === 'eraser') {
+                this.b.isDrawingMode = true
                 this.b.freeDrawingBrush = this.eraser
+            }
+            else
+                this.b.isDrawingMode = false
         })
     }
 
@@ -101,6 +130,10 @@ export default class DrawingBoardCmp extends React.Component {
                     className = 'drawingBoardControls' 
                     style = {{height:'1.2rem', visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}
                 >
+                    <Menu.Item active = {'select' === this.state.option} onClick = {()=>{this.setOption('select')}}>
+                        <MdPhotoSizeSelectSmall/>
+                    </Menu.Item>
+
                     <Menu.Item active = {'pencil' === this.state.option} onClick = {()=>{this.setOption('pencil')}}>
                         <FaPencil/>
                     </Menu.Item>
@@ -141,7 +174,7 @@ export default class DrawingBoardCmp extends React.Component {
                         
                         }}>Clear canvas
                     </Menu.Item>
-
+{/* 
                     <Menu.Item active = {this.state.option === 'line'} onClick = {()=>{this.setOption('line')}}>
                         <GoDash/>
                     </Menu.Item>
@@ -150,9 +183,9 @@ export default class DrawingBoardCmp extends React.Component {
                         <FaSquareO/>
                     </Menu.Item>
 
-                    <Menu.Item active = {this.state.option === 'circle'} onClick = {()=>{this.setOption('circle')}}>
+                    <Menu.Item active = {this.state.option === 'ellipse'} onClick = {()=>{this.setOption('ellipse')}}>
                         <FaCircleO/>
-                    </Menu.Item>
+                    </Menu.Item> */}
 
                 </Menu>
                 <canvas id = 'c'></canvas>
