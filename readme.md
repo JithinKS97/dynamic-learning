@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning-app.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning-app)
+
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
