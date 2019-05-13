@@ -130,9 +130,9 @@ export default class DrawingBoardCmp extends React.Component {
                     className = 'drawingBoardControls' 
                     style = {{height:'1.2rem', visibility:this.props.toolbarVisible?'visible':'hidden', position:'fixed', zIndex:3, display:'flex', flexDirection:'row'}}
                 >
-                    <Menu.Item active = {'select' === this.state.option} onClick = {()=>{this.setOption('select')}}>
+                    {/* <Menu.Item active = {'select' === this.state.option} onClick = {()=>{this.setOption('select')}}>
                         <MdPhotoSizeSelectSmall/>
-                    </Menu.Item>
+                    </Menu.Item> */}
 
                     <Menu.Item active = {'pencil' === this.state.option} onClick = {()=>{this.setOption('pencil')}}>
                         <FaPencil/>

@@ -23,7 +23,6 @@ import {
   Header
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
-import { Tracker } from "meteor/tracker";
 import { withTracker } from "meteor/react-meteor-data";
 
 import { generateSrc } from '../../functions/index.js'
@@ -64,7 +63,6 @@ class Request extends React.Component {
       initialized: false,
 
       topicTitleModalOpen: false,
-
       topicTitle: ""
     };
     this.update.bind(this);
@@ -76,6 +74,10 @@ class Request extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props == nextProps) return;
+
+    /**
+     * If the title for the first slide has not been yet set, show is false
+     */
 
     const show = !!nextProps.request.slides[0].title;
 

@@ -404,13 +404,11 @@ export class CreateLessonPlan extends React.Component {
                         alert('Saved successfully')
                         this.setState({
                             saving:false
-                        })
-                        
+                        })                       
                     })
                 }
             }
         }
-
     }
 
     pushToUndoStacks = (oldSlide) => {

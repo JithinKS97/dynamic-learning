@@ -263,11 +263,7 @@ export default class SimsList extends React.Component {
                                         <FaCode size = '22' />
                                     </a>
                                 </div>
-                                
-                                    
-                            </div>
-                 
-               
+                            </div>               
                     )
                 }               
             })

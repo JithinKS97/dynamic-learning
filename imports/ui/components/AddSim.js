@@ -58,7 +58,7 @@ export default class AddSim extends React.Component {
             const { curSlide } = this.props                                
 
             const sim = {
-                linkToCode:this.state.node.linkToCode,
+                
                 username:this.state.node.username,
                 project_id:this.state.node.project_id,
                 w:this.state.node.w,

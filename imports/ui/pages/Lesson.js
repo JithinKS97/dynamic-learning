@@ -11,18 +11,28 @@ import { Link } from 'react-router-dom'
 
 class Lesson extends React.Component {
 
-
-
     constructor(props) {
         super(props)
 
         this.state = {
+
+            /**
+             * curSlide keeps track of the current slide on which we are in
+             */
+
             curSlide:0
         }
     }
 
 
     addNewSlide() {
+        
+        /**
+         * This function adds a new slide to the slides array
+         * CurSlide and slides are obtained from state and props
+         * Function pushSlide is called passing in slides
+         * The curSlide is set to the index of the new slide added
+         */
 
         let {curSlide} = this.state
         let slides = this.props.lesson.slides
@@ -45,6 +55,11 @@ class Lesson extends React.Component {
         }
 
         slides.push(newSlide)
+
+        /**
+         * Save saves the current state of slides to database
+         */
+
         this.save(this.props.lesson._id, slides)
     }
 
@@ -53,11 +68,22 @@ class Lesson extends React.Component {
         if(!Meteor.userId())
             return
 
+        /**
+         * Look at imports/api/lessons to to see the Meteor method 'lessons.update'
+         * which is called from here
+         */
+
         Meteor.call('lessons.update', _id, slides)
     }
 
 
     saveChanges(slides, curSlide) {        
+
+        /**
+         * This function is used to save any changes happening to the state
+         * It accepts 2 parameters slides and curSlide
+         * 
+         */
 
         if(slides == undefined) {
 
@@ -119,6 +145,11 @@ class Lesson extends React.Component {
 
     reset() {
         
+        /**
+         * It resets the full lesson
+         * It first empties the slide and pushes a new slide into it
+         */
+
         const slides = []
         slides.push({
             url:null,
@@ -129,6 +160,12 @@ class Lesson extends React.Component {
 
     addVideo(url) {
 
+        /**
+         * Adds video to the current slide
+         * We should not allow the user to add video if he is not the owner which is checked by
+         * lesson.userId === Meteor.userId()
+         */
+
         if(this.props.lesson.userId != Meteor.userId())
             return
 
@@ -137,30 +174,13 @@ class Lesson extends React.Component {
         this.save(this.props.lesson._id, slides)
     }
 
-    pushSim(title, src, w, h, linkToCode) {
-
-        if(this.props.lesson.userId != Meteor.userId())
-            return
-
-        const { curSlide }  = this.state
-        const slides = this.props.lesson.slides
-
-        const objectToPush = {
-            userId:Meteor.userId(),
-            src,
-            w,
-            h,
-            x:0,
-            y:0,
-            title,
-            linkToCode
-        }
-
-        slides[curSlide].iframes.push(objectToPush)
-        this.save(this.props.lesson._id, slides)
-    }
-
     deleteSim(index) {
+
+        /**
+         * Deletes a particular sim in the slide
+         * It accepts the index of the sim to be deleted
+         * Takes a slide and delets slides[curSlide].iframes[index]
+         */
 
         if(this.props.lesson.userId != Meteor.userId())
             return
@@ -188,6 +208,9 @@ class Lesson extends React.Component {
                     <Grid.Column style = {{padding:'2.4rem', width:'50vw'}}>
                         
                             <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Back to dashboard</Button></Link>
+
+                            {/** Shre check box should be visible only to the owner of the lesson */}
+
                             {this.props.lesson.userId == Meteor.userId()?<Checkbox
                                 checked = {this.props.lesson.shared}
                                 ref = {e=>this.checkbox = e}
@@ -200,17 +223,31 @@ class Lesson extends React.Component {
                             <div style = {{ height:'100%', border:'1px dashed #cccccc', display:'flex', justifyContent:'center', alignItems:'center'}}>
                                 <VideoContainer userId = {this.props.lesson.userId} addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
                             </div>
+
                     </Grid.Column>
                     <Grid.Column  style = {{padding:'2.4rem', width:'50vw', textAlign:'center'}}>
                         
                             <Button style = {{marginBottom:'0.8rem', visibility:this.props.lesson.userId == Meteor.userId()?'visible':'hidden'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:
+
+                            {/** 
+                                AddSim component adds a sim to the lesson. See the function addToLesson function
+                                inside the AddSim component to know how the sim gets added.
+                            */}
+
                             <AddSim 
                                 saveChanges = {this.saveChanges.bind(this)} 
-                                slides = {this.props.lesson.slides} curSlide = {this.state.curSlide} 
+                                slides = {this.props.lesson.slides} 
+                                curSlide = {this.state.curSlide} 
                                 isPreview = {true} 
                                 ref = { e => this.addSim = e }
                             />
+
                             <div style = {{height:'100%', border:'1px dashed #cccccc', overflow:'auto'}}>
+
+                                {/**
+                                    SimsList renders the list of sims added
+                                */}
+
                                 <SimsList 
                                     save = {this.save.bind(this)} 
                                     userId = {this.props.lesson.userId} 
