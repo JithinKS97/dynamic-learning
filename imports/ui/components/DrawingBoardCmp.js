@@ -16,10 +16,10 @@ export default class DrawingBoardCmp extends React.Component {
         super(props)
         this.state = {
             option:'pencil',
-            size:5,
+            size:6,
             selectedColor:'white'
         }
-        this.brushSizes = [2,3,4,5,12,16,32]
+        this.brushSizes = [2,4,6,8,12,16,32]
     }
 
     componentDidMount() {

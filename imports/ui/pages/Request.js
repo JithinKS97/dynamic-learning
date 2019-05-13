@@ -19,7 +19,8 @@ import {
   Segment,
   Menu,
   Input,
-  TextArea
+  TextArea,
+  Header
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { Tracker } from "meteor/tracker";
@@ -414,6 +415,9 @@ class Request extends React.Component {
                 width={4}
                 style={{ overflow: "auto", padding: "0 1.6rem" }}
               >
+                <Header as='h3' dividing>
+                  Requests list
+                </Header>
                 {isOwner ? (
                   <Button
                     onClick={() => {
@@ -463,6 +467,10 @@ class Request extends React.Component {
                 width={5}
                 style={{ overflow: "auto", padding: "0 1.6rem" }}
               >
+                <Header as='h3' dividing>
+                  Uploaded sims
+                </Header>
+                  
                 {Meteor.userId() ? (
                   <div style={{ marginBottom: "1.6rem" }}>
                     {this.state.show ? (
