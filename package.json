@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "meteor test --driver-package meteortesting:mocha"
+    "test": "meteor test --once --full-app --driver-package meteortesting:mocha"
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55",
