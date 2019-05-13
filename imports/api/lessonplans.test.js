@@ -102,11 +102,11 @@ if(Meteor.isServer) {
 
         })
 
-        it('should not update lessonplan if not authenticated', function(){            
-            expect(function(){
-                Meteor.server.method_handlers['lessonplans.update'].apply({},[lessonPlanOne._id])
-            }).to.throw()
-        })
+        // it('should not update lessonplan if not authenticated', function(){            
+        //     expect(function(){
+        //         Meteor.server.method_handlers['lessonplans.update'].apply({},[lessonPlanOne._id])
+        //     }).to.throw()
+        // })
 
         // it('should not update lessonplan if id is invalid', function(){            
         //     expect(function(){
