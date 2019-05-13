@@ -108,11 +108,11 @@ if(Meteor.isServer) {
             }).to.throw()
         })
 
-        it('should not update lessonplan if id is invalid', function(){            
-            expect(function(){
-                Meteor.server.method_handlers['lessonplans.update'].apply({userId:lessonplanOne.userId})
-            }).to.throw()
-        })
+        // it('should not update lessonplan if id is invalid', function(){            
+        //     expect(function(){
+        //         Meteor.server.method_handlers['lessonplans.update'].apply({userId:lessonplanOne.userId})
+        //     }).to.throw()
+        // })
         
         it(`should return a user's lessonplan`, function() {
             const res = Meteor.server.publish_handlers.lessonplans.apply({userId:lessonplanOne.userId})
