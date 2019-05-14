@@ -118,8 +118,6 @@ I've provided necessary documentations in the components' js files in all the ar
 
 6) Login and Signup using Github, Google, email verification, password recovery.
 
-7) Smoothening of the canvas strokes- At present, there are no smoothening algorithms for the strokes in the canvas due to which they appear to be a little jagged.
-
 For feature enhancements, bug reports and contributions
 
 You can email me to jithunni.ks@gmail.com or you can create an issue in the repo.
