@@ -20,6 +20,8 @@ export default class DrawingBoardCmp extends React.Component {
             selectedColor:'white'
         }
         this.brushSizes = [2,4,6,8,12,16,32]
+        this.newRect
+        this.started = false
     }
 
     componentDidMount() {
@@ -39,12 +41,14 @@ export default class DrawingBoardCmp extends React.Component {
         this.pencil.width = 5
 
         this.b.freeDrawingBrush = this.pencil
-        this.newRect
+        
     }
 
     handleMouseDown = (e) => {
 
         if(this.state.option === 'rect') {
+
+            this.started = true
 
             this.newRect = new fabric.Rect({
 
@@ -52,31 +56,47 @@ export default class DrawingBoardCmp extends React.Component {
                 top:e.pointer.y,
                 width:0,
                 height:0,
-                fill:'red'
+                fill:'white'
             })
+
+            this.newRect.selectable = false
         }
     }
 
     handleMouseMove = (e) => {
 
         if(this.state.option == 'rect') {
-            const width = e.pointer.x - this.newRect.left  
+
+            if(this.started === false)
+                return
+
+            const width = e.pointer.x - this.newRect.left 
             const height = e.pointer.y - this.newRect.top
 
             this.newRect.width = width
             this.newRect.height = height
+
+            this.b.renderAll()
         }
     }
 
-    handleMouseUp = () => {
-
-        if(this.state.option === 'pencil' || this.state.option === 'eraser')
-            this.props.onChange()
+    handleMouseUp = () => {               
 
         if(this.state.option == 'rect') {
 
+            /**
+             * We need not add new rectangle to the canvas if its size is 0
+             */
+
+            if(this.newRect.width === 0 || this.newRect.height === 0)
+                return
+
             this.b.add($.extend(true, {}, this.newRect))
+
+            if(this.started === true)
+                this.started = false
         }
+        this.props.onChange()
     }
 
     reset = () => {
@@ -174,14 +194,17 @@ export default class DrawingBoardCmp extends React.Component {
                         
                         }}>Clear canvas
                     </Menu.Item>
+
+                    <Menu.Item active = {this.state.option === 'rect'} onClick = {()=>{this.setOption('rect')}}>
+                        <FaSquareO/>
+                    </Menu.Item>
+
 {/* 
                     <Menu.Item active = {this.state.option === 'line'} onClick = {()=>{this.setOption('line')}}>
                         <GoDash/>
                     </Menu.Item>
 
-                    <Menu.Item active = {this.state.option === 'rect'} onClick = {()=>{this.setOption('rect')}}>
-                        <FaSquareO/>
-                    </Menu.Item>
+                 
 
                     <Menu.Item active = {this.state.option === 'ellipse'} onClick = {()=>{this.setOption('ellipse')}}>
                         <FaCircleO/>
