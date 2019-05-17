@@ -164,6 +164,17 @@ export default class DrawingBoardCmp extends React.Component {
     });
   };
 
+  getIcon() {
+
+    if(this.state.option === 'rect')
+      return <FaSquareO/>
+    else if(this.state.option === 'ellipse')
+      return <FaCircleO/>
+    else if(this.state.option === 'line')
+      return <GoDash/>
+    else return <FaSquareO/>
+  }
+
   render() {
     return (
       <div>
@@ -298,37 +309,26 @@ export default class DrawingBoardCmp extends React.Component {
             Clear canvas
           </Menu.Item>
 
-          <Menu.Item
-            active={this.state.option === "rect"}
-            onClick={() => {
-              this.setOption("rect");
-            }}
-          >
-            <FaSquareO />
-          </Menu.Item>
-
-          <Dropdown.Menu>
-            <Dropdown.Item>
-              <GoDash/>
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <FaCircleO/>
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <FaSquareO />
-            </Dropdown.Item>
-          </Dropdown.Menu>
-
-          {/* 
-                    <Menu.Item active = {this.state.option === 'line'} onClick = {()=>{this.setOption('line')}}>
-                        <GoDash/>
-                    </Menu.Item>
-
-                 
-
-                    <Menu.Item active = {this.state.option === 'ellipse'} onClick = {()=>{this.setOption('ellipse')}}>
-                        <FaCircleO/>
-                    </Menu.Item> */}
+          <Dropdown style = {{background:this.state.option === 'rect' || this.state.option === 'ellipse' || this.state.option === 'line'?'#e8e8e8':'white'}}pointing className="link item" icon = {this.getIcon()}>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => {
+                this.setOption("rect")
+              }}>
+                <FaSquareO />
+              </Dropdown.Item>
+              <Dropdown.Item onClick = {()=>{
+                this.setOption("ellipse")
+              }}>
+                <FaCircleO/>
+              </Dropdown.Item>
+              <Dropdown.Item  onClick = {()=>{
+                this.setOption("line")
+              }}>
+                <GoDash/>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          
         </Menu>
         <canvas id="c" />
       </div>
