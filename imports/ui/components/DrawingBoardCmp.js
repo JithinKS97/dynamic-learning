@@ -112,6 +112,10 @@ export default class DrawingBoardCmp extends React.Component {
 
       if (this.started === true) this.started = false;
     }
+    else if(this.state.option == 'pencil') {
+
+      this.b.item(0).selectable = false
+    }
 
     this.props.onChange();
   };
@@ -125,6 +129,7 @@ export default class DrawingBoardCmp extends React.Component {
   }
 
   setImg = (canvasObjects) => {
+
     if (canvasObjects) {
       this.b.loadFromJSON(canvasObjects);
     }
