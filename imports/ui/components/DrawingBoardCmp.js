@@ -88,13 +88,12 @@ export default class DrawingBoardCmp extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
 
-    if(this.state.size!=nextState.size)
-      return true
-    else if(this.state.option!=nextState.option)
-      return true
-    else if(this.state.selectedFill!=nextState.selectedFill)
-      return true
-    else if(this.state.selectedStroke!=nextState.selectedStroke)
+    if(
+        this.state.size!=nextState.size || 
+        this.state.option!=nextState.option ||
+        this.state.selectedFill!=nextState.selectedFill ||
+        this.state.selectedStroke!=nextState.selectedStroke
+      )
       return true
     else
       return false
@@ -307,6 +306,18 @@ export default class DrawingBoardCmp extends React.Component {
           >
             <FaSquareO />
           </Menu.Item>
+
+          <Dropdown.Menu>
+            <Dropdown.Item>
+              <GoDash/>
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <FaCircleO/>
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <FaSquareO />
+            </Dropdown.Item>
+          </Dropdown.Menu>
 
           {/* 
                     <Menu.Item active = {this.state.option === 'line'} onClick = {()=>{this.setOption('line')}}>
