@@ -460,7 +460,6 @@ export class CreateLessonPlan extends React.Component {
         }
         else if (curSlide == undefined) {
             
-
             const slide = this.state.slides[this.state.curSlide]
             if (!shouldNotPushToUndoStack)
                 this.pushToUndoStacks(slide)

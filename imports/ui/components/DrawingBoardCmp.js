@@ -9,7 +9,6 @@ import FaCircleO from "react-icons/lib/fa/circle-o";
 import GoDash from "react-icons/lib/go/dash";
 import MdPhotoSizeSelectSmall from "react-icons/lib/md/photo-size-select-small";
 import MdFormatColorFill from "react-icons/lib/md/format-color-fill";
-import FaPaintBrush from "react-icons/lib/fa/paint-brush";
 import MdClose from "react-icons/lib/md/close";
 
 export default class DrawingBoardCmp extends React.Component {
@@ -68,8 +67,13 @@ export default class DrawingBoardCmp extends React.Component {
       this.b.setActiveObject(this.rect);
     }
   };
+  
 
   handleMouseMove = e => {
+
+    if(this.state.option === 'pencil')
+      return
+
     if (this.state.option == "rect") {
       if (this.started === false) return;
 
@@ -81,6 +85,20 @@ export default class DrawingBoardCmp extends React.Component {
       this.b.renderAll();
     }
   };
+
+  shouldComponentUpdate(nextProps, nextState) {
+
+    if(this.state.size!=nextState.size)
+      return true
+    else if(this.state.option!=nextState.option)
+      return true
+    else if(this.state.selectedFill!=nextState.selectedFill)
+      return true
+    else if(this.state.selectedStroke!=nextState.selectedStroke)
+      return true
+    else
+      return false
+  }
 
   handleMouseUp = () => {
     if (this.state.option == "rect") {
@@ -106,7 +124,7 @@ export default class DrawingBoardCmp extends React.Component {
     return JSON.stringify(this.b);
   }
 
-  setImg(canvasObjects) {
+  setImg = (canvasObjects) => {
     if (canvasObjects) {
       this.b.loadFromJSON(canvasObjects);
     }
@@ -166,7 +184,7 @@ export default class DrawingBoardCmp extends React.Component {
               this.setOption("pencil");
             }}
           >
-            <FaPaintBrush />
+            <FaPencil />
           </Menu.Item>
 
           <Menu.Item
