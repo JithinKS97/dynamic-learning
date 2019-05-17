@@ -26,6 +26,10 @@ https://github.com/JithinKS97/dynamic-learning-app
 
 https://medium.com/processing-foundation/improving-science-and-math-education-using-p5-js-d434beea465c
 
+## Tutorial manual Created in Gitbook
+
+https://dynamic-learning.gitbook.io/dynamic-learning/
+
 ## How to set up the development environment
 
 1) Install Meteor.js - https://www.meteor.com/
