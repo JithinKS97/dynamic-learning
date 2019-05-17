@@ -207,6 +207,11 @@ export default class DrawingBoardCmp extends React.Component {
     if (canvasObjects) {
       this.b.loadFromJSON(canvasObjects);
     }
+ 
+    this.b.forEachObject(function(object){ 
+          object.selectable = false; 
+    });
+
   }
 
   setOption(option) {
