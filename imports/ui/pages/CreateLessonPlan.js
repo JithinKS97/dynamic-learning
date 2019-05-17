@@ -137,21 +137,9 @@ export class CreateLessonPlan extends React.Component {
 
         window.onresize = this.handleWindowResize
 
-        /* board:reset and board:stopDrawing are events associated with the drawing
-           board. They are triggered whenever we press the reset button or stop
-           the drawing. Whenever these events are triggered, the onChange method is
-           called. See the definition below.
-        */
-
-        // this.db.ev.bind('board:reset', this.onChange.bind(this));
-        // this.db.ev.bind('board:stopDrawing', this.onChange.bind(this));
-
         window.addEventListener("keydown", this.handleKeyDown, false);
         this.handleWindowResize()
         $(window).scroll(this.handleScroll)
-
-        
-
     }
 
     handleScroll = () => {

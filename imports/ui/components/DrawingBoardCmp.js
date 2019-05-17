@@ -21,7 +21,7 @@ export default class DrawingBoardCmp extends React.Component {
       selectedFill: "white",
       selectedStroke: "white"
     };
-    this.brushSizes = [2, 4, 6, 8, 12, 16, 32];
+    this.brushSizes = [1, 2, 3, 4, 5, 6, 8, 12, 16, 32];
     this.newRect;
     this.started = false;
   }
