@@ -21,11 +21,12 @@ export default class DrawingBoardCmp extends React.Component {
       selectedStroke: "white"
     };
     this.brushSizes = [1, 2, 3, 4, 5, 6, 8, 12, 16, 32];
-    this.newRect;
+    this.newObject;
     this.started = false;
   }
 
   componentDidMount() {
+    
     this.b = new fabric.Canvas("c", {
       isDrawingMode: true,
       width: 1366,
@@ -52,7 +53,7 @@ export default class DrawingBoardCmp extends React.Component {
     if (this.state.option === "rect") {
       this.started = true;
 
-      this.newRect = new fabric.Rect({
+      this.newObject = new fabric.Rect({
         left: e.pointer.x,
         top: e.pointer.y,
         width: 0,
@@ -62,8 +63,8 @@ export default class DrawingBoardCmp extends React.Component {
         strokeWidth: this.state.size
       });
 
-      this.newRect.selectable = false;
-      this.b.add(this.newRect);
+      this.newObject.selectable = false;
+      this.b.add(this.newObject);
       this.b.setActiveObject(this.rect);
     }
   };
@@ -77,10 +78,10 @@ export default class DrawingBoardCmp extends React.Component {
     if (this.state.option == "rect") {
       if (this.started === false) return;
 
-      const width = e.pointer.x - this.newRect.left;
-      const height = e.pointer.y - this.newRect.top;
+      const width = e.pointer.x - this.newObject.left;
+      const height = e.pointer.y - this.newObject.top;
 
-      this.newRect.set("width", width).set("height", height);
+      this.newObject.set("width", width).set("height", height);
 
       this.b.renderAll();
     }
@@ -105,9 +106,9 @@ export default class DrawingBoardCmp extends React.Component {
        * We need not add new rectangle to the canvas if its size is 0
        */
 
-      if (this.newRect.width === 0 || this.newRect.height === 0) return;
+      if (this.newObject.width === 0 || this.newObject.height === 0) return;
 
-      this.b.add($.extend(true, {}, this.newRect));
+      this.b.add($.extend(true, {}, this.newObject));
 
       if (this.started === true) this.started = false;
     }
@@ -328,7 +329,7 @@ export default class DrawingBoardCmp extends React.Component {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          
+
         </Menu>
         <canvas id="c" />
       </div>
