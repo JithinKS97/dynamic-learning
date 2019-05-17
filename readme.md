@@ -104,6 +104,10 @@ Another functionality I wanted to add was the ability to save the state of the s
 
 I've provided necessary documentations in the components' js files in all the areas where I felt like clarifications are necessary.
 
+#### Icons
+
+Icons have been used from the site `http://react-icons.github.io`
+
 ## Features that can be added
 
 1) In GSoC 2018, my main target was to develop the overall basic structure of the application on top of which further development can be done. I haven't given much emphasis on the design aspects and didn't go much into the styling (The Components of Semantic UI React comes up with the essential styles that are needed). The app needs a general styling template.
