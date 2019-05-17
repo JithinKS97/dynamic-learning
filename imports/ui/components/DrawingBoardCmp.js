@@ -260,10 +260,10 @@ export default class DrawingBoardCmp extends React.Component {
                 color={this.state.selectedStroke}
                 onChangeComplete={this.handleStrokeSelection}
               />
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 icon={<MdClose color="red" />}
                 style={{ marginTop: "1.2rem" }}
-              />
+              /> */}
             </Dropdown.Menu>
           </Dropdown>
 
