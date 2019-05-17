@@ -8,6 +8,9 @@ import { SwatchesPicker } from 'react-color';
 import FaCircleO from 'react-icons/lib/fa/circle-o'
 import GoDash from 'react-icons/lib/go/dash'
 import MdPhotoSizeSelectSmall from 'react-icons/lib/md/photo-size-select-small'
+import MdFormatColorFill from 'react-icons/lib/md/format-color-fill'
+import FaPaintBrush from 'react-icons/lib/fa/paint-brush'
+
 
 export default class DrawingBoardCmp extends React.Component {
 
@@ -17,7 +20,8 @@ export default class DrawingBoardCmp extends React.Component {
         this.state = {
             option:'pencil',
             size:6,
-            selectedColor:'white'
+            selectedFill:'white',
+            selectedStroke:'white'
         }
         this.brushSizes = [2,4,6,8,12,16,32]
         this.newRect
@@ -56,10 +60,14 @@ export default class DrawingBoardCmp extends React.Component {
                 top:e.pointer.y,
                 width:0,
                 height:0,
-                fill:'white'
+                fill: this.state.selectedFill,
+                stroke: this.state.selectedStroke,
+                strokeWidth: this.state.size
             })
 
             this.newRect.selectable = false
+            this.b.add(this.newRect); 
+            this.b.setActiveObject(this.rect); 
         }
     }
 
@@ -73,8 +81,7 @@ export default class DrawingBoardCmp extends React.Component {
             const width = e.pointer.x - this.newRect.left 
             const height = e.pointer.y - this.newRect.top
 
-            this.newRect.width = width
-            this.newRect.height = height
+            this.newRect.set('width', width).set('height', height)
 
             this.b.renderAll()
         }
@@ -96,6 +103,7 @@ export default class DrawingBoardCmp extends React.Component {
             if(this.started === true)
                 this.started = false
         }
+        
         this.props.onChange()
     }
 
@@ -130,17 +138,26 @@ export default class DrawingBoardCmp extends React.Component {
                 this.b.isDrawingMode = true
                 this.b.freeDrawingBrush = this.eraser
             }
-            else
+            else {
                 this.b.isDrawingMode = false
+                this.b.selection = false
+            }
         })
     }
 
-    handleChangeComplete = (color) => {
+    handleFillSelection = (color) => {
 
-        this.setState({ selectedColor: color.hex },()=>{
+        this.setState({ selectedFill: color.hex },()=>{
+            
+        });
+    }
+
+    handleStrokeSelection = (color) => {
+
+        this.setState({ selectedStroke: color.hex },()=>{
             this.pencil.color = color.hex
         });
-      }
+    }
 
     render() {
 
@@ -155,7 +172,7 @@ export default class DrawingBoardCmp extends React.Component {
                     </Menu.Item> */}
 
                     <Menu.Item active = {'pencil' === this.state.option} onClick = {()=>{this.setOption('pencil')}}>
-                        <FaPencil/>
+                        <FaPaintBrush/>
                     </Menu.Item>
 
                     <Menu.Item active = {'eraser' === this.state.option}  onClick = {()=>{this.setOption('eraser')}}>
@@ -177,12 +194,22 @@ export default class DrawingBoardCmp extends React.Component {
                         </Dropdown.Menu>                        
                     </Dropdown>
 
-                    <Dropdown style = {{backgroundColor:this.state.selectedColor}} pointing className='link item'>
+                    <Dropdown icon = {<MdFormatColorFill/>} style = {{backgroundColor:this.state.selectedFill}} pointing className='link item'>
+                        
                         <Dropdown.Menu>
                             <SwatchesPicker 
-                                 
-                                color={ this.state.selectedColor } 
-                                onChangeComplete={ this.handleChangeComplete } 
+                                color={ this.state.selectedFill } 
+                                onChangeComplete={ this.handleFillSelection } 
+                            />
+                        </Dropdown.Menu>                    
+                    </Dropdown>
+
+
+                    <Dropdown style = {{backgroundColor:this.state.selectedStroke}}  icon = {<FaPencil/>} pointing className='link item'>
+                        <Dropdown.Menu>
+                            <SwatchesPicker 
+                                color={ this.state.selectedStroke } 
+                                onChangeComplete={ this.handleStrokeSelection } 
                             />
                         </Dropdown.Menu>                    
                     </Dropdown>
@@ -199,7 +226,7 @@ export default class DrawingBoardCmp extends React.Component {
                         <FaSquareO/>
                     </Menu.Item>
 
-{/* 
+                {/* 
                     <Menu.Item active = {this.state.option === 'line'} onClick = {()=>{this.setOption('line')}}>
                         <GoDash/>
                     </Menu.Item>
