@@ -27,11 +27,12 @@ export default class DrawingBoardCmp extends React.Component {
 
   componentDidMount() {
     
-    this.b = new fabric.Canvas("c", {
+    this.b = new fabric.Canvas("c", {      
       isDrawingMode: true,
       width: 1366,
       height: 900,
-      backgroundColor: "black"
+      backgroundColor: "black",
+      selection:false
     });
 
     this.b.on("mouse:up", this.handleMouseUp);
@@ -50,7 +51,9 @@ export default class DrawingBoardCmp extends React.Component {
   }
 
   handleMouseDown = e => {
+
     if (this.state.option === "rect") {
+
       this.started = true;
 
       this.newObject = new fabric.Rect({
@@ -63,10 +66,39 @@ export default class DrawingBoardCmp extends React.Component {
         strokeWidth: this.state.size
       });
 
-      this.newObject.selectable = false;
       this.b.add(this.newObject);
-      this.b.setActiveObject(this.rect);
     }
+    else if(this.state.option === 'ellipse') {
+
+      this.started = true;
+
+      this.newObject = new fabric.Ellipse({
+
+        left: e.pointer.x,
+        top: e.pointer.y,
+        rx:0,
+        ry:0,
+        fill: this.state.selectedFill,
+        stroke: this.state.selectedStroke,
+        strokeWidth: this.state.size
+      })
+
+      this.b.add(this.newObject)
+    }
+    else if(this.state.option === 'line') {
+
+      this.started = true
+
+      this.newObject = new fabric.Line([e.pointer.x, e.pointer.y, e.pointer.x, e.pointer.y], {
+
+        strokeWidth: this.state.size,
+        stroke: this.state.selectedStroke,
+        originX: 'center',
+        originY: 'center'
+      })
+
+      this.b.add(this.newObject)
+    }    
   };
   
 
@@ -85,6 +117,27 @@ export default class DrawingBoardCmp extends React.Component {
 
       this.b.renderAll();
     }
+    else if(this.state.option === 'ellipse') {
+      
+      if (this.started === false) return;
+
+      const rx = e.pointer.x - this.newObject.left;
+      const ry = e.pointer.y - this.newObject.top;
+
+      if(rx <0 || ry  <0)
+        return
+
+      this.newObject.set({"rx": rx/2, "ry":ry/2})
+      this.b.renderAll();
+    }
+    else if(this.state.option === 'line') {
+
+      if(this.started == false) return;
+ 
+      this.newObject.set({ x2: e.pointer.x, y2: e.pointer.y });
+
+      this.b.renderAll()
+    }
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -101,6 +154,10 @@ export default class DrawingBoardCmp extends React.Component {
   }
 
   handleMouseUp = () => {
+
+    if(this.newObject)
+      this.newObject.set('selectable', false)
+
     if (this.state.option == "rect") {
       /**
        * We need not add new rectangle to the canvas if its size is 0
@@ -111,6 +168,23 @@ export default class DrawingBoardCmp extends React.Component {
       this.b.add($.extend(true, {}, this.newObject));
 
       if (this.started === true) this.started = false;
+    }
+    else if(this.state.option === 'ellipse') {
+
+      if (this.newObject.rx === 0 || this.newObject.ry === 0) return;
+
+      this.b.add($.extend(true, {}, this.newObject));
+
+      if (this.started === true) this.started = false;
+    }
+    else if(this.state.option === 'line') {
+
+      // if(this.b.x1 === this.b.x2 && this.b.y1 === this.b.y2)
+      //   return
+
+      this.b.add($.extend(true, {}, this.newObject));
+
+      if(this.started === true) this.started = false;
     }
     else if(this.state.option == 'pencil') {
 
@@ -149,7 +223,6 @@ export default class DrawingBoardCmp extends React.Component {
           this.b.freeDrawingBrush = this.eraser;
         } else {
           this.b.isDrawingMode = false;
-          this.b.selection = false;
         }
       }
     );
@@ -319,6 +392,7 @@ export default class DrawingBoardCmp extends React.Component {
               </Dropdown.Item>
               <Dropdown.Item onClick = {()=>{
                 this.setOption("ellipse")
+                
               }}>
                 <FaCircleO/>
               </Dropdown.Item>
