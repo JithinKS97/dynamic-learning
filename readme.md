@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning-app.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning-app)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![License: LGPL v2.1](https://img.shields.io/cpan/l/Config-Augeas.svg)](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html
 
