@@ -155,8 +155,10 @@ export default class DrawingBoardCmp extends React.Component {
 
   handleMouseUp = () => {
 
-    if(this.newObject)
+    if(this.newObject) {
       this.newObject.set('selectable', false)
+      this.newObject.set('hoverCursor', 'default')
+    }
 
     if (this.state.option == "rect") {
       /**
@@ -210,8 +212,8 @@ export default class DrawingBoardCmp extends React.Component {
  
     this.b.forEachObject(function(object){ 
           object.selectable = false; 
+          object.hoverCursor = 'default'
     });
-
   }
 
   setOption(option) {
