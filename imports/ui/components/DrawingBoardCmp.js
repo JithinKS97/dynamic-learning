@@ -9,9 +9,9 @@ import FaCircleO from "react-icons/lib/fa/circle-o";
 import GoDash from "react-icons/lib/go/dash";
 import MdPhotoSizeSelectSmall from "react-icons/lib/md/photo-size-select-small";
 import MdFormatColorFill from "react-icons/lib/md/format-color-fill";
-import MdClose from "react-icons/lib/md/close";
 
 export default class DrawingBoardCmp extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,8 +31,7 @@ export default class DrawingBoardCmp extends React.Component {
       isDrawingMode: true,
       width: 1366,
       height: 900,
-      backgroundColor: "black",
-      selection:false
+      backgroundColor: "black"
     });
 
     this.b.on("mouse:up", this.handleMouseUp);
@@ -53,7 +52,7 @@ export default class DrawingBoardCmp extends React.Component {
   handleMouseDown = e => {
 
     if (this.state.option === "rect") {
-
+      
       this.started = true;
 
       this.newObject = new fabric.Rect({
@@ -63,7 +62,9 @@ export default class DrawingBoardCmp extends React.Component {
         height: 0,
         fill: this.state.selectedFill,
         stroke: this.state.selectedStroke,
-        strokeWidth: this.state.size
+        strokeWidth: this.state.size,
+        selectable:false,
+        hoverCursor:'default'
       });
 
       this.b.add(this.newObject);
@@ -80,7 +81,10 @@ export default class DrawingBoardCmp extends React.Component {
         ry:0,
         fill: this.state.selectedFill,
         stroke: this.state.selectedStroke,
-        strokeWidth: this.state.size
+        strokeWidth: this.state.size,        
+        selectable:false,
+        hoverCursor:'default'
+
       })
 
       this.b.add(this.newObject)
@@ -94,7 +98,9 @@ export default class DrawingBoardCmp extends React.Component {
         strokeWidth: this.state.size,
         stroke: this.state.selectedStroke,
         originX: 'center',
-        originY: 'center'
+        originY: 'center',
+        selectable:false,
+        hoverCursor:'default'
       })
 
       this.b.add(this.newObject)
@@ -114,6 +120,7 @@ export default class DrawingBoardCmp extends React.Component {
       const height = e.pointer.y - this.newObject.top;
 
       this.newObject.set("width", width).set("height", height);
+      this.newObject.setCoords();
 
       this.b.renderAll();
     }
@@ -128,6 +135,8 @@ export default class DrawingBoardCmp extends React.Component {
         return
 
       this.newObject.set({"rx": rx/2, "ry":ry/2})
+      this.newObject.setCoords();
+
       this.b.renderAll();
     }
     else if(this.state.option === 'line') {
@@ -135,6 +144,7 @@ export default class DrawingBoardCmp extends React.Component {
       if(this.started == false) return;
  
       this.newObject.set({ x2: e.pointer.x, y2: e.pointer.y });
+      this.newObject.setCoords();
 
       this.b.renderAll()
     }
@@ -155,11 +165,6 @@ export default class DrawingBoardCmp extends React.Component {
 
   handleMouseUp = () => {
 
-    if(this.newObject) {
-      this.newObject.set('selectable', false)
-      this.newObject.set('hoverCursor', 'default')
-    }
-
     if (this.state.option == "rect") {
       /**
        * We need not add new rectangle to the canvas if its size is 0
@@ -167,15 +172,11 @@ export default class DrawingBoardCmp extends React.Component {
 
       if (this.newObject.width === 0 || this.newObject.height === 0) return;
 
-      this.b.add($.extend(true, {}, this.newObject));
-
       if (this.started === true) this.started = false;
     }
     else if(this.state.option === 'ellipse') {
 
       if (this.newObject.rx === 0 || this.newObject.ry === 0) return;
-
-      this.b.add($.extend(true, {}, this.newObject));
 
       if (this.started === true) this.started = false;
     }
@@ -184,13 +185,7 @@ export default class DrawingBoardCmp extends React.Component {
       // if(this.b.x1 === this.b.x2 && this.b.y1 === this.b.y2)
       //   return
 
-      this.b.add($.extend(true, {}, this.newObject));
-
       if(this.started === true) this.started = false;
-    }
-    else if(this.state.option == 'pencil') {
-
-      this.b.item(0).selectable = false
     }
 
     this.props.onChange();
@@ -209,10 +204,18 @@ export default class DrawingBoardCmp extends React.Component {
     if (canvasObjects) {
       this.b.loadFromJSON(canvasObjects);
     }
- 
+
+    this.setSelectionStatus(false)
+  }
+
+  setSelectionStatus = (status) => {
+
+    this.b.selection = status
+
     this.b.forEachObject(function(object){ 
-          object.selectable = false; 
-          object.hoverCursor = 'default'
+      
+      object.selectable = status; 
+      object.hoverCursor = status?'hand':'default'
     });
   }
 
@@ -223,12 +226,23 @@ export default class DrawingBoardCmp extends React.Component {
       },
       () => {
         if (option === "pencil") {
+
           this.b.freeDrawingBrush = this.pencil;
           this.b.isDrawingMode = true;
+
         } else if (option === "eraser") {
+
           this.b.isDrawingMode = true;
           this.b.freeDrawingBrush = this.eraser;
+
+        } else if (option === 'select') {
+
+          this.b.isDrawingMode = false
+          this.setSelectionStatus(true)
+
         } else {
+          
+          this.setSelectionStatus(false)
           this.b.isDrawingMode = false;
         }
       }
@@ -270,9 +284,9 @@ export default class DrawingBoardCmp extends React.Component {
             flexDirection: "row"
           }}
         >
-          {/* <Menu.Item active = {'select' === this.state.option} onClick = {()=>{this.setOption('select')}}>
-                        <MdPhotoSizeSelectSmall/>
-                    </Menu.Item> */}
+          <Menu.Item active = {'select' === this.state.option} onClick = {()=>{this.setOption('select')}}>
+              <MdPhotoSizeSelectSmall/>
+            </Menu.Item>
 
           <Menu.Item
             active={"pencil" === this.state.option}
