@@ -247,10 +247,33 @@ export default class DrawingBoardCmp extends React.Component {
   }
 
   handleFillSelection = color => {
-    this.setState({ selectedFill: color.hex }, () => {});
+
+    if(this.state.option === 'select') {
+
+      this.b.getActiveObjects().map(object=>{
+
+        if(object.get('type') !== 'path')
+          object.set({fill:color.hex})        
+      })
+
+      this.b.renderAll()
+    }
+
+    this.setState({ selectedFill: color.hex });
   };
 
   handleStrokeSelection = color => {
+
+    if(this.state.option === 'select') {
+
+      this.b.getActiveObjects().map(object=>{
+
+        object.set({stroke:color.hex})        
+      })
+      
+      this.b.renderAll()
+    }
+
     this.setState({ selectedStroke: color.hex }, () => {
       this.pencil.color = color.hex;
     });
