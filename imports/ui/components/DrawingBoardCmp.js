@@ -205,7 +205,8 @@ export default class DrawingBoardCmp extends React.Component {
       this.b.loadFromJSON(canvasObjects);
     }
 
-    this.setSelectionStatus(false)
+    if(this.state.option != 'select')
+      this.setSelectionStatus(false)
   }
 
   setSelectionStatus = (status) => {
@@ -216,6 +217,7 @@ export default class DrawingBoardCmp extends React.Component {
       
       object.selectable = status; 
       object.hoverCursor = status?'hand':'default'
+
     });
   }
 
