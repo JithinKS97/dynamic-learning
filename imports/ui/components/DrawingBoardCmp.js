@@ -3,7 +3,6 @@ import { Dropdown, Menu } from "semantic-ui-react";
 import { fabric } from "fabric";
 import FaPencil from "react-icons/lib/fa/pencil";
 import FaSquareO from "react-icons/lib/fa/square-o";
-import FaEraser from "react-icons/lib/fa/eraser";
 import { SwatchesPicker } from "react-color";
 import FaCircleO from "react-icons/lib/fa/circle-o";
 import GoDash from "react-icons/lib/go/dash";
@@ -147,6 +146,8 @@ export default class DrawingBoardCmp extends React.Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
+
+    console.log(this.state.size!=nextState.size )
 
     if(
         this.state.size!=nextState.size || 
@@ -322,8 +323,19 @@ export default class DrawingBoardCmp extends React.Component {
               {this.brushSizes.map(brushSize => (
                 <Dropdown.Item
                   onClick={(e, d) => {
+
                     this.pencil.width = d.text;
-                    this.eraser.width = d.text;
+
+                    if(this.state.option === 'select') {
+
+                      this.b.getActiveObjects().map(object=>{
+                
+                        object.set({strokeWidth:d.text})  
+                                
+                      })
+                
+                      this.b.renderAll()
+                    }
 
                     this.setState({
                       size: d.text
