@@ -77,6 +77,8 @@ export class CreateLessonPlan extends React.Component {
 
         this.savingChanges = false
 
+        this.copiedObject
+
     }
 
     handleWindowResize = () => {
@@ -96,6 +98,20 @@ export class CreateLessonPlan extends React.Component {
         /*
             This function handles the shortcut key functionalities.
          */
+
+        if(e.keyCode === 67 && e.ctrlKey) {
+            
+            this.copiedObject = this.db.copy()
+        }
+
+        if(e.keyCode === 86 && e.ctrlKey) {
+
+            if(this.copiedObject) {
+
+                this.db.paste(this.copiedObject)
+                this.copiedObject = null
+            }
+        }
 
         if(e.keyCode === 46) {
 
@@ -117,11 +133,6 @@ export class CreateLessonPlan extends React.Component {
         if(e.keyCode === 68 && e.ctrlKey) {
             e.preventDefault()
             this.interact()
-        }
-        if(e.keyCode === 67 && e.ctrlKey){
-
-            this.db.reset();
-            this.saveAfterReset()
         }
     }
 

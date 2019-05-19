@@ -9,6 +9,8 @@ import GoDash from "react-icons/lib/go/dash";
 import MdPhotoSizeSelectSmall from "react-icons/lib/md/photo-size-select-small";
 import MdFormatColorFill from "react-icons/lib/md/format-color-fill";
 
+let _clipboard
+
 export default class DrawingBoardCmp extends React.Component {
 
   constructor(props) {
@@ -104,6 +106,43 @@ export default class DrawingBoardCmp extends React.Component {
     }    
   };
   
+  copy = () => {
+
+    let copiedObject
+
+    this.b.getActiveObject().clone(function(cloned) {
+      copiedObject = cloned
+    });
+
+    return copiedObject
+  }
+
+  paste = (_clipboard) => {
+    // clone again, so you can do multiple copies.
+    _clipboard.clone((clonedObj) => {
+      this.b.discardActiveObject();
+      clonedObj.set({
+        left: 50,
+        top: 50,
+        evented: true,
+      });
+      if (clonedObj.type === 'activeSelection') {
+        // active selection needs a reference to the canvas.
+        clonedObj.canvas = this.b;
+        clonedObj.forEachObject((obj) => {
+          this.b.add(obj);
+        });
+        // this should solve the unselectability
+        clonedObj.setCoords();
+      } else {
+        this.b.add(clonedObj);
+      }
+      _clipboard.top += 10;
+      _clipboard.left += 10;
+      this.b.setActiveObject(clonedObj);
+      this.b.requestRenderAll();
+    });
+  }
 
   handleMouseMove = e => {
 
