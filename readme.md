@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning-app.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning-app)
-
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 # Dynamic Learning
-#### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
+#### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97)
 
 ## Overview of the app
 
@@ -26,7 +26,7 @@ https://github.com/JithinKS97/dynamic-learning-app
 
 https://medium.com/processing-foundation/improving-science-and-math-education-using-p5-js-d434beea465c
 
-## Tutorial manual Created in Gitbook
+## Tutorial manual created in Gitbook
 
 https://dynamic-learning.gitbook.io/dynamic-learning/
 
