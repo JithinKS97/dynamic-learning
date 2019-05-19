@@ -38,10 +38,6 @@ export default class DrawingBoardCmp extends React.Component {
     this.b.on("mouse:down", this.handleMouseDown);
     this.b.on("mouse:move", this.handleMouseMove);
 
-    this.eraser = new fabric.PencilBrush(this.b);
-    this.eraser.globalCompositeOperation = "destination-out";
-    this.eraser.width = 5;
-
     this.pencil = new fabric.PencilBrush(this.b);
     this.pencil.color = "white";
     this.pencil.width = 5;
@@ -236,11 +232,6 @@ export default class DrawingBoardCmp extends React.Component {
           this.b.freeDrawingBrush = this.pencil;
           this.b.isDrawingMode = true;
 
-        } else if (option === "eraser") {
-
-          this.b.isDrawingMode = true;
-          this.b.freeDrawingBrush = this.eraser;
-
         } else if (option === 'select') {
 
           this.b.isDrawingMode = false
@@ -301,15 +292,6 @@ export default class DrawingBoardCmp extends React.Component {
             }}
           >
             <FaPencil />
-          </Menu.Item>
-
-          <Menu.Item
-            active={"eraser" === this.state.option}
-            onClick={() => {
-              this.setOption("eraser");
-            }}
-          >
-            <FaEraser />
           </Menu.Item>
 
           <Dropdown pointing className="link item" text={this.state.size}>

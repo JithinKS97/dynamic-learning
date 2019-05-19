@@ -97,7 +97,11 @@ export class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
-        
+        if(e.keyCode === 46) {
+
+            this.db.b.remove(...this.db.b.getActiveObjects())
+            this.db.b.discardActiveObject().renderAll();
+        }
 
         if (e.keyCode === 90 && e.ctrlKey)
             this.undo()
@@ -140,6 +144,12 @@ export class CreateLessonPlan extends React.Component {
         window.addEventListener("keydown", this.handleKeyDown, false);
         this.handleWindowResize()
         $(window).scroll(this.handleScroll)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("keydown", this.handleKeyDown, false);
+        window.removeEventListener('scroll', this.handleScroll, false);
+        window.removeEventListener('resize', this.handleWindowResize, false);
     }
 
     handleScroll = () => {
