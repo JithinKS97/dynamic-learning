@@ -232,7 +232,7 @@ export default class SimsList extends React.Component {
                                         marginBottom:'0.8rem', 
                                         float:'center'
                                     }}
-                                    onClick = {()=>{console.log('hello')
+                                    onClick = {()=>{
 
                                         const confirmation = confirm('Are you sure you want to remove this?')
                                         if(confirmation == true)

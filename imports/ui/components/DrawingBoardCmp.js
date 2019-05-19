@@ -8,6 +8,7 @@ import FaCircleO from "react-icons/lib/fa/circle-o";
 import GoDash from "react-icons/lib/go/dash";
 import MdPhotoSizeSelectSmall from "react-icons/lib/md/photo-size-select-small";
 import MdFormatColorFill from "react-icons/lib/md/format-color-fill";
+import MdClose from "react-icons/lib/md/close";
 
 let _clipboard
 
@@ -21,7 +22,7 @@ export default class DrawingBoardCmp extends React.Component {
       selectedFill: "white",
       selectedStroke: "white"
     };
-    this.brushSizes = [1, 2, 3, 4, 5, 6, 8, 12, 16, 32];
+    this.brushSizes = [0, 1, 2, 3, 4, 5, 6, 8, 12, 16, 32];
     this.newObject;
     this.started = false;
   }
@@ -38,9 +39,7 @@ export default class DrawingBoardCmp extends React.Component {
     this.b.on("mouse:up", this.handleMouseUp);
     this.b.on("mouse:down", this.handleMouseDown);
     this.b.on("mouse:move", this.handleMouseMove);
-
-    this.b.on('object:modified', ()=>{console.log('hello')})
-
+    
     this.pencil = new fabric.PencilBrush(this.b);
     this.pencil.color = "white";
     this.pencil.width = 5;
@@ -413,15 +412,31 @@ export default class DrawingBoardCmp extends React.Component {
             pointing
             className="link item"
           >
-            <Dropdown.Menu>
+          <Dropdown.Menu>
               <SwatchesPicker
                 color={this.state.selectedFill}
                 onChangeComplete={this.handleFillSelection}
               />
-              {/* <Dropdown.Item
+              <Dropdown.Item
+                text = '  No fill'
                 icon={<MdClose color="red" />}
-                style={{ marginTop: "1.2rem" }}
-              /> */}
+                onClick = {()=>{
+
+                  if(this.state.option === 'select') {
+
+                    this.b.getActiveObjects().map(object=>{
+              
+                      object.set({fill:'transparent'})        
+                    })
+                    
+                    this.b.renderAll()
+                    this.props.onChange();
+                  }
+
+                  this.setState({selectedFill:'transparent'})
+                
+                }}        
+              />
             </Dropdown.Menu>
           </Dropdown>
 
