@@ -37,6 +37,8 @@ export default class DrawingBoardCmp extends React.Component {
     this.b.on("mouse:down", this.handleMouseDown);
     this.b.on("mouse:move", this.handleMouseMove);
 
+    this.b.on('object:modified', ()=>{console.log('hello')})
+
     this.pencil = new fabric.PencilBrush(this.b);
     this.pencil.color = "white";
     this.pencil.width = 5;
@@ -147,8 +149,6 @@ export default class DrawingBoardCmp extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
 
-    console.log(this.state.size!=nextState.size )
-
     if(
         this.state.size!=nextState.size || 
         this.state.option!=nextState.option ||
@@ -256,8 +256,9 @@ export default class DrawingBoardCmp extends React.Component {
         if(object.get('type') !== 'path')
           object.set({fill:color.hex})        
       })
-
+      
       this.b.renderAll()
+      this.props.onChange();
     }
 
     this.setState({ selectedFill: color.hex });
@@ -273,6 +274,7 @@ export default class DrawingBoardCmp extends React.Component {
       })
       
       this.b.renderAll()
+      this.props.onChange();
     }
 
     this.setState({ selectedStroke: color.hex }, () => {
@@ -333,8 +335,9 @@ export default class DrawingBoardCmp extends React.Component {
                         object.set({strokeWidth:d.text})  
                                 
                       })
-                
+                      
                       this.b.renderAll()
+                      this.props.onChange();
                     }
 
                     this.setState({
