@@ -1004,6 +1004,8 @@ export class CreateLessonPlan extends React.Component {
                                 />
 
                                 <DrawingBoardCmp
+                                    interactEnabled = {this.state.interactEnabled}
+                                    interact = {this.interact.bind(this)}
                                     toolbarVisible={true}
                                     ref={e => this.drawingBoard = e}
                                     onChange = {this.onChange.bind(this)}

@@ -222,6 +222,10 @@ export default class DrawingBoardCmp extends React.Component {
   }
 
   setOption(option) {
+
+    if(this.props.interactEnabled === true)
+      this.props.interact()
+
     this.setState(
       {
         option
@@ -242,8 +246,8 @@ export default class DrawingBoardCmp extends React.Component {
           this.b.isDrawingMode = false
           this.setSelectionStatus(true)
 
-        } else {
-          
+        } else {         
+
           this.setSelectionStatus(false)
           this.b.isDrawingMode = false;
         }
@@ -390,10 +394,6 @@ export default class DrawingBoardCmp extends React.Component {
                 color={this.state.selectedStroke}
                 onChangeComplete={this.handleStrokeSelection}
               />
-              {/* <Dropdown.Item
-                icon={<MdClose color="red" />}
-                style={{ marginTop: "1.2rem" }}
-              /> */}
             </Dropdown.Menu>
           </Dropdown>
 
