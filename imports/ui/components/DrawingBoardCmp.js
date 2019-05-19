@@ -10,8 +10,6 @@ import MdPhotoSizeSelectSmall from "react-icons/lib/md/photo-size-select-small";
 import MdFormatColorFill from "react-icons/lib/md/format-color-fill";
 import MdClose from "react-icons/lib/md/close";
 
-let _clipboard
-
 export default class DrawingBoardCmp extends React.Component {
 
   constructor(props) {
@@ -39,7 +37,7 @@ export default class DrawingBoardCmp extends React.Component {
     this.b.on("mouse:up", this.handleMouseUp);
     this.b.on("mouse:down", this.handleMouseDown);
     this.b.on("mouse:move", this.handleMouseMove);
-    
+
     this.pencil = new fabric.PencilBrush(this.b);
     this.pencil.color = "white";
     this.pencil.width = 5;
@@ -112,6 +110,8 @@ export default class DrawingBoardCmp extends React.Component {
     this.b.getActiveObject().clone(function(cloned) {
       copiedObject = cloned
     });
+
+    alert('Copied !!')
 
     return copiedObject
   }
