@@ -110,8 +110,6 @@ export default class DrawingBoardCmp extends React.Component {
       copiedObject = cloned
     });
 
-    alert('Copied !!')
-
     return copiedObject
   }
 
@@ -332,6 +330,7 @@ export default class DrawingBoardCmp extends React.Component {
   render() {
     return (
       <div>
+
         <Menu
           className="drawingBoardControls"
           style={{
