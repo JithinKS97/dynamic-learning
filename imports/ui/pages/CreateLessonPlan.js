@@ -1111,9 +1111,11 @@ export class CreateLessonPlan extends React.Component {
                                     Reset lessonplan
                                 </Menu.Item>
 
-                                <Menu.Item style = {{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                                    <Button onClick={() => { this.undo() }}><MdUndo/></Button>
-                                    <Button onClick={() => { this.redo() }}><MdRedo/></Button>
+                                <Menu.Item>
+                                    <div>
+                                        <Button color = 'teal' onClick={() => { this.undo() }} attached='left'><MdUndo/></Button>
+                                        <Button color = 'teal' onClick={() => { this.redo() }}attached='right'><MdRedo/></Button>
+                                    </div>
                                 </Menu.Item>
 
                                 <Menu.Item onClick={() => {

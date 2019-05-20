@@ -251,7 +251,6 @@ export default class DrawingBoardCmp extends React.Component {
       
       object.selectable = status; 
       object.hoverCursor = status?'hand':'default'
-
     });
   }
 
