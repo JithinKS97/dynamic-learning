@@ -17,6 +17,9 @@ import DOMPurify from 'dompurify'
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
 
+import MdUndo from 'react-icons/lib/md/undo'
+import MdRedo from 'react-icons/lib/md/redo'
+
 
 /* This Component is intended for the development of a lessonplan by the teachers. Each lessonplan
     is composed of a sequence of slides. Each slide contains a note (the drawing on the canvas which is
@@ -1108,12 +1111,9 @@ export class CreateLessonPlan extends React.Component {
                                     Reset lessonplan
                                 </Menu.Item>
 
-                                <Menu.Item onClick={() => { this.undo() }}>
-                                    Undo
-                                </Menu.Item>
-
-                                <Menu.Item onClick={() => { this.redo() }}>
-                                    Redo
+                                <Menu.Item style = {{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+                                    <Button onClick={() => { this.undo() }}><MdUndo/></Button>
+                                    <Button onClick={() => { this.redo() }}><MdRedo/></Button>
                                 </Menu.Item>
 
                                 <Menu.Item onClick={() => {

@@ -80,7 +80,6 @@ export default class DrawingBoardCmp extends React.Component {
         strokeWidth: this.state.size,        
         selectable:false,
         hoverCursor:'default'
-
       })
 
       this.b.add(this.newObject)
@@ -119,7 +118,7 @@ export default class DrawingBoardCmp extends React.Component {
   paste = (_clipboard) => {
     // clone again, so you can do multiple copies.
     _clipboard.clone((clonedObj) => {
-      this.b.discardActiveObject();
+      this.b.discardActiveObject()
       clonedObj.set({
         left: 50,
         top: 50,
@@ -136,8 +135,8 @@ export default class DrawingBoardCmp extends React.Component {
       } else {
         this.b.add(clonedObj);
       }
-      _clipboard.top += 10;
-      _clipboard.left += 10;
+      _clipboard.top += 10
+      _clipboard.left += 10
       this.b.setActiveObject(clonedObj);
       this.b.requestRenderAll();
     });
@@ -282,7 +281,7 @@ export default class DrawingBoardCmp extends React.Component {
           this.b.isDrawingMode = false;
         }
       }
-    );
+    )
   }
 
   handleFillSelection = color => {
@@ -296,10 +295,10 @@ export default class DrawingBoardCmp extends React.Component {
       })
       
       this.b.renderAll()
-      this.props.onChange();
+      this.props.onChange()
     }
 
-    this.setState({ selectedFill: color.hex });
+    this.setState({ selectedFill: color.hex })
   };
 
   handleStrokeSelection = color => {
@@ -316,7 +315,7 @@ export default class DrawingBoardCmp extends React.Component {
     }
 
     this.setState({ selectedStroke: color.hex }, () => {
-      this.pencil.color = color.hex;
+      this.pencil.color = color.hex
     });
   };
 
@@ -352,7 +351,7 @@ export default class DrawingBoardCmp extends React.Component {
           <Menu.Item
             active={"pencil" === this.state.option}
             onClick={() => {
-              this.setOption("pencil");
+              this.setOption("pencil")
             }}
           >
             <FaPencil />
@@ -371,9 +370,8 @@ export default class DrawingBoardCmp extends React.Component {
                       this.b.getActiveObjects().map(object=>{
                 
                         object.set({strokeWidth:d.text})  
-                                
                       })
-                      
+  
                       this.b.renderAll()
                       this.props.onChange();
                     }
