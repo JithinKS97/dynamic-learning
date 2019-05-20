@@ -1069,7 +1069,6 @@ export class CreateLessonPlan extends React.Component {
                                     </Button>
                                 </Menu.Item>
 
-
                                 {Meteor.userId() ?
                                     <Menu.Item> <Button color='blue' onClick={() => {
 
@@ -1095,14 +1094,12 @@ export class CreateLessonPlan extends React.Component {
 
                                             redirectToDashboard: true
                                         })
-                                    }}>Home</Button></Menu.Item>
+                                    }}>Dashboard</Button></Menu.Item>
                                     : null}
 
                                 {!!Meteor.userId() && this.state.userId == Meteor.userId() ?
                                     <Link to={`/request/${this.state._id}`}><Menu.Item link>Request for new sim</Menu.Item></Link>
                                     : null}
-
-
                                 <Menu.Item onClick={() => {
                                     const confirmation = confirm('Are you sure you want to reset all?')
                                     if (confirmation == true)
