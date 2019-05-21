@@ -254,8 +254,9 @@ class LessonPlansDirectories extends Component {
                             }}     
                         />
                         <br/>
-                        {this.state.isPublic?<TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} />:null}
-                        
+                        <div style = {{width:`${100/1.3}%`}}>
+                            {this.state.isPublic?<TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} />:null}
+                        </div>
                     </Modal.Description>
 
                 </Modal.Content>
