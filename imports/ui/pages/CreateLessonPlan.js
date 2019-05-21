@@ -102,6 +102,11 @@ export class CreateLessonPlan extends React.Component {
             This function handles the shortcut key functionalities.
          */
 
+        if(e.keyCode>=37 && e.keyCode<=40){
+
+            e.preventDefault()
+        }
+
         if(e.keyCode === 67 && e.ctrlKey) {
             
             this.copiedObject = this.db.copy()
