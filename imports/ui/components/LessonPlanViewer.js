@@ -144,6 +144,18 @@ class LessonPlanViewer extends React.Component {
         window.removeEventListener("keydown", this.handleKeyDown, false)
     }
 
+    handleKeyDown = (e) => {
+
+        /*
+            This function handles the shortcut key functionalities.
+         */
+
+        if(e.keyCode>=37 && e.keyCode<=40){
+
+            e.preventDefault()
+        }
+    }
+
 
     next() {
 
