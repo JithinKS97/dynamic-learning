@@ -204,7 +204,7 @@ class Lesson extends React.Component {
             </Dimmer>
 
             <Grid divided='vertically' style = {{height:'100vh', boxSizing: 'border-box'}}>
-                <Grid.Row style = {{height:'80vh'}}>
+                <Grid.Row divided style = {{height:'80vh'}}>
                     <Grid.Column style = {{padding:'2.4rem', width:'50vw'}}>
                         
                             <Link to = '/dashboard/lessons'><Button style = {{marginBottom:'0.8rem'}} >Back to dashboard</Button></Link>
@@ -220,12 +220,12 @@ class Lesson extends React.Component {
                                 style = {{paddingLeft:'1.6rem'}} 
                                 label = 'share the lesson'
                             />:null}
-                            <div style = {{ height:'100%', border:'1px dashed #cccccc', display:'flex', justifyContent:'center', alignItems:'center'}}>
+                           
                                 <VideoContainer userId = {this.props.lesson.userId} addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
-                            </div>
+                        
 
                     </Grid.Column>
-                    <Grid.Column  style = {{padding:'2.4rem', width:'50vw', textAlign:'center'}}>
+                    <Grid.Column  style = {{padding:'2.4rem', width:'50vw', height:'100%', textAlign:'center', overflow:'auto'}}>
                         
                             <Button style = {{marginBottom:'0.8rem', visibility:this.props.lesson.userId == Meteor.userId()?'visible':'hidden'}} onClick = {()=>{this.addSim.addSim()}}>Add Sim</Button>:
 
@@ -242,21 +242,21 @@ class Lesson extends React.Component {
                                 ref = { e => this.addSim = e }
                             />
 
-                            <div style = {{height:'100%', border:'1px dashed #cccccc', overflow:'auto'}}>
+                            
 
                                 {/**
                                     SimsList renders the list of sims added
                                 */}
 
-                                {/* <SimsList 
+                                <SimsList 
                                     save = {this.save.bind(this)} 
                                     userId = {this.props.lesson.userId} 
                                     isRndRequired = {false} 
                                     delete = {this.deleteSim.bind(this)} 
                                     {...this.props.lesson} 
                                     curSlide = {this.state.curSlide}
-                                /> */}
-                            </div>
+                                />
+                      
                         
                     </Grid.Column>
                 </Grid.Row>
