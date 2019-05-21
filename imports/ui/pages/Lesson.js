@@ -248,14 +248,14 @@ class Lesson extends React.Component {
                                     SimsList renders the list of sims added
                                 */}
 
-                                <SimsList 
+                                {/* <SimsList 
                                     save = {this.save.bind(this)} 
                                     userId = {this.props.lesson.userId} 
                                     isRndRequired = {false} 
                                     delete = {this.deleteSim.bind(this)} 
                                     {...this.props.lesson} 
                                     curSlide = {this.state.curSlide}
-                                />
+                                /> */}
                             </div>
                         
                     </Grid.Column>

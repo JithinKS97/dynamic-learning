@@ -20,7 +20,8 @@ import {
   Menu,
   Input,
   TextArea,
-  Header
+  Header,
+  Container
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { withTracker } from "meteor/react-meteor-data";
@@ -401,21 +402,22 @@ class Request extends React.Component {
                   </Button>
                 ) : null}
 
-                <div style={{ paddingLeft: "1.6rem" }}>
+                <Container textAlign = {"left"}>
                   <h1 style={{ margin: "0.8rem 0" }}>
                     {this.state.requestTitle}
                   </h1>
                   <p style={{ paddingLeft: "1.6rem" }}>
                     {this.state.description}
                   </p>
-                </div>
+                </Container>
               </div>
             </Grid.Row>
 
-            <Grid.Row style={{ height: "80vh" }}>
+            <Grid.Row divided style={{ height: "80vh" }}>
               <Grid.Column
                 width={4}
-                style={{ overflow: "auto", padding: "0 1.6rem" }}
+                style={{ overflow: "auto"}}
+                centered
               >
                 <Header as='h3' dividing>
                   Requests list
