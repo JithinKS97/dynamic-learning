@@ -48,7 +48,7 @@ export default class TextBox extends React.Component {
         return (
             
             <Rnd
-                // style = {{backgroundColor:'red'}}
+               
                 className = 'textbox-floating'
                 bounds = '.canvas-container'
 
@@ -91,7 +91,6 @@ export default class TextBox extends React.Component {
                     slides[curSlide].textboxes[index].y = d.lastY
 
                     this.props.saveChanges(slides)
-
                 }}
             >   
                 <div className = 'textArea' style ={{

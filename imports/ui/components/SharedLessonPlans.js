@@ -97,7 +97,7 @@ export default class SharedLessonPlans extends React.Component {
                 <Modal 
                     open = {!!this.state.lessonplan}
                     size = 'fullscreen'
-                    style = {{transform: 'scale(0.79, 0.79)', marginTop:'3rem'}}
+                    style = {{transform: 'scale(0.79, 0.79)', marginTop:'3rem', transform: 'scale(1.3, 1.3)', transformOrigin: 'left'}}
                 >
                     <Modal.Header>
                         Preview
