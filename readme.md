@@ -14,6 +14,8 @@ The three core objectives of the web app are-
 3) Students are able to view the video lessons prepared by teachers and should be able to use the simulations
 the same time they watch it.
 
+To get to know more about the project, please read the GSoC proposals which you can find in the project folder.
+
 ## Link to the webapp
 
 http://dynamiclearning.io
