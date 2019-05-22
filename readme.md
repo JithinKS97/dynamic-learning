@@ -22,18 +22,15 @@ http://dynamiclearning.io
 
 https://github.com/JithinKS97/dynamic-learning-
 
-To get to know more about the project, here are some resources that you can go through
+## To get to know more about the project, here are some resources that you can go through
 
-## Link to Medium post
-
+### Link to Medium post
 https://medium.com/processing-foundation/improving-science-and-math-education-using-p5-js-d434beea465c
 
-## Tutorial manual created in Gitbook
-
+### Tutorial manual created in Gitbook
 https://dynamic-learning.gitbook.io/dynamic-learning/
 
-## GSoC proposals
-
+### GSoC proposals
 https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals
 
 ## How to set up the development environment
