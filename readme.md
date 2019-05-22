@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning-app.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning-app)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 # Dynamic Learning
-#### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97)
+#### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
 ## Overview of the app
 
@@ -14,15 +14,15 @@ The three core objectives of the web app are-
 3) Students are able to view the video lessons prepared by teachers and should be able to use the simulations
 the same time they watch it.
 
-To get to know more about the project, please read the GSoC proposals which you can find in the project folder.
-
 ## Link to the webapp
 
 http://dynamiclearning.io
 
 ## Link to Github repo
 
-https://github.com/JithinKS97/dynamic-learning-app
+https://github.com/JithinKS97/dynamic-learning-
+
+To get to know more about the project, here are some resources that you can go through
 
 ## Link to Medium post
 
@@ -31,6 +31,10 @@ https://medium.com/processing-foundation/improving-science-and-math-education-us
 ## Tutorial manual created in Gitbook
 
 https://dynamic-learning.gitbook.io/dynamic-learning/
+
+## GSoC proposals
+
+https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals
 
 ## How to set up the development environment
 
