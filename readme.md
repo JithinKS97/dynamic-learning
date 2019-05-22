@@ -22,15 +22,15 @@ http://dynamiclearning.io
 
 https://github.com/JithinKS97/dynamic-learning-
 
-## To get to know more about the project, here are some resources that you can go through
+### To get to know more about the project, here are some resources that you can go through
 
-### Link to Medium post
+#### Link to Medium post
 https://medium.com/processing-foundation/improving-science-and-math-education-using-p5-js-d434beea465c
 
-### Tutorial manual created in Gitbook
+#### Tutorial manual created in Gitbook
 https://dynamic-learning.gitbook.io/dynamic-learning/
 
-### GSoC proposals
+#### GSoC proposals
 https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals
 
 ## How to set up the development environment
@@ -140,10 +140,3 @@ I'm extremenly thankful to Processing Foundation for having the faith in me and 
 I've started this project and doing it with my friend [Anupam Asok](https://github.com/Anu-Asok). I'm so greatful to him for being with me in the development of this project.
 
 I'm so greatful to [Andrew Mead](https://github.com/andrewjmead) and his course in udemy Full Stack Web Development using Meteor https://www.udemy.com/meteor-react/ for it has helped me greatly and Andrew has responded to each and every queries of mine.
-
-
-
-
-
-
-
