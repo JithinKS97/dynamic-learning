@@ -1473,7 +1473,6 @@ export default CreatelessonPlanContainer = withTracker(({ match }) => {
         lessonplanExists = !loading && !!lessonplan
     }
 
-
     return {
 
         /*
