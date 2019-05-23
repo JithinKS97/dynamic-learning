@@ -1,11 +1,13 @@
-[![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning-app.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning-app)
+[![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
 ## Overview of the app
 
-Dynamic Learning is an online platform where teachers and programmers collaborate to create and share STEM lessons which make use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
+Dynamic Learning is an online platform where teachers and programmers collaborate to create and share STEM lessons which make use of interactive visualisations created in p5.js.
+
+The project was started as a part of GSoC 2018. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
 
 The three core objectives of the web app are-
 
@@ -22,18 +24,15 @@ http://dynamiclearning.io
 
 https://github.com/JithinKS97/dynamic-learning-
 
-To get to know more about the project, here are some resources that you can go through
+### To get to know more about the project, here are some resources that you can go through
 
-## Link to Medium post
-
+#### Link to Medium post
 https://medium.com/processing-foundation/improving-science-and-math-education-using-p5-js-d434beea465c
 
-## Tutorial manual created in Gitbook
-
+#### Tutorial manual created in Gitbook
 https://dynamic-learning.gitbook.io/dynamic-learning/
 
-## GSoC proposals
-
+#### GSoC proposals
 https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals
 
 ## How to set up the development environment
@@ -124,7 +123,7 @@ Icons have been used from the site `http://react-icons.github.io`
 
 2) Unit testing - I've added many server side and client side tests, but more tests are needed.
 
-3) Enhancing the discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users and the ability to reply to the comments, voting for the comments etc.
+3) Enhancing the discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users, voting for the comments etc.
 
 4) Adding Comments forum for the lessons.
 
@@ -143,10 +142,3 @@ I'm extremenly thankful to Processing Foundation for having the faith in me and 
 I've started this project and doing it with my friend [Anupam Asok](https://github.com/Anu-Asok). I'm so greatful to him for being with me in the development of this project.
 
 I'm so greatful to [Andrew Mead](https://github.com/andrewjmead) and his course in udemy Full Stack Web Development using Meteor https://www.udemy.com/meteor-react/ for it has helped me greatly and Andrew has responded to each and every queries of mine.
-
-
-
-
-
-
-
