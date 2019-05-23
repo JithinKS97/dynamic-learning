@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "JithinKS97",
+      "name": "Jithin KS",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/19987520?v=4",
+      "profile": "http://dynamiclearning.io",
+      "contributions": [
+        "infra",
+        "test",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "dynamic-learning",
+  "projectOwner": "JithinKS97",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}
