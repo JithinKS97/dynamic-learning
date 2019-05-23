@@ -5,7 +5,9 @@
 
 ## Overview of the app
 
-Dynamic Learning is an online platform where teachers and programmers collaborate to create and share STEM lessons which make use of interactive visualisations created in p5.js. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
+Dynamic Learning is an online platform where teachers and programmers collaborate to create and share STEM lessons which make use of interactive visualisations created in p5.js.
+
+The project was started as a part of GSoC 2018. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
 
 The three core objectives of the web app are-
 
