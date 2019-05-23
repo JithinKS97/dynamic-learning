@@ -123,7 +123,7 @@ Icons have been used from the site `http://react-icons.github.io`
 
 2) Unit testing - I've added many server side and client side tests, but more tests are needed.
 
-3) Enhancing the discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users and the ability to reply to the comments, voting for the comments etc.
+3) Enhancing the discussion forum- The forums area can be enhanced by providing more features like providing Avatars for each users, voting for the comments etc.
 
 4) Adding Comments forum for the lessons.
 
