@@ -1332,6 +1332,13 @@ export class CreateLessonPlan extends React.Component {
                                 }
 
 
+                                <a target = '_blank' href = 'https://github.com/JithinKS97/dynamic-learning'>
+                                    <Menu.Item>
+                                        Contribute
+                                    </Menu.Item>
+                                </a>
+
+
                                 {this.state.copied ? <Menu.Item>
 
                                     <div style={{ display: 'flex', flexDirection: 'row' }}>
