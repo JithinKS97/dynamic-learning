@@ -1333,7 +1333,7 @@ export class CreateLessonPlan extends React.Component {
 
 
                                 <a target = '_blank' href = 'https://github.com/JithinKS97/dynamic-learning'>
-                                    <Menu.Item>
+                                    <Menu.Item link>
                                         Contribute
                                     </Menu.Item>
                                 </a>
