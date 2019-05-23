@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning)
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
@@ -143,15 +142,3 @@ I'm extremenly thankful to Processing Foundation for having the faith in me and 
 I've started this project and doing it with my friend [Anupam Asok](https://github.com/Anu-Asok). I'm so greatful to him for being with me in the development of this project.
 
 I'm so greatful to [Andrew Mead](https://github.com/andrewjmead) and his course in udemy Full Stack Web Development using Meteor https://www.udemy.com/meteor-react/ for it has helped me greatly and Andrew has responded to each and every queries of mine.
-
-## Contributors
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<table><tr><td align="center"><a href="http://dynamiclearning.io"><img src="https://avatars1.githubusercontent.com/u/19987520?v=4" width="100px;" alt="Jithin KS"/><br /><sub><b>Jithin KS</b></sub></a><br /><a href="#infra-JithinKS97" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/JithinKS97/dynamic-learning/commits?author=JithinKS97" title="Tests">⚠️</a> <a href="https://github.com/JithinKS97/dynamic-learning/commits?author=JithinKS97" title="Code">💻</a></td></tr></table>
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
