@@ -7,7 +7,7 @@
     "full-test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "bcrypt": "^2.0.1",
     "chai": "^4.2.0",
     "dompurify": "^1.0.10",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.12.1"
+    "enzyme-adapter-react-16": "^1.13.1"
   },
   "engines": {
     "node": "8.11.1"

@@ -118,6 +118,7 @@ export class CreateLessonPlan extends React.Component {
 
                 this.db.paste(this.copiedObject)
                 this.copiedObject = null
+                this.db.props.onChange()
             }
         }
 
@@ -125,6 +126,7 @@ export class CreateLessonPlan extends React.Component {
 
             this.db.b.remove(...this.db.b.getActiveObjects())
             this.db.b.discardActiveObject().renderAll();
+            this.db.props.onChange()
         }
 
         if (e.keyCode === 90 && e.ctrlKey)
