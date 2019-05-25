@@ -32,7 +32,7 @@ https://medium.com/processing-foundation/improving-science-and-math-education-us
 #### Tutorial manual created in Gitbook
 https://dynamic-learning.gitbook.io/dynamic-learning/
 
-#### GSoC proposals
+#### GSoC works
 https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals  
 [2019 GSoC](https://summerofcode.withgoogle.com/projects/#4682013469048832)  
 [2018 GSoC](https://summerofcode.withgoogle.com/archive/2018/projects/5629805013762048/)
