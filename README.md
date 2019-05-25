@@ -24,7 +24,7 @@ http://dynamiclearning.io
 
 https://github.com/JithinKS97/dynamic-learning-
 
-## Some other resources
+## To know more about the project, take a look at these
 
 #### Processing Medium post
 https://medium.com/processing-foundation/improving-science-and-math-education-using-p5-js-d434beea465c
