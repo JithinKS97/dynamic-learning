@@ -22,7 +22,7 @@ http://dynamiclearning.io
 
 ## Link to Github repo
 
-https://github.com/JithinKS97/dynamic-learning-
+https://github.com/JithinKS97/dynamic-learning
 
 ## To know more about the project, take a look at these
 
