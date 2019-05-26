@@ -5,7 +5,7 @@
   no-return-assign,
   no-unused-vars
 */
-import React from 'react';
+import React, { Component } from 'react';
 import FaCode from 'react-icons/lib/fa/code';
 import { Meteor } from 'meteor/meteor';
 import {
@@ -24,7 +24,7 @@ import { generateSrc } from '../../functions';
     This component is for the addition of simulations to the lessonplan.
 */
 
-export default class AddSim extends React.Component {
+export default class AddSim extends Component {
   constructor(props) {
     super(props);
     this.state = {
