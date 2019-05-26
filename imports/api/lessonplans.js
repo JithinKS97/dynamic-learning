@@ -117,12 +117,12 @@ Meteor.methods({
     Requests.remove({ _id, userId: this.userId });
   },
 
-  'lessonplans.directoryChange'(_id, parentId) { // eslint-disable-line object-shorthand
+  'lessonplans.directoryChange'(_id, parent_id) { // eslint-disable-line object-shorthand, camelcase
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    LessonPlans.update({ _id }, { $set: { parentId } });
+    LessonPlans.update({ _id }, { $set: { parent_id } });
   },
 
   'lessonplans.folder.visibilityChange'(_id, expanded) { // eslint-disable-line object-shorthand
