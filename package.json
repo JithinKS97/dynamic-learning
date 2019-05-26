@@ -13,6 +13,7 @@
     "chai": "^4.2.0",
     "dompurify": "^1.0.10",
     "fabric": "^2.7.0",
+    "history": "^4.9.0",
     "meteor-node-stubs": "^0.3.3",
     "moment": "^2.24.0",
     "react": "^16.8.6",
