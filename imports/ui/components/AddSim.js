@@ -14,6 +14,7 @@ import { generateSrc } from '../../functions';
 
 export default class AddSim extends React.Component {
 
+
     constructor(props) {
 
         super(props)
@@ -105,14 +106,14 @@ export default class AddSim extends React.Component {
         ]
 
         return(
-            <div>
+            <div className='modal'>
 
                 <Modal                
-                    
+
                     open={this.state.isOpen}
                     onClose={this.handleClose}
                     size='fullscreen' 
-                    
+
                 >
 
                     <Modal.Header>
@@ -142,7 +143,7 @@ export default class AddSim extends React.Component {
                                 </Grid.Column>
 
                                 {this.state.node?<Grid.Column style = {{overflow:'auto', marginTop:'43px'}}>
-                                    <SimPreview  src = {generateSrc(this.state.node.username, this.state.node.project_id)}/>                 
+                                    <SimPreview  slides={true} src = {generateSrc(this.state.node.username, this.state.node.project_id)}/>                 
                                 </Grid.Column>:<h2 style = {{margin:'auto'}} >Select a simulation</h2>}
                                 
                                 {this.state.node?<Button style = {{marginLeft:'0.8rem', visibility:this.state.node?'visible':'hidden'}} onClick = {this.addToLesson.bind(this)}>Add to lesson</Button>:null}

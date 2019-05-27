@@ -30,7 +30,7 @@ export default class SideBar extends React.Component {
 
     render(){
         return (
-            <div>
+            <div id="menu">
                 <p style = {{paddingLeft:'0.8rem', marginTop:'0.8rem'}}>{`${this.state.user}`}</p>
                 <ul>
                     

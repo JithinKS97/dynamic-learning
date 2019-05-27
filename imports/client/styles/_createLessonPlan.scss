@@ -8,3 +8,11 @@
 .drawingBoardControls {
     transition: top 0.07s ease-out;
 }
+
+.ui.ui.fullscreen.modal {
+    left: unset!important; 
+}
+
+.ui.ui.fullscreen.scrolling.modal {
+    left: unset!important; 
+}
