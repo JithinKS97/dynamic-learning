@@ -1,9 +1,9 @@
 /*
   eslint-disable
-  react/destructuring-assignment,
   react/jsx-no-bind,
   no-return-assign,
-  no-unused-vars
+  no-unused-vars,
+  block-scoped-var
 */
 import React, { Component } from 'react';
 import FaCode from 'react-icons/lib/fa/code';
@@ -30,7 +30,7 @@ export default class AddSim extends Component {
     this.state = {
       isOpen: false,
       node: null,
-      username: '',
+      username: '', // eslint-disable-line react/no-unused-state
     };
     this.handleOpen.bind(this);
     this.handleClose.bind(this);
@@ -44,7 +44,7 @@ export default class AddSim extends Component {
     this.setState({ node }, () => {
       const { userId } = this.state.node; // eslint-disable-line react/destructuring-assignment
       Meteor.call('getUsername', userId, (err, username) => {
-        this.setState({ username });
+        this.setState({ username }); // eslint-disable-line react/no-unused-state
       });
     });
   }
@@ -64,9 +64,11 @@ export default class AddSim extends Component {
   addToLesson() {
     const { node } = this.state;
     if (node) {
-      const { slides } = this.props; // eslint-disable-line react/prop-types
+      const {
+        slides, // eslint-disable-line react/prop-types
+        curSlide, // eslint-disable-line react/prop-types
+      } = this.props;
       const allSlides = Object.values($.extend(true, {}, slides));
-      const { curSlide } = this.props; // eslint-disable-line react/prop-types
       const {
         username,
         project_id, // eslint-disable-line camelcase
@@ -110,11 +112,24 @@ export default class AddSim extends Component {
         ),
       },
     ];
+    const {
+      isOpen,
+      activeIndex,
+      node,
+    } = this.state;
+    // FIXME: this is pobably a bad idea
+    if (node) {
+      var { // eslint-disable-line no-var, vars-on-top
+        username,
+        project_id, // eslint-disable-line camelcase
+        linkToCode,
+      } = node;
+    }
 
     return (
       <div>
         <Modal
-          open={this.state.isOpen}
+          open={isOpen}
           onClose={this.handleClose}
           size="fullscreen"
         >
@@ -145,41 +160,41 @@ export default class AddSim extends Component {
                     panes={panes}
                   />
                 </Grid.Column>
-                {this.state.node
+                {node
                   ? (
                     <Grid.Column style={{ overflow: 'auto', marginTop: '43px' }}>
                       <SimPreview
-                        src={generateSrc(this.state.node.username, this.state.node.project_id)}
+                        src={generateSrc(username, project_id)}
                       />
                     </Grid.Column>
                   ) : <h2 style={{ margin: 'auto' }}>Select a simulation</h2>
                 }
-                {this.state.node
+                {node
                   ? (
                     <Button
-                      style={{ marginLeft: '0.8rem', visibility: this.state.node ? 'visible' : 'hidden' }}
+                      style={{ marginLeft: '0.8rem', visibility: node ? 'visible' : 'hidden' }}
                       onClick={this.addToLesson.bind(this)}
                     >
                       Add to lesson
                     </Button>
                   ) : null
                 }
-                {this.state.node
+                {node
                   ? (
                     <a
                       className="link-to-code"
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={this.state.node ? this.state.node.linkToCode : ''}
+                      href={node ? linkToCode : ''}
                     >
                       <Button><FaCode /></Button>
                     </a>
                   ) : null
                 }
-                {!!this.state.node && this.tab.state.activeIndex === 0
+                {!!node && activeIndex === 0
                   ? (
                     <p style={{ paddingTop: '0.8rem' }}>
-                      {`Author: ${this.state.username}`}
+                      {`Author: ${username}`}
                     </p>
                   ) : null
                 }
