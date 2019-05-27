@@ -45,7 +45,7 @@ export default class CommentBox extends Component {
       ));
     }
 
-    return 'HAL 9000'; // this is a hack
+    return null; // this is a hack
   }
 
   findTime() {
@@ -88,7 +88,7 @@ export default class CommentBox extends Component {
       );
     }
 
-    return 'HAL 9000'; // this is a hack
+    return null; // this is a hack
   }
 
   render() {

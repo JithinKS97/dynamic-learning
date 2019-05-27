@@ -22,7 +22,7 @@ Meteor.methods({
       return user.username;
     }
 
-    return 'HAL 9000'; // this is a hack
+    return null; // this is a hack
   },
 });
 
