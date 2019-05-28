@@ -84,7 +84,7 @@ export default class Signup extends React.Component {
                 })
             }
             else {
-
+                
                 this.setState({
                     error: ''
                 },()=>{
@@ -140,7 +140,7 @@ export default class Signup extends React.Component {
                             </Form.Field>
                             <Form.Field> 
                                 <label> Account Type </label> 
-                                <Form.Select onChange= {(e, {value}) => this.accountType = value} options={vals} placeHolder='Account Type' /> 
+                                <Form.Select onChange= {(e, {value}) => this.accountType = value} options={vals} placeholder='Account Type' /> 
                             </Form.Field>
                             <Button>Create Account</Button>
                         </Form>

@@ -54,6 +54,7 @@ export default class Login extends React.Component {
                     error: 'Unable to login. Check email and password'
                 })
             }
+            
             else {
                 
                 this.setState({
