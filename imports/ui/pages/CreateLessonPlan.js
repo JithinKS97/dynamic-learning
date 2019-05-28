@@ -8,12 +8,11 @@ import { Link, Redirect } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { withTracker } from 'meteor/react-meteor-data';
-import { Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid, List } from 'semantic-ui-react'
+import { Menu, Button, Dimmer, Loader, Segment, Modal, Form, Grid, List, Container } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 import TextBoxes from '../components/TextBoxes'
 import DOMPurify from 'dompurify'
-
 import FaTrash from 'react-icons/lib/fa/trash'
 import FaEdit from 'react-icons/lib/fa/edit'
 
@@ -980,6 +979,7 @@ export class CreateLessonPlan extends React.Component {
                 <Grid style={{ height: this.calcHeightOfCanvasContainer()*this.state.scaleX + 'px', padding: 0, margin: 0 }} columns={3} divided>
                     <Grid.Row style={{ overflow: 'hidden' }}>
                         <Grid.Column style={{ position:'fixed', textAlign: 'center', overflow: 'auto' }} width={2}>
+                           
                             {this.state.saving?<p>Saving...</p>:null}
                             <Button style={{ marginTop: '0.8rem' }} onClick={this.addNewSlide.bind(this)}>Create Slide</Button>
                             <h1>{this.state.curSlide + 1}</h1>
@@ -994,7 +994,6 @@ export class CreateLessonPlan extends React.Component {
                                 isPreview={false}
                             />
                         </Grid.Column>
-
                         <Grid.Column style={{
 
                             margin: '0 auto',

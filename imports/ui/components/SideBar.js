@@ -31,10 +31,10 @@ export default class SideBar extends React.Component {
     render(){
         return (
             <div id="menu">
-                <p style = {{paddingLeft:'0.8rem', marginTop:'0.8rem'}}>{`${this.state.user}`}</p>
+                <Link to='profile' style = {{paddingLeft:'0.8rem', marginTop:'0.8rem'}}>{`${this.state.user}`}</Link>
                 <ul>
                     
-                    <Menu vertical >
+                    <Menu vertical style={{marginTop: '0.8rem'}}>
                         <Link to = 'lessonplans'><Menu.Item link>Manage lessonplans</Menu.Item></Link>
                         <Link to = 'lessons'><Menu.Item link>Manage lessons</Menu.Item></Link>                    
                         <Link  to = 'uploadsim'><Menu.Item link>Manage simulations</Menu.Item></Link>
