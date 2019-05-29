@@ -26,6 +26,10 @@ Meteor.methods({
       return user.username
   },
 
+  'updateSchool'(id, school) {
+    Meteor.users.update({_id: id}, { $set: {'school': school} }); 
+  }
+
 })
 
 if(Meteor.isServer) {
@@ -34,6 +38,8 @@ if(Meteor.isServer) {
   Meteor.publish('getAccounts', function () {
     return Meteor.users.find(); 
   })
+
+
 }
 
 
