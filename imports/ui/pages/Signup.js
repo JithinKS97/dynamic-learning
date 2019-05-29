@@ -8,6 +8,12 @@ import { Session } from 'meteor/session'
 
 import 'semantic-ui-css/semantic.min.css';
 
+const vals = [
+    {key: 's', text: 'Student', value: 'Student'}, 
+    {key: 't', text: 'Teacher', value: 'Teacher'}, 
+    {key: 'd', text: 'Developer', value: 'Developer'}
+]
+
 export default class Signup extends React.Component {
 
     constructor(props) {
@@ -49,6 +55,7 @@ export default class Signup extends React.Component {
         const email = this.email.value.trim()
         const password = this.password.value.trim()
         const username = this.username.value.trim()
+        const accountType = this.accountType.trim(); 
 
         if(password.length<9) {
 
@@ -58,7 +65,16 @@ export default class Signup extends React.Component {
             return
         }
 
-        Accounts.createUser({email,username,password},(err) => {
+        const options = {
+            email: email, 
+            username: username, 
+            password: password, 
+            profile: {
+                accountType: accountType
+            }
+        }; 
+
+        Accounts.createUser(options,(err) => {
 
             console.log(err)
 
@@ -68,7 +84,7 @@ export default class Signup extends React.Component {
                 })
             }
             else {
-
+                
                 this.setState({
                     error: ''
                 },()=>{
@@ -121,6 +137,10 @@ export default class Signup extends React.Component {
                             <Form.Field>
                                 <label>Password</label>
                                 <input type='password' ref= { e => this.password = e } placeholder='Password'/>
+                            </Form.Field>
+                            <Form.Field> 
+                                <label> Account Type </label> 
+                                <Form.Select onChange= {(e, {value}) => this.accountType = value} options={vals} placeholder='Account Type' /> 
                             </Form.Field>
                             <Button>Create Account</Button>
                         </Form>

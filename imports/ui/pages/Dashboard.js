@@ -16,6 +16,7 @@ import 'semantic-ui-css/semantic.min.css';
 import FaCode from 'react-icons/lib/fa/code'
 import TagsInput from 'react-tagsinput'
 import { generateSrc } from '../../functions/index.js'
+import Profile from '../components/Profile'; 
 
 /*
     This is the Component which renders the dashboard of the application.
@@ -121,7 +122,7 @@ export default class Dashboard extends React.Component {
 
             case 'requests':
                 return <div>
-                            <Header style = {{marginLeft:'2.4rem'}}>Reqests</Header>
+                            <Header style = {{marginLeft:'2.4rem'}}>Requests</Header>
                             <RequestsList/>
                         </div>
 
@@ -142,6 +143,13 @@ export default class Dashboard extends React.Component {
                             <SharedLessons/>
                         </div>
                     )
+            case 'profile': 
+                    return (
+                        <div> 
+                            <Header> User Profile </Header>
+                            <Profile /> 
+                        </div> 
+                    );
        }
     }
 
@@ -225,7 +233,7 @@ export default class Dashboard extends React.Component {
                 <Grid  columns={3} divided>
                     <Grid.Row>                        
                         <Grid.Column width = {3} style = {{margin:'1.6rem'}}>
-                        <Button onClick = {()=>{Accounts.logout()}}>Log out</Button>
+                        <Button style={{marginBottom: '0.8rem'}} onClick = {()=>{Accounts.logout()}}>Log out</Button>
                             <SideBar/> 
                         </Grid.Column>
                         <Grid.Column width = {10} style = {{margin:'1.6rem'}}>

@@ -14,7 +14,6 @@ import Explore from '../ui/pages/Explore'
 
 import Signup from '../ui/pages/Signup'
 import NotFound from '../ui/pages/NotFound'
-
 import Request from '../ui/pages/Request'
 import SandBox from '../ui/pages/SandBox'
 import Dashboard from '../ui/pages/Dashboard'
@@ -29,8 +28,8 @@ const authenticatedPages = [
     '/dashboard/uploadsim',
     '/dashboard/lessons',
     '/dashboard/watchlesson',
+    '/dashboard/profile', 
     '/lesson',
-    '/profile'
 ]
 
 export const onAuthChange = (isAuthenticated) => {

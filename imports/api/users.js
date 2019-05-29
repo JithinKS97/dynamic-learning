@@ -24,11 +24,16 @@ Meteor.methods({
     const user = Meteor.users.findOne({_id})
     if(user)
       return user.username
-  }
+  },
+
 })
 
 if(Meteor.isServer) {
   Accounts.validateNewUser(validateNewUser)
+
+  Meteor.publish('getAccounts', function () {
+    return Meteor.users.find(); 
+  })
 }
 
 
