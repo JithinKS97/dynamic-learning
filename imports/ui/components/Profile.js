@@ -3,6 +3,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
 import { Button, Form, Card } from 'semantic-ui-react'
+import TeacherSearch from './TeacherSearch';
 
 export default class Profile extends React.Component {
 
@@ -18,7 +19,7 @@ export default class Profile extends React.Component {
     }
 
     updateSchool = () => {
-        Meteor.call('updateSchool', Meteor.user()._id, this.school.value);
+        Meteor.call('updateSchool', Meteor.user().username, this.school.value);
         this.setState({
             school: this.school.value
         })
@@ -51,6 +52,7 @@ export default class Profile extends React.Component {
         })
 
         Meteor.subscribe('getAccounts');
+
     }
 
     render() {
@@ -62,27 +64,28 @@ export default class Profile extends React.Component {
                     Your school is {this.state.school}. <br />
                     {
                         (this.state.type === 'Student' || this.state.type === 'Teacher') &&
-                        <Form noValidate onSubmit={this.updateSchool} style={{paddingTop: '20px', width: '25%'}}>
+                        <Form noValidate onSubmit={this.updateSchool} style={{ paddingTop: '20px', width: '25%' }}>
                             <Form.Field>
                                 <input ref={e => this.school = e} placeholder='School' />
                             </Form.Field>
-                            <Button type='submit' style={{ }}> Update School </Button>
-                        </Form> 
+                            <Button type='submit' style={{}}> Update School </Button>
+                        </Form>
                     }
                 </div>
                 {/* 
                     The following allows us to fetch a list of all existing users
                     which will be used to create functionality for searching for other users.
                 */}
-                    {/* <b> Existing users </b> 
+                {/* <b> Existing users </b> 
                 {
                     Meteor.users.find().fetch().
                     map(user => (
                      <div> {user.username} </div>   
                     ))   
                 } */}
-                </div>
-                )
-            }
-        }
-        
+                <TeacherSearch />
+            </div>
+        )
+    }
+}
+

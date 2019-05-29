@@ -26,8 +26,8 @@ Meteor.methods({
       return user.username
   },
 
-  'updateSchool'(id, school) {
-    Meteor.users.update({_id: id}, { $set: {'school': school} }); 
+  'updateSchool'(username, school) {
+    Meteor.users.update({username: username}, { $set: {'school': school} }); 
   }
 
 })
