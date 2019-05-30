@@ -68,34 +68,32 @@ const List = (props) => {
                    Both these operations are not performed here. But the functions
                    that execute the operations are passed.
                 */
-                if(props.from == 'createLessonplan') {
-                  return(
-                    <SortableItem key={`item-${index}`} index={index} slideNo={index} slide={slide} props={props}/>
-                  )
-                }
-                else {
+               return(
+                <SortableItem key={`item-${index}`} index={index} slideNo={index} slide={slide} props={props}/>
+              )
+                // else {
 
-                    return (
-                        <Menu.Item
-                          style = {{display:'flex', justifyContent:'space-between'}}
-                          key = {index}
-                          color
-                        >
+                //     return (
+                //         <Menu.Item
+                //           style = {{display:'flex', justifyContent:'space-between'}}
+                //           key = {index}
+                //           color
+                //         >
                         
-                            <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{!props.isPreview?slide.title:index+1}</Button>
+                //             <Button style = {{width:'100%', textAlign:'left'}} onClick = {()=>{props.saveChanges(undefined, index)}}>{!props.isPreview?slide.title:index+1}</Button>
 
-                            {Meteor.userId() == props.userId && !props.isPreview?<Button className = 'deleteButton' onClick = {()=>{
+                //             {Meteor.userId() == props.userId && !props.isPreview?<Button className = 'deleteButton' onClick = {()=>{
 
-                                const confirmation = confirm('Are you sure you want to delete?')
+                //                 const confirmation = confirm('Are you sure you want to delete?')
 
-                                if(confirmation == true)
-                                    props.delete(index)
+                //                 if(confirmation == true)
+                //                     props.delete(index)
 
-                            }}>X</Button>:null}
+                //             }}>X</Button>:null}
 
-                        </Menu.Item>
-                    )
-                }
+                //         </Menu.Item>
+                //     )
+                // }
             })
             return slideslist;
         }

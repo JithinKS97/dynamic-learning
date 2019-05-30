@@ -1,5 +1,8 @@
 import React from "react";
+
 import List from "../components/List";
+import DetailedList from '../components/DetailedList'
+
 import Upload from "../components/Upload";
 import { Requests } from "../../api/requests";
 import CommentForm from "../components/CommentForm";
@@ -122,25 +125,28 @@ class Request extends React.Component {
 
     if (this.state.show == false) {
       slides[0].title = title;
-      this.setState({ slides, show: true });
+      slides[0].userId = Meteor.userId();
+      this.setState({ slides, show: true },()=>{this.update()});
     } else {
       const slide = {
         title: title,
         comments: [],
-        iframes: []
+        iframes: [],
+        userId: Meteor.userId()
       };
       slides.push(slide);
       this.setState({
         title,
         slides,
         curSlide
+      },()=>{
+        this.update()
       });
     }
-
-    this.update();
   }
 
   update() {
+
     if (!Meteor.userId()) return;
 
     const { slides } = this.state;
@@ -148,8 +154,9 @@ class Request extends React.Component {
     Meteor.call("requests.update", this.state._id, slides);
   }
 
-  deleteSlide(index) {
-    const isOwner = this.state.userId == Meteor.userId();
+  deleteSlide = (index) => {
+
+    const isOwner = this.state.slides[index].userId == Meteor.userId();
 
     if (isOwner) {
       const { slides } = this.state;
@@ -172,7 +179,8 @@ class Request extends React.Component {
     const slide = {
       comments: [],
       iframes: [],
-      title: ""
+      title: "",
+      userId: Meteor.userId()
     };
 
     slides.push(slide);
@@ -190,7 +198,8 @@ class Request extends React.Component {
     );
   }
 
-  saveChanges(slides, curSlide) {
+  saveChanges = (slides, curSlide) => {
+
     if (slides == undefined) {
       this.setState(
         {
@@ -198,19 +207,26 @@ class Request extends React.Component {
         },
         () => {
           this.commentsList.collapse();
+          this.update();
         }
       );
     } else if (curSlide == undefined) {
       this.setState({
         slides
+      },()=>{
+
+        this.update();
       });
     } else {
       this.setState({
         slides,
         curSlide
+      },()=>{
+
+        this.update();
       });
     }
-    this.update();
+    
   }
 
   pushSim(title, username, project_id) {
@@ -341,6 +357,20 @@ class Request extends React.Component {
     }
   }
 
+  changeTitleOfSlide = (newTitle, index) => {
+
+    if(!newTitle)
+        return false
+
+    const slides = Object.values($.extend(true, {}, this.state.slides))
+
+    slides[index].title = newTitle
+
+    this.saveChanges(slides)
+
+    return true
+}
+
   render() {
 
     const isOwner = this.state.userId == Meteor.userId();
@@ -462,27 +492,36 @@ class Request extends React.Component {
                 <Header as='h3' dividing>
                   Requests list
                 </Header>
-                {isOwner ? (
-                  <Button
-                    onClick={() => {
-                      this.setState({
-                        topicTitleModalOpen: true
-                      });
-                    }}
-                  >
-                    Create new topic
-                  </Button>
-                ) : null}
-
+               
+                <Button
+                  onClick={() => {
+                    this.setState({
+                      topicTitleModalOpen: true
+                    });
+                  }}
+                >
+                  Create new topic
+                </Button>
+          
                 {this.state.show ? (
-                  <List
-                    userId={this.state.userId}
-                    from={"request"}
-                    showTitle={true}
-                    {...this.state}
-                    saveChanges={this.saveChanges.bind(this)}
-                    delete={this.deleteSlide.bind(this)}
+                  // <List
+                  //   userId={this.state.userId}
+                  //   from={"request"}
+                  //   showTitle={true}
+                  //   {...this.state}
+                  //   saveChanges={this.saveChanges.bind(this)}
+                  //   delete={this.deleteSlide.bind(this)}
+                  // />
+
+                  <DetailedList
+                    userId = {this.state.userId}
+                    slides = {this.state.slides}
+                    curSlide = {this.state.curSlide}
+                    saveChanges = {this.saveChanges}
+                    delete = {this.deleteSlide}
+                    changeTitleOfSlide = {this.changeTitleOfSlide}
                   />
+
                 ) : null}
               </Grid.Column>
               <Grid.Column
