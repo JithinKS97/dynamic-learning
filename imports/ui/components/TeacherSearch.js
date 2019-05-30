@@ -2,7 +2,7 @@ import React from 'react'
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
-import { Button, Form, Card } from 'semantic-ui-react'
+import { Button, Form, Modal } from 'semantic-ui-react'
 
 /*  
     This component is made to allow teachers to search for students within their school. It will 
@@ -50,18 +50,25 @@ export default class TeacherSearch extends React.Component {
     // this function gets the list of students that match the search criteria and are in 
     // the teacher's school
 
+    handleOpen = (user) => {
+        this.setState({
+            modalOpen: true, 
+            userClicked: user.username, 
+            clickedType: user.profile['accountType'], 
+            clickedEmail: user.emails[0].address
+        })
+    }
+
     getStudents = () => {
         return (
             Meteor.users.find().fetch().
                 map(user => {
+                    if (this.search !== '' && user.username !== undefined && 
+                        user.school !== undefined && user.school === this.state.school 
+                        && user.username.includes(this.search))
                     return (
-                    <div> 
+                    <div onClick={() => this.handleOpen(user)} style={{paddingTop: '5px'}}> 
                         {
-                            this.search !== '' && 
-                            user.username !== undefined &&
-                            user.school !== undefined &&
-                            user.school === this.state.school &&
-                            user.username.includes(this.search) &&
                             user.username
                         } 
                     </div>
@@ -70,6 +77,11 @@ export default class TeacherSearch extends React.Component {
         )
     }
 
+    handleClose = () => {
+        this.setState({
+            modalOpen: false
+        })
+    }
     // form for searching
 
     render() {
@@ -85,6 +97,27 @@ export default class TeacherSearch extends React.Component {
                 {
                     this.state.lookedup && this.getStudents()
                 }
+                 <Modal 
+                open={this.state.modalOpen}
+                onClose={() => this.handleClose()}
+                size='tiny'            
+             >
+                <Modal.Header>
+                    {this.state.userClicked}
+                    <Button className = 'close-button' onClick = {() => this.handleClose()}>
+                        X
+                    </Button>
+                </Modal.Header>
+
+                <Modal.Content>
+                    <Modal.Description>
+                        Account Type: {this.state.clickedType} <br /> 
+                        Email: {this.state.clickedEmail}
+                    </Modal.Description>
+                    
+                </Modal.Content>              
+
+            </Modal>
             </div>
         );
     }
