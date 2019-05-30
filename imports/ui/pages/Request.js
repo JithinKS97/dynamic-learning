@@ -4,7 +4,8 @@ import Upload from "../components/Upload";
 import { Requests } from "../../api/requests";
 import CommentForm from "../components/CommentForm";
 import CommentsList from "../components/CommentsList";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+
 import { Meteor } from "meteor/meteor";
 import SimPreview from "../components/SimPreview";
 import FaTrash from "react-icons/lib/fa/trash";
@@ -25,7 +26,7 @@ import {
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { withTracker } from "meteor/react-meteor-data";
-
+import FaPencil from 'react-icons/lib/fa/pencil'
 import { generateSrc } from '../../functions/index.js'
 
 /* This component renders the page where the teachers post the requests for the new simulation
@@ -64,7 +65,10 @@ class Request extends React.Component {
       initialized: false,
 
       topicTitleModalOpen: false,
-      topicTitle: ""
+      topicTitle: "",
+
+      showEditDescription:false,
+      redirectToLessonplan:false
     };
     this.update.bind(this);
     this.pushSim.bind(this);
@@ -244,24 +248,25 @@ class Request extends React.Component {
   }
 
   setTitle(e) {
+
     e.preventDefault();
 
-    if (!(this.state.descriptionInTheForm && this.state.titleInTheForm)) {
+    if (!(this.state.description && this.state.requestTitle)) {
       alert("Fill the details");
-
       return;
     }
 
     this.setState(
       {
-        requestTitle: this.state.titleInTheForm
+        requestTitle: this.state.requestTitle,
+        showEditDescription: false
       },
       () => {
         Meteor.call(
           "requests.title.update",
           this.state._id,
           this.state.requestTitle,
-          this.state.descriptionInTheForm
+          this.state.description
         );
       }
     );
@@ -321,6 +326,9 @@ class Request extends React.Component {
 
     const isOwner = this.state.userId == Meteor.userId();
 
+    if(this.state.redirectToLessonplan)
+      return <Redirect to = {`/createlessonplan/${this.state._id}`}/>
+
     return (
       <Segment>
         <Dimmer inverted active={!this.props.requestExists}>
@@ -372,7 +380,6 @@ class Request extends React.Component {
             />
           </Modal.Content>
         </Modal>
-
         <div>
           <Grid divided="vertically" style={{ height: "100vh" }}>
             <Grid.Row style={{ height: "20vh" }}>
@@ -402,11 +409,27 @@ class Request extends React.Component {
                   </Button>
                 ) : null}
 
-                <Container textAlign = {"left"}>
-                  <h1 style={{ margin: "0.8rem 0" }}>
-                    {this.state.requestTitle}
-                  </h1>
-                  <p style={{ paddingLeft: "1.6rem" }}>
+                <Container textAlign = {"left"} style = {{width:'100%'}}>
+                    
+                    <div style = {{marginTop:'1.2rem', alignItems:'center', display:'flex'}}>
+                      <h1 style = {{height:'2.4rem', margin: 'auto 0'}}>
+                        {this.state.requestTitle}
+                      </h1>
+                      {isOwner?<Button onClick = {()=>{
+
+                        console.log('hello')
+
+                        this.setState({
+
+                          showEditDescription:true
+                        })
+
+                      }} icon style = {{marginLeft:'1.2rem'}}>
+                        <FaPencil/>
+                      </Button>:null}
+                    </div>
+                    
+                  <p style={{ paddingLeft: "1.6rem", marginTop:'1.2rem' }}>
                     {this.state.description}
                   </p>
                 </Container>
@@ -496,6 +519,7 @@ class Request extends React.Component {
                 <Form.Field>
                   <label>Title for the topic</label>
                   <Input
+                    
                     ref={e => (this.topicTitle = e)}
                     onChange={(e, { value }) => {
                       this.setState({
@@ -524,14 +548,21 @@ class Request extends React.Component {
           </Modal>
 
           {isOwner ? (
-            <Modal open={!!!this.state.requestTitle} size="tiny">
+            <Modal open={!this.state.requestTitle || this.state.showEditDescription} size="tiny">
               <Modal.Header>
                 Details for the request
-                <Link to={{ pathname: `/createlessonplan/${this.state._id}` }}>
-                  <Button link className="close-button">
+                
+                  <Button onClick = {()=>{
+
+                    this.setState({
+
+                      redirectToLessonplan:true
+                    })
+
+                  }} className="close-button">
                     X
                   </Button>
-                </Link>
+            
               </Modal.Header>
 
               <Modal.Content>
@@ -540,13 +571,13 @@ class Request extends React.Component {
                     <Form.Field>
                       <label>Title</label>
                       <Input
+                        value = {this.state.requestTitle}
                         name="title"
                         onChange={(e, { value }) => {
                           this.setState({
-                            titleInTheForm: value
+                            requestTitle: value
                           });
                         }}
-                        value={this.state.titleInTheForm}
                       />
                     </Form.Field>
 
@@ -554,12 +585,12 @@ class Request extends React.Component {
                       <label>Add a description</label>
                       <TextArea
                         name="description"
+                        value = {this.state.description}
                         onChange={(e, { value }) => {
                           this.setState({
-                            descriptionInTheForm: value
+                            description: value
                           });
-                        }}
-                        value={this.state.descriptionInTheForm}
+                        }}                   
                       />
                     </Form.Field>
 
