@@ -77,7 +77,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized')
         }
 
-        Requests.update({_id, userId:this.userId}, {$set: {requestTitle:'',slides:[], updatedAt: moment().valueOf()}})
+        Requests.update({_id, userId:this.userId}, {$set: {requestTitle:'', description:'', slides:[], updatedAt: moment().valueOf()}})
     }, 
 
     'requests.title.update'(_id, requestTitle, description) {

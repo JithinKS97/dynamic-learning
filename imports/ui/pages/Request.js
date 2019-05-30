@@ -56,10 +56,12 @@ class Request extends React.Component {
       curSlide: 0,
       selectedSim: null,
       selectedSimIndex: null,
-      requestTitle: true,
 
-      titleInTheForm: "",
-      descriptionInTheForm: "",
+      requestTitle: '',
+      description:'',
+
+      editTitle:'',
+      editDescription:'',
 
       loading: true,
       initialized: false,
@@ -77,6 +79,11 @@ class Request extends React.Component {
     this.push.bind(this);
   }
 
+  componentDidMount() {
+
+
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props == nextProps) return;
 
@@ -90,7 +97,17 @@ class Request extends React.Component {
       ...nextProps.request,
       loading: nextProps.loading,
       show,
-      initialized: true
+      initialized: true,
+      
+      editDescription: nextProps.request.description,
+      editTitle: nextProps.request.requestTitle
+    },()=>{
+
+      if(!(this.state.requestTitle && this.state.description))  {
+        this.setState({
+          showEditDescription:true
+        })
+      }
     });
   }
 
@@ -251,22 +268,22 @@ class Request extends React.Component {
 
     e.preventDefault();
 
-    if (!(this.state.description && this.state.requestTitle)) {
+    if (!(this.state.editDescription && this.state.editTitle)) {
       alert("Fill the details");
       return;
     }
 
     this.setState(
       {
-        requestTitle: this.state.requestTitle,
+        requestTitle: this.state.editTitle,
         showEditDescription: false
       },
       () => {
         Meteor.call(
           "requests.title.update",
           this.state._id,
-          this.state.requestTitle,
-          this.state.description
+          this.state.editTitle,
+          this.state.editDescription
         );
       }
     );
@@ -417,8 +434,6 @@ class Request extends React.Component {
                       </h1>
                       {isOwner?<Button onClick = {()=>{
 
-                        console.log('hello')
-
                         this.setState({
 
                           showEditDescription:true
@@ -548,16 +563,22 @@ class Request extends React.Component {
           </Modal>
 
           {isOwner ? (
-            <Modal open={!this.state.requestTitle || this.state.showEditDescription} size="tiny">
+            <Modal open={this.state.showEditDescription} size="tiny">
               <Modal.Header>
                 Details for the request
                 
                   <Button onClick = {()=>{
 
-                    this.setState({
+                    if(!(this.state.requestTitle && this.state.description))
+                      this.setState({
 
-                      redirectToLessonplan:true
-                    })
+                        redirectToLessonplan:true
+                      })
+                    else
+                      this.setState({
+
+                        showEditDescription:false
+                      })
 
                   }} className="close-button">
                     X
@@ -571,11 +592,11 @@ class Request extends React.Component {
                     <Form.Field>
                       <label>Title</label>
                       <Input
-                        value = {this.state.requestTitle}
+                        value = {this.state.editTitle}
                         name="title"
                         onChange={(e, { value }) => {
                           this.setState({
-                            requestTitle: value
+                            editTitle: value
                           });
                         }}
                       />
@@ -585,16 +606,14 @@ class Request extends React.Component {
                       <label>Add a description</label>
                       <TextArea
                         name="description"
-                        value = {this.state.description}
+                        value = {this.state.editDescription}
                         onChange={(e, { value }) => {
                           this.setState({
-                            description: value
+                            editDescription: value
                           });
                         }}                   
                       />
                     </Form.Field>
-
-                    <p>Note: You can edit these details later</p>
 
                     <Form.Field>
                       <Button>Submit</Button>
