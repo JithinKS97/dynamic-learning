@@ -302,6 +302,8 @@ class Request extends React.Component {
           >
             <Button
               onClick={() => {
+                
+
                 this.setState({
                   selectedSim: sim,
                   selectedSimIndex: index
@@ -365,7 +367,7 @@ class Request extends React.Component {
                 target="_blank"
                 href={
                   this.state.selectedSim
-                    ? this.state.selectedSim.linkToCode
+                    ? `https://editor.p5js.org/${this.state.selectedSim.username}/sketches/${this.state.selectedSim.project_id}`
                     : ""
                 }
               >
