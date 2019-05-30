@@ -9,7 +9,6 @@
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "bcrypt": "^2.0.1",
-    "chai": "^4.2.0",
     "dompurify": "^1.0.10",
     "fabric": "^2.7.0",
     "meteor-node-stubs": "^0.3.3",
@@ -34,8 +33,10 @@
     "simpl-schema": "^1.5.5"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.13.1"
+    "enzyme-adapter-react-16": "^1.13.2",
+    "mocha": "^6.1.4"
   },
   "engines": {
     "node": "8.11.1"
