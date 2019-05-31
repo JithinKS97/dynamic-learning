@@ -88,6 +88,7 @@ export default class CommentBox extends React.Component {
         return (
           <a
             className="arrow"
+            style={{ marginRight: '1.2rem' }}
             size={17}
             onClick={() => {
               this.setState(prev => ({
@@ -132,7 +133,7 @@ export default class CommentBox extends React.Component {
               </Comment.Metadata>
             </div>
 
-            {!this.state.isEditable ? <Comment.Text style={{ padding: '0.4rem 0', width: '95%' }}>{this.props.comment.comment}</Comment.Text> : null}
+            {!this.state.isEditable ? <Comment.Text style={{ padding: '0.8rem 0', width: '95%' }}>{this.props.comment.comment}</Comment.Text> : null}
             {this.state.isEditable ? (
               <Form style={{ margin: '1.2rem 0' }}>
                 <TextArea
@@ -152,6 +153,7 @@ export default class CommentBox extends React.Component {
               {this.state.replyVis ? (
                 <a
                   className="arrow"
+                  style={{ marginRight: '1.2rem' }}
                   size={17}
                   onClick={() => {
                     this.setState(prev => ({
@@ -180,7 +182,6 @@ export default class CommentBox extends React.Component {
                     }
                   }}
                   className="arrow"
-                  style={{ marginLeft: !this.state.isEditable ? '1.2rem' : '0rem' }}
                 >
                   {this.state.isEditable ? 'Save' : 'Edit'}
                 </a>
