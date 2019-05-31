@@ -1,73 +1,77 @@
-/*
-  eslint-disable
-  react/prop-types,
-  react/no-unused-state,
-  jsx-a11y/click-events-have-key-events,
-  jsx-a11y/anchor-is-valid,
-  jsx-a11y/no-static-element-interactions
-*/
-import React, { Component } from 'react';
+/* eslint-disable no-restricted-globals */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable consistent-return */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+
+import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
 import moment from 'moment';
 import { Comment, Button } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
-import CommentReplies from './CommentReplies';
+import { Tracker } from 'meteor/tracker';
 import CommentForm from './CommentForm';
+import CommentReplies from './CommentReplies';
 
-
-export default class CommentBox extends Component {
+export default class CommentBox extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       username: '',
       replyVis: false,
     };
+
     Tracker.autorun(() => {
-      const { comment: { userId: id } } = this.props;
-      Meteor.call('getUsername', id, (err, username) => {
+      Meteor.call('getUsername', this.props.comment.userId, (err, username) => {
         this.setState({ username });
       });
     });
   }
 
   componentDidMount() {
-    this.setState({ retplyVis: false });
+    this.setState({
+
+      replyVis: false,
+    });
   }
 
   showReplies() {
     const { replies } = this.props;
     if (replies) {
-      return replies.map((reply, index) => (
-        // eslint-disable-next-line react/no-array-index-key
+      return (replies.map((reply, index) => (
         <CommentReplies key={index} {...this.props} subIndex={index} reply={reply} />
-      ));
+      )));
     }
-
-    return null; // this is a hack
+    return null;
   }
 
   findTime() {
-    const { comment: { time: currentTime } } = this.props;
-    return moment(currentTime);
+    return moment(this.props.comment.time);
   }
 
   showDownArrow() {
-    const { visible } = this.state;
-    if (visible === false) {
+    if (this.state.replyVis === false) {
       if (!Meteor.userId()) {
-        const { replies } = this.props;
-        if (replies.length === 0) {
+        if (this.props.replies.length === 0) {
           return null;
         }
 
+
         return (
+
           <FaAngleDown
             className="arrow"
             size={17}
             onClick={() => {
-              this.setState(prev => ({ replyVis: !prev.replyVis }));
+              this.setState(prev => ({
+
+                replyVis: !prev.replyVis,
+              }));
             }}
           >
             Show
@@ -75,100 +79,87 @@ export default class CommentBox extends Component {
         );
       }
 
+
       return (
+
         <a
           className="arrow"
           size={17}
           onClick={() => {
-            this.setState(prev => ({ replyVis: !prev.replyVis }));
+            this.setState(prev => ({
+
+              replyVis: !prev.replyVis,
+            }));
           }}
         >
           Reply
         </a>
       );
     }
-
-    return null; // this is a hack
   }
 
   render() {
-    const {
-      comment: {
-        userId,
-        comment,
-      },
-      index,
-      deleteComment,
-    } = this.props;
-    const {
-      username,
-      replyVis,
-    } = this.state;
     return (
       <div>
-        <Comment style={
-          {
-            padding: '0.8rem',
-            marginBottom: '0.9rem',
-            marginTop: '0.9rem',
-            backgroundColor: '#eeeeee',
-          }
-        }
+        <Comment style={{
+          padding: '0.8rem', marginBottom: '0.9rem', marginTop: '0.9rem', backgroundColor: '#eeeeee',
+        }}
         >
           <Comment.Content style={{ width: '100%' }}>
-            {userId === Meteor.userId()
-              ? (
-                <Button
-                  style={{ float: 'right', padding: '0.5rem' }}
-                  onClick={() => {
-                    // eslint-disable-next-line no-alert, no-restricted-globals
-                    const confirmation = confirm('Are you sure you want to delete your comment?');
-                    if (confirmation === true) {
-                      deleteComment(index);
-                    }
-                  }
+            {/* <Comment.Avatar src='/images/avatar/small/matt.jpg' /> */}
+            {this.props.comment.userId === Meteor.userId() ? (
+              <Button
+                style={{ float: 'right', padding: '0.5rem' }}
+                onClick={() => {
+                  const confirmation = confirm('Are you sure you want to delete your comment?');
+                  if (confirmation === true) { this.props.deleteComment(this.props.index); }
                 }
-                >
-                  &times;
-                </Button>
-              ) : null }
+                }
+              >
+                X
+              </Button>
+            ) : null}
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <Comment.Author>{username}</Comment.Author>
+              <Comment.Author>{this.state.username}</Comment.Author>
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
             </div>
 
-            <Comment.Text style={{ padding: '0.4rem 0', width: '95%' }}>{comment}</Comment.Text>
+            <Comment.Text style={{ padding: '0.4rem 0', width: '95%' }}>{this.props.comment.comment}</Comment.Text>
 
             {this.showDownArrow()}
 
-            {replyVis
-              ? (
-                <a
-                  className="arrow"
-                  size={17}
-                  onClick={() => {
-                    this.setState(prev => ({ replyVis: !prev.replyVis }));
-                  }}
-                >
-                  Hide
-                </a>
-              ) : null}
+
+            {this.state.replyVis ? (
+              <a
+                className="arrow"
+                size={17}
+                onClick={() => {
+                  this.setState(prev => ({
+
+                    replyVis: !prev.replyVis,
+                  }));
+                }}
+              >
+                Hide
+
+              </a>
+            ) : null}
+
+
+            {/* <Comment.Actions>
+                    <Comment.Action>Reply</Comment.Action>
+                    </Comment.Actions> */}
           </Comment.Content>
         </Comment>
-        {replyVis
-          ? (
-            <div>
-              <div>{this.showReplies()}</div>
-              {Meteor.userId()
-                ? (
-                  <div>
-                    <CommentForm option={index} {...this.props} />
-                  </div>
-                ) : null}
-            </div>
-          ) : null}
+        {this.state.replyVis ? (
+          <div>
+            <div>{this.showReplies()}</div>
+            {Meteor.userId()
+              ? <div><CommentForm option={this.props.index} {...this.props} /></div> : null}
+          </div>
+        ) : null}
       </div>
     );
   }
