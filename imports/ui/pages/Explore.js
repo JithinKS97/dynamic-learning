@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { Grid, Header, Button} from 'semantic-ui-react'
 import SharedLessons from '../components/SharedLessons'

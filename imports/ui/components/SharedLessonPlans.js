@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { LessonPlansIndex } from '../../api/lessonplans'
 import { List, Modal,Button, Input, Dimmer, Loader } from 'semantic-ui-react'

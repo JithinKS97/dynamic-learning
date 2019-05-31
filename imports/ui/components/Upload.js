@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
 import SimPreview from './SimPreview'

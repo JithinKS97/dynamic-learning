@@ -1,3 +1,5 @@
+
+/* eslint-disable */
 import React from 'react'
 import { Meteor } from 'meteor/meteor'
 import { Menu } from 'semantic-ui-react'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor'

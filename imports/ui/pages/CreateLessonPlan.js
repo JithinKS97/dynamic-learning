@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import DrawingBoardCmp from '../components/DrawingBoardCmp'
 import { LessonPlans } from '../../api/lessonplans'

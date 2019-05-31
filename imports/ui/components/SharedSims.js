@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { SimsIndex } from '../../api/sims'
 import { List, Input, Dimmer, Loader } from 'semantic-ui-react' 

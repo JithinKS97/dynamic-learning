@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import {Tracker} from 'meteor/tracker'
 import { List, Input, Dimmer, Loader } from 'semantic-ui-react' 

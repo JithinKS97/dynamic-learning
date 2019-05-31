@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Upload from '../components/Upload'
 import { Meteor } from 'meteor/meteor'

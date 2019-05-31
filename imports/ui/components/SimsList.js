@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import SimPreview from './SimPreview'
 import SimContainer from './SimContainer'

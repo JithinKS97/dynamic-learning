@@ -1,28 +1,36 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react'
-import { Menu, Card, Button, Input } from 'semantic-ui-react'
-import FaPencil from 'react-icons/lib/fa/pencil'
-
-import { Tracker } from 'meteor/tracker'
+/* eslint-disable */
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
+import {
+  Menu,
+  Card,
+  Button,
+  Input,
+} from 'semantic-ui-react';
+import FaPencil from 'react-icons/lib/fa/pencil';
+import { Tracker } from 'meteor/tracker';
 
 const ListTile = (props) => {
+  const [isEditable, enableEditable] = useState(false);
+  const [tempTitle, changeTempTitle] = useState('');
+  const input = useRef();
+  const [ownerName, changeOwnerName] = useState('');
 
-    const [isEditable, enableEditable] = useState(false);
-    const [tempTitle, changeTempTitle] = useState('')
-    const input = useRef();
-    const [ownerName, changeOwnerName] = useState('')
+  const { userId } = props;
 
-    const isOwner = Meteor.userId() === props.userId
+  const isOwner = Meteor.userId() === userId;
 
-    useEffect(()=>{
-
-        Tracker.autorun(()=>{
-
-            Meteor.call('getUsername', props.userId, (err, username) => {
-
-                changeOwnerName(username)
-            })
+  useEffect(() => {
+    Tracker.autorun(() => {
+      Meteor.call('getUsername', userId, (err, username) => {
+        changeOwnerName(username);
         })
     })
+})
 
     return (
         <Card style={{ margin: '0', display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>

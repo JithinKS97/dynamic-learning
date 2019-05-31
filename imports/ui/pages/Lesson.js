@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data';
 import { Lessons } from '../../api/lessons'

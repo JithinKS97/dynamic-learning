@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { Button, Modal, Form, Container, Dimmer, Loader } from 'semantic-ui-react'
 

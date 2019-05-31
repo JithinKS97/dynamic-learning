@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import '../../api/castify-api'
 import { Meteor } from 'meteor/meteor'
