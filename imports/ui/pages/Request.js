@@ -515,7 +515,6 @@ class Request extends React.Component {
                   // />
 
                   <DetailedList
-                    userId = {this.state.userId}
                     slides = {this.state.slides}
                     curSlide = {this.state.curSlide}
                     saveChanges = {this.saveChanges}
