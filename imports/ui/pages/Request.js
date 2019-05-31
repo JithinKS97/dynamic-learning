@@ -83,11 +83,6 @@ class Request extends React.Component {
     this.push.bind(this);
   }
 
-  componentDidMount() {
-
-
-  }
-
   componentWillReceiveProps(nextProps) {
     if (this.props == nextProps) return;
 
@@ -272,6 +267,13 @@ class Request extends React.Component {
   deleteComment(index) {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments.splice(index, 1);
+    this.saveChanges(slides);
+  }
+
+  editComment = (editedComment, index) => {
+
+    const { slides, curSlide } = this.state;
+    slides[curSlide].comments[index].comment = editedComment;
     this.saveChanges(slides);
   }
 
@@ -505,14 +507,6 @@ class Request extends React.Component {
                 </Button>
           
                 {this.state.show ? (
-                  // <List
-                  //   userId={this.state.userId}
-                  //   from={"request"}
-                  //   showTitle={true}
-                  //   {...this.state}
-                  //   saveChanges={this.saveChanges.bind(this)}
-                  //   delete={this.deleteSlide.bind(this)}
-                  // />
 
                   <DetailedList
                     slides = {this.state.slides}
@@ -535,6 +529,7 @@ class Request extends React.Component {
                     saveChanges={this.saveChanges.bind(this)}
                     deleteReplyComment={this.deleteReplyComment.bind(this)}
                     deleteComment={this.deleteComment.bind(this)}
+                    editComment={this.editComment}
                   />
                 ) : <h2>Create a topic to start the discussion</h2>}
                 <br />

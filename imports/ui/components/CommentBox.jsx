@@ -10,7 +10,12 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import moment from 'moment';
-import { Comment, Button } from 'semantic-ui-react';
+import {
+  Comment,
+  Button,
+  TextArea,
+  Form,
+} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
 import { Tracker } from 'meteor/tracker';
@@ -24,6 +29,8 @@ export default class CommentBox extends React.Component {
     this.state = {
       username: '',
       replyVis: false,
+      isEditable: false,
+      tempComment: '',
     };
 
     Tracker.autorun(() => {
@@ -61,7 +68,6 @@ export default class CommentBox extends React.Component {
           return null;
         }
 
-
         return (
 
           <FaAngleDown
@@ -78,27 +84,27 @@ export default class CommentBox extends React.Component {
           </FaAngleDown>
         );
       }
+      if (this.state.isEditable === false) {
+        return (
+          <a
+            className="arrow"
+            size={17}
+            onClick={() => {
+              this.setState(prev => ({
 
-
-      return (
-
-        <a
-          className="arrow"
-          size={17}
-          onClick={() => {
-            this.setState(prev => ({
-
-              replyVis: !prev.replyVis,
-            }));
-          }}
-        >
-          Reply
-        </a>
-      );
+                replyVis: !prev.replyVis,
+              }));
+            }}
+          >
+            Reply
+          </a>
+        );
+      }
     }
   }
 
   render() {
+    const isOwner = Meteor.userId() === this.props.comment.userId;
     return (
       <div>
         <Comment style={{
@@ -107,7 +113,7 @@ export default class CommentBox extends React.Component {
         >
           <Comment.Content style={{ width: '100%' }}>
             {/* <Comment.Avatar src='/images/avatar/small/matt.jpg' /> */}
-            {this.props.comment.userId === Meteor.userId() ? (
+            {isOwner ? (
               <Button
                 style={{ float: 'right', padding: '0.5rem' }}
                 onClick={() => {
@@ -126,31 +132,61 @@ export default class CommentBox extends React.Component {
               </Comment.Metadata>
             </div>
 
-            <Comment.Text style={{ padding: '0.4rem 0', width: '95%' }}>{this.props.comment.comment}</Comment.Text>
-
-            {this.showDownArrow()}
-
-
-            {this.state.replyVis ? (
-              <a
-                className="arrow"
-                size={17}
-                onClick={() => {
-                  this.setState(prev => ({
-
-                    replyVis: !prev.replyVis,
-                  }));
-                }}
-              >
-                Hide
-
-              </a>
+            {!this.state.isEditable ? <Comment.Text style={{ padding: '0.4rem 0', width: '95%' }}>{this.props.comment.comment}</Comment.Text> : null}
+            {this.state.isEditable ? (
+              <Form style={{ margin: '1.2rem 0' }}>
+                <TextArea
+                  onChange={(e, d) => {
+                    this.setState({
+                      tempComment: d.value,
+                    });
+                  }}
+                  value={this.state.tempComment}
+                />
+              </Form>
             ) : null}
 
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              {this.showDownArrow()}
 
-            {/* <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                    </Comment.Actions> */}
+              {this.state.replyVis ? (
+                <a
+                  className="arrow"
+                  size={17}
+                  onClick={() => {
+                    this.setState(prev => ({
+                      replyVis: !prev.replyVis,
+                    }));
+                  }}
+                >
+                  Hide
+                </a>
+              ) : null}
+
+              { isOwner ? (
+                <a
+                  onClick={() => {
+                    if (this.state.isEditable === false) {
+                      this.setState({
+                        isEditable: true,
+                        tempComment: this.props.comment.comment,
+                      });
+                    } else {
+                      this.setState({
+                        isEditable: false,
+                      }, () => {
+                        this.props.editComment(this.state.tempComment, this.props.index);
+                      });
+                    }
+                  }}
+                  className="arrow"
+                  style={{ marginLeft: !this.state.isEditable ? '1.2rem' : '0rem' }}
+                >
+                  {this.state.isEditable ? 'Save' : 'Edit'}
+                </a>
+              ) : null}
+              {this.state.isEditable ? <a style={{ marginLeft: '1.2rem' }} size={17} className="arrow" onClick={() => { this.setState({ isEditable: false }); }}>Cancel</a> : null}
+            </div>
           </Comment.Content>
         </Comment>
         {this.state.replyVis ? (

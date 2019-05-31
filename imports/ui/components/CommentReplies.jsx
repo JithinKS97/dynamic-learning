@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
@@ -68,10 +69,14 @@ export default class CommentReplies extends React.Component {
             <Comment.Text style={{
               paddingTop: '0.8rem',
               width: '95%',
+              marginBottom: '0.8rem',
             }}
             >
               {comment}
             </Comment.Text>
+
+            <a size={17} className="arrow">Edit</a>
+
           </Comment.Content>
         </Comment>
       </div>
