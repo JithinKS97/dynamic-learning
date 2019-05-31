@@ -20,7 +20,7 @@ import 'semantic-ui-css/semantic.min.css';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
 import { Tracker } from 'meteor/tracker';
 import CommentForm from './CommentForm';
-import CommentReplies from './CommentReplies';
+import CommentReply from './CommentReply';
 
 export default class CommentBox extends React.Component {
   constructor(props) {
@@ -51,7 +51,7 @@ export default class CommentBox extends React.Component {
     const { replies } = this.props;
     if (replies) {
       return (replies.map((reply, index) => (
-        <CommentReplies key={index} {...this.props} subIndex={index} reply={reply} />
+        <CommentReply key={index} {...this.props} subIndex={index} reply={reply} />
       )));
     }
     return null;

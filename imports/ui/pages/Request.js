@@ -283,6 +283,12 @@ class Request extends React.Component {
     this.saveChanges(slides);
   }
 
+  editReplyComment = (index, subIndex, editedComment) => {
+    const { slides, curSlide } = this.state;
+    slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
+    this.saveChanges(slides);
+  }
+
   setTitle(e) {
 
     e.preventDefault();
@@ -530,6 +536,7 @@ class Request extends React.Component {
                     deleteReplyComment={this.deleteReplyComment.bind(this)}
                     deleteComment={this.deleteComment.bind(this)}
                     editComment={this.editComment}
+                    editReplyComment={this.editReplyComment}
                   />
                 ) : <h2>Create a topic to start the discussion</h2>}
                 <br />
