@@ -519,7 +519,7 @@ class Request extends React.Component {
                     slides = {this.state.slides}
                     curSlide = {this.state.curSlide}
                     saveChanges = {this.saveChanges}
-                    delete = {this.deleteSlide}
+                    deleteSlide = {this.deleteSlide}
                     changeTitleOfSlide = {this.changeTitleOfSlide}
                   />
 
