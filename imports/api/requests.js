@@ -34,6 +34,7 @@ Meteor.methods({
         requestTitle: '',
         slides: [],
         updatedAt: moment().valueOf(),
+        description: '',
       },
     });
   },
