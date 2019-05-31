@@ -1,3 +1,5 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-restricted-globals */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 import React, {
   Fragment,
@@ -89,9 +91,7 @@ const ListTile = (props) => {
                 }}
               >
                 <FaPencil />
-
               </Button>
-            // eslint-disable-next-line react/jsx-no-comment-textnodes
             )}
 
             <Button
@@ -102,7 +102,6 @@ const ListTile = (props) => {
                 changeSlideChangeDisable(false);
               }}
               onClick={() => {
-                // eslint-disable-next-line no-restricted-globals
                 if (confirm('Are you sure you want to delete?')) { deleteSlide(props.index); }
               }}
               icon
