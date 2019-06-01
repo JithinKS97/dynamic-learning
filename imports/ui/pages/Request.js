@@ -124,7 +124,8 @@ class Request extends React.Component {
         title: title,
         comments: [],
         iframes: [],
-        userId: Meteor.userId()
+        userId: Meteor.userId(),
+        time: Date.now()
       };
       slides.push(slide);
       this.setState({
@@ -231,7 +232,8 @@ class Request extends React.Component {
       h: 360,
       x: 0,
       y: 0,
-      title
+      title,
+      time: Date.now()
     };
 
     slides[curSlide].iframes.push(objectToPush);
@@ -475,7 +477,10 @@ class Request extends React.Component {
           </Grid>
 
           <Modal size="tiny" open={this.state.topicTitleModalOpen}>
-            <Modal.Header>Topic title</Modal.Header>
+            <Modal.Header>
+                Topic title
+                <Button icon onClick = {()=>{this.setState({topicTitleModalOpen: false})}} style = {{float: 'right'}}>X</Button>
+            </Modal.Header>
 
             <Modal.Content>
               <Form>

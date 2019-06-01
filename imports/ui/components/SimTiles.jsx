@@ -12,6 +12,7 @@ import {
 import { Tracker } from 'meteor/tracker';
 import FaCode from 'react-icons/lib/fa/code';
 import MdSave from 'react-icons/lib/md/save';
+import moment from 'moment';
 import { generateSrc, isValidp5EmbedTag } from '../../functions/index.js';
 import SimPreview from './SimPreview';
 
@@ -41,6 +42,8 @@ const SimTile = (props) => {
     });
   });
 
+  const findTime = () => moment(sim.time);
+
   const [ownerName, changeOwnerName] = useState('');
 
   return (
@@ -53,7 +56,10 @@ const SimTile = (props) => {
       >
         <Card.Content style={{ flex: 14 }}>
           <Card.Header>{sim.title}</Card.Header>
-          <Card.Meta style={{ marginTop: '0.4rem' }}>{ownerName}</Card.Meta>
+          <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
+            <div>{ownerName}</div>
+            <div style={{ marginLeft: '0.2rem' }}>{findTime().fromNow()}</div>
+          </Card.Meta>
         </Card.Content>
         <Card.Content style={{ flex: 1 }}>
           {isOwner ? (

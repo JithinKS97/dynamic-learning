@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable react/prop-types */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
@@ -17,6 +19,7 @@ import {
 import FaPencil from 'react-icons/lib/fa/pencil';
 import { Tracker } from 'meteor/tracker';
 import MdSave from 'react-icons/lib/md/save';
+import moment from 'moment';
 
 const ListTile = (props) => {
   const [isEditable, enableEditable] = useState(false);
@@ -32,7 +35,12 @@ const ListTile = (props) => {
     deleteItem,
     index,
     handleClick,
+    time,
   } = props;
+
+  const findTime = () => {
+    return moment(time);
+  };
 
   const isOwner = Meteor.userId() === userId;
 
@@ -65,7 +73,10 @@ const ListTile = (props) => {
             value={tempTitle}
           />
         ) : <Card.Header style={{ width: '100%' }}>{title}</Card.Header>}
-        <Card.Meta style={{ marginTop: '0.4rem' }}>{ownerName}</Card.Meta>
+        <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
+          <div>{ownerName}</div>
+          <div style={{ marginLeft: '0.2rem' }}>{findTime().fromNow()}</div>
+        </Card.Meta>
       </Card.Content>
       <Card.Content style={{
         flex: 1, display: 'flex', flexDirection: 'row', height: '4.8rem',
@@ -145,6 +156,7 @@ const DetailedList = (props) => {
       index={index}
       title={item.title}
       handleClick={handleClick}
+      time={item.time}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
