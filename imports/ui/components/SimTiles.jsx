@@ -5,7 +5,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable import/extensions */
 import FaPencil from 'react-icons/lib/fa/pencil';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import {
   Card, Button, Menu, Modal, Input,
 } from 'semantic-ui-react';
@@ -226,18 +226,22 @@ const SimTiles = (props) => {
   const sims = slides[curSlide].iframes;
 
   return (
-    <Menu vertical style={{ width: '100%' }}>
-      {sims.map((sim, index) => (
-        <SimTile
-          index={index}
-          sim={sim}
-          slides={props.slides}
-          curSlide={props.curSlide}
-          update={props.update}
-          deleteSim={props.deleteSim}
-        />
-      ))}
-    </Menu>
+    <Fragment>
+      {sims.length > 0 ? (
+        <Menu vertical style={{ width: '100%' }}>
+          {sims.map((sim, index) => (
+            <SimTile
+              index={index}
+              sim={sim}
+              slides={props.slides}
+              curSlide={props.curSlide}
+              update={props.update}
+              deleteSim={props.deleteSim}
+            />
+          ))}
+        </Menu>
+      ) : null}
+    </Fragment>
   );
 };
 
