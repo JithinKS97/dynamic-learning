@@ -6,7 +6,8 @@ import SimPreview from './SimPreview'
 import { Button, Modal, Form} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
-import { generateSrc } from  '../../functions/index.js'
+import { generateSrc } from  '../../functions/index.js';
+import { isValidp5EmbedTag } from '../../functions/index.js';
  
 
 export default class Upload extends React.Component {
@@ -40,7 +41,7 @@ export default class Upload extends React.Component {
 
         const embedTag = this.src.value
 
-        if(this.isValidp5EmbedTag(embedTag)) {
+        if(isValidp5EmbedTag(embedTag)) {
 
             this.setState({
 
@@ -110,14 +111,6 @@ export default class Upload extends React.Component {
         h:null,
         project_id:''
     })
-
-    isValidp5EmbedTag(embedTag){
-    
-        if(embedTag.match(`<iframe src="https://editor.p5js.org/[ A-Za-z0-9_@./#&+-]*/embed/[ A-Za-z0-9_@./#&+-]*"></iframe>`))
-            return true
-        else
-            return false
-    }
     
     render() {
 

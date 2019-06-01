@@ -16,6 +16,7 @@ import {
 } from 'semantic-ui-react';
 import FaPencil from 'react-icons/lib/fa/pencil';
 import { Tracker } from 'meteor/tracker';
+import MdSave from 'react-icons/lib/md/save';
 
 const ListTile = (props) => {
   const [isEditable, enableEditable] = useState(false);
@@ -75,12 +76,14 @@ const ListTile = (props) => {
           <Fragment>
 
             {isEditable ? (
-              <Button onClick={() => {
-                enableEditable(false);
-                changeTitleOfItem(tempTitle, index);
-              }}
+              <Button
+                icon
+                onClick={() => {
+                  enableEditable(false);
+                  changeTitleOfItem(tempTitle, index);
+                }}
               >
-                Save
+                <MdSave />
               </Button>
             ) : (
               <Button

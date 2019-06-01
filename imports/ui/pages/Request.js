@@ -241,7 +241,7 @@ class Request extends React.Component {
     this.update();
   }
 
-  deleteSim(index, userId) {
+  deleteSim = (index, userId) => {
     /* This function decides what to do when cross Button is pressed in the
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
@@ -467,6 +467,7 @@ class Request extends React.Component {
                   slides={this.state.slides}
                   curSlide={this.state.curSlide}
                   update={this.update}
+                  deleteSim={this.deleteSim}
                 /> : 
                 null}
               </Grid.Column>

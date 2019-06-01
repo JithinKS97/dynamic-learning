@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable no-use-before-define */
@@ -11,12 +12,17 @@ import {
 import { Tracker } from 'meteor/tracker';
 import FaCode from 'react-icons/lib/fa/code';
 import MdSave from 'react-icons/lib/md/save';
-import { generateSrc } from '../../functions/index.js';
+import { generateSrc, isValidp5EmbedTag } from '../../functions/index.js';
 import SimPreview from './SimPreview';
 
 const SimTile = (props) => {
   const {
-    sim, slides, curSlide, update, index,
+    sim,
+    slides,
+    curSlide,
+    update,
+    index,
+    deleteSim,
   } = props;
   const [selectedSim, setSelectedSim] = useState(null);
   const [onDelete, setOnDelete] = useState(false);
@@ -24,6 +30,8 @@ const SimTile = (props) => {
   const [titleEditable, changeTitleEditable] = useState(false);
   const [tempTag, changeTempTag] = useState('');
   const [tempTitle, changeTempTitle] = useState('');
+
+  const isOwner = Meteor.userId() === sim.userId;
 
   useEffect(() => {
     Tracker.autorun(() => {
@@ -48,17 +56,22 @@ const SimTile = (props) => {
           <Card.Meta style={{ marginTop: '0.4rem' }}>{ownerName}</Card.Meta>
         </Card.Content>
         <Card.Content style={{ flex: 1 }}>
-          <Button
-            onMouseOver={() => {
-              setOnDelete(true);
-            }}
-            onMouseOut={() => {
-              setOnDelete(false);
-            }}
-            icon
-          >
+          {isOwner ? (
+            <Button
+              onClick={() => {
+                deleteSim(index, sim.userId);
+              }}
+              onMouseOver={() => {
+                setOnDelete(true);
+              }}
+              onMouseOut={() => {
+                setOnDelete(false);
+              }}
+              icon
+            >
             X
-          </Button>
+            </Button>
+          ) : null}
         </Card.Content>
       </Card>
       <Modal size="small" style={{ width: 'auto' }} open={!!selectedSim}>
@@ -76,7 +89,7 @@ const SimTile = (props) => {
                   : ''
               }
             >
-              <Button>
+              <Button icon>
                 <FaCode />
               </Button>
             </a>
@@ -84,6 +97,7 @@ const SimTile = (props) => {
               onClick={() => {
                 setSelectedSim(null);
               }}
+              icon
             >
               X
             </Button>
@@ -124,20 +138,22 @@ const SimTile = (props) => {
                     }}
                   />
                 ) : null}
-                <Button
-                  onClick={() => {
-                    if (titleEditable === false) {
-                      changeTitleEditable(true);
-                      changeTempTitle(selectedSim.title);
-                    } else {
-                      changeTitleEditable(false);
-                    }
-                  }}
-                  style={{ float: 'right', flex: 1 }}
-                  icon
-                >
-                  {titleEditable ? <MdSave icon /> : <FaPencil icon />}
-                </Button>
+                {isOwner ? (
+                  <Button
+                    icon
+                    onClick={() => {
+                      if (titleEditable === false) {
+                        changeTitleEditable(true);
+                        changeTempTitle(selectedSim.title);
+                      } else {
+                        changeTitleEditable(false);
+                      }
+                    }}
+                    style={{ float: 'right', flex: 1 }}
+                  >
+                    {titleEditable ? <MdSave /> : <FaPencil icon />}
+                  </Button>
+                ) : null}
               </Card.Content>
               <Card.Content
                 style={{ display: 'flex', flexDirection: 'row', width: '100%' }}
@@ -160,25 +176,35 @@ const SimTile = (props) => {
                     style={{ flex: 14, marginRight: '1.2rem' }}
                   />
                 ) : null}
-                <Button
-                  onClick={() => {
-                    if (tagEditable === false) {
-                      changeTagEditable(true);
-                      changeTempTag(
-                        `<iframe src="${generateSrc(
-                          selectedSim.username,
-                          selectedSim.project_id,
-                        )}"></iframe>`,
-                      );
-                    } else {
-                      changeTagEditable(false);
-                    }
-                  }}
-                  icon
-                  style={{ flex: 1 }}
-                >
-                  {tagEditable ? <MdSave icon /> : <FaPencil icon />}
-                </Button>
+                {isOwner ? (
+                  <Button
+                    icon
+                    onClick={() => {
+                      if (tagEditable === false) {
+                        changeTagEditable(true);
+                        changeTempTag(
+                          `<iframe src="${generateSrc(
+                            selectedSim.username,
+                            selectedSim.project_id,
+                          )}"></iframe>`,
+                        );
+                      } else {
+                        changeTagEditable(false);
+                        if (isValidp5EmbedTag(tempTag)) {
+                          const tempSim = selectedSim;
+                          tempSim.username = tempTag.match('org/(.*)/embed')[1];
+                          tempSim.project_id = tempTag.match('embed/(.*)"')[1];
+                          setSelectedSim(tempSim);
+                          slides[curSlide].iframes[index] = tempSim;
+                          update();
+                        }
+                      }
+                    }}
+                    style={{ flex: 1 }}
+                  >
+                    {tagEditable ? <MdSave icon /> : <FaPencil icon />}
+                  </Button>
+                ) : null}
               </Card.Content>
             </Card>
           ) : null}
@@ -193,7 +219,7 @@ const SimTiles = (props) => {
   const sims = slides[curSlide].iframes;
 
   return (
-    <Menu>
+    <Menu vertical style={{ width: '100%' }}>
       {sims.map((sim, index) => (
         <SimTile
           index={index}
@@ -201,6 +227,7 @@ const SimTiles = (props) => {
           slides={props.slides}
           curSlide={props.curSlide}
           update={props.update}
+          deleteSim={props.deleteSim}
         />
       ))}
     </Menu>
