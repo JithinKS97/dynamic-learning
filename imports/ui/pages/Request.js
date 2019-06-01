@@ -118,6 +118,7 @@ class Request extends React.Component {
     if (this.state.show == false) {
       slides[0].title = title;
       slides[0].userId = Meteor.userId();
+      slides[0].time = Date.now();
       this.setState({ slides, show: true },()=>{this.update()});
     } else {
       const slide = {
@@ -597,7 +598,8 @@ export default (RequestContainer = withTracker(({ match }) => {
     request.slides[0] = {
       title: "",
       comments: [],
-      iframes: []
+      iframes: [],
+      time: Date.now()
     };
   }
 
