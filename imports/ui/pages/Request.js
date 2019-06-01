@@ -1,19 +1,14 @@
 /* eslint-disable */
 import React from "react";
-
-import List from "../components/List";
 import DetailedList from '../components/DetailedList'
-
 import Upload from "../components/Upload";
 import { Requests } from "../../api/requests";
 import CommentForm from "../components/CommentForm";
 import CommentsList from "../components/CommentsList";
-import { Link, Redirect } from "react-router-dom";
-
+import { Redirect } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
-import SimPreview from "../components/SimPreview";
-import FaTrash from "react-icons/lib/fa/trash";
-import FaCode from "react-icons/lib/fa/code";
+import SimTiles from '../components/SimTiles'
+
 import {
   Grid,
   Button,
@@ -22,16 +17,14 @@ import {
   Dimmer,
   Loader,
   Segment,
-  Menu,
   Input,
   TextArea,
   Header,
-  Container
+  Container,
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { withTracker } from "meteor/react-meteor-data";
 import FaPencil from 'react-icons/lib/fa/pencil'
-import { generateSrc } from '../../functions/index.js'
 
 /* This component renders the page where the teachers post the requests for the new simulation
     and the teachers and the other users have discussions about the simulations that they are trying to make.
@@ -74,7 +67,10 @@ class Request extends React.Component {
       topicTitle: "",
 
       showEditDescription:false,
-      redirectToLessonplan:false
+      redirectToLessonplan:false,
+
+      isHovering: false,
+      owners:[]
     };
     this.update.bind(this);
     this.pushSim.bind(this);
@@ -141,7 +137,7 @@ class Request extends React.Component {
     }
   }
 
-  update() {
+  update = () => {
 
     if (!Meteor.userId()) return;
 
@@ -221,8 +217,7 @@ class Request extends React.Component {
 
         this.update();
       });
-    }
-    
+    } 
   }
 
   pushSim(title, username, project_id) {
@@ -314,57 +309,6 @@ class Request extends React.Component {
     );
   }
 
-  displaySims() {
-    const { slides, curSlide } = this.state;
-    const sims = slides[curSlide];
-
-    if (sims)
-      return sims.iframes.map((sim, index) => {
-        return (
-          <Menu.Item
-            style={{ display: "flex", justifyContent: "space-between" }}
-            key={index}
-          >
-            <Button
-              onClick={() => {
-                
-
-                this.setState({
-                  selectedSim: sim,
-                  selectedSimIndex: index
-                });
-              }}
-              style={{ width: "100%", textAlign: "left" }}
-            >
-              {sim.title}
-            </Button>
-            {Meteor.userId() == sim.userId ? (
-              <Button
-                onClick={() => {
-                  this.deleteSim(index, sim.userId);
-                }}
-              >
-                <FaTrash />
-              </Button>
-            ) : null}
-          </Menu.Item>
-        );
-      });
-  }
-
-  displayMenu() {
-    const { slides, curSlide } = this.state;
-    const sim = slides[curSlide];
-    if (sim) {
-      if (sim.iframes.length > 0) {
-        return (
-          <Menu style={{ display: "flex", width: "100%" }} vertical>
-            {this.displaySims()}
-          </Menu>
-        );
-      }
-    }
-  }
 
   changeTitleOfSlide = (newTitle, index) => {
 
@@ -392,52 +336,6 @@ class Request extends React.Component {
         <Dimmer inverted active={!this.props.requestExists}>
           <Loader />
         </Dimmer>
-
-        <Modal
-          size="small"
-          style={{ width: "auto" }}
-          open={!!this.state.selectedSim}
-        >
-          <Modal.Header>
-            Preview
-            <div className="close-button">
-              <a
-                className="link-to-code"
-                target="_blank"
-                href={
-                  this.state.selectedSim
-                    ? `https://editor.p5js.org/${this.state.selectedSim.username}/sketches/${this.state.selectedSim.project_id}`
-                    : ""
-                }
-              >
-                <Button>
-                  <FaCode />
-                </Button>
-              </a>
-              <Button
-                onClick={() => {
-                  this.setState({ selectedSim: null });
-                }}
-              >
-                X
-              </Button>
-            </div>
-          </Modal.Header>
-          <Modal.Content>
-            <SimPreview
-              userId={
-                this.state.selectedSim ? this.state.selectedSim.userId : null
-              }
-              index={this.state.selectedSimIndex}
-              slides={this.state.slides}
-              curSlide={this.state.curSlide}
-              save={this.update.bind(this)}
-              w={this.state.selectedSim ? this.state.selectedSim.w : 640}
-              h={this.state.selectedSim ? this.state.selectedSim.h : 360}
-              src={this.state.selectedSim ? generateSrc(this.state.selectedSim.username, this.state.selectedSim.project_id) : null}
-            />
-          </Modal.Content>
-        </Modal>
         <div>
           <Grid divided="vertically" style={{ height: "100vh" }}>
             <Grid.Row style={{ height: "20vh" }}>
@@ -515,11 +413,11 @@ class Request extends React.Component {
                 {this.state.show ? (
 
                   <DetailedList
-                    slides = {this.state.slides}
+                    items = {this.state.slides}
                     curSlide = {this.state.curSlide}
-                    saveChanges = {this.saveChanges}
-                    deleteSlide = {this.deleteSlide}
-                    changeTitleOfSlide = {this.changeTitleOfSlide}
+                    handleClick = {this.saveChanges}
+                    deleteItem = {this.deleteSlide}
+                    changeTitleOfItem = {this.changeTitleOfSlide}
                   />
 
                 ) : null}
@@ -564,7 +462,13 @@ class Request extends React.Component {
                   </div>
                 ) : null}
 
-                {this.state.show ? this.displayMenu.bind(this)() : null}
+                {this.state.show ? 
+                <SimTiles 
+                  slides={this.state.slides}
+                  curSlide={this.state.curSlide}
+                  update={this.update}
+                /> : 
+                null}
               </Grid.Column>
             </Grid.Row>
           </Grid>

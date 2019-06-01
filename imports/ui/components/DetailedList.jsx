@@ -26,11 +26,11 @@ const ListTile = (props) => {
 
   const {
     userId,
-    changeTitleOfSlide,
+    changeTitleOfItem,
     title,
-    deleteSlide,
+    deleteItem,
     index,
-    saveChanges,
+    handleClick,
   } = props;
 
   const isOwner = Meteor.userId() === userId;
@@ -46,7 +46,7 @@ const ListTile = (props) => {
   return (
     <Card
       onClick={() => {
-        if (!slideChangeDisable) { saveChanges(undefined, index); }
+        if (!slideChangeDisable) { handleClick(undefined, index); }
       }}
       style={{
         margin: '0', display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between',
@@ -77,7 +77,7 @@ const ListTile = (props) => {
             {isEditable ? (
               <Button onClick={() => {
                 enableEditable(false);
-                changeTitleOfSlide(tempTitle, index);
+                changeTitleOfItem(tempTitle, index);
               }}
               >
                 Save
@@ -102,7 +102,7 @@ const ListTile = (props) => {
                 changeSlideChangeDisable(false);
               }}
               onClick={() => {
-                if (confirm('Are you sure you want to delete?')) { deleteSlide(props.index); }
+                if (confirm('Are you sure you want to delete?')) { deleteItem(props.index); }
               }}
               icon
             >
@@ -119,39 +119,39 @@ const ListTile = (props) => {
 ListTile.propTypes = {
   userId: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  changeTitleOfSlide: PropTypes.func.isRequired,
+  changeTitleOfItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-  deleteSlide: PropTypes.func.isRequired,
-  saveChanges: PropTypes.func.isRequired,
+  deleteItem: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
 
 const DetailedList = (props) => {
   const {
-    slides,
-    deleteSlide,
-    changeTitleOfSlide,
-    saveChanges,
+    items,
+    deleteItem,
+    changeTitleOfItem,
+    handleClick,
   } = props;
-  const renderSlides = () => slides.map((slide, index) => (
+  const renderSlides = () => items.map((item, index) => (
     <ListTile
-      userId={slide.userId}
-      deleteSlide={deleteSlide}
-      changeTitleOfSlide={changeTitleOfSlide}
+      userId={item.userId}
+      deleteItem={deleteItem}
+      changeTitleOfSlide={changeTitleOfItem}
       // eslint-disable-next-line react/no-array-index-key
       key={index}
       index={index}
-      title={slide.title}
-      saveChanges={saveChanges}
+      title={item.title}
+      handleClick={handleClick}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
 };
 
 DetailedList.propTypes = {
-  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
-  deleteSlide: PropTypes.func.isRequired,
-  changeTitleOfSlide: PropTypes.func.isRequired,
-  saveChanges: PropTypes.func.isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  deleteItem: PropTypes.func.isRequired,
+  changeTitleOfItem: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
 
 export default DetailedList;

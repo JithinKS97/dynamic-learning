@@ -15,7 +15,6 @@ export default class Profile extends React.Component {
             user: '', 
             type: ''
         }
-
     }
 
     componentDidMount() {
@@ -39,16 +38,16 @@ export default class Profile extends React.Component {
 
         })
         
-        Meteor.subscribe('getAccounts'); 
+        Meteor.subscribe('getAccounts');
     }
 
     render() {
         return (
             <div> 
                 <div style={{paddingBottom: '30px'}}> 
-                Hello, {this.state.user}! <br /> 
-                Your account type is {this.state.type}. <br /> 
-                </div> 
+                  Hello, {this.state.user}! <br /> 
+                  Your account type is {this.state.type}. <br /> 
+                </div>
                 {/* 
                     The following allows us to fetch a list of all existing users
                     which will be used to create functionality for searching for other users.
