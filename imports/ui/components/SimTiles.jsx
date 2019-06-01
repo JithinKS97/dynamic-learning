@@ -147,6 +147,13 @@ const SimTile = (props) => {
                         changeTempTitle(selectedSim.title);
                       } else {
                         changeTitleEditable(false);
+                        const tempSim = selectedSim;
+                        if (tempTitle) {
+                          tempSim.title = tempTitle;
+                          setSelectedSim(tempSim);
+                          slides[curSlide].iframes[index] = tempSim;
+                          update();
+                        }
                       }
                     }}
                     style={{ float: 'right', flex: 1 }}
