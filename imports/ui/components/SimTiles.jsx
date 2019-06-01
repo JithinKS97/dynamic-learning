@@ -102,6 +102,8 @@ const SimTile = (props) => {
             <Button
               onClick={() => {
                 setSelectedSim(null);
+                changeTagEditable(false);
+                changeTitleEditable(false);
               }}
               icon
             >
