@@ -19,7 +19,7 @@ export default class Profile extends React.Component {
     }
 
     updateSchool = () => {
-        Meteor.call('updateSchool', Meteor.user().username, this.school.value);
+        Meteor.call('updateSchool', this.state.user, this.school.value);
         this.setState({
             school: this.school.value
         })
