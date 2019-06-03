@@ -30,6 +30,16 @@ Meteor.methods({
     Meteor.users.update({username: username}, { $set: {'school': school} }); 
   },
 
+  'addClass'(username, classcode) {
+    Meteor.users.update({username: username}, { $push: {'classes': classcode} } )
+  },
+
+  /* 
+  'deleteAllClasses'(username) {
+    Meteor.users.update({username: username}, { $set: {'classes': [] }})
+  }
+  */ 
+
 })
 
 if(Meteor.isServer) {
