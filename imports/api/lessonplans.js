@@ -74,7 +74,8 @@ Meteor.methods({
           updatedAt: moment().valueOf(),
           createdAt: Date.now(),
           description: '',
-          members:[`${this.userId}`]
+          members:[`${this.userId}`],
+          pendingRequests:[]
         });
       },
     );

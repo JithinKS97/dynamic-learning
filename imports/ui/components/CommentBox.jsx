@@ -109,7 +109,7 @@ export default class CommentBox extends React.Component {
     return (
       <div>
         <Comment style={{
-          padding: '0.8rem', marginBottom: '0.9rem', marginTop: '0.9rem', backgroundColor: '#eeeeee',
+          padding: '0.8rem', marginBottom: '0.8rem', marginTop: '0.8rem', backgroundColor: '#eeeeee',
         }}
         >
           <Comment.Content style={{ width: '100%' }}>

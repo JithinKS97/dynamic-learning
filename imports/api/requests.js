@@ -20,17 +20,33 @@ Meteor.methods({
     Requests.update({ _id }, { $set: { slides, updatedAt: moment().valueOf() } });
   },
 
+  'requests.addPendingRequest' (_id, memberId) {
+
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Requests.update({ _id, members: { $nin : [memberId]}}, { $push: { 'pendingRequests': memberId } })
+  },
+
   'requests.addMember' (_id, memberId) {
+
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
 
     Requests.update({ _id, members: { $nin : [memberId]}}, { $push: { 'members': memberId } })
   },
 
   'requests.removeMember' (_id, memberId) {
 
-    console.log(_id, memberId)
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
 
     Requests.update({ _id, members: { $in : [memberId]}}, { $pull: { 'members': memberId } })
   },
+  
 
   'requests.reset'(_id) {
     if (!this.userId) {
