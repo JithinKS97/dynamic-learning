@@ -5,6 +5,7 @@ import { Tracker } from 'meteor/tracker'
 import { Button, Form, Card } from 'semantic-ui-react'
 import TeacherSearch from './TeacherSearch';
 import TeacherClasses from './TeacherClasses';
+import StudentClasses from './StudentClasses';
 import { Classes } from '../../api/classes';
 
 export default class Profile extends React.Component {
@@ -15,8 +16,7 @@ export default class Profile extends React.Component {
         this.state = {
             user: '',
             type: '',
-            school: '',
-            classes: []
+            school: ''
         }
 
     }
@@ -26,33 +26,6 @@ export default class Profile extends React.Component {
         this.setState({
             school: this.school.value
         })
-    }
-
-    randomClassCode = () => {
-        return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
-    }
-
-    // this function can ONLY be called by a teacher, will allow a new class to be created
-    createClass = (className) => {
-        const code = this.randomClassCode();
-        this.state.classes.push(code);
-        Meteor.call('classes.insert', code, className, this.state.user);
-    }
-
-    addStudent = (classcode, student) => {
-        Meteor.call('classes.addstudent', classcode, student);
-    }
-
-    getClasses = () => {
-        let user = Meteor.users.find({ username: this.state.user }).fetch()[0];
-        let clnames = [];
-        if (user.classes) {
-            user.classes.map(c => {
-                let cl = Classes.find({ classcode: c }).fetch()[0];
-                clnames.push(cl.name);
-            })
-        }
-        return clnames;
     }
 
     componentDidMount() {
@@ -82,16 +55,6 @@ export default class Profile extends React.Component {
                     school: Meteor.user().school
                 })
             }
-            if (Meteor.user() && Meteor.user().classes) {
-                this.setState({
-                    classes: Meteor.user().classes
-                })
-            }
-            else {
-                this.setState({
-                    classes: []
-                })
-            }
         })
     }
 
@@ -112,10 +75,14 @@ export default class Profile extends React.Component {
                         </Form>
                     }
                 </div>
-                <div style={{ paddingBottom: '30px' }}>
-                    <TeacherSearch />
-                </div>
-                <TeacherClasses />
+                {
+                    this.state.type === 'Teacher' &&
+                    <div style={{ paddingBottom: '30px' }}>
+                        <TeacherSearch />
+                    </div>
+                }
+                {this.state.type === 'Teacher' && <TeacherClasses />}
+                {this.state.type === 'Student' && <StudentClasses />}
             </div>
         )
     }

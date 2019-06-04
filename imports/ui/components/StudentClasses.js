@@ -5,41 +5,16 @@ import { Tracker } from 'meteor/tracker'
 import { Button, Form, Card } from 'semantic-ui-react'
 import { Classes } from '../../api/classes';
 
-export default class TeacherClasses extends React.Component {
+export default class StudentClasses extends React.Component {
 
     constructor(props) {
 
-        super(props)
+        super(props);
         this.state = {
             user: '',
             classes: []
         }
 
-    }
-
-    randomClassCode = () => {
-        return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
-    }
-
-    // this function can ONLY be called by a teacher, will allow a new class to be created
-    createClass = () => {
-        if (this.classname.value && this.classname.value !== '') {
-            const code = this.randomClassCode();
-            this.state.classes.push(code);
-            Meteor.call('classes.insert', code, this.classname.value, this.state.user);
-        }
-    }
-
-    getClasses = () => {
-        let user = Meteor.users.find({ username: this.state.user }).fetch()[0];
-        let clnames = [];
-        if (user.classes) {
-            user.classes.map(c => {
-                let cl = Classes.find({ classcode: c }).fetch()[0];
-                clnames.push(cl);
-            })
-        }
-        return clnames;
     }
 
     componentDidMount() {
@@ -67,12 +42,36 @@ export default class TeacherClasses extends React.Component {
         })
     }
 
+    getClasses = () => {
+        let user = Meteor.users.find({ username: this.state.user }).fetch()[0];
+        let clnames = [];
+        if (user.classes) {
+            user.classes.map(c => {
+                let cl = Classes.find({ classcode: c }).fetch()[0];
+                clnames.push(cl);
+            })
+        }
+        return clnames;
+    }
+
+    addStudent = (classcode, student) => {
+        Meteor.call('classes.addstudent', classcode, student);
+    }
+
+    addClass = () => {
+        const foundclass = Classes.findOne({ classcode: this.classcode.value });
+        if (foundclass && !(this.state.classes.includes(foundclass.classcode))) {
+            this.addStudent(this.classcode.value, this.state.user);
+            this.state.classes.push(this.classcode.value);
+        }
+    }
+
     render() {
         return (
             <div>
-                <Form style={{ paddingTop: '20px', width: '25%' }} noValidate onSubmit={() => this.createClass()}>
+                <Form style={{ paddingTop: '20px', width: '25%' }} noValidate onSubmit={() => this.addClass()}>
                     <Form.Field>
-                        <input ref={e => this.classname = e} placeholder='Name of new class' />
+                        <input ref={e => this.classcode = e} placeholder='Class code' />
                     </Form.Field>
                     <Button type='submit'> Add new class </Button>
                 </Form>
@@ -83,7 +82,6 @@ export default class TeacherClasses extends React.Component {
                     return (<div style={{ paddingTop: '5px' }}> {cl.name + ': ' + cl.classcode} </div>)
                 })}
             </div>
-        );
+        )
     }
-
 }

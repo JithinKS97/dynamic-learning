@@ -34,11 +34,10 @@ Meteor.methods({
     Meteor.users.update({username: username}, { $push: {'classes': classcode} } )
   },
 
-  /* 
+
   'deleteAllClasses'(username) {
     Meteor.users.update({username: username}, { $set: {'classes': [] }})
   }
-  */ 
 
 })
 
