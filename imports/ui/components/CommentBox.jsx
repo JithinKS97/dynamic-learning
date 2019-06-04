@@ -105,7 +105,7 @@ export default class CommentBox extends React.Component {
   }
 
   render() {
-    const isOwner = Meteor.userId() === this.props.comment.userId;
+    const isOwner = Meteor.userId() === this.props.comment.userId && this.props.isMember;
     return (
       <div>
         <Comment style={{
