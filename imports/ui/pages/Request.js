@@ -23,7 +23,8 @@ import {
   Header,
   Container,
   Card,
-  Menu
+  Menu,
+  Label
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { withTracker } from "meteor/react-meteor-data";
@@ -75,8 +76,11 @@ class Request extends React.Component {
       isHovering: false,
 
       showMembershipRequests: false,
-      pendingMembers:[]
+      pendingMembers: [],
 
+      membersName: [],
+
+      showMembers: false
     };
     this.update.bind(this);
     this.pushSim.bind(this);
@@ -84,7 +88,6 @@ class Request extends React.Component {
     this.deleteSim.bind(this);
     this.push.bind(this);
     this.isMember;
-    
   }
 
   findTime(time) {
@@ -92,47 +95,75 @@ class Request extends React.Component {
   }
 
   pendingRequestsList = () => {
-
-    return this.state.pendingMembers.filter(item=>item).map(member=>{
-
-      return (
-        <Card style = {{display:'flex', flexDirection:'row', margin:0, width:'100%'}}>
-          <Card.Content>
-            {member.username}
-            <Button 
-              style = {{float:'right'}}
-              onClick = {()=>{
-
-                Meteor.call('requests.addMember', this.state._id, member.userId, ()=>{
-
-                  this.generatePendingUsersNamesList()
-                },()=>{
-
-                  alert('successfully added !!!')
-                })
-              }}
-            >
-              Accept
-            </Button>
-          </Card.Content>
-        </Card>
-      )
-    })
-  }
+    return this.state.pendingMembers
+      .filter(item => item)
+      .map(member => {
+        return (
+          <Card
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              margin: 0,
+              width: "100%"
+            }}
+          >
+            <Card.Content>
+              {member.username}
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  Meteor.call(
+                    "requests.addMember",
+                    this.state._id,
+                    member.userId,
+                    () => {
+                      this.generatePendingUsersNamesList();
+                    },
+                    () => {
+                      alert("successfully added !!!");
+                    }
+                  );
+                }}
+              >
+                Accept
+              </Button>
+            </Card.Content>
+          </Card>
+        );
+      });
+  };
 
   generatePendingMembersList = () => {
-
-    if(this.state.pendingRequests) {
-
-      Meteor.call('getUsernames', this.state.pendingRequests, (err, pendingMembers)=>{
-
-        this.setState({
-
-          pendingMembers
-        })
-      })
+    if (this.state.pendingRequests) {
+      Meteor.call(
+        "getUsernames",
+        this.state.pendingRequests,
+        (err, pendingMembers) => {
+          this.setState({
+            pendingMembers
+          });
+        }
+      );
     }
-  }
+  };
+
+  generateMembersList = () => {
+    if (this.state.members) {
+      Meteor.call("getUsernames", this.state.members, (err, membersName) => {
+        this.setState({
+          membersName
+        });
+      });
+    }
+  };
+
+  displayMembersName = () => {
+    if (!this.state.members) return;
+
+    return this.state.membersName.map(member => {
+      return <li>{member.username}</li>;
+    });
+  };
 
   componentWillReceiveProps(nextProps) {
     if (this.props == nextProps) return;
@@ -160,7 +191,8 @@ class Request extends React.Component {
           });
         }
 
-        this.generatePendingMembersList()
+        this.generatePendingMembersList();
+        this.generateMembersList();
       }
     );
   }
@@ -397,11 +429,16 @@ class Request extends React.Component {
       return;
     }
 
-    Meteor.call('')
+    Meteor.call("");
 
-    Meteor.call("requests.addPendingRequest", this.state._id, Meteor.userId(), () => {
-      alert("Your request has been send");
-    });
+    Meteor.call(
+      "requests.addPendingRequest",
+      this.state._id,
+      Meteor.userId(),
+      () => {
+        alert("Your request has been send");
+      }
+    );
   };
 
   handleLeave = () => {
@@ -452,7 +489,6 @@ class Request extends React.Component {
             </Menu.Item>
           ) : null}
 
-
           {Meteor.userId() && !this.isMember ? (
             <Menu.Item
               onClick={() => {
@@ -463,7 +499,9 @@ class Request extends React.Component {
             </Menu.Item>
           ) : null}
 
-          {Meteor.userId() && this.isMember && Meteor.userId() !== this.state.userId ? (
+          {Meteor.userId() &&
+          this.isMember &&
+          Meteor.userId() !== this.state.userId ? (
             <Menu.Item
               onClick={() => {
                 this.handleLeave();
@@ -474,14 +512,31 @@ class Request extends React.Component {
           ) : null}
 
           {Meteor.userId() === this.state.userId && this.isMember ? (
-            <Menu.Item style = {{backgroundColor: this.state.pendingMembers.length>0?'#90ee90':'white'}} onClick = {()=>{
-              this.setState({
-                showMembershipRequests:true
-              })
-            }}>Membership requests</Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                this.setState({
+                  showMembershipRequests: true
+                });
+              }}
+            >
+              Membership requests
+              {this.state.pendingMembers.length > 0 ? (
+                <Label color = 'teal'>{this.state.pendingMembers.length}</Label>
+              ) : null}
+            </Menu.Item>
           ) : null}
 
-          <Menu.Item style = {{backgroundColor:'#E5E4E2'}}>
+          <Menu.Item
+            onClick={() => {
+              this.setState({
+                showMembers: true
+              });
+            }}
+          >
+            Members
+          </Menu.Item>
+
+          <Menu.Item style={{ backgroundColor: "#E5E4E2" }}>
             Opened {this.findTime(this.state.createdAt).fromNow()}
           </Menu.Item>
         </Menu>
@@ -613,12 +668,22 @@ class Request extends React.Component {
           <Modal size="tiny" open={this.state.showMembershipRequests}>
             <Modal.Header>
               Membership requests
-              <Button icon style = {{float:'right'}} onClick = {()=>{this.setState({showMembershipRequests: false})}}>X</Button>
+              <Button
+                icon
+                style={{ float: "right" }}
+                onClick={() => {
+                  this.setState({ showMembershipRequests: false });
+                }}
+              >
+                X
+              </Button>
             </Modal.Header>
             <Modal.Content>
-              <div style = {{width:'100%'}} vertical>
+              <div style={{ width: "100%" }} vertical>
                 {this.pendingRequestsList()}
-                {this.state.pendingMembers.length===0?<p>No requests to show</p>:null}
+                {this.state.pendingMembers.length === 0 ? (
+                  <p>No requests to show</p>
+                ) : null}
               </div>
             </Modal.Content>
           </Modal>
@@ -666,6 +731,26 @@ class Request extends React.Component {
                   </Button>
                 </Form.Field>
               </Form>
+            </Modal.Content>
+          </Modal>
+
+          <Modal size="tiny" open={this.state.showMembers}>
+            <Modal.Header>
+              Members
+              <Button
+                icon
+                style={{ float: "right" }}
+                onClick={() => {
+                  this.setState({ showMembers: false });
+                }}
+              >
+                X
+              </Button>
+            </Modal.Header>
+            <Modal.Content>
+              <ul style={{ marginLeft: "1.2rem" }}>
+                {this.displayMembersName()}
+              </ul>
             </Modal.Content>
           </Modal>
 
