@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React from "react";
+import React, { Fragment } from "react";
 import DetailedList from '../components/DetailedList'
 import Upload from "../components/Upload";
 import { Requests } from "../../api/requests";
@@ -8,6 +8,7 @@ import CommentsList from "../components/CommentsList";
 import { Redirect } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import SimTiles from '../components/SimTiles'
+import moment from 'moment';
 
 import {
   Grid,
@@ -21,6 +22,7 @@ import {
   TextArea,
   Header,
   Container,
+  Menu
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { withTracker } from "meteor/react-meteor-data";
@@ -69,14 +71,17 @@ class Request extends React.Component {
       showEditDescription:false,
       redirectToLessonplan:false,
 
-      isHovering: false,
-      owners:[]
+      isHovering: false
     };
     this.update.bind(this);
     this.pushSim.bind(this);
     this.requestExists = false;
     this.deleteSim.bind(this);
     this.push.bind(this);
+  }
+
+  findTime(time) {
+    return moment(time);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -223,6 +228,15 @@ class Request extends React.Component {
   }
 
   pushSim(title, username, project_id) {
+
+    let isMember;
+
+    if(this.state.members)
+      isMember = this.state.members.includes(Meteor.userId());  
+
+    if(!(Meteor.userId() && isMember))
+      return
+
     const { slides, curSlide } = this.state;
 
     const objectToPush = {
@@ -238,6 +252,7 @@ class Request extends React.Component {
     };
 
     slides[curSlide].iframes.push(objectToPush);
+    
     this.setState({
       slides
     });
@@ -327,7 +342,31 @@ class Request extends React.Component {
     return true
 }
 
+handleJoin = () => {
+
+  if(!Meteor.userId()) {
+    alert('Login to participate in the discussion')
+    return
+  }
+
+  Meteor.call('requests.addMember', this.state._id, Meteor.userId(), ()=>{
+    alert('You have joined the forum')
+  })
+}
+
+handleLeave = () => {
+
+  Meteor.call('requests.removeMember', this.state._id, Meteor.userId(),()=>{
+    alert('You have left the forum')
+  })
+}
+
   render() {
+
+    let isMember;
+
+    if(this.state.members)
+      isMember = this.state.members.includes(Meteor.userId());  
 
     const isOwner = this.state.userId == Meteor.userId();
 
@@ -335,250 +374,271 @@ class Request extends React.Component {
       return <Redirect to = {`/createlessonplan/${this.state._id}`}/>
 
     return (
-      <Segment>
+      <div>
+        <Menu style = {{margin:0}}>
+          <Menu.Item
+            onClick={() => {
+              history.back();
+            }}
+          >
+            Back
+          </Menu.Item>
+
+          {isOwner ? (
+            <Menu.Item
+              onClick={() => {
+                const confirmation = confirm(
+                  "Are you sure you want to close this forum?"
+                );
+
+                if (confirmation && isOwner) {
+                  Meteor.call("requests.reset", this.state._id);
+                  history.back();
+                }
+              }}
+            >
+              Close this request forum
+            </Menu.Item>
+          ) : null}
+
+          <Menu.Item>Opened {this.findTime(this.state.createdAt).fromNow()}</Menu.Item>
+         
+          {Meteor.userId() && !isMember?<Menu.Item onClick = {()=>{this.handleJoin()}}>
+            Join
+          </Menu.Item>:null}
+
+          {Meteor.userId() && isMember?<Menu.Item onClick = {()=>{this.handleLeave()}}>
+            Leave
+          </Menu.Item>:null}
+
+        </Menu>
+      <Segment style = {{marginTop:'0px'}}>
+        
         <Dimmer inverted active={!this.props.requestExists}>
           <Loader />
         </Dimmer>
-        <div>
-          <Grid divided="vertically" style={{ height: "100vh" }}>
-            <Grid.Row style={{ height: "20vh" }}>
-              <div style={{ padding: "1.6rem" }}>
-                <Button
-                  onClick={() => {
-                    history.back();
-                  }}
-                >
-                  Back
-                </Button>
-
-                {isOwner ? (
-                  <Button
-                    onClick={() => {
-                      const confirmation = confirm(
-                        "Are you sure you want to close this forum?"
-                      );
-
-                      if (confirmation && isOwner) {
-                        Meteor.call("requests.reset", this.state._id);
-                        history.back();
-                      }
-                    }}
-                  >
-                    Close this request forum
-                  </Button>
-                ) : null}
-
-                <Container textAlign = {"left"} style = {{width:'100%'}}>
-                    
-                    <div style = {{marginTop:'1.2rem', alignItems:'center', display:'flex'}}>
+     
+        <Grid divided="vertically">
+          <Grid.Row style={{ height: "15vh" }}>
+            <div style={{ padding: "1.6rem", paddingTop:'0px' }}>
+              <Container textAlign = {"left"} style = {{width:'100%'}}>
+                  
+                  <div style = {{alignItems:'center', display:'flex'}}>
+                    <div>
                       <h1 style = {{height:'2.4rem', margin: 'auto 0'}}>
                         {this.state.requestTitle}
                       </h1>
-                      {isOwner?<Button onClick = {()=>{
-
-                        this.setState({
-
-                          showEditDescription:true
-                        })
-
-                      }} icon style = {{marginLeft:'1.2rem'}}>
-                        <FaPencil/>
-                      </Button>:null}
                     </div>
-                    
-                  <p style={{ paddingLeft: "1.6rem", marginTop:'1.2rem' }}>
-                    {this.state.description}
-                  </p>
-                </Container>
-              </div>
-            </Grid.Row>
+                    {isOwner?<Button onClick = {()=>{
 
-            <Grid.Row divided style={{ height: "80vh" }}>
-              <Grid.Column
-                width={4}
-                style={{ overflow: "auto"}}
-                centered
+                      this.setState({
+
+                        showEditDescription:true
+                      })
+
+                    }} icon style = {{marginLeft:'1.2rem'}}>
+                      <FaPencil/>
+                    </Button>:null}
+                  </div>
+                  
+                <p style={{ paddingLeft: "1.6rem", marginTop:'0.6rem' }}>
+                  {this.state.description}
+                </p>
+              </Container>
+            </div>
+          </Grid.Row>
+
+          <Grid.Row divided style={{ height:`${window.innerHeight*0.85 - 48}px` }}>
+            <Grid.Column
+              width={4}
+              style={{ overflow: "auto"}}
+              centered
+            >
+              <Header as='h3' dividing>
+                Requests list
+              </Header>
+              
+              {Meteor.userId() && isMember?<Button
+                onClick={() => {
+                  this.setState({
+                    topicTitleModalOpen: true
+                  });
+                }}
               >
-                <Header as='h3' dividing>
-                  Requests list
-                </Header>
-               
+                Create new topic
+              </Button>:null}
+        
+              {this.state.show ? (
+
+                <DetailedList
+                  items = {this.state.slides}
+                  curSlide = {this.state.curSlide}
+                  handleClick = {this.saveChanges}
+                  deleteItem = {this.deleteSlide}
+                  changeTitleOfItem = {this.changeTitleOfSlide}
+                  isMember = {isMember}
+                />
+
+              ) : null}
+            </Grid.Column>
+            <Grid.Column
+              width={7}
+              style={{ overflow: "auto", padding: "0 1.6rem" }}
+            >
+              {this.state.show ? (
+                <CommentsList
+                  isMember = {isMember}
+                  ref={el => (this.commentsList = el)}
+                  {...this.state}
+                  saveChanges={this.saveChanges.bind(this)}
+                  deleteReplyComment={this.deleteReplyComment.bind(this)}
+                  deleteComment={this.deleteComment.bind(this)}
+                  editComment={this.editComment}
+                  editReplyComment={this.editReplyComment}
+                />
+              ) : <h2>Create a topic to start the discussion</h2>}
+              <br />
+              {this.state.show && !!Meteor.userId() && isMember ? (
+                <CommentForm
+                  option={-1}
+                  {...this.state}
+                  saveChanges={this.saveChanges.bind(this)}
+                />
+              ) : null}
+            </Grid.Column>
+            <Grid.Column
+              width={5}
+              style={{ overflow: "auto", padding: "0 1.6rem" }}
+            >
+              <Header as='h3' dividing>
+                Uploaded sims
+              </Header>
+                
+              {Meteor.userId() && isMember ? (
+                <div style={{ marginBottom: "1.6rem" }}>
+                  {this.state.show ? (
+                    <Upload methodToRun={this.pushSim.bind(this)} />
+                  ) : null}
+                </div>
+              ) : null}
+
+              {this.state.show ? 
+              <SimTiles 
+                slides={this.state.slides}
+                curSlide={this.state.curSlide}
+                update={this.update}
+                deleteSim={this.deleteSim}
+                isMember={isMember}
+              /> : 
+              null}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+
+        <Modal size="tiny" open={this.state.topicTitleModalOpen}>
+          <Modal.Header>
+              Topic title
+              <Button icon onClick = {()=>{this.setState({topicTitleModalOpen: false})}} style = {{float: 'right'}}>X</Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Form>
+              <Form.Field>
+                <label>Title for the topic</label>
+                <Input
+                  
+                  ref={e => (this.topicTitle = e)}
+                  onChange={(e, { value }) => {
+                    this.setState({
+                      topicTitle: value
+                    });
+                  }}
+                />
+              </Form.Field>
+              <Form.Field>
                 <Button
                   onClick={() => {
+                      
+                    if(Meteor.userId() && isMember)
+                      this.push(this.state.topicTitle);
+
                     this.setState({
-                      topicTitleModalOpen: true
+                      topicTitle: "",
+                      topicTitleModalOpen: false
                     });
                   }}
                 >
-                  Create new topic
+                  Submit
+                </Button>
+              </Form.Field>
+            </Form>
+          </Modal.Content>
+        </Modal>
+
+        {isOwner ? (
+          <Modal open={this.state.showEditDescription} size="tiny">
+            <Modal.Header>
+              Details for the request
+              
+                <Button onClick = {()=>{
+
+                  if(!(this.state.requestTitle && this.state.description))
+                    this.setState({
+
+                      redirectToLessonplan:true
+                    })
+                  else
+                    this.setState({
+
+                      showEditDescription:false
+                    })
+
+                }} className="close-button">
+                  X
                 </Button>
           
-                {this.state.show ? (
-
-                  <DetailedList
-                    items = {this.state.slides}
-                    curSlide = {this.state.curSlide}
-                    handleClick = {this.saveChanges}
-                    deleteItem = {this.deleteSlide}
-                    changeTitleOfItem = {this.changeTitleOfSlide}
-                  />
-
-                ) : null}
-              </Grid.Column>
-              <Grid.Column
-                width={7}
-                style={{ overflow: "auto", padding: "0 1.6rem" }}
-              >
-                {this.state.show ? (
-                  <CommentsList
-                    ref={el => (this.commentsList = el)}
-                    {...this.state}
-                    saveChanges={this.saveChanges.bind(this)}
-                    deleteReplyComment={this.deleteReplyComment.bind(this)}
-                    deleteComment={this.deleteComment.bind(this)}
-                    editComment={this.editComment}
-                    editReplyComment={this.editReplyComment}
-                  />
-                ) : <h2>Create a topic to start the discussion</h2>}
-                <br />
-                {this.state.show && !!Meteor.userId() ? (
-                  <CommentForm
-                    option={-1}
-                    {...this.state}
-                    saveChanges={this.saveChanges.bind(this)}
-                  />
-                ) : null}
-              </Grid.Column>
-              <Grid.Column
-                width={5}
-                style={{ overflow: "auto", padding: "0 1.6rem" }}
-              >
-                <Header as='h3' dividing>
-                  Uploaded sims
-                </Header>
-                  
-                {Meteor.userId() ? (
-                  <div style={{ marginBottom: "1.6rem" }}>
-                    {this.state.show ? (
-                      <Upload methodToRun={this.pushSim.bind(this)} />
-                    ) : null}
-                  </div>
-                ) : null}
-
-                {this.state.show ? 
-                <SimTiles 
-                  slides={this.state.slides}
-                  curSlide={this.state.curSlide}
-                  update={this.update}
-                  deleteSim={this.deleteSim}
-                /> : 
-                null}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-
-          <Modal size="tiny" open={this.state.topicTitleModalOpen}>
-            <Modal.Header>
-                Topic title
-                <Button icon onClick = {()=>{this.setState({topicTitleModalOpen: false})}} style = {{float: 'right'}}>X</Button>
             </Modal.Header>
 
             <Modal.Content>
-              <Form>
-                <Form.Field>
-                  <label>Title for the topic</label>
-                  <Input
-                    
-                    ref={e => (this.topicTitle = e)}
-                    onChange={(e, { value }) => {
-                      this.setState({
-                        topicTitle: value
-                      });
-                    }}
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Button
-                    onClick={() => {
-                        
-                      this.push(this.state.topicTitle);
+              <Modal.Description>
+                <Form onSubmit={this.setTitle.bind(this)}>
+                  <Form.Field>
+                    <label>Title</label>
+                    <Input
+                      value = {this.state.editTitle}
+                      name="title"
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          editTitle: value
+                        });
+                      }}
+                    />
+                  </Form.Field>
 
-                      this.setState({
-                        topicTitle: "",
-                        topicTitleModalOpen: false
-                      });
-                    }}
-                  >
-                    Submit
-                  </Button>
-                </Form.Field>
-              </Form>
+                  <Form.Field>
+                    <label>Add a description</label>
+                    <TextArea
+                      name="description"
+                      value = {this.state.editDescription}
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          editDescription: value
+                        });
+                      }}                   
+                    />
+                  </Form.Field>
+
+                  <Form.Field>
+                    <Button>Submit</Button>
+                  </Form.Field>
+                </Form>
+              </Modal.Description>
             </Modal.Content>
           </Modal>
-
-          {isOwner ? (
-            <Modal open={this.state.showEditDescription} size="tiny">
-              <Modal.Header>
-                Details for the request
-                
-                  <Button onClick = {()=>{
-
-                    if(!(this.state.requestTitle && this.state.description))
-                      this.setState({
-
-                        redirectToLessonplan:true
-                      })
-                    else
-                      this.setState({
-
-                        showEditDescription:false
-                      })
-
-                  }} className="close-button">
-                    X
-                  </Button>
-            
-              </Modal.Header>
-
-              <Modal.Content>
-                <Modal.Description>
-                  <Form onSubmit={this.setTitle.bind(this)}>
-                    <Form.Field>
-                      <label>Title</label>
-                      <Input
-                        value = {this.state.editTitle}
-                        name="title"
-                        onChange={(e, { value }) => {
-                          this.setState({
-                            editTitle: value
-                          });
-                        }}
-                      />
-                    </Form.Field>
-
-                    <Form.Field>
-                      <label>Add a description</label>
-                      <TextArea
-                        name="description"
-                        value = {this.state.editDescription}
-                        onChange={(e, { value }) => {
-                          this.setState({
-                            editDescription: value
-                          });
-                        }}                   
-                      />
-                    </Form.Field>
-
-                    <Form.Field>
-                      <Button>Submit</Button>
-                    </Form.Field>
-                  </Form>
-                </Modal.Description>
-              </Modal.Content>
-            </Modal>
-          ) : null}
-        </div>
+        ) : null}
+  
       </Segment>
+      </div>
     );
   }
 }

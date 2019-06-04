@@ -97,7 +97,7 @@ export default class CommentBox extends React.Component {
               }));
             }}
           >
-            Reply
+            Replies
           </a>
         );
       }
@@ -193,7 +193,7 @@ export default class CommentBox extends React.Component {
         {this.state.replyVis ? (
           <div>
             <div>{this.showReplies()}</div>
-            {Meteor.userId()
+            {Meteor.userId() && this.props.isMember
               ? <div><CommentForm option={this.props.index} {...this.props} /></div> : null}
           </div>
         ) : null}

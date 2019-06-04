@@ -41,7 +41,8 @@ export default class CommentReply extends React.Component {
       editReplyComment,
     } = this.props;
     const { username } = this.state;
-    const isOwner = userId === Meteor.userId();
+
+    const isOwner = userId === Meteor.userId() && this.props.isMember;
     return (
       <div>
         <Comment style={{

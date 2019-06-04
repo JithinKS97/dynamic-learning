@@ -24,6 +24,7 @@ const SimTile = (props) => {
     update,
     index,
     deleteSim,
+    isMember
   } = props;
   const [selectedSim, setSelectedSim] = useState(null);
   const [onDelete, setOnDelete] = useState(false);
@@ -32,7 +33,7 @@ const SimTile = (props) => {
   const [tempTag, changeTempTag] = useState('');
   const [tempTitle, changeTempTitle] = useState('');
 
-  const isOwner = Meteor.userId() === sim.userId;
+  const isOwner = Meteor.userId() === sim.userId && isMember;
 
   useEffect(() => {
     Tracker.autorun(() => {
@@ -245,6 +246,7 @@ const SimTiles = (props) => {
               curSlide={props.curSlide}
               update={props.update}
               deleteSim={props.deleteSim}
+              isMember={props.isMember}
             />
           ))}
         </Menu>

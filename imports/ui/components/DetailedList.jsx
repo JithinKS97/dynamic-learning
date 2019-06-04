@@ -36,13 +36,14 @@ const ListTile = (props) => {
     index,
     handleClick,
     time,
+    isMember
   } = props;
 
   const findTime = () => {
     return moment(time);
   };
 
-  const isOwner = Meteor.userId() === userId;
+  const isOwner = Meteor.userId() === userId && !!isMember;
 
   useEffect(() => {
     Tracker.autorun(() => {
@@ -157,6 +158,7 @@ const DetailedList = (props) => {
       title={item.title}
       handleClick={handleClick}
       time={item.time}
+      isMember={props.isMember}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
