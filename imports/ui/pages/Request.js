@@ -452,9 +452,6 @@ class Request extends React.Component {
             </Menu.Item>
           ) : null}
 
-          <Menu.Item>
-            Opened {this.findTime(this.state.createdAt).fromNow()}
-          </Menu.Item>
 
           {Meteor.userId() && !this.isMember ? (
             <Menu.Item
@@ -483,6 +480,10 @@ class Request extends React.Component {
               })
             }}>Membership requests</Menu.Item>
           ) : null}
+
+          <Menu.Item style = {{backgroundColor:'#E5E4E2'}}>
+            Opened {this.findTime(this.state.createdAt).fromNow()}
+          </Menu.Item>
         </Menu>
         <Segment style={{ marginTop: "0px" }}>
           <Dimmer inverted active={!this.props.requestExists}>
