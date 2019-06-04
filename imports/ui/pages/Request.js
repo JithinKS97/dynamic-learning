@@ -615,7 +615,10 @@ class Request extends React.Component {
               <Button icon style = {{float:'right'}} onClick = {()=>{this.setState({showMembershipRequests: false})}}>X</Button>
             </Modal.Header>
             <Modal.Content>
-              <div style = {{width:'100%'}} vertical>{this.pendingRequestsList()}</div>
+              <div style = {{width:'100%'}} vertical>
+                {this.pendingRequestsList()}
+                {this.state.pendingMembers.length===0?<p>No requests to show</p>:null}
+              </div>
             </Modal.Content>
           </Modal>
 
