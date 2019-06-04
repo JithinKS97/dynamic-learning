@@ -22,7 +22,18 @@ Meteor.methods({
       return user.username;
     }
   },
-
+  'getUsernames'(_idArray) {
+    
+    return Meteor.users
+      .find({}).fetch()
+      .filter(user=>_idArray.includes(user._id))
+      .map(user=>{
+        return {
+          username: user.username,
+          userId: user._id
+        }
+      })
+    }
 })
 
 if(Meteor.isServer) {

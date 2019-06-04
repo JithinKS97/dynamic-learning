@@ -36,6 +36,7 @@ Meteor.methods({
     }
 
     Requests.update({ _id, members: { $nin : [memberId]}}, { $push: { 'members': memberId } })
+    Requests.update({ _id, members: { $in : [memberId]}}, { $pull: { 'pendingRequests': memberId } })
   },
 
   'requests.removeMember' (_id, memberId) {

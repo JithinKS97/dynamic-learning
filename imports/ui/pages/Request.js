@@ -22,6 +22,7 @@ import {
   TextArea,
   Header,
   Container,
+  Card,
   Menu
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
@@ -74,8 +75,7 @@ class Request extends React.Component {
       isHovering: false,
 
       showMembershipRequests: false,
-
-      membersName:[]
+      pendingMembers:[]
 
     };
     this.update.bind(this);
@@ -93,9 +93,30 @@ class Request extends React.Component {
 
   pendingRequestsList = () => {
 
-    return this.state.membersName.filter(item=>item).map(name=>{
+    return this.state.pendingMembers.filter(item=>item).map(member=>{
 
-      return <p>{name}</p>
+      return (
+        <Card style = {{display:'flex', flexDirection:'row', margin:0, width:'100%'}}>
+          <Card.Content>
+            {member.username}
+            <Button 
+              style = {{float:'right'}}
+              onClick = {()=>{
+
+                Meteor.call('requests.addMember', this.state._id, member.userId, ()=>{
+
+                  this.generatePendingUsersNamesList()
+                },()=>{
+
+                  alert('successfully added !!!')
+                })
+              }}
+            >
+              Accept
+            </Button>
+          </Card.Content>
+        </Card>
+      )
     })
   }
 
@@ -103,17 +124,11 @@ class Request extends React.Component {
 
     if(this.state.pendingRequests) {
 
-      this.state.pendingRequests.map((userId, index)=>{
+      Meteor.call('getUsernames', this.state.pendingRequests, (err, pendingMembers)=>{
 
-        Meteor.call('getUsername', userId, (err, username) => {
+        this.setState({
 
-          const membersName = this.state.membersName
-          membersName[index] = username
-
-          this.setState({
-
-            membersName: membersName
-          })
+          pendingMembers
         })
       })
     }
@@ -451,7 +466,7 @@ class Request extends React.Component {
             </Menu.Item>
           ) : null}
 
-          {Meteor.userId() && this.isMember ? (
+          {Meteor.userId() && this.isMember && Meteor.userId() !== this.state.userId ? (
             <Menu.Item
               onClick={() => {
                 this.handleLeave();
@@ -600,7 +615,7 @@ class Request extends React.Component {
               <Button icon style = {{float:'right'}} onClick = {()=>{this.setState({showMembershipRequests: false})}}>X</Button>
             </Modal.Header>
             <Modal.Content>
-              <ul>{this.pendingRequestsList()}</ul>
+              <div style = {{width:'100%'}} vertical>{this.pendingRequestsList()}</div>
             </Modal.Content>
           </Modal>
 
