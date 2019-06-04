@@ -120,7 +120,7 @@ class Request extends React.Component {
     })
   }
 
-  generatePendingUsersNamesList = () => {
+  generatePendingMembersList = () => {
 
     if(this.state.pendingRequests) {
 
@@ -160,7 +160,7 @@ class Request extends React.Component {
           });
         }
 
-        this.generatePendingUsersNamesList()
+        this.generatePendingMembersList()
       }
     );
   }
@@ -477,7 +477,7 @@ class Request extends React.Component {
           ) : null}
 
           {Meteor.userId() === this.state.userId && this.isMember ? (
-            <Menu.Item onClick = {()=>{
+            <Menu.Item style = {{backgroundColor: this.state.pendingMembers.length>0?'#90ee90':'white'}} onClick = {()=>{
               this.setState({
                 showMembershipRequests:true
               })

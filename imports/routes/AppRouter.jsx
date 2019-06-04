@@ -19,7 +19,7 @@ import SandBox from '../ui/pages/SandBox';
 import Dashboard from '../ui/pages/Dashboard';
 
 
-const history = createBrowserHistory();
+export const history = createBrowserHistory();
 const publicPages = ['/', '/signup', '/createlessonplan', '/login', '/explore'];
 const authenticatedPages = [
   '/dashboard/lessonplans',
