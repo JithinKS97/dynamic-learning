@@ -70,6 +70,7 @@ export default class Signup extends React.Component {
             username: username, 
             password: password, 
             school: '',
+            classes: [],
             profile: {
                 accountType: accountType
             }

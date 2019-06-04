@@ -4,7 +4,8 @@ import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
 import { Button, Form, Card } from 'semantic-ui-react'
 import TeacherSearch from './TeacherSearch';
-import { Classes } from '../../api/classes'; 
+import TeacherClasses from './TeacherClasses';
+import { Classes } from '../../api/classes';
 
 export default class Profile extends React.Component {
 
@@ -33,31 +34,31 @@ export default class Profile extends React.Component {
 
     // this function can ONLY be called by a teacher, will allow a new class to be created
     createClass = (className) => {
-        const code = this.randomClassCode(); 
-        this.state.classes.push(code); 
-        Meteor.call('classes.insert', code, className, this.state.user); 
+        const code = this.randomClassCode();
+        this.state.classes.push(code);
+        Meteor.call('classes.insert', code, className, this.state.user);
     }
 
     addStudent = (classcode, student) => {
-        Meteor.call('classes.addstudent', classcode, student); 
+        Meteor.call('classes.addstudent', classcode, student);
     }
 
     getClasses = () => {
-        let user = Meteor.users.find({username: this.state.user}).fetch()[0]; 
+        let user = Meteor.users.find({ username: this.state.user }).fetch()[0];
         let clnames = [];
         if (user.classes) {
             user.classes.map(c => {
-                let cl = Classes.find({classcode: c}).fetch()[0];
-                clnames.push(cl.name); 
+                let cl = Classes.find({ classcode: c }).fetch()[0];
+                clnames.push(cl.name);
             })
         }
-        return clnames; 
+        return clnames;
     }
 
     componentDidMount() {
 
         Meteor.subscribe('getAccounts');
-        Meteor.subscribe('classes'); 
+        Meteor.subscribe('classes');
 
         Tracker.autorun(() => {
 
@@ -88,7 +89,7 @@ export default class Profile extends React.Component {
             }
             else {
                 this.setState({
-                    classes: [] 
+                    classes: []
                 })
             }
         })
@@ -111,26 +112,10 @@ export default class Profile extends React.Component {
                         </Form>
                     }
                 </div>
-                {/* 
-                    The following allows us to fetch a list of all existing users
-                    which will be used to create functionality for searching for other users.
-                */}
-                {/* <b> Existing users </b> 
-                {
-                    Meteor.users.find().fetch().
-                    map(user => (
-                     <div> {user.username} </div>   
-                    ))   
-                } */}
-                <TeacherSearch />
-                <div> 
-                    <Form style={{paddingTop: '20px'}} noValidate onSubmit={() => this.createClass('Linear Algebra')}> 
-                        <Button type='submit'> Add new class </Button>
-                    </Form> 
-                    {this.state.user !== '' && this.getClasses().map(clname => {
-                        return (<div> {clname} </div> )
-                    })}
-                </div> 
+                <div style={{ paddingBottom: '30px' }}>
+                    <TeacherSearch />
+                </div>
+                <TeacherClasses />
             </div>
         )
     }
