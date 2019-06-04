@@ -289,7 +289,7 @@ class Request extends React.Component {
     if (this.state.members)
       this.isMember = this.state.members.includes(Meteor.userId());
 
-    if (!(Meteor.userId() && isMember)) return;
+    if (!(Meteor.userId() && this.isMember)) return;
 
     const { slides, curSlide } = this.state;
 
