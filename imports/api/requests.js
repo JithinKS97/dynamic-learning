@@ -64,7 +64,7 @@ Meteor.methods({
         slides: [],
         updatedAt: moment().valueOf(),
         description: '',
-        members:[],
+        members:[this.userId],
         pendingRequests:[]
       },
     });
