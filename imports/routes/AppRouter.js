@@ -29,6 +29,7 @@ const authenticatedPages = [
     '/dashboard/lessons',
     '/dashboard/watchlesson',
     '/dashboard/profile', 
+    '/dashboard/classes',
     '/lesson',
 ]
 

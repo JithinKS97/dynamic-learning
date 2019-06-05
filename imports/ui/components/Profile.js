@@ -4,9 +4,6 @@ import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
 import { Button, Form, Card } from 'semantic-ui-react'
 import TeacherSearch from './TeacherSearch';
-import TeacherClasses from './TeacherClasses';
-import StudentClasses from './StudentClasses';
-import { Classes } from '../../api/classes';
 
 export default class Profile extends React.Component {
 
@@ -81,8 +78,6 @@ export default class Profile extends React.Component {
                         <TeacherSearch />
                     </div>
                 }
-                {this.state.type === 'Teacher' && <TeacherClasses />}
-                {this.state.type === 'Student' && <StudentClasses />}
             </div>
         )
     }

@@ -16,12 +16,12 @@ import 'semantic-ui-css/semantic.min.css';
 import FaCode from 'react-icons/lib/fa/code'
 import TagsInput from 'react-tagsinput'
 import { generateSrc } from '../../functions/index.js'
-import Profile from '../components/Profile'; 
-
+import Profile from '../components/Profile';
+import Classes from '../components/Classes'; 
 /*
     This is the Component which renders the dashboard of the application.
  */
- 
+
 export default class Dashboard extends React.Component {
 
     /*
@@ -37,34 +37,34 @@ export default class Dashboard extends React.Component {
         super(props)
 
         this.state = {
-            node:null,
-            modelOpen:false,
-            isPublic:null,
-            editable:false,
-            title:'',
-            tags:[]
+            node: null,
+            modelOpen: false,
+            isPublic: null,
+            editable: false,
+            title: '',
+            tags: []
         }
-        
+
         this.renderOption.bind(this)
 
     }
 
     componentDidMount() {
 
-        this.simsTracker = Tracker.autorun(()=>{
+        this.simsTracker = Tracker.autorun(() => {
 
             /* This code is for ensuring that when title gets updated, then new data is fetched from the database
                 and set to state so that the new title value is rendered after its update.
             */
 
-            if(this.state.node) {
+            if (this.state.node) {
 
-                const sim = Sims.findOne({_id:this.state.node._id})
+                const sim = Sims.findOne({ _id: this.state.node._id })
                 this.setState({
-                    node:sim
+                    node: sim
                 })
             }
-                
+
         })
     }
 
@@ -85,15 +85,15 @@ export default class Dashboard extends React.Component {
 
         this.setState({
             node
-        },()=>{
-            const sim = Sims.findOne({_id:node._id})
+        }, () => {
+            const sim = Sims.findOne({ _id: node._id })
             this.setState({
-                node:sim,
+                node: sim,
                 isPublic: sim.isPublic,
-                title:node.title,
-                tags:node.tags
+                title: node.title,
+                tags: node.tags
             })
-            
+
         })
     }
 
@@ -104,144 +104,151 @@ export default class Dashboard extends React.Component {
          */
 
         const panes = [
-            { menuItem: 'My lessonplans', render: () => <Tab.Pane style = {{height:window.innerHeight - 150+ 'px'}}> <LessonPlansDirectories/></Tab.Pane> },
-            { menuItem: 'Shared lessonplans', render: () => <Tab.Pane style = {{height:window.innerHeight - 150+ 'px'}}><SharedLessonPlans/></Tab.Pane> },
-        ]        
+            { menuItem: 'My lessonplans', render: () => <Tab.Pane style={{ height: window.innerHeight - 150 + 'px' }}> <LessonPlansDirectories /></Tab.Pane> },
+            { menuItem: 'Shared lessonplans', render: () => <Tab.Pane style={{ height: window.innerHeight - 150 + 'px' }}><SharedLessonPlans /></Tab.Pane> },
+        ]
 
-       const option = this.props.match.params.option
+        const option = this.props.match.params.option
 
-       /* The components are rendered depending upon the selection in the menu */
+        /* The components are rendered depending upon the selection in the menu */
 
-       switch(option) {
-           
+        switch (option) {
+
             case 'lessonplans':
                 return <div>
-                            <Header>Manage Lessonplans</Header>
-                            <Tab panes = {panes}/>
-                        </div>
+                    <Header>Manage Lessonplans</Header>
+                    <Tab panes={panes} />
+                </div>
 
             case 'requests':
                 return <div>
-                            <Header style = {{marginLeft:'2.4rem'}}>Requests</Header>
-                            <RequestsList/>
-                        </div>
+                    <Header style={{ marginLeft: '2.4rem' }}>Requests</Header>
+                    <RequestsList />
+                </div>
 
             case 'uploadsim':
                 return <div>
-                            <Header>Manage simulations</Header>
-                            <SimsDirectories height = {window.innerHeight - 150} getNode = {this.getNode.bind(this)} isPreview = {false}/>
-                        </div>
+                    <Header>Manage simulations</Header>
+                    <SimsDirectories height={window.innerHeight - 150} getNode={this.getNode.bind(this)} isPreview={false} />
+                </div>
             case 'lessons':
-                    return <div>
-                                <Header>Manage Lessons</Header>
-                                <LessonsDirectories/>
-                            </div>
+                return <div>
+                    <Header>Manage Lessons</Header>
+                    <LessonsDirectories />
+                </div>
             case 'watchlesson':
-                    return (
-                        <div>
-                            <Header>Dynamic Lessons</Header>
-                            <SharedLessons/>
-                        </div>
-                    )
-            case 'profile': 
-                    return (
-                        <div> 
-                            <Header> User Profile </Header>
-                            <Profile /> 
-                        </div> 
-                    );
-       }
+                return (
+                    <div>
+                        <Header>Dynamic Lessons</Header>
+                        <SharedLessons />
+                    </div>
+                )
+            case 'profile':
+                return (
+                    <div>
+                        <Header> User Profile </Header>
+                        <Profile />
+                    </div>
+                );
+            case 'classes':
+                return (
+                    <div>
+                        <Header> Classes </Header>
+                        <Classes />
+                    </div>
+                )
+        }
     }
 
-    handleClose = () => this.setState({node:null, editable:false})  
+    handleClose = () => this.setState({ node: null, editable: false })
 
     editTitle() {
 
-        if(this.state.editable == false) {
-            
-           this.setState({editable:true})
+        if (this.state.editable == false) {
+
+            this.setState({ editable: true })
         }
         else {
 
-            if(this.title.value === '') {
-                this.setState({editable:false})
+            if (this.title.value === '') {
+                this.setState({ editable: false })
                 return
             }
-                
+
 
             Meteor.call('sims.titleChange', this.state.node._id, this.state.title)
-            this.setState({editable:false})
+            this.setState({ editable: false })
         }
     }
 
     handleTagsInput(tags) {
 
-        this.setState({tags},()=>{
+        this.setState({ tags }, () => {
 
             Meteor.call('sims.tagsChange', this.state.node._id, tags)
         })
     }
 
     render() {
-        return(
-            <div style = {{height:'100vh'}}>                   
+        return (
+            <div style={{ height: '100vh' }}>
 
                 <Modal
-                    closeOnRootNodeClick={false}                
-                    style = {{width:'auto'}}
+                    closeOnRootNodeClick={false}
+                    style={{ width: 'auto' }}
                     open={!!this.state.node}
                     onClose={this.handleClose}
-                    size='small'            
+                    size='small'
                 >
                     <Modal.Header>
                         Preview
-                        <Button className = 'close-button' onClick = {this.handleClose}>
+                        <Button className='close-button' onClick={this.handleClose}>
                             X
-                        </Button> 
+                        </Button>
                     </Modal.Header>
 
                     <Modal.Content>
-                        <Modal.Description>                        
-                            <SimPreview 
-                                src = {this.state.node?generateSrc(this.state.node.username, this.state.node.project_id):''}
-                            />                        
-                            <br/>                
-                            {this.state.editable?null:<Label style = {{padding:'0.8rem', width:'18rem', textAlign:'center'}}><h4>{this.state.node?this.state.title:null}</h4></Label>}
-                            {this.state.editable?<input ref = {e=>this.title = e} onChange = {()=>{this.setState({title:this.title.value})}} style = {{padding:'0.8rem', width:'18rem'}} ref = {e => this.title = e}/>:null}
-                            <Button onClick = {this.editTitle.bind(this)} style = {{marginLeft:'0.8rem'}}>{this.state.editable?'Submit':'Edit title'}</Button>
-                            <a style = {{marginLeft:'0.8rem'}}className = 'link-to-code' target = '_blank' href = {this.state.node?this.state.node.linkToCode:''}><Button><FaCode/></Button></a> 
+                        <Modal.Description>
+                            <SimPreview
+                                src={this.state.node ? generateSrc(this.state.node.username, this.state.node.project_id) : ''}
+                            />
+                            <br />
+                            {this.state.editable ? null : <Label style={{ padding: '0.8rem', width: '18rem', textAlign: 'center' }}><h4>{this.state.node ? this.state.title : null}</h4></Label>}
+                            {this.state.editable ? <input ref={e => this.title = e} onChange={() => { this.setState({ title: this.title.value }) }} style={{ padding: '0.8rem', width: '18rem' }} ref={e => this.title = e} /> : null}
+                            <Button onClick={this.editTitle.bind(this)} style={{ marginLeft: '0.8rem' }}>{this.state.editable ? 'Submit' : 'Edit title'}</Button>
+                            <a style={{ marginLeft: '0.8rem' }} className='link-to-code' target='_blank' href={this.state.node ? this.state.node.linkToCode : ''}><Button><FaCode /></Button></a>
                         </Modal.Description>
-                        <Modal.Description>  
-                            <Checkbox 
-                                style = {{margin:'0.8rem 0'}}
-                                checked = {this.state.isPublic}
-                                ref = {e => this.checkbox = e }
-                                onChange = {()=>{
+                        <Modal.Description>
+                            <Checkbox
+                                style={{ margin: '0.8rem 0' }}
+                                checked={this.state.isPublic}
+                                ref={e => this.checkbox = e}
+                                onChange={() => {
 
                                     Meteor.call('sims.visibilityChange', this.state.node._id, !this.checkbox.state.checked)
                                     this.setState({
                                         isPublic: !this.checkbox.state.checked
-                                    })      
+                                    })
 
-                            }} label = 'Share with others'/>
-                            {this.state.isPublic?<TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} />:null}
+                                }} label='Share with others' />
+                            {this.state.isPublic ? <TagsInput value={this.state.tags} onChange={this.handleTagsInput.bind(this)} /> : null}
                         </Modal.Description>
-                    </Modal.Content>         
+                    </Modal.Content>
 
-                </Modal>               
+                </Modal>
 
-                <Grid  columns={3} divided>
-                    <Grid.Row>                        
-                        <Grid.Column width = {3} style = {{margin:'1.6rem'}}>
-                        <Button style={{marginBottom: '0.8rem'}} onClick = {()=>{Accounts.logout()}}>Log out</Button>
-                            <SideBar/> 
+                <Grid columns={3} divided>
+                    <Grid.Row>
+                        <Grid.Column width={3} style={{ margin: '1.6rem' }}>
+                            <Button style={{ marginBottom: '0.8rem' }} onClick={() => { Accounts.logout() }}>Log out</Button>
+                            <SideBar />
                         </Grid.Column>
-                        <Grid.Column width = {10} style = {{margin:'1.6rem'}}>
+                        <Grid.Column width={10} style={{ margin: '1.6rem' }}>
                             {this.renderOption()}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-                
+
             </div>
         )
     }
