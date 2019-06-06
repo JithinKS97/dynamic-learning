@@ -24,7 +24,7 @@ const SimTile = (props) => {
     update,
     index,
     deleteSim,
-    isMember
+    isMember,
   } = props;
   const [selectedSim, setSelectedSim] = useState(null);
   const [onDelete, setOnDelete] = useState(false);

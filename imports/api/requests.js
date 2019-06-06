@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable object-shorthand, meteor/audit-argument-checks, import/prefer-default-export */
 import { Mongo } from 'meteor/mongo';
 import moment from 'moment';
@@ -20,34 +21,31 @@ Meteor.methods({
     Requests.update({ _id }, { $set: { slides, updatedAt: moment().valueOf() } });
   },
 
-  'requests.addPendingRequest' (_id, memberId) {
-
+  'requests.addPendingRequest'(_id, memberId) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Requests.update({ _id, members: { $nin : [memberId]}}, { $push: { 'pendingRequests': memberId } })
+    Requests.update({ _id, members: { $nin: [memberId] } }, { $push: { pendingRequests: memberId } });
   },
 
-  'requests.addMember' (_id, memberId) {
-
+  'requests.addMember'(_id, memberId) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Requests.update({ _id, members: { $nin : [memberId]}}, { $push: { 'members': memberId } })
-    Requests.update({ _id, members: { $in : [memberId]}}, { $pull: { 'pendingRequests': memberId } })
+    Requests.update({ _id, members: { $nin: [memberId] } }, { $push: { members: memberId } });
+    Requests.update({ _id, members: { $in: [memberId] } }, { $pull: { pendingRequests: memberId } });
   },
 
-  'requests.removeMember' (_id, memberId) {
-
+  'requests.removeMember'(_id, memberId) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Requests.update({ _id, members: { $in : [memberId]}}, { $pull: { 'members': memberId } })
+    Requests.update({ _id, members: { $in: [memberId] } }, { $pull: { members: memberId } });
   },
-  
+
 
   'requests.reset'(_id) {
     if (!this.userId) {
@@ -64,8 +62,8 @@ Meteor.methods({
         slides: [],
         updatedAt: moment().valueOf(),
         description: '',
-        members:[this.userId],
-        pendingRequests:[]
+        members: [this.userId],
+        pendingRequests: [],
       },
     });
   },

@@ -1,3 +1,8 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable object-shorthand, meteor/audit-argument-checks, import/prefer-default-export */
 import SimpleSchema from 'simpl-schema';
 import { Accounts } from 'meteor/accounts-base';
@@ -23,23 +28,17 @@ Meteor.methods({
     }
   },
   'getUsernames'(_idArray) {
-    
-    return Meteor.users
-      .find({}).fetch()
-      .filter(user=>_idArray.includes(user._id))
-      .map(user=>{
-        return {
-          username: user.username,
-          userId: user._id
-        }
-      })
-    }
-})
+    const users = Meteor.users.find({}).fetch();
+    const usersMap = {};
+    users.map((user) => {
+      usersMap[user._id] = { userId: user._id, username: user.username };
+    });
+    return _idArray.map(_id => usersMap[_id]);
+  },
+});
 
-if(Meteor.isServer) {
-  Accounts.validateNewUser(validateNewUser)
+if (Meteor.isServer) {
+  Accounts.validateNewUser(validateNewUser);
 
-  Meteor.publish('getAccounts', function () {
-    return Meteor.users.find(); 
-  })
+  Meteor.publish('getAccounts', () => Meteor.users.find());
 }
