@@ -627,7 +627,7 @@ class Request extends React.Component {
                 ) : (
                   <h2>Create a topic to start the discussion</h2>
                 )}
-                <br />
+       
                 {this.state.show && !!Meteor.userId() && this.isMember ? (
                   <CommentForm
                     option={-1}

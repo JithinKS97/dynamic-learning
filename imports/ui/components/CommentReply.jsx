@@ -48,7 +48,7 @@ export default class CommentReply extends React.Component {
         <Comment style={{
           padding: '0.8rem',
           marginLeft: '1.6rem',
-          marginBottom: '0.9rem',
+          marginBottom: '1.2rem',
           backgroundColor: '#eeeeee',
         }}
         >
@@ -65,7 +65,7 @@ export default class CommentReply extends React.Component {
                     }
                   }}
                 >
-                  &times;
+                  X
                 </Button>
               ) : null}
 

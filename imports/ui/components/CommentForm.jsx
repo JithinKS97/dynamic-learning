@@ -45,7 +45,7 @@ export default class CommentForm extends Component {
     const { option } = this.props;
     return (
       <Form
-        style={{ marginLeft: option === -1 ? '0rem' : '1.6rem', maxWidth: '650px' }}
+        style={{ marginLeft: option === -1 ? '0rem' : '1.6rem', maxWidth: '650px', marginBottom: '0.9rem' }}
         onSubmit={this.postComment.bind(this)}
       >
         <Form.Field>
