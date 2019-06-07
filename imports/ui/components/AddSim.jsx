@@ -151,7 +151,7 @@ export default class AddSim extends Component {
                 columns={2}
                 divided
               >
-                <Grid.Column style={{ overflow: 'auto', height: '576px' }} width={8}>
+                <Grid.Column style={{ overflow: 'auto', height: '576px', marginBottom: '0.4rem' }} width={8}>
                   <Tab
                     ref={e => this.tab = e}
                     onTabChange={(event, data) => {
