@@ -46,7 +46,8 @@ const RequestsList = props => {
                     }} style={{ width: '100%', margin: 0 }} key={index}>
                         <Card.Content>
                             <Card.Header>{request.requestTitle}</Card.Header>
-                            <Card.Meta style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'row' }}>
+                            <Card.Description>{request.description}</Card.Description>
+                            <Card.Meta style={{ marginTop: '0.2rem', display: 'flex', flexDirection: 'row' }}>
                                 <div>
                                     {displayUsername(index)}
                                 </div>
