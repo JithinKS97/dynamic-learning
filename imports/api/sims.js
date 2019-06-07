@@ -53,6 +53,7 @@ Meteor.methods({
       isPublic: false,
       parent_id: '0',
       tags: [],
+      createdAt: Date.now(),
     });
   },
 
@@ -76,7 +77,6 @@ Meteor.methods({
       parent_id: '0',
       children: [],
       expanded: false,
-      createdAt: Date.now(),
     });
   },
 

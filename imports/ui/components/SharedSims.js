@@ -89,7 +89,7 @@ export default class SharedSims extends React.Component {
                                 {this.displayName(index)}
                             </div>
                             <div style = {{marginLeft:'0.4rem'}}>
-                                updated {this.displayTime(index)}
+                                created {this.displayTime(index)}
                             </div>
                         </Card.Meta>
                     </Card.Content>
