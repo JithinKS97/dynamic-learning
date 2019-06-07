@@ -53,7 +53,7 @@ const RequestsList = props => {
                                     {displayUsername(index)}
                                 </div>
                                 <div>
-                                    updated {displayTime(index)}
+                                    last activity {displayTime(index)}
                                 </div>
                             </Card.Meta>
                         </Card.Content>

@@ -84,7 +84,7 @@ export default class SharedSims extends React.Component {
                         <Card.Header>    
                             {sim.title}
                         </Card.Header>
-                        <Card.Meta style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'row' }}>
+                        <Card.Meta style={{ marginTop: '0.4rem', marginLeft:'0.4rem', display: 'flex', flexDirection: 'row' }}>
                             <div>
                                 {this.displayName(index)}
                             </div>

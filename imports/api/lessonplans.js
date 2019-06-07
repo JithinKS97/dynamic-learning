@@ -58,6 +58,7 @@ Meteor.methods({
         title,
         slides: [],
         userId: this.userId,
+        createdAt: Date.now(),
         updatedAt: moment().valueOf(),
         isFile: true,
         isPublic: false,

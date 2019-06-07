@@ -67,7 +67,7 @@ export default class SharedLessonPlans extends React.Component {
 
         if(this.state.lessonplans.length>0) {
 
-            return this.findTime(this.state.lessonplans[index].updatedAt).fromNow();
+            return this.findTime(this.state.lessonplans[index].createdAt).fromNow();
         }
     }
 
@@ -88,14 +88,14 @@ export default class SharedLessonPlans extends React.Component {
                         })
                     })
                 }}>
-                    <Card.Content style = {{paddingLeft:'2.4rem'}} onClick = {()=>{this.setState({lessonplan})}}>    
+                    <Card.Content onClick = {()=>{this.setState({lessonplan})}}>    
                         <Card.Header>{lessonplan.title}</Card.Header>
-                        <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
+                        <Card.Meta style={{ marginLeft:'0.4rem', marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
                             <div>
                                 {this.displayName(index)}
                             </div>
                             <div style = {{marginLeft:'0.4rem'}}>
-                                updated {this.displayTime(index)}
+                                created {this.displayTime(index)}
                             </div>
                         </Card.Meta>
                     </Card.Content>
