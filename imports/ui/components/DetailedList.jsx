@@ -36,7 +36,7 @@ const ListTile = (props) => {
     index,
     handleClick,
     time,
-    isMember
+    isMember,
   } = props;
 
   const findTime = () => {

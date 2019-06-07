@@ -76,6 +76,7 @@ Meteor.methods({
       parent_id: '0',
       children: [],
       expanded: false,
+      createdAt: Date.now(),
     });
   },
 
