@@ -100,7 +100,7 @@ export default class AddSim extends Component {
     const panes = [
       {
         menuItem: 'Shared simulations',
-        render: () => <Tab.Pane style={{ height: '429px' }}><SharedSims getNode={this.getNode.bind(this)} /></Tab.Pane>,
+        render: () => <Tab.Pane style={{ height: 'auto' }}><SharedSims getNode={this.getNode.bind(this)} /></Tab.Pane>,
       },
       {
         menuItem: 'My simulations',
@@ -151,7 +151,7 @@ export default class AddSim extends Component {
                 columns={2}
                 divided
               >
-                <Grid.Column width={8}>
+                <Grid.Column style={{ overflow: 'auto', height: '576px' }} width={8}>
                   <Tab
                     ref={e => this.tab = e}
                     onTabChange={(event, data) => {
