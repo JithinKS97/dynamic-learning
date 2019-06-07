@@ -151,7 +151,7 @@ const DetailedList = (props) => {
     <ListTile
       userId={item.userId}
       deleteItem={deleteItem}
-      changeTitleOfSlide={changeTitleOfItem}
+      changeTitleOfItem={changeTitleOfItem}
       // eslint-disable-next-line react/no-array-index-key
       key={index}
       index={index}
