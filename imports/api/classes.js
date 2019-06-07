@@ -34,8 +34,8 @@ Meteor.methods({
         Meteor.call('addClass', studentname, classcode);
     },
 
-    'classes.remove'() {
-        return Classes.remove({}); 
-    }
+    // 'classes.remove'() {
+    //     return Classes.remove({}); 
+    // }
 
 })
