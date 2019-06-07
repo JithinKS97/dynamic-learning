@@ -14,7 +14,8 @@ export default class SharedSims extends React.Component {
             sims:[],
             searchTag:null,
             loading:true,
-            ownerNames:[]
+            ownerNames:[],
+            ownerNamesObtained:false,
         }
         this.displaySims.bind(this)
     }
@@ -37,7 +38,8 @@ export default class SharedSims extends React.Component {
                 Meteor.call('getUsernames', this.state.sims.map(sim=>sim.userId), (err, usernames)=>{
 
                     this.setState({
-                        ownerNames:usernames
+                        ownerNames:usernames,
+                        ownerNamesObtained: true
                     })
                 })
             })            
@@ -51,7 +53,7 @@ export default class SharedSims extends React.Component {
 
     displayName(index) {
 
-        if(this.state.ownerNames.length>0) {
+        if(this.state.ownerNames.length>0 && this.state.ownerNamesObtained) {
 
             return this.state.ownerNames[index].username;
         }
