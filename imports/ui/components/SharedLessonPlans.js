@@ -58,7 +58,8 @@ export default class SharedLessonPlans extends React.Component {
 
         if(this.state.ownerNames.length>0) {
 
-            return this.state.ownerNames[index].username;
+            if(this.state.ownerNames[index].username)
+                return this.state.ownerNames[index].username;
         }
     }
 
@@ -89,7 +90,7 @@ export default class SharedLessonPlans extends React.Component {
                 }}>
                     <Card.Content style = {{paddingLeft:'2.4rem'}} onClick = {()=>{this.setState({lessonplan})}}>    
                         <Card.Header>{lessonplan.title}</Card.Header>
-                        <Card.Meta style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'row' }}>
+                        <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
                             <div>
                                 {this.displayName(index)}
                             </div>

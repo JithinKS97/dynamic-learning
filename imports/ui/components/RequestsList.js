@@ -33,7 +33,8 @@ const RequestsList = props => {
 
         if(usernames.length>0) {
 
-            return usernames[index].username
+            if(usernames[index].username)
+                return usernames[index].username
         }
     }
 
@@ -46,8 +47,8 @@ const RequestsList = props => {
                     }} style={{ width: '100%', margin: 0 }} key={index}>
                         <Card.Content>
                             <Card.Header>{request.requestTitle}</Card.Header>
-                            <Card.Description>{request.description}</Card.Description>
-                            <Card.Meta style={{ marginTop: '0.2rem', display: 'flex', flexDirection: 'row' }}>
+                            <Card.Description style={{marginLeft:'0.4rem'}}>{request.description}</Card.Description>
+                            <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row', marginLeft:'0.4rem' }}>
                                 <div>
                                     {displayUsername(index)}
                                 </div>
