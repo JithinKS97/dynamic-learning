@@ -1,9 +1,5 @@
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable object-shorthand, meteor/audit-argument-checks, import/prefer-default-export */
+/* eslint-disable*/
+
 import SimpleSchema from 'simpl-schema';
 import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
@@ -16,7 +12,6 @@ export const validateNewUser = (user) => {
       regEx: SimpleSchema.RegEx.Email,
     },
   }).validate({ email });
-
   return true;
 };
 
@@ -35,10 +30,21 @@ Meteor.methods({
     });
     return _idArray.map(_id => usersMap[_id]);
   },
-});
+  'updateSchool'(username, school) {
+    Meteor.users.update({username: username}, { $set: {'school': school} }); 
+  },
 
-if (Meteor.isServer) {
-  Accounts.validateNewUser(validateNewUser);
+  'addClass'(username, classcode) {
+    Meteor.users.update({username: username}, { $push: {'classes': classcode} } )
+  },
+  'deleteAllClasses'(username) {
+    Meteor.users.update({username: username}, { $set: {'classes': [] }})
+  }
+})
 
-  Meteor.publish('getAccounts', () => Meteor.users.find());
+if(Meteor.isServer) {
+  Accounts.validateNewUser(validateNewUser)
+  Meteor.publish('getAccounts', function () {
+    return Meteor.users.find(); 
+  })
 }

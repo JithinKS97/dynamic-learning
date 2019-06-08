@@ -10,7 +10,6 @@
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "bcrypt": "^2.0.1",
-    "chai": "^4.2.0",
     "dompurify": "^1.0.10",
     "fabric": "^2.7.0",
     "history": "^4.9.0",
@@ -37,17 +36,10 @@
     "simpl-schema": "^1.5.5"
   },
   "devDependencies": {
-    "@meteorjs/eslint-config-meteor": "^1.0.5",
-    "babel-eslint": "^10.0.1",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.13.1",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-import-resolver-meteor": "^0.4.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-meteor": "^5.1.0",
-    "eslint-plugin-react": "^7.13.0"
+    "chai": "^4.2.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "mocha": "^6.1.4"
   },
   "engines": {
     "node": "8.11.1"
