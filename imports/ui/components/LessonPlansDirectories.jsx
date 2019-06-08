@@ -24,7 +24,6 @@ import TagsInput from 'react-tagsinput';
 import { LessonPlans } from '../../api/lessonplans';
 import LessonPlanViewer from './LessonPlanViewer';
 
-
 /*
   This component displays the lessonplan files in nested tree structure.
   You will be able to create directories and add lessonplans to it.

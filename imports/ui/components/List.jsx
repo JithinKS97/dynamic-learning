@@ -1,8 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-alert */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Menu } from 'semantic-ui-react';
 import {
@@ -10,6 +5,7 @@ import {
   SortableElement,
   arrayMove,
 } from 'react-sortable-hoc';
+import PropTypes from 'prop-types';
 
 const SortableItem = SortableElement(({
   slide,
@@ -88,6 +84,12 @@ const List = (props) => {
       onSortEnd={onSortEnd}
     />
   );
+};
+
+List.propTypes = {
+  setStateAfterRearranging: PropTypes.func.isRequired,
+  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
+  saveChanges: PropTypes.func.isRequired,
 };
 
 export default List;

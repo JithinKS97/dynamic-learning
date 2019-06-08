@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { Menu, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -14,6 +13,7 @@ export default class HorizontalList extends Component {
 
     return slides.map((slide, index) => (
       <Menu.Item
+        // eslint-disable-next-line react/no-array-index-key
         key={index}
         style={{
           height: '100%',
