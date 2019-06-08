@@ -70,6 +70,8 @@ export default class Signup extends React.Component {
             email: email, 
             username: username, 
             password: password, 
+            school: '',
+            classes: [],
             profile: {
                 accountType: accountType
             }
@@ -85,7 +87,7 @@ export default class Signup extends React.Component {
                 })
             }
             else {
-                
+
                 this.setState({
                     error: ''
                 },()=>{
