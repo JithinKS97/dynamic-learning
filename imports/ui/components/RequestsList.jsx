@@ -1,81 +1,86 @@
-/* eslint-disable */
-import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
-import { withTracker } from "meteor/react-meteor-data";
-import { Requests } from "../../api/requests";
-import { List, Dimmer, Loader, Card } from "semantic-ui-react";
+import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
+import { withTracker } from 'meteor/react-meteor-data';
+import {
+  List, Dimmer, Loader, Card,
+} from 'semantic-ui-react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
+import { Requests } from '../../api/requests';
 
-const RequestsList = props => {
-
+const RequestsList = (props) => {
   const [requestId, changeRequestId] = useState('');
   const [usernames, changeUsernames] = useState([]);
 
   useEffect(() => {
+    Meteor.call('getUsernames', props.requests.map(request => request.userId), (err, unames) => {
+      changeUsernames(unames);
+    });
+  });
 
-    Meteor.call('getUsernames', props.requests.map(request => request.userId), (err, usernames) => {
-
-      changeUsernames(usernames);
-    })
-  })
-
-  const findTime = (time) => moment(time);
+  const findTime = time => moment(time);
+  const { loading } = props;
 
   const displayTime = (index) => {
+    const { requests } = props;
 
-    if (props.requests.length > 0) {
-
-      return findTime(props.requests[index].updatedAt).fromNow();
+    if (requests.length > 0) {
+      return findTime(requests[index].updatedAt).fromNow();
     }
-  }
-
-  const displayUsername = (index) => {
-
-    if (usernames.length > 0) {
-
-      if (usernames[index].username)
-        return usernames[index].username
-    }
-  }
-
-  const renderRequests = () => {
-    return props.requests.map((request, index) => {
-      if (request.requestTitle) {
-        return (
-          <Card onClick={() => {
-            changeRequestId(request._id)
-          }} style={{ width: '100%', margin: 0 }} key={index}>
-            <Card.Content>
-              <Card.Header>{request.requestTitle}</Card.Header>
-              <Card.Description style={{ marginLeft: '0.4rem' }}>{request.description}</Card.Description>
-              <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row', marginLeft: '0.4rem' }}>
-                <div>
-                  {displayUsername(index)}
-                </div>
-                <div>
-                  last activity {displayTime(index)}
-                </div>
-              </Card.Meta>
-            </Card.Content>
-          </Card>
-        );
-      }
-    });
+    return null;
   };
 
-  if (requestId) {
+  const displayUsername = (index) => {
+    if (usernames.length > 0) {
+      if (usernames[index].username) { return usernames[index].username; }
+    }
+    return null;
+  };
 
-    return <Redirect to={`/request/${requestId}`} />
+  const renderRequests = () => props.requests.map((request, index) => {
+    if (request.requestTitle) {
+      return (
+        <Card
+          onClick={() => {
+            changeRequestId(request._id);
+          }}
+          style={{ width: '100%', margin: 0 }}
+          key={request.createdAt}
+        >
+          <Card.Content>
+            <Card.Header>{request.requestTitle}</Card.Header>
+            <Card.Description style={{ marginLeft: '0.4rem' }}>{request.description}</Card.Description>
+            <Card.Meta style={{
+              marginTop: '0.4rem', display: 'flex', flexDirection: 'row', marginLeft: '0.4rem',
+            }}
+            >
+              <div>
+                {displayUsername(index)}
+              </div>
+              <div>
+                  last activity
+                {' '}
+                {displayTime(index)}
+              </div>
+            </Card.Meta>
+          </Card.Content>
+        </Card>
+      );
+    }
+    return null;
+  });
+
+  if (requestId) {
+    return <Redirect to={`/request/${requestId}`} />;
   }
 
   return (
     <div>
-      <Dimmer inverted active={props.loading}>
+      <Dimmer inverted active={loading}>
         <Loader />
       </Dimmer>
       <List
-        selection
-        style={{ height: window.innerHeight - 150, marginTop: "2.4rem" }}
+        style={{ height: window.innerHeight - 150, marginTop: '2.4rem' }}
         selection
         verticalAlign="middle"
       >
@@ -85,12 +90,19 @@ const RequestsList = props => {
   );
 };
 
-export default (RequestsListContainer = withTracker(props => {
-  const requestsHandle = Meteor.subscribe("requests");
+const RequestsListContainer = withTracker(() => {
+  const requestsHandle = Meteor.subscribe('requests');
   const loading = !requestsHandle.ready();
 
   return {
     requests: Requests.find().fetch(),
-    loading
+    loading,
   };
-})(RequestsList));
+})(RequestsList);
+
+RequestsList.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  requests: PropTypes.objectOf(PropTypes.object).isRequired,
+};
+
+export default RequestsListContainer;
