@@ -1,7 +1,7 @@
-/* eslint-disable react/prop-types, react/no-array-index-key */
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { Menu, Button } from 'semantic-ui-react';
-
+import PropTypes from 'prop-types';
 
 export default class HorizontalList extends Component {
   renderList() {
@@ -12,29 +12,27 @@ export default class HorizontalList extends Component {
       deleteSlide,
     } = this.props;
 
-    return slides.map((slide, index) => { // eslint-disable-line arrow-body-style
-      return (
-        <Menu.Item
-          key={index}
-          style={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: userId === Meteor.userId() ? 'space-around' : 'center',
-          }}
-        >
-          <Button onClick={() => { saveChanges(undefined, index); }}>
-            {index + 1}
-          </Button>
-          {userId === Meteor.userId()
-            ? (
-              <Button onClick={() => { deleteSlide(index); }}>
-                &times;
-              </Button>
-            ) : null}
-        </Menu.Item>
-      );
-    });
+    return slides.map((slide, index) => (
+      <Menu.Item
+        key={index}
+        style={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: userId === Meteor.userId() ? 'space-around' : 'center',
+        }}
+      >
+        <Button onClick={() => { saveChanges(undefined, index); }}>
+          {index + 1}
+        </Button>
+        {userId === Meteor.userId()
+          ? (
+            <Button onClick={() => { deleteSlide(index); }}>
+                X
+            </Button>
+          ) : null}
+      </Menu.Item>
+    ));
   }
 
   render() {
@@ -45,3 +43,10 @@ export default class HorizontalList extends Component {
     );
   }
 }
+
+HorizontalList.propTypes = {
+  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
+  userId: PropTypes.string.isRequired,
+  saveChanges: PropTypes.func.isRequired,
+  deleteSlide: PropTypes.func.isRequired,
+};

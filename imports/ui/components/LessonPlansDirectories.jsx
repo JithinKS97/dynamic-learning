@@ -1,12 +1,4 @@
-/*
-  eslint-disable
-  no-return-assign,
-  no-underscore-dangle,
-  react/no-unused-state,
-  react/jsx-no-bind,
-  react/button-has-type,
-  react/prop-types
-*/
+/* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import { Meteor } from 'meteor/meteor';
@@ -64,7 +56,7 @@ class LessonPlansDirectories extends Component {
 
   handle2Close = () => this.setState({ modal2Open: false });
 
-  addNewFolder(e) {
+  addNewFolder = (e) => {
     e.preventDefault();
     // New directory is created here.
     if (!this.folderName.value) {
@@ -76,7 +68,7 @@ class LessonPlansDirectories extends Component {
     this.folderName.value = '';
   }
 
-  addNewLessonPlan() {
+  addNewLessonPlan = () => {
     if (!this.lessonPlanName.value) {
       return;
     }
@@ -86,7 +78,7 @@ class LessonPlansDirectories extends Component {
     this.lessonPlanName.value = '';
   }
 
-  editTitle() {
+  editTitle = () => {
     const { editable, selectedLessonPlanId } = this.state;
     if (!this.title && editable === true) {
       return;
@@ -110,7 +102,7 @@ class LessonPlansDirectories extends Component {
     }
   }
 
-  handleTagsInput(tags) {
+  handleTagsInput = (tags) => {
     const { node: { _id } } = this.state;
     this.setState({ tags }, () => {
       Meteor.call('lessonplans.tagsChange', _id, tags);
@@ -129,10 +121,8 @@ class LessonPlansDirectories extends Component {
       title,
       node,
     } = this.state;
-    const {
-      lessonplansExists,
-      treeData,
-    } = this.props;
+    // eslint-disable-next-line react/prop-types
+    const { lessonplansExists, treeData } = this.props;
     const canDrop = ({ node: theNode, nextParent }) => {
       /* To prevent a file to be added as a child of a file
           and to prevent a directory to be added as a child of a file.
@@ -198,7 +188,7 @@ class LessonPlansDirectories extends Component {
           </Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              <Form onSubmit={this.addNewLessonPlan.bind(this)}>
+              <Form onSubmit={this.addNewLessonPlan}>
                 <Form.Field>
                   {/* eslint-disable-next-line */}
                   <label>Name</label>
@@ -254,17 +244,17 @@ class LessonPlansDirectories extends Component {
               {editable
                 ? (
                   <input
-                    ref={e => this.title = e}
+                    ref={(e) => { this.title = e; }}
                     style={{ width: '24rem', padding: '0.8rem' }}
                   />
                 ) : null}
-              <Button onClick={this.editTitle.bind(this)} style={{ marginLeft: '2rem' }}>{editable ? 'Submit' : 'Edit title'}</Button>
+              <Button onClick={this.editTitle} style={{ marginLeft: '2rem' }}>{editable ? 'Submit' : 'Edit title'}</Button>
               <br />
               <Checkbox
                 style={{ margin: '0.8rem 0' }}
                 label="Share with others"
                 checked={isPublic}
-                ref={e => this.checkbox = e}
+                ref={(e) => { this.checkbox = e; }}
                 onChange={() => {
                   Meteor.call('lessonplans.visibilityChange', selectedLessonPlanId, !this.checkbox.state.checked);
                   this.setState({ isPublic: !this.checkbox.state.checked });
@@ -273,7 +263,7 @@ class LessonPlansDirectories extends Component {
               <br />
               <div style={{ width: `${100 / 1.3}%` }}>
                 {isPublic
-                  ? <TagsInput value={tags} onChange={this.handleTagsInput.bind(this)} />
+                  ? <TagsInput value={tags} onChange={this.handleTagsInput} />
                   : null}
               </div>
             </Modal.Description>
@@ -293,11 +283,10 @@ class LessonPlansDirectories extends Component {
           </Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              <Form onSubmit={this.addNewFolder.bind(this)}>
+              <Form onSubmit={this.addNewFolder}>
                 <Form.Field>
-                  {/* eslint-disable-next-line */}
                   <label>Name</label>
-                  <input ref={e => this.folderName = e} placeholder="Name" />
+                  <input ref={(e) => { this.folderName = e; }} placeholder="Name" />
                 </Form.Field>
                 <Button type="submit">
                   Submit
@@ -314,6 +303,7 @@ class LessonPlansDirectories extends Component {
             theme={FileExplorerTheme}
             canDrop={canDrop}
             treeData={treeData}
+            // eslint-disable-next-line react/no-unused-state
             onChange={theTreeData => this.setState({ treeData: theTreeData })}
             onMoveNode={(args) => {
               if (args.nextParentNode) {
