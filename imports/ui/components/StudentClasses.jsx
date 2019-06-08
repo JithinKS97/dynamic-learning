@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-return-assign */
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
@@ -94,7 +91,7 @@ export default class StudentClasses extends React.Component {
       <div>
         <Form style={{ marginTop: '1.2rem', width: '25%' }} noValidate onSubmit={() => this.addClass()}>
           <Form.Field>
-            <input ref={e => this.classcode = e} placeholder="Class code" />
+            <input ref={(e) => { this.classcode = e; }} placeholder="Class code" />
           </Form.Field>
           <Button type="submit"> Add new class </Button>
         </Form>
