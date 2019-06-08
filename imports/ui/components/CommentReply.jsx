@@ -1,8 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/prop-types */
 import React, { Fragment } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
@@ -14,6 +9,7 @@ import {
   Form,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import PropTypes from 'prop-types';
 
 export default class CommentReply extends React.Component {
   constructor(props) {
@@ -39,10 +35,12 @@ export default class CommentReply extends React.Component {
       index,
       subIndex,
       editReplyComment,
+      isMember,
     } = this.props;
-    const { username } = this.state;
 
-    const isOwner = userId === Meteor.userId() && this.props.isMember;
+    const { username, isEditable, tempComment } = this.state;
+
+    const isOwner = userId === Meteor.userId() && isMember;
     return (
       <div>
         <Comment style={{
@@ -76,7 +74,7 @@ export default class CommentReply extends React.Component {
               </Comment.Metadata>
             </div>
 
-            {this.state.isEditable ? null : (
+            {isEditable ? null : (
               <Comment.Text style={{
                 paddingTop: '0.8rem',
                 width: '95%',
@@ -86,7 +84,7 @@ export default class CommentReply extends React.Component {
                 {comment}
               </Comment.Text>
             )}
-            {this.state.isEditable
+            {isEditable
               ? (
                 <Form style={{ margin: '1.2rem 0' }}>
                   <TextArea
@@ -95,7 +93,7 @@ export default class CommentReply extends React.Component {
                         tempComment: d.value,
                       });
                     }}
-                    value={this.state.tempComment}
+                    value={tempComment}
                   />
                 </Form>
               )
@@ -107,21 +105,21 @@ export default class CommentReply extends React.Component {
               {isOwner ? (
                 <a
                   onClick={() => {
-                    if (this.state.isEditable === false) {
+                    if (isEditable === false) {
                       this.setState({ isEditable: true, tempComment: comment });
                     } else {
                       this.setState({ isEditable: false });
-                      editReplyComment(index, subIndex, this.state.tempComment);
+                      editReplyComment(index, subIndex, tempComment);
                     }
                   }}
                   size={17}
                   className="arrow"
                 >
-                  {this.state.isEditable ? 'Save' : 'Edit'}
+                  {isEditable ? 'Save' : 'Edit'}
                 </a>
               ) : null}
 
-              {this.state.isEditable ? <a style={{ marginLeft: '1.2rem' }} size={17} onClick={() => { this.setState({ isEditable: false }); }} className="arrow">Cancel</a> : null}
+              {isEditable ? <a style={{ marginLeft: '1.2rem' }} size={17} onClick={() => { this.setState({ isEditable: false }); }} className="arrow">Cancel</a> : null}
 
             </Fragment>
 
@@ -131,3 +129,16 @@ export default class CommentReply extends React.Component {
     );
   }
 }
+
+CommentReply.propTypes = {
+  reply: PropTypes.shape({
+    comment: PropTypes.string,
+    userId: PropTypes.string,
+    time: PropTypes.string,
+  }).isRequired,
+  deleteReplyComment: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  subIndex: PropTypes.number.isRequired,
+  editReplyComment: PropTypes.func.isRequired,
+  isMember: PropTypes.bool.isRequired,
+};

@@ -1,12 +1,3 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable consistent-return */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/destructuring-assignment */
-
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import moment from 'moment';
@@ -19,6 +10,7 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
 import { Tracker } from 'meteor/tracker';
+import PropTypes from 'prop-types';
 import CommentForm from './CommentForm';
 import CommentReply from './CommentReply';
 
@@ -33,8 +25,10 @@ export default class CommentBox extends React.Component {
       tempComment: '',
     };
 
+    const { comment: { userId } } = this.props;
+
     Tracker.autorun(() => {
-      Meteor.call('getUsername', this.props.comment.userId, (err, username) => {
+      Meteor.call('getUsername', userId, (err, username) => {
         this.setState({ username });
       });
     });
@@ -48,23 +42,40 @@ export default class CommentBox extends React.Component {
   }
 
   showReplies() {
-    const { replies } = this.props;
+    const {
+      replies,
+      deleteReplyComment,
+      editReplyComment,
+      isMember,
+      index,
+    } = this.props;
     if (replies) {
-      return (replies.map((reply, index) => (
-        <CommentReply key={index} {...this.props} subIndex={index} reply={reply} />
+      return (replies.map((reply, i) => (
+        <CommentReply
+          key={reply.time}
+          subIndex={i}
+          reply={reply}
+          deleteReplyComment={deleteReplyComment}
+          editReplyComment={editReplyComment}
+          isMember={isMember}
+          index={index}
+        />
       )));
     }
     return null;
   }
 
   findTime() {
-    return moment(this.props.comment.time);
+    const { comment: { time } } = this.props;
+    return moment(time);
   }
 
   showDownArrow() {
-    if (this.state.replyVis === false) {
+    const { replyVis, isEditable } = this.state;
+    const { replies } = this.props;
+    if (replyVis === false) {
       if (!Meteor.userId()) {
-        if (this.props.replies.length === 0) {
+        if (replies.length === 0) {
           return null;
         }
 
@@ -84,7 +95,7 @@ export default class CommentBox extends React.Component {
           </FaAngleDown>
         );
       }
-      if (this.state.isEditable === false) {
+      if (isEditable === false) {
         return (
           <a
             className="arrow"
@@ -102,10 +113,28 @@ export default class CommentBox extends React.Component {
         );
       }
     }
+    return null;
   }
 
   render() {
-    const isOwner = Meteor.userId() === this.props.comment.userId && this.props.isMember;
+    const {
+      isMember,
+      comment: { userId },
+      deleteComment,
+      index,
+      comment: { comment },
+      editComment,
+      slides,
+      curSlide,
+      saveChanges,
+    } = this.props;
+    const {
+      username,
+      isEditable,
+      tempComment,
+      replyVis,
+    } = this.state;
+    const isOwner = Meteor.userId() === userId && isMember;
     return (
       <div>
         <Comment style={{
@@ -119,7 +148,7 @@ export default class CommentBox extends React.Component {
                 style={{ float: 'right', padding: '0.5rem' }}
                 onClick={() => {
                   const confirmation = confirm('Are you sure you want to delete your comment?');
-                  if (confirmation === true) { this.props.deleteComment(this.props.index); }
+                  if (confirmation === true) { deleteComment(index); }
                 }
                 }
               >
@@ -127,14 +156,14 @@ export default class CommentBox extends React.Component {
               </Button>
             ) : null}
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <Comment.Author>{this.state.username}</Comment.Author>
+              <Comment.Author>{username}</Comment.Author>
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
             </div>
 
-            {!this.state.isEditable ? <Comment.Text style={{ padding: '0.8rem 0', width: '95%' }}>{this.props.comment.comment}</Comment.Text> : null}
-            {this.state.isEditable ? (
+            {!isEditable ? <Comment.Text style={{ padding: '0.8rem 0', width: '95%' }}>{comment}</Comment.Text> : null}
+            {isEditable ? (
               <Form style={{ margin: '1.2rem 0' }}>
                 <TextArea
                   onChange={(e, d) => {
@@ -142,7 +171,7 @@ export default class CommentBox extends React.Component {
                       tempComment: d.value,
                     });
                   }}
-                  value={this.state.tempComment}
+                  value={tempComment}
                 />
               </Form>
             ) : null}
@@ -150,7 +179,7 @@ export default class CommentBox extends React.Component {
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               {this.showDownArrow()}
 
-              {this.state.replyVis ? (
+              {replyVis ? (
                 <a
                   className="arrow"
                   style={{ marginRight: '1.2rem' }}
@@ -168,36 +197,64 @@ export default class CommentBox extends React.Component {
               { isOwner ? (
                 <a
                   onClick={() => {
-                    if (this.state.isEditable === false) {
+                    if (isEditable === false) {
                       this.setState({
                         isEditable: true,
-                        tempComment: this.props.comment.comment,
+                        tempComment: comment,
                       });
                     } else {
                       this.setState({
                         isEditable: false,
                       }, () => {
-                        this.props.editComment(this.state.tempComment, this.props.index);
+                        editComment(tempComment, index);
                       });
                     }
                   }}
                   className="arrow"
                 >
-                  {this.state.isEditable ? 'Save' : 'Edit'}
+                  {isEditable ? 'Save' : 'Edit'}
                 </a>
               ) : null}
-              {this.state.isEditable ? <a style={{ marginLeft: '1.2rem' }} size={17} className="arrow" onClick={() => { this.setState({ isEditable: false }); }}>Cancel</a> : null}
+              {isEditable ? <a style={{ marginLeft: '1.2rem' }} size={17} className="arrow" onClick={() => { this.setState({ isEditable: false }); }}>Cancel</a> : null}
             </div>
           </Comment.Content>
         </Comment>
-        {this.state.replyVis ? (
+        {replyVis ? (
           <div>
             <div>{this.showReplies()}</div>
-            {Meteor.userId() && this.props.isMember
-              ? <div><CommentForm option={this.props.index} {...this.props} /></div> : null}
+            {Meteor.userId() && isMember
+              ? (
+                <div>
+                  <CommentForm
+                    option={index}
+                    slides={slides}
+                    curSlide={curSlide}
+                    saveChanges={saveChanges}
+                  />
+                </div>
+              ) : null}
           </div>
         ) : null}
       </div>
     );
   }
 }
+
+CommentBox.propTypes = {
+  isMember: PropTypes.bool.isRequired,
+  comment: PropTypes.shape({
+    comment: PropTypes.string,
+    userId: PropTypes.string,
+    time: PropTypes.string,
+    replies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+  editComment: PropTypes.func.isRequired,
+  deleteComment: PropTypes.func.isRequired,
+  replies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  deleteReplyComment: PropTypes.func.isRequired,
+  editReplyComment: PropTypes.func.isRequired,
+  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
+  curSlide: PropTypes.number.isRequired,
+  saveChanges: PropTypes.func.isRequired,
+};

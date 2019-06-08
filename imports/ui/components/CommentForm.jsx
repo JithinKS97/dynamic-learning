@@ -1,16 +1,15 @@
-/* eslint-disable react/prop-types, react/jsx-no-bind */
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Form, Button } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-
+import PropTypes from 'prop-types';
 
 export default class CommentForm extends Component {
   componentDidMount() {
     this.postComment.bind(this);
   }
 
-  postComment(e, { value }) { // eslint-disable-line no-unused-vars
+  postComment = () => {
     const {
       option,
       slides,
@@ -46,7 +45,7 @@ export default class CommentForm extends Component {
     return (
       <Form
         style={{ marginLeft: option === -1 ? '0rem' : '1.6rem', maxWidth: '650px', marginBottom: '0.9rem' }}
-        onSubmit={this.postComment.bind(this)}
+        onSubmit={this.postComment}
       >
         <Form.Field>
           {/* eslint-disable-next-line no-return-assign */}
@@ -59,3 +58,10 @@ export default class CommentForm extends Component {
     );
   }
 }
+
+CommentForm.propTypes = {
+  option: PropTypes.bool.isRequired,
+  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
+  curSlide: PropTypes.number.isRequired,
+  saveChanges: PropTypes.func.isRequired,
+};
