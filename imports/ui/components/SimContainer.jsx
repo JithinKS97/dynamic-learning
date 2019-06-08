@@ -118,8 +118,14 @@ export default class SimContainer extends React.Component {
 }
 
 SimContainer.propTypes = {
-  h: PropTypes.number.isRequired,
-  w: PropTypes.number.isRequired,
+  h: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
+  w: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
   src: PropTypes.string.isRequired,
   curSlide: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,

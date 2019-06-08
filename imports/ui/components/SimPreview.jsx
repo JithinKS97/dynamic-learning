@@ -97,11 +97,20 @@ export default class SimPreview extends React.Component {
 }
 
 SimPreview.propTypes = {
-  save: PropTypes.func.isRequired,
-  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
-  curSlide: PropTypes.number.isRequired,
-  index: PropTypes.number.isRequired,
+  save: PropTypes.func,
+  slides: PropTypes.arrayOf(PropTypes.object),
+  curSlide: PropTypes.number,
+  index: PropTypes.number,
   src: PropTypes.string.isRequired,
-  w: PropTypes.number.isRequired,
-  h: PropTypes.number.isRequired,
+  w: PropTypes.number,
+  h: PropTypes.number,
+};
+
+SimPreview.defaultProps = {
+  w: 640,
+  h: 360,
+  curSlide: 0,
+  slides: [],
+  index: 0,
+  save: () => null,
 };
