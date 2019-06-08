@@ -87,11 +87,11 @@ export default class TeacherSearch extends React.Component {
     render() {
         return (
             <div>
-                <Form noValidate onSubmit={this.searched} style={{ paddingTop: '20px', width: '25%' }} >
+                <Form noValidate onSubmit={this.searched} style={{ marginTop: '1.2rem', width: '25%' }} >
                     <Form.Field>
                         <label> Search for a student in your school by username </label>
                         <input onChange={e => this.search = e.target.value} />
-                        <Button type='submit' style={{marginTop: '14px'}}> Search </Button>
+                        <Button type='submit' style={{marginTop: '1.2rem'}}> Search </Button>
                     </Form.Field>
                 </Form>
                 {

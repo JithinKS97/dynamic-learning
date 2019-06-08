@@ -69,17 +69,17 @@ export default class StudentClasses extends React.Component {
     render() {
         return (
             <div>
-                <Form style={{ paddingTop: '20px', width: '25%' }} noValidate onSubmit={() => this.addClass()}>
+                <Form style={{ marginTop: '1.2rem', width: '25%' }} noValidate onSubmit={() => this.addClass()}>
                     <Form.Field>
                         <input ref={e => this.classcode = e} placeholder='Class code' />
                     </Form.Field>
                     <Button type='submit'> Add new class </Button>
                 </Form>
-                <div style={{ paddingTop: '5px' }}>
+                <div style={{ paddingTop: '1.2rem' }}>
                     <b> Your current classes </b>
                 </div>
                 {this.state.user !== '' && this.getClasses().map(cl => {
-                    return (<div style={{ paddingTop: '5px' }}> {cl.name + ': ' + cl.classcode} </div>)
+                    return (<div style={{ marginTop: '0.4rem' }}> {cl.name + ': ' + cl.classcode} </div>)
                 })}
             </div>
         )
