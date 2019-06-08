@@ -85,6 +85,16 @@ export default class TeacherClasses extends React.Component {
     return classmates;
   }
 
+  addStudent = (classcode, student) => {
+    if (Meteor.users.findOne({ username: student }) 
+        && !Classes.findOne({classcode: classcode}).roster.includes(student) )
+      Meteor.call('classes.addstudent', classcode, student);
+    else if (!Meteor.users.findOne({ username: student }))
+      alert('There is no student with the given username.');
+    else
+      alert(`${student} is already in the class!`); 
+  }
+
   render() {
     return (
       <div>
@@ -111,7 +121,7 @@ export default class TeacherClasses extends React.Component {
           size="tiny"
         >
           <Modal.Header>
-            Students in your class 
+            Students in your class
             <Button className="close-button" onClick={() => this.handleClose()}>
               X
             </Button>
@@ -128,6 +138,22 @@ export default class TeacherClasses extends React.Component {
                   </div>
                 ),
               )}
+              {this.state.clickedclass &&
+                <div>
+                  <Form
+                    style={{ marginTop: '1.2rem', width: '50%' }} noValidate
+                    onSubmit={() => this.addStudent(this.state.clickedclass, this.studenttoadd.value)}
+                  >
+                    <Form.Field>
+                      <input
+                        ref={e => this.studenttoadd = e}
+                        placeholder="Username of new student"
+                      />
+                    </Form.Field>
+                    <Button type="submit"> Add student </Button>
+                  </Form>
+                </div>
+              }
             </Modal.Description>
 
           </Modal.Content>
