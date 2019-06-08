@@ -27,14 +27,12 @@ const RequestsList = (props) => {
     if (requests.length > 0) {
       return findTime(requests[index].updatedAt).fromNow();
     }
-    return null;
   };
 
   const displayUsername = (index) => {
     if (usernames.length > 0) {
       if (usernames[index].username) { return usernames[index].username; }
     }
-    return null;
   };
 
   const renderRequests = () => props.requests.map((request, index) => {
@@ -67,7 +65,6 @@ const RequestsList = (props) => {
         </Card>
       );
     }
-    return null;
   });
 
   if (requestId) {

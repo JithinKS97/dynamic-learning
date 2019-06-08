@@ -43,8 +43,6 @@ export default class commentsList extends Component {
         );
       });
     }
-
-    return null;
   }
 
   render() {

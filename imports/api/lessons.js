@@ -56,6 +56,7 @@ Meteor.methods({
       parent_id: '0',
       shared: false,
       updatedAt: moment().valueOf(),
+      createdAt: Date.now(),
     });
   },
 

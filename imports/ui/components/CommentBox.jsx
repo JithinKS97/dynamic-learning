@@ -62,7 +62,6 @@ export default class CommentBox extends React.Component {
         />
       )));
     }
-    return null;
   }
 
   findTime() {
@@ -113,7 +112,6 @@ export default class CommentBox extends React.Component {
         );
       }
     }
-    return null;
   }
 
   render() {

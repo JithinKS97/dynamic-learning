@@ -1,5 +1,6 @@
 import React from 'react';
 import { Menu } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 const List = (props) => {
   const renderSlides = () => {
@@ -29,8 +30,6 @@ const List = (props) => {
         </Menu.Item>
       ));
     }
-
-    return null;
   };
 
   return (
@@ -38,6 +37,12 @@ const List = (props) => {
       {renderSlides()}
     </Menu>
   );
+};
+
+List.propTypes = {
+  saveChanges: PropTypes.func.isRequired,
+  showTitle: PropTypes.bool.isRequired,
+  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default List;

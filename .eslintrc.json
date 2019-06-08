@@ -27,6 +27,8 @@
     "no-underscore-dangle":"off",
     "jsx-a11y/label-has-for":"off",
     "jsx-a11y/label-has-associated-control":"off",
-    "react/button-has-type":"off"
+    "react/button-has-type":"off",
+    "consistent-return":"off",
+    "array-callback-return":"off"
   }
 }
