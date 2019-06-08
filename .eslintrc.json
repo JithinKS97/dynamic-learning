@@ -16,6 +16,7 @@
   "plugins": ["meteor"],
   "extends": ["airbnb", "plugin:meteor/recommended"],
   "rules": {
-    "import/no-unresolved": ["error", { "ignore": ["^meteor/"] }]
+    "import/no-unresolved": ["error", { "ignore": ["^meteor/"] }],
+    "camelcase": "off"
   }
 }

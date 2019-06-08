@@ -1052,7 +1052,6 @@ export class CreateLessonPlan extends React.Component {
                         <Grid.Column width={2} style={{position:'fixed', right:0}}>
 
                             <AddSim 
-                                isPreview={true} 
                                 ref={e => this.addSim = e} 
                                 curSlide={this.state.curSlide}
                                 slides = {this.state.slides}
