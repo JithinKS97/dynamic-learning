@@ -2,7 +2,9 @@ import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import { Button, Form } from 'semantic-ui-react';
+import {
+  Button, Form, Modal,
+} from 'semantic-ui-react';
 import { Classes } from '../../api/classes';
 
 export default class TeacherClasses extends React.Component {
@@ -60,6 +62,29 @@ export default class TeacherClasses extends React.Component {
     return clnames;
   }
 
+  handleClose = () => {
+    this.setState({
+      modalOpen: false,
+    });
+  }
+
+  handleOpen = (classcode) => {
+    this.setState({
+      modalOpen: true,
+      clickedclass: classcode,
+    });
+  }
+
+  classmatelist = (clickedclass) => {
+    const classmates = [];
+    if (clickedclass) {
+      Classes.findOne({ classcode: clickedclass }).roster.map(
+        student => classmates.push(student),
+      );
+    }
+    return classmates;
+  }
+
   render() {
     return (
       <div>
@@ -73,12 +98,41 @@ export default class TeacherClasses extends React.Component {
           <b> Your current classes </b>
         </div>
         {this.state.user !== '' && this.getClasses().map(cl => (
-          <div style={{ paddingTop: '0.4rem' }}>
+          <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
             {' '}
             {`${cl.name}: ${cl.classcode}`}
             {' '}
           </div>
         ))}
+
+        <Modal
+          open={this.state.modalOpen}
+          onClose={() => this.handleClose()}
+          size="tiny"
+        >
+          <Modal.Header>
+            Students in your class 
+            <Button className="close-button" onClick={() => this.handleClose()}>
+              X
+            </Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Modal.Description>
+              {this.state.clickedclass && this.classmatelist(this.state.clickedclass).map(
+                student => (
+                  <div>
+                    {' '}
+                    {student}
+                    {' '}
+                  </div>
+                ),
+              )}
+            </Modal.Description>
+
+          </Modal.Content>
+
+        </Modal>
       </div>
     );
   }
