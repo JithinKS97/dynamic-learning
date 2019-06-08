@@ -11,6 +11,7 @@
     "@babel/runtime": "^7.4.5",
     "bcrypt": "^2.0.1",
     "dompurify": "^1.0.10",
+    "eslint": "^5.16.0",
     "fabric": "^2.7.0",
     "history": "^4.9.0",
     "meteor-node-stubs": "^0.3.3",
@@ -36,6 +37,7 @@
     "simpl-schema": "^1.5.5"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
