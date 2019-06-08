@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData }  from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
