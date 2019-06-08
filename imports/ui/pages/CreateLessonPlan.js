@@ -432,6 +432,8 @@ export class CreateLessonPlan extends React.Component {
 
     pushToUndoStacks = (oldSlide) => {
 
+        console.log(oldSlide)
+
         /**
          * oldSlide is the object that get pushed to the undoStack
          */
@@ -680,7 +682,7 @@ export class CreateLessonPlan extends React.Component {
         }
     }
 
-    redo() {
+    redo = () => {
 
         /**
          * When undo is called, the current state is saved to redoStack
@@ -1027,8 +1029,8 @@ export class CreateLessonPlan extends React.Component {
                                     isPreview={false}
                                     setCopiedState={this.setCopiedState.bind(this)}
                                     isRndRequired={true}
-                                    undo={this.undo.bind(this)}
-                                    redo={this.redo.bind(this)}
+                                    undo={this.undo}
+                                    redo={this.redo}
                                     ref={e => this.simsList = e}
                                     save={this.save.bind(this)}
                                     interact = {this.interact.bind(this)}
