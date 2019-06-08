@@ -1,9 +1,11 @@
+/* eslint-disable */
 import React from 'react'
 import { LessonPlansIndex } from '../../api/lessonplans'
-import { List, Modal,Button, Input, Dimmer, Loader } from 'semantic-ui-react'
+import { List, Modal,Button, Input, Dimmer, Loader, Card } from 'semantic-ui-react'
 import LessonPlanViewer from './LessonPlanViewer'
 import FaCodeFork from 'react-icons/lib/fa/code-fork'
 import {Link} from 'react-router-dom'
+import moment from 'moment';
  
 export default class SharedLessonPlans extends React.Component {
 
@@ -15,10 +17,13 @@ export default class SharedLessonPlans extends React.Component {
             lessonplans:[],
             lessonplan:null,
             username:'',
-            loading:true
+            loading:true,
+            ownerNames:[]
         }
         this.displayLessonPlans.bind(this)
     }
+
+    findTime = (time) => moment(time);
 
     componentDidMount() {  
         
@@ -31,6 +36,14 @@ export default class SharedLessonPlans extends React.Component {
                 lessonplans:LessonPlansIndex.search('').fetch(),
                 selectedLessonPlan:null,
                 loading
+            },()=>{
+                
+                Meteor.call('getUsernames', this.state.lessonplans.map(lessonplan=>lessonplan.userId), (err, usernames)=>{
+
+                    this.setState({
+                        ownerNames:usernames
+                    })
+                })
             })            
         })
     }
@@ -41,13 +54,30 @@ export default class SharedLessonPlans extends React.Component {
     
     }
 
+    displayName(index) {
+
+        if(this.state.ownerNames.length>0) {
+
+            if(this.state.ownerNames[index].username)
+                return this.state.ownerNames[index].username;
+        }
+    }
+
+    displayTime(index) {
+
+        if(this.state.lessonplans.length>0) {
+
+            return this.findTime(this.state.lessonplans[index].createdAt).fromNow();
+        }
+    }
+
     displayLessonPlans() {
 
         const {lessonplans} = this.state
 
         return lessonplans.map((lessonplan, index) =>{
             return (
-                <List.Item key = {index} onClick = {()=>{
+                <Card style = {{width:'100%', margin:0}} key = {index} onClick = {()=>{
                     this.setState({                        
                         selectedLessonPlan: lessonplan
                     },()=>{
@@ -58,10 +88,18 @@ export default class SharedLessonPlans extends React.Component {
                         })
                     })
                 }}>
-                    <List.Content style = {{paddingLeft:'2.4rem'}} onClick = {()=>{this.setState({lessonplan})}}>    
-                        {lessonplan.title}
-                    </List.Content>
-                </List.Item>
+                    <Card.Content onClick = {()=>{this.setState({lessonplan})}}>    
+                        <Card.Header>{lessonplan.title}</Card.Header>
+                        <Card.Meta style={{ marginLeft:'0.4rem', marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
+                            <div>
+                                {this.displayName(index)}
+                            </div>
+                            <div style = {{marginLeft:'0.4rem'}}>
+                                created {this.displayTime(index)}
+                            </div>
+                        </Card.Meta>
+                    </Card.Content>
+                </Card>
             )
         })
 
@@ -137,9 +175,9 @@ export default class SharedLessonPlans extends React.Component {
                     </Modal.Content>
                 </Modal>
                 <Input ref = {e => this.searchTag = e} onChange = {this.search.bind(this)} label = 'search'/>
-                <List style = {{width:'100%', height:'100%'}}  selection verticalAlign='middle'>
+                <div style = {{width:'100%', height:'100%', marginTop:'1.2rem'}}  selection verticalAlign='middle'>
                     {this.displayLessonPlans()}
-                </List>
+                </div>
             </div>
         )
     }

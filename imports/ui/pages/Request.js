@@ -1,14 +1,15 @@
-import React from "react";
-import List from "../components/List";
+/* eslint-disable */
+import React, { Fragment } from "react";
+import DetailedList from "../components/DetailedList";
 import Upload from "../components/Upload";
 import { Requests } from "../../api/requests";
 import CommentForm from "../components/CommentForm";
 import CommentsList from "../components/CommentsList";
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
-import SimPreview from "../components/SimPreview";
-import FaTrash from "react-icons/lib/fa/trash";
-import FaCode from "react-icons/lib/fa/code";
+import SimTiles from "../components/SimTiles";
+import moment from "moment";
+
 import {
   Grid,
   Button,
@@ -17,16 +18,17 @@ import {
   Dimmer,
   Loader,
   Segment,
-  Menu,
   Input,
   TextArea,
   Header,
-  Container
+  Container,
+  Card,
+  Menu,
+  Label
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { withTracker } from "meteor/react-meteor-data";
-
-import { generateSrc } from '../../functions/index.js'
+import FaPencil from "react-icons/lib/fa/pencil";
 
 /* This component renders the page where the teachers post the requests for the new simulation
     and the teachers and the other users have discussions about the simulations that they are trying to make.
@@ -55,23 +57,113 @@ class Request extends React.Component {
       curSlide: 0,
       selectedSim: null,
       selectedSimIndex: null,
-      requestTitle: true,
 
-      titleInTheForm: "",
-      descriptionInTheForm: "",
+      requestTitle: "",
+      description: "",
+
+      editTitle: "",
+      editDescription: "",
 
       loading: true,
       initialized: false,
 
       topicTitleModalOpen: false,
-      topicTitle: ""
+      topicTitle: "",
+
+      showEditDescription: false,
+      redirectToLessonplan: false,
+
+      isHovering: false,
+
+      showMembershipRequests: false,
+      pendingMembers: [],
+
+      membersName: [],
+
+      showMembers: false
     };
     this.update.bind(this);
     this.pushSim.bind(this);
     this.requestExists = false;
     this.deleteSim.bind(this);
     this.push.bind(this);
+    this.isMember;
   }
+
+  findTime(time) {
+    return moment(time);
+  }
+
+  pendingRequestsList = () => {
+    return this.state.pendingMembers
+      .filter(item => item)
+      .map(member => {
+        return (
+          <Card
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              margin: 0,
+              width: "100%"
+            }}
+          >
+            <Card.Content>
+              {member.username}
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  Meteor.call(
+                    "requests.addMember",
+                    this.state._id,
+                    member.userId,
+                    () => {
+                      this.generatePendingUsersNamesList();
+                    },
+                    () => {
+                      alert("successfully added !!!");
+                    }
+                  );
+                }}
+              >
+                Accept
+              </Button>
+            </Card.Content>
+          </Card>
+        );
+      });
+  };
+
+  generatePendingMembersList = () => {
+    if (this.state.pendingRequests) {
+      Meteor.call(
+        "getUsernames",
+        this.state.pendingRequests,
+        (err, pendingMembers) => {
+          this.setState({
+            pendingMembers
+          });
+        }
+      );
+    }
+  };
+
+  generateMembersList = () => {
+    if (this.state.members) {
+      Meteor.call("getUsernames", this.state.members, (err, membersName) => {
+        this.setState({
+          membersName
+        });
+      });
+    }
+  };
+
+  displayMembersName = () => {
+    if (!this.state.members) return;
+
+    return this.state.membersName.map(member => {
+      return <li>{member.username}</li>;
+    });
+  };
 
   componentWillReceiveProps(nextProps) {
     if (this.props == nextProps) return;
@@ -82,18 +174,31 @@ class Request extends React.Component {
 
     const show = !!nextProps.request.slides[0].title;
 
-    this.setState({
-      ...nextProps.request,
-      loading: nextProps.loading,
-      show,
-      initialized: true
-    });
+    this.setState(
+      {
+        ...nextProps.request,
+        loading: nextProps.loading,
+        show,
+        initialized: true,
+
+        editDescription: nextProps.request.description,
+        editTitle: nextProps.request.requestTitle
+      },
+      () => {
+        if (!(this.state.requestTitle && this.state.description)) {
+          this.setState({
+            showEditDescription: true
+          });
+        }
+
+        this.generatePendingMembersList();
+        this.generateMembersList();
+      }
+    );
   }
 
   push(title) {
-
-    if(!title)
-        return
+    if (!title) return;
 
     const { slides } = this.state;
 
@@ -101,34 +206,43 @@ class Request extends React.Component {
 
     if (this.state.show == false) {
       slides[0].title = title;
-      this.setState({ slides, show: true });
+      slides[0].userId = Meteor.userId();
+      slides[0].time = Date.now();
+      this.setState({ slides, show: true }, () => {
+        this.update();
+      });
     } else {
       const slide = {
         title: title,
         comments: [],
-        iframes: []
+        iframes: [],
+        userId: Meteor.userId(),
+        time: Date.now()
       };
       slides.push(slide);
-      this.setState({
-        title,
-        slides,
-        curSlide
-      });
+      this.setState(
+        {
+          title,
+          slides,
+          curSlide
+        },
+        () => {
+          this.update();
+        }
+      );
     }
-
-    this.update();
   }
 
-  update() {
+  update = () => {
     if (!Meteor.userId()) return;
 
     const { slides } = this.state;
 
     Meteor.call("requests.update", this.state._id, slides);
-  }
+  };
 
-  deleteSlide(index) {
-    const isOwner = this.state.userId == Meteor.userId();
+  deleteSlide = index => {
+    const isOwner = this.state.slides[index].userId == Meteor.userId();
 
     if (isOwner) {
       const { slides } = this.state;
@@ -143,7 +257,7 @@ class Request extends React.Component {
         this.saveChanges(slides, curSlide);
       } else this.reset();
     }
-  }
+  };
 
   reset() {
     const slides = [];
@@ -151,7 +265,8 @@ class Request extends React.Component {
     const slide = {
       comments: [],
       iframes: [],
-      title: ""
+      title: "",
+      userId: Meteor.userId()
     };
 
     slides.push(slide);
@@ -169,7 +284,7 @@ class Request extends React.Component {
     );
   }
 
-  saveChanges(slides, curSlide) {
+  saveChanges = (slides, curSlide) => {
     if (slides == undefined) {
       this.setState(
         {
@@ -177,22 +292,37 @@ class Request extends React.Component {
         },
         () => {
           this.commentsList.collapse();
+          this.update();
         }
       );
     } else if (curSlide == undefined) {
-      this.setState({
-        slides
-      });
+      this.setState(
+        {
+          slides
+        },
+        () => {
+          this.update();
+        }
+      );
     } else {
-      this.setState({
-        slides,
-        curSlide
-      });
+      this.setState(
+        {
+          slides,
+          curSlide
+        },
+        () => {
+          this.update();
+        }
+      );
     }
-    this.update();
-  }
+  };
 
   pushSim(title, username, project_id) {
+    if (this.state.members)
+      this.isMember = this.state.members.includes(Meteor.userId());
+
+    if (!(Meteor.userId() && this.isMember)) return;
+
     const { slides, curSlide } = this.state;
 
     const objectToPush = {
@@ -203,17 +333,19 @@ class Request extends React.Component {
       h: 360,
       x: 0,
       y: 0,
-      title
+      title,
+      time: Date.now()
     };
 
     slides[curSlide].iframes.push(objectToPush);
+
     this.setState({
       slides
     });
     this.update();
   }
 
-  deleteSim(index, userId) {
+  deleteSim = (index, userId) => {
     /* This function decides what to do when cross Button is pressed in the
            simulation. The simulation is deleted from the iframes array and the
            changes are saved.
@@ -229,7 +361,7 @@ class Request extends React.Component {
     iframes.splice(index, 1);
     slides[this.state.curSlide].iframes = iframes;
     this.saveChanges(slides);
-  }
+  };
 
   deleteComment(index) {
     const { slides, curSlide } = this.state;
@@ -237,192 +369,224 @@ class Request extends React.Component {
     this.saveChanges(slides);
   }
 
+  editComment = (editedComment, index) => {
+    const { slides, curSlide } = this.state;
+    slides[curSlide].comments[index].comment = editedComment;
+    this.saveChanges(slides);
+  };
+
   deleteReplyComment(index, subIndex) {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments[index].replies.splice(subIndex, 1);
     this.saveChanges(slides);
   }
 
+  editReplyComment = (index, subIndex, editedComment) => {
+    const { slides, curSlide } = this.state;
+    slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
+    this.saveChanges(slides);
+  };
+
   setTitle(e) {
     e.preventDefault();
 
-    if (!(this.state.descriptionInTheForm && this.state.titleInTheForm)) {
+    if (!(this.state.editDescription && this.state.editTitle)) {
       alert("Fill the details");
-
       return;
     }
 
     this.setState(
       {
-        requestTitle: this.state.titleInTheForm
+        requestTitle: this.state.editTitle,
+        showEditDescription: false
       },
       () => {
         Meteor.call(
           "requests.title.update",
           this.state._id,
-          this.state.requestTitle,
-          this.state.descriptionInTheForm
+          this.state.editTitle,
+          this.state.editDescription
         );
       }
     );
   }
 
-  displaySims() {
-    const { slides, curSlide } = this.state;
-    const sims = slides[curSlide];
+  changeTitleOfSlide = (newTitle, index) => {
+    if (!newTitle) return false;
 
-    if (sims)
-      return sims.iframes.map((sim, index) => {
-        return (
-          <Menu.Item
-            style={{ display: "flex", justifyContent: "space-between" }}
-            key={index}
-          >
-            <Button
-              onClick={() => {
-                this.setState({
-                  selectedSim: sim,
-                  selectedSimIndex: index
-                });
-              }}
-              style={{ width: "100%", textAlign: "left" }}
-            >
-              {sim.title}
-            </Button>
-            {Meteor.userId() == sim.userId ? (
-              <Button
-                onClick={() => {
-                  this.deleteSim(index, sim.userId);
-                }}
-              >
-                <FaTrash />
-              </Button>
-            ) : null}
-          </Menu.Item>
-        );
-      });
-  }
+    const slides = Object.values($.extend(true, {}, this.state.slides));
 
-  displayMenu() {
-    const { slides, curSlide } = this.state;
-    const sim = slides[curSlide];
-    if (sim) {
-      if (sim.iframes.length > 0) {
-        return (
-          <Menu style={{ display: "flex", width: "100%" }} vertical>
-            {this.displaySims()}
-          </Menu>
-        );
-      }
+    slides[index].title = newTitle;
+
+    this.saveChanges(slides);
+
+    return true;
+  };
+
+  handleJoin = () => {
+    if (!Meteor.userId()) {
+      alert("Login to participate in the discussion");
+      return;
     }
-  }
+
+    Meteor.call("");
+
+    Meteor.call(
+      "requests.addPendingRequest",
+      this.state._id,
+      Meteor.userId(),
+      () => {
+        alert("Your request has been send");
+      }
+    );
+  };
+
+  handleLeave = () => {
+    Meteor.call(
+      "requests.removeMember",
+      this.state._id,
+      Meteor.userId(),
+      () => {
+        alert("You have left the forum");
+      }
+    );
+  };
 
   render() {
+    if (this.state.members)
+      this.isMember = this.state.members.includes(Meteor.userId());
 
     const isOwner = this.state.userId == Meteor.userId();
 
+    if (this.state.redirectToLessonplan)
+      return <Redirect to={`/createlessonplan/${this.state._id}`} />;
+
     return (
-      <Segment>
-        <Dimmer inverted active={!this.props.requestExists}>
-          <Loader />
-        </Dimmer>
+      <div>
+        <Menu style={{ margin: 0 }}>
+          <Menu.Item
+            onClick={() => {
+              history.back();
+            }}
+          >
+            Back
+          </Menu.Item>
 
-        <Modal
-          size="small"
-          style={{ width: "auto" }}
-          open={!!this.state.selectedSim}
-        >
-          <Modal.Header>
-            Preview
-            <div className="close-button">
-              <a
-                className="link-to-code"
-                target="_blank"
-                href={
-                  this.state.selectedSim
-                    ? this.state.selectedSim.linkToCode
-                    : ""
+          {isOwner ? (
+            <Menu.Item
+              onClick={() => {
+                const confirmation = confirm(
+                  "Are you sure you want to close this forum?"
+                );
+
+                if (confirmation && isOwner) {
+                  Meteor.call("requests.reset", this.state._id);
+                  history.back();
                 }
-              >
-                <Button>
-                  <FaCode />
-                </Button>
-              </a>
-              <Button
-                onClick={() => {
-                  this.setState({ selectedSim: null });
-                }}
-              >
-                X
-              </Button>
-            </div>
-          </Modal.Header>
-          <Modal.Content>
-            <SimPreview
-              userId={
-                this.state.selectedSim ? this.state.selectedSim.userId : null
-              }
-              index={this.state.selectedSimIndex}
-              slides={this.state.slides}
-              curSlide={this.state.curSlide}
-              save={this.update.bind(this)}
-              w={this.state.selectedSim ? this.state.selectedSim.w : 640}
-              h={this.state.selectedSim ? this.state.selectedSim.h : 360}
-              src={this.state.selectedSim ? generateSrc(this.state.selectedSim.username, this.state.selectedSim.project_id) : null}
-            />
-          </Modal.Content>
-        </Modal>
+              }}
+            >
+              Close this request forum
+            </Menu.Item>
+          ) : null}
 
-        <div>
-          <Grid divided="vertically" style={{ height: "100vh" }}>
-            <Grid.Row style={{ height: "20vh" }}>
-              <div style={{ padding: "1.6rem" }}>
-                <Button
-                  onClick={() => {
-                    history.back();
-                  }}
-                >
-                  Back
-                </Button>
+          {Meteor.userId() && !this.isMember ? (
+            <Menu.Item
+              onClick={() => {
+                this.handleJoin();
+              }}
+            >
+              Join
+            </Menu.Item>
+          ) : null}
 
-                {isOwner ? (
-                  <Button
-                    onClick={() => {
-                      const confirmation = confirm(
-                        "Are you sure you want to close this forum?"
-                      );
+          {Meteor.userId() &&
+          this.isMember &&
+          Meteor.userId() !== this.state.userId ? (
+            <Menu.Item
+              onClick={() => {
+                this.handleLeave();
+              }}
+            >
+              Leave
+            </Menu.Item>
+          ) : null}
 
-                      if (confirmation && isOwner) {
-                        Meteor.call("requests.reset", this.state._id);
-                        history.back();
-                      }
-                    }}
-                  >
-                    Close this request forum
-                  </Button>
-                ) : null}
+          {Meteor.userId() === this.state.userId && this.isMember ? (
+            <Menu.Item
+              onClick={() => {
+                this.setState({
+                  showMembershipRequests: true
+                });
+              }}
+            >
+              Membership requests
+              {this.state.pendingMembers.length > 0 ? (
+                <Label color = 'teal'>{this.state.pendingMembers.length}</Label>
+              ) : null}
+            </Menu.Item>
+          ) : null}
 
-                <Container textAlign = {"left"}>
-                  <h1 style={{ margin: "0.8rem 0" }}>
-                    {this.state.requestTitle}
-                  </h1>
-                  <p style={{ paddingLeft: "1.6rem" }}>
+          <Menu.Item
+            onClick={() => {
+              this.setState({
+                showMembers: true
+              });
+            }}
+          >
+            Members
+          </Menu.Item>
+
+          <Menu.Item style={{ backgroundColor: "#E5E4E2" }}>
+            Opened {this.findTime(this.state.createdAt).fromNow()}
+          </Menu.Item>
+        </Menu>
+        <Segment style={{ marginTop: "0px" }}>
+          <Dimmer inverted active={!this.props.requestExists}>
+            <Loader />
+          </Dimmer>
+
+          <Grid divided="vertically">
+            <Grid.Row style={{ height: "15vh" }}>
+              <div style={{ padding: "1.6rem", paddingTop: "0px" }}>
+                <Container textAlign={"left"} style={{ width: "100%" }}>
+                  <div style={{ alignItems: "center", display: "flex" }}>
+                    <div>
+                      <h1 style={{ height: "2.4rem", margin: "auto 0" }}>
+                        {this.state.requestTitle}
+                      </h1>
+                    </div>
+                    {isOwner && this.isMember ? (
+                      <Button
+                        onClick={() => {
+                          this.setState({
+                            showEditDescription: true
+                          });
+                        }}
+                        icon
+                        style={{ marginLeft: "1.2rem" }}
+                      >
+                        <FaPencil />
+                      </Button>
+                    ) : null}
+                  </div>
+
+                  <p style={{ paddingLeft: "1.6rem", marginTop: "0.6rem" }}>
                     {this.state.description}
                   </p>
                 </Container>
               </div>
             </Grid.Row>
 
-            <Grid.Row divided style={{ height: "80vh" }}>
-              <Grid.Column
-                width={4}
-                style={{ overflow: "auto"}}
-                centered
-              >
-                <Header as='h3' dividing>
+            <Grid.Row
+              divided
+              style={{ height: `${window.innerHeight * 0.85 - 48}px` }}
+            >
+              <Grid.Column width={4} style={{ overflow: "auto" }} centered>
+                <Header as="h3" dividing>
                   Requests list
                 </Header>
-                {isOwner ? (
+
+                {Meteor.userId() && this.isMember ? (
                   <Button
                     onClick={() => {
                       this.setState({
@@ -435,13 +599,13 @@ class Request extends React.Component {
                 ) : null}
 
                 {this.state.show ? (
-                  <List
-                    userId={this.state.userId}
-                    from={"request"}
-                    showTitle={true}
-                    {...this.state}
-                    saveChanges={this.saveChanges.bind(this)}
-                    delete={this.deleteSlide.bind(this)}
+                  <DetailedList
+                    items={this.state.slides}
+                    curSlide={this.state.curSlide}
+                    handleClick={this.saveChanges}
+                    deleteItem={this.deleteSlide}
+                    changeTitleOfItem={this.changeTitleOfSlide}
+                    isMember={this.isMember}
                   />
                 ) : null}
               </Grid.Column>
@@ -451,15 +615,20 @@ class Request extends React.Component {
               >
                 {this.state.show ? (
                   <CommentsList
+                    isMember={this.isMember}
                     ref={el => (this.commentsList = el)}
                     {...this.state}
                     saveChanges={this.saveChanges.bind(this)}
                     deleteReplyComment={this.deleteReplyComment.bind(this)}
                     deleteComment={this.deleteComment.bind(this)}
+                    editComment={this.editComment}
+                    editReplyComment={this.editReplyComment}
                   />
-                ) : <h2>Create a topic to start the discussion</h2>}
-                <br />
-                {this.state.show && !!Meteor.userId() ? (
+                ) : (
+                  <h2>Create a topic to start the discussion</h2>
+                )}
+       
+                {this.state.show && !!Meteor.userId() && this.isMember ? (
                   <CommentForm
                     option={-1}
                     {...this.state}
@@ -471,11 +640,11 @@ class Request extends React.Component {
                 width={5}
                 style={{ overflow: "auto", padding: "0 1.6rem" }}
               >
-                <Header as='h3' dividing>
+                <Header as="h3" dividing>
                   Uploaded sims
                 </Header>
-                  
-                {Meteor.userId() ? (
+
+                {Meteor.userId() && this.isMember ? (
                   <div style={{ marginBottom: "1.6rem" }}>
                     {this.state.show ? (
                       <Upload methodToRun={this.pushSim.bind(this)} />
@@ -483,13 +652,55 @@ class Request extends React.Component {
                   </div>
                 ) : null}
 
-                {this.state.show ? this.displayMenu.bind(this)() : null}
+                {this.state.show ? (
+                  <SimTiles
+                    slides={this.state.slides}
+                    curSlide={this.state.curSlide}
+                    update={this.update}
+                    deleteSim={this.deleteSim}
+                    isMember={this.isMember}
+                  />
+                ) : null}
               </Grid.Column>
             </Grid.Row>
           </Grid>
 
+          <Modal size="tiny" open={this.state.showMembershipRequests}>
+            <Modal.Header>
+              Membership requests
+              <Button
+                icon
+                style={{ float: "right" }}
+                onClick={() => {
+                  this.setState({ showMembershipRequests: false });
+                }}
+              >
+                X
+              </Button>
+            </Modal.Header>
+            <Modal.Content>
+              <div style={{ width: "100%" }} vertical>
+                {this.pendingRequestsList()}
+                {this.state.pendingMembers.length === 0 ? (
+                  <p>No requests to show</p>
+                ) : null}
+              </div>
+            </Modal.Content>
+          </Modal>
+
           <Modal size="tiny" open={this.state.topicTitleModalOpen}>
-            <Modal.Header>Topic title</Modal.Header>
+            <Modal.Header>
+              Topic title
+              <Button
+                icon
+                onClick={() => {
+                  this.setState({ topicTitleModalOpen: false });
+                }}
+                style={{ float: "right" }}
+              >
+                X
+              </Button>
+            </Modal.Header>
 
             <Modal.Content>
               <Form>
@@ -507,8 +718,8 @@ class Request extends React.Component {
                 <Form.Field>
                   <Button
                     onClick={() => {
-                        
-                      this.push(this.state.topicTitle);
+                      if (Meteor.userId() && this.isMember)
+                        this.push(this.state.topicTitle);
 
                       this.setState({
                         topicTitle: "",
@@ -523,15 +734,45 @@ class Request extends React.Component {
             </Modal.Content>
           </Modal>
 
+          <Modal size="tiny" open={this.state.showMembers}>
+            <Modal.Header>
+              Members
+              <Button
+                icon
+                style={{ float: "right" }}
+                onClick={() => {
+                  this.setState({ showMembers: false });
+                }}
+              >
+                X
+              </Button>
+            </Modal.Header>
+            <Modal.Content>
+              <ul style={{ marginLeft: "1.2rem" }}>
+                {this.displayMembersName()}
+              </ul>
+            </Modal.Content>
+          </Modal>
+
           {isOwner ? (
-            <Modal open={!!!this.state.requestTitle} size="tiny">
+            <Modal open={this.state.showEditDescription} size="tiny">
               <Modal.Header>
                 Details for the request
-                <Link to={{ pathname: `/createlessonplan/${this.state._id}` }}>
-                  <Button link className="close-button">
-                    X
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => {
+                    if (!(this.state.requestTitle && this.state.description))
+                      this.setState({
+                        redirectToLessonplan: true
+                      });
+                    else
+                      this.setState({
+                        showEditDescription: false
+                      });
+                  }}
+                  className="close-button"
+                >
+                  X
+                </Button>
               </Modal.Header>
 
               <Modal.Content>
@@ -540,13 +781,13 @@ class Request extends React.Component {
                     <Form.Field>
                       <label>Title</label>
                       <Input
+                        value={this.state.editTitle}
                         name="title"
                         onChange={(e, { value }) => {
                           this.setState({
-                            titleInTheForm: value
+                            editTitle: value
                           });
                         }}
-                        value={this.state.titleInTheForm}
                       />
                     </Form.Field>
 
@@ -554,16 +795,14 @@ class Request extends React.Component {
                       <label>Add a description</label>
                       <TextArea
                         name="description"
+                        value={this.state.editDescription}
                         onChange={(e, { value }) => {
                           this.setState({
-                            descriptionInTheForm: value
+                            editDescription: value
                           });
                         }}
-                        value={this.state.descriptionInTheForm}
                       />
                     </Form.Field>
-
-                    <p>Note: You can edit these details later</p>
 
                     <Form.Field>
                       <Button>Submit</Button>
@@ -573,8 +812,8 @@ class Request extends React.Component {
               </Modal.Content>
             </Modal>
           ) : null}
-        </div>
-      </Segment>
+        </Segment>
+      </div>
     );
   }
 }
@@ -594,7 +833,8 @@ export default (RequestContainer = withTracker(({ match }) => {
     request.slides[0] = {
       title: "",
       comments: [],
-      iframes: []
+      iframes: [],
+      time: Date.now()
     };
   }
 

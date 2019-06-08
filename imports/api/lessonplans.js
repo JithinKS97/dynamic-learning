@@ -1,22 +1,23 @@
-import { Mongo } from "meteor/mongo";
-import { Meteor } from "meteor/meteor";
-import { Requests } from "./requests";
-import SimpleSchema from "simpl-schema";
-import moment from "moment";
-import { Index, MongoDBEngine } from "meteor/easy:search";
+/* eslint-disable object-shorthand, meteor/audit-argument-checks */
+import { Mongo } from 'meteor/mongo';
+import { Meteor } from 'meteor/meteor';
+import SimpleSchema from 'simpl-schema';
+import moment from 'moment';
+import { Index, MongoDBEngine } from 'meteor/easy:search';
+import { Requests } from './requests';
 
-export const LessonPlans = new Mongo.Collection("lessonplans");
+export const LessonPlans = new Mongo.Collection('lessonplans');
 
 export const LessonPlansIndex = new Index({
   collection: LessonPlans,
-  fields: ["title", "tags"],
+  fields: ['title', 'tags'],
   engine: new MongoDBEngine({
-    selector: function(searchObject, options, aggregation) {
+    selector(searchObject, options, aggregation) {
       // selector contains the default mongo selector that Easy Search would use
-      let selector = this.defaultConfiguration().selector(
+      const selector = this.defaultConfiguration().selector(
         searchObject,
         options,
-        aggregation
+        aggregation,
       );
 
       // modify the selector to only match documents
@@ -24,28 +25,26 @@ export const LessonPlansIndex = new Index({
       selector.isFile = true;
 
       return selector;
-    }
-  })
+    },
+  }),
 });
 
 if (Meteor.isServer) {
-  
-  Meteor.publish("lessonplans", function() {
+  Meteor.publish('lessonplans', function () { // eslint-disable-line func-names
     return LessonPlans.find({
-      $or: [{ userId: this.userId }, { isPublic: true }]
+      $or: [{ userId: this.userId }, { isPublic: true }],
     });
   });
 
-  Meteor.publish("lessonplans.public", function() {
+  Meteor.publish('lessonplans.public', function () { // eslint-disable-line func-names, prefer-arrow-callback
     return LessonPlans.find({ isPublic: true });
   });
-
 }
 
 Meteor.methods({
-  "lessonplans.insert"(title) {
+  'lessonplans.insert'(title) { // eslint-disable-line object-shorthand
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
     }
 
     return LessonPlans.insert(
@@ -59,151 +58,124 @@ Meteor.methods({
         title,
         slides: [],
         userId: this.userId,
+        createdAt: Date.now(),
         updatedAt: moment().valueOf(),
         isFile: true,
         isPublic: false,
-        parent_id: "0",
+        parent_id: '0',
         tags: [],
-        description: {}
+        description: {},
       },
       (err, docs) => {
         Requests.insert({
           userId: this.userId,
           _id: docs,
           slides: [],
-          requestTitle: "",
+          requestTitle: '',
           updatedAt: moment().valueOf(),
-          description:''
+          createdAt: Date.now(),
+          description: '',
+          members: [this.userId],
+          pendingRequests: [],
         });
-      }
+      },
     );
   },
 
-  "lessonplans.tagsChange"(_id, tags) {
+  'lessonplans.tagsChange'(_id, tags) { // eslint-disable-line object-shorthand
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
     }
 
     LessonPlans.update({ _id }, { $set: { tags } });
   },
 
-  "lessonplans.folder.insert"(title) {
+  'lessonplans.folder.insert'(title) { // eslint-disable-line object-shorthand
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
     }
 
     return LessonPlans.insert({
       userId: this.userId,
       title,
       isFile: false,
-      parent_id: "0",
+      parent_id: '0',
       children: [],
-      expanded: false
+      expanded: false,
     });
   },
 
-  "lessonplans.remove"(_id) {
+  'lessonplans.remove'(_id) { // eslint-disable-line object-shorthand
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
     }
 
     new SimpleSchema({
       _id: {
         type: String,
-        min: 1
-      }
+        min: 1,
+      },
     }).validate({ _id });
 
     LessonPlans.remove({ _id, userId: this.userId });
     Requests.remove({ _id, userId: this.userId });
   },
 
-  "lessonplans.directoryChange"(_id, parent_id) {
+  'lessonplans.directoryChange'(_id, parent_id) { // eslint-disable-line object-shorthand, camelcase
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
     }
 
     LessonPlans.update({ _id }, { $set: { parent_id } });
   },
 
-  "lessonplans.folder.visibilityChange"(_id, expanded) {
+  'lessonplans.folder.visibilityChange'(_id, expanded) { // eslint-disable-line object-shorthand
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
     }
 
     LessonPlans.update({ _id }, { $set: { expanded } });
   },
 
-  "lessonplans.update"(_id, slides) {
+  'lessonplans.update'(_id, slides) { // eslint-disable-line object-shorthand
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
-    }
-
-    // new SimpleSchema({
-    //   _id: {
-    //     type: String,
-    //     min: 1
-    //   }
-    // }).validate({ _id });
-
-    // new SimpleSchema({
-    //   note: {
-    //     type: String,
-    //     optional: true
-    //   },
-    //   pageCount: {
-    //     type: Number,
-    //     optional: true
-    //   },
-    //   iframes: {
-    //     type: Array,
-    //     optional: true
-    //   },
-    //   textboxes: {
-    //     type: Array,
-    //     optional: true
-    //   },
-
-    //   "iframes.$": { type: Object, blackbox: true },
-    //   "textboxes.$": { type: Object, blackbox: true }
-    // }).validate(slides);
-
-    LessonPlans.update(
-      { _id, userId: this.userId },
-      { $set: { slides, updatedAt: moment().valueOf() } }
-    );
-  },
-
-  "lessonplans.updateTitle"(_id, title) {
-    if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
     }
 
     LessonPlans.update(
       { _id, userId: this.userId },
-      { $set: { title, updatedAt: moment().valueOf() } }
+      { $set: { slides, updatedAt: moment().valueOf() } },
     );
   },
 
-  "lessonplans.visibilityChange"(_id, isPublic) {
+  'lessonplans.updateTitle'(_id, title) { // eslint-disable-line object-shorthand
     if (!this.userId) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error('not-authorized');
+    }
+
+    LessonPlans.update(
+      { _id, userId: this.userId },
+      { $set: { title, updatedAt: moment().valueOf() } },
+    );
+  },
+
+  'lessonplans.visibilityChange'(_id, isPublic) { // eslint-disable-line object-shorthand
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
     }
 
     LessonPlans.update({ _id }, { $set: { isPublic } });
   },
 
-  "lessonplans.description"(_id, description) {
-
-    LessonPlans.update({ _id: _id }, { $set: { description: description } })
-
+  'lessonplans.description'(_id, description) { // eslint-disable-line object-shorthand
+    LessonPlans.update({ _id }, { $set: { description } });
   },
 
-  "lessonplans.removeDescription"(_id){
-    LessonPlans.update({ _id: _id }, { $set: { description: {} } })
+  'lessonplans.removeDescription'(_id) { // eslint-disable-line object-shorthand
+    LessonPlans.update({ _id }, { $set: { description: {} } });
   },
 
-  "lessonplans.addDescriptionField"(_id){
-    LessonPlans.update({ _id: _id }, { $set: { "description": {} } }) 
-  }
+  'lessonplans.addDescriptionField'(_id) { // eslint-disable-line object-shorthand
+    LessonPlans.update({ _id }, { $set: { description: {} } });
+  },
 });

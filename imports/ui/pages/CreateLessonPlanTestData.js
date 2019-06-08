@@ -1,3 +1,4 @@
+/* eslint-disable */
 export const Oscillations =  {
     "_id" : "xBFtkhuzyztC4Q6ih",
     "title" : "0",

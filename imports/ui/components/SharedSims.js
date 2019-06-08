@@ -1,6 +1,8 @@
+/* eslint-disable */
 import React from 'react'
 import { SimsIndex } from '../../api/sims'
-import { List, Input, Dimmer, Loader } from 'semantic-ui-react' 
+import { List, Input, Dimmer, Loader, Card } from 'semantic-ui-react' 
+import moment from 'moment';
  
 export default class SharedSims extends React.Component {
 
@@ -11,10 +13,13 @@ export default class SharedSims extends React.Component {
         this.state = {
             sims:[],
             searchTag:null,
-            loading:true
+            loading:true,
+            ownerNames:[]
         }
         this.displaySims.bind(this)
     }
+
+    findTime = (time) => moment(time);
 
     componentDidMount() {        
 
@@ -28,6 +33,13 @@ export default class SharedSims extends React.Component {
                 sims:SimsIndex.search('').fetch(),
                 selectedSim:null,
                 loading
+            },()=>{
+                Meteor.call('getUsernames', this.state.sims.map(sim=>sim.userId), (err, usernames)=>{
+
+                    this.setState({
+                        ownerNames:usernames
+                    })
+                })
             })            
         })
     }
@@ -37,13 +49,30 @@ export default class SharedSims extends React.Component {
         this.simsTracker.stop()
     }
 
+    displayName(index) {
+
+        if(this.state.ownerNames.length>0) {
+
+            if(this.state.ownerNames[index].username)
+                return this.state.ownerNames[index].username;
+        }
+    }
+
+    displayTime(index) {
+
+        if(this.state.sims.length>0) {
+
+            return this.findTime(this.state.sims[index].createdAt).fromNow();
+        }
+    }
+
     displaySims() {
 
         const {sims} = this.state
 
         return sims.map((sim, index) =>{
             return (
-                <List.Item key = {index} onClick = {()=>{
+                <Card style = {{width:'100%', margin:'0'}} key = {index} onClick = {()=>{
                     
                     this.setState({                        
                         selectedSim: sim
@@ -51,10 +80,20 @@ export default class SharedSims extends React.Component {
                         this.props.getNode(sim)
                     })
                 }}>
-                    <List.Content style = {{paddingLeft:'2.4rem'}}>    
-                        {sim.title}
-                    </List.Content>
-                </List.Item>
+                    <Card.Content>
+                        <Card.Header>    
+                            {sim.title}
+                        </Card.Header>
+                        <Card.Meta style={{ marginTop: '0.4rem', marginLeft:'0.4rem', display: 'flex', flexDirection: 'row' }}>
+                            <div>
+                                {this.displayName(index)}
+                            </div>
+                            <div style = {{marginLeft:'0.4rem'}}>
+                                added {this.displayTime(index)}
+                            </div>
+                        </Card.Meta>
+                    </Card.Content>
+                </Card>
             )
         })
 

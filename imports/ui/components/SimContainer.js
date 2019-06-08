@@ -1,6 +1,6 @@
+/* eslint-disable */
 import React from 'react'
 import { Dimmer, Loader } from 'semantic-ui-react'
-
 
 export default class SimContainer extends React.Component{
 

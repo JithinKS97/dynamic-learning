@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import MathQuill, { addStyles as addMathquillStyles } from 'react-mathquill'
 import Rnd from 'react-rnd'

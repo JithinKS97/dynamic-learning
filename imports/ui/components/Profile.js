@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable */
+import React from 'react'
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor'
 import { Tracker } from 'meteor/tracker'
@@ -15,7 +16,6 @@ export default class Profile extends React.Component {
             type: '',
             school: ''
         }
-
     }
 
     updateSchool = () => {
@@ -58,13 +58,13 @@ export default class Profile extends React.Component {
     render() {
         return (
             <div>
-                <div style={{ paddingBottom: '30px' }}>
+                <div>
                     Hello, {this.state.user}! <br />
                     Your account type is {this.state.type}. <br />
                     Your school is {this.state.school}. <br />
                     {
                         (this.state.type === 'Student' || this.state.type === 'Teacher') &&
-                        <Form noValidate onSubmit={this.updateSchool} style={{ paddingTop: '20px', width: '25%' }}>
+                        <Form noValidate onSubmit={this.updateSchool} style={{marginTop:'1.2rem', width: '25%' }}>
                             <Form.Field>
                                 <input ref={e => this.school = e} placeholder='School' />
                             </Form.Field>
@@ -74,7 +74,7 @@ export default class Profile extends React.Component {
                 </div>
                 {
                     this.state.type === 'Teacher' &&
-                    <div style={{ paddingBottom: '30px' }}>
+                    <div>
                         <TeacherSearch />
                     </div>
                 }

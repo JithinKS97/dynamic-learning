@@ -1,106 +1,88 @@
-import { Mongo } from 'meteor/mongo'
-import moment from 'moment'
-import SimpleSchema from 'simpl-schema'
+/* eslint-disable max-len */
+/* eslint-disable object-shorthand, meteor/audit-argument-checks, import/prefer-default-export */
+import { Mongo } from 'meteor/mongo';
+import moment from 'moment';
 
-export const Requests = new Mongo.Collection('requests')
+export const Requests = new Mongo.Collection('requests');
 
-
-if(Meteor.isServer) {
-
-    Meteor.publish('requests',function(){
-
-        return Requests.find()
-    })
+if (Meteor.isServer) {
+  // eslint-disable-next-line func-names, prefer-arrow-callback
+  Meteor.publish('requests', function () {
+    return Requests.find();
+  });
 }
 
 Meteor.methods({
-
-    'requests.update'(_id, slides) {
-
-        if(!this.userId) {
-
-            throw new Meteor.Error('not-authorized')
-        }
-
-        // new SimpleSchema({
-
-        //     _id: {
-        //         type: String,
-        //         min:1
-        //     }
-
-        // }).validate({_id})
-
-
-        // new SimpleSchema({
-
-        //     title: {
-        //         type: String,
-        //         optional:true
-        //     },
-
-        //     comments: {
-        //         type:Array,
-        //         optional: true,
-        //     },
-
-        //     'comments.$':{type:Object},
-        //     'comments.$.comment':{type:String},
-        //     'comments.$.userId':{type:String},
-        //     'comments.$.time':{type:Number},
-
-        //     iframes: {
-        //         type:Array,
-        //         optional: true,
-        //     },
-
-        //     'iframes.$':{type:Object},
-        //     'iframes.$.src':{type:String},
-        //     'iframes.$.w':{type:String},
-        //     'iframes.$.h':{type:String},
-        //     'iframes.$.x':{type:Number},
-        //     'iframes.$.y':{type:Number},
-        //     'iframes.$.userId':{type:String},
-        //     'iframes.$.title':{type:String},
-        //     'iframes.$.linkToCode':{type:String}
-
-
-        // }).validate(slides)
-
-        Requests.update({_id}, {$set:{slides,  updatedAt: moment().valueOf()}})
-    },
-
-    'requests.reset'(_id) {
-        
-
-        if(!this.userId) {
-            throw new Meteor.Error('not-authorized')
-        }
-
-        Requests.update({_id, userId:this.userId}, {$set: {requestTitle:'',slides:[], updatedAt: moment().valueOf()}})
-    }, 
-
-    'requests.title.update'(_id, requestTitle, description) {
-
-        if(!this.userId) {
-            
-            throw new Meteor.Error('not-authorized')
-        }
-
-        // new SimpleSchema({
-
-        //     _id: {
-        //         type: String,
-        //         min:1
-        //     },
-        //     requestTitle: {
-        //         type: String,
-        //         optional:true
-        //     }
-
-        // }).validate({_id, requestTitle})
-                
-        Requests.update({_id, userId:this.userId}, {$set: {requestTitle, description, updatedAt: moment().valueOf()}})
+  'requests.update'(_id, slides) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
     }
-    
-})
+
+    Requests.update({ _id }, { $set: { slides, updatedAt: moment().valueOf() } });
+  },
+
+  'requests.addPendingRequest'(_id, memberId) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Requests.update({ _id, members: { $nin: [memberId] } }, { $push: { pendingRequests: memberId } });
+  },
+
+  'requests.addMember'(_id, memberId) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Requests.update({ _id, members: { $nin: [memberId] } }, { $push: { members: memberId } });
+    Requests.update({ _id, members: { $in: [memberId] } }, { $pull: { pendingRequests: memberId } });
+  },
+
+  'requests.removeMember'(_id, memberId) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Requests.update({ _id, members: { $in: [memberId] } }, { $pull: { members: memberId } });
+  },
+
+
+  'requests.reset'(_id) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Requests.update({
+      _id,
+      userId: this.userId,
+    },
+    {
+      $set: {
+        requestTitle: '',
+        slides: [],
+        updatedAt: moment().valueOf(),
+        description: '',
+        members: [this.userId],
+        pendingRequests: [],
+      },
+    });
+  },
+
+  'requests.title.update'(_id, requestTitle, description) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Requests.update({
+      _id,
+      userId: this.userId,
+    },
+    {
+      $set: {
+        requestTitle,
+        description,
+        updatedAt: moment().valueOf(),
+      },
+    });
+  },
+});
