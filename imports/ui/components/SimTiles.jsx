@@ -117,8 +117,8 @@ const SimTile = (props) => {
             userId={selectedSim ? selectedSim.userId : null}
             index={index}
             slides={slides}
-            curSlide={curSlide}
             save={update}
+            curSlide={curSlide}
             w={selectedSim ? selectedSim.w : 640}
             h={selectedSim ? selectedSim.h : 360}
             src={
