@@ -680,7 +680,7 @@ class Request extends React.Component {
               </Button>
             </Modal.Header>
             <Modal.Content>
-              <div style={{ width: "100%" }} vertical>
+              <div style={{ width: "100%" }}>
                 {this.pendingRequestsList()}
                 {this.state.pendingMembers.length === 0 ? (
                   <p>No requests to show</p>
