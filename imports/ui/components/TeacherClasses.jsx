@@ -1,7 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-return-assign */
-/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
@@ -52,19 +48,23 @@ export default class TeacherClasses extends React.Component {
   )
 
   // this function can ONLY be called by a teacher, will allow a new class to be created
+
   createClass = () => {
+    const { classes, user } = this.state;
+
     if (this.classname.value && this.classname.value !== '') {
       const code = this.randomClassCode();
-      this.state.classes.push(code);
-      Meteor.call('classes.insert', code, this.classname.value, this.state.user);
+      classes.push(code);
+      Meteor.call('classes.insert', code, this.classname.value, user);
     }
   }
 
   getClasses = () => {
-    const user = Meteor.users.find({ username: this.state.user }).fetch()[0];
+    const { user } = this.state;
+    const _user = Meteor.users.find({ username: user }).fetch()[0];
     const clnames = [];
-    if (user.classes) {
-      user.classes.map((c) => {
+    if (_user.classes) {
+      _user.classes.map((c) => {
         const cl = Classes.find({ classcode: c }).fetch()[0];
         return clnames.push(cl);
       });
@@ -96,18 +96,19 @@ export default class TeacherClasses extends React.Component {
   }
 
   render() {
+    const { user, modalOpen, clickedclass } = this.state;
     return (
       <div>
         <Form style={{ marginTop: '1.2rem', width: '25%' }} noValidate onSubmit={() => this.createClass()}>
           <Form.Field>
-            <input ref={e => this.classname = e} placeholder="Name of new class" />
+            <input ref={(e) => { this.classname = e; }} placeholder="Name of new class" />
           </Form.Field>
           <Button type="submit"> Add new class </Button>
         </Form>
         <div style={{ marginTop: '1.2rem' }}>
           <b> Your current classes </b>
         </div>
-        {this.state.user !== '' && this.getClasses().map(cl => (
+        {user !== '' && this.getClasses().map(cl => (
           <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
             {' '}
             {`${cl.name}: ${cl.classcode}`}
@@ -116,7 +117,7 @@ export default class TeacherClasses extends React.Component {
         ))}
 
         <Modal
-          open={this.state.modalOpen}
+          open={modalOpen}
           onClose={() => this.handleClose()}
           size="tiny"
         >
@@ -129,7 +130,7 @@ export default class TeacherClasses extends React.Component {
 
           <Modal.Content>
             <Modal.Description>
-              {this.state.clickedclass && this.classmatelist(this.state.clickedclass).map(
+              {clickedclass && this.classmatelist(clickedclass).map(
                 student => (
                   <div>
                     {' '}

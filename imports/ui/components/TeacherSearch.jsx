@@ -1,11 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable no-return-assign */
-/* eslint-disable jsx-a11y/label-has-for */
-/* eslint-disable array-callback-return */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable consistent-return */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
@@ -64,8 +56,9 @@ export default class TeacherSearch extends React.Component {
   getStudents = () => (
     Meteor.users.find().fetch()
       .map((user) => {
+        const { school } = this.state;
         if (this.search !== '' && user.username !== undefined
-          && user.school !== undefined && user.school === this.state.school
+          && user.school !== undefined && user.school === school
           && user.username.includes(this.search)) {
           return (
             <div onClick={() => this.handleOpen(user)} style={{ paddingTop: '5px' }}>
@@ -86,25 +79,28 @@ export default class TeacherSearch extends React.Component {
   // form for searching
 
   render() {
+    const {
+      lookedup, modalOpen, userClicked, clickedType, clickedEmail,
+    } = this.state;
     return (
       <div>
         <Form noValidate onSubmit={this.searched} style={{ marginTop: '1.2rem', width: '25%' }}>
           <Form.Field>
             <label> Search for a student in your school by username </label>
-            <input onChange={e => this.search = e.target.value} />
+            <input onChange={(e) => { this.search = e.target.value; }} />
             <Button type="submit" style={{ marginTop: '1.2rem' }}> Search </Button>
           </Form.Field>
         </Form>
         {
-          this.state.lookedup && this.getStudents()
+          lookedup && this.getStudents()
         }
         <Modal
-          open={this.state.modalOpen}
+          open={modalOpen}
           onClose={() => this.handleClose()}
           size="tiny"
         >
           <Modal.Header>
-            {this.state.userClicked}
+            {userClicked}
             <Button className="close-button" onClick={() => this.handleClose()}>
               X
             </Button>
@@ -114,12 +110,12 @@ export default class TeacherSearch extends React.Component {
             <Modal.Description>
               Account Type:
               {' '}
-              {this.state.clickedType}
+              {clickedType}
               {' '}
               <br />
               Email:
               {' '}
-              {this.state.clickedEmail}
+              {clickedEmail}
             </Modal.Description>
 
           </Modal.Content>

@@ -1025,7 +1025,7 @@ export class CreateLessonPlan extends React.Component {
                                     slides={this.state.slides}
                                     curSlide={this.state.curSlide}
                                     saveChanges={this.saveChanges.bind(this)}
-                                    delete={this.deleteSim.bind(this)}
+                                    deleteSim={this.deleteSim.bind(this)}
                                     isPreview={false}
                                     setCopiedState={this.setCopiedState.bind(this)}
                                     isRndRequired={true}
