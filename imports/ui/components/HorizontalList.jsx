@@ -45,8 +45,15 @@ export default class HorizontalList extends Component {
 }
 
 HorizontalList.propTypes = {
-  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
-  userId: PropTypes.string.isRequired,
-  saveChanges: PropTypes.func.isRequired,
-  deleteSlide: PropTypes.func.isRequired,
+  slides: PropTypes.arrayOf(PropTypes.object),
+  userId: PropTypes.string,
+  saveChanges: PropTypes.func,
+  deleteSlide: PropTypes.func,
+};
+
+HorizontalList.defaultProps = {
+  slides: [],
+  userId: '',
+  saveChanges: () => null,
+  deleteSlide: () => null,
 };

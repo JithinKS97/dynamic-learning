@@ -113,7 +113,6 @@ export default class VideoContainer extends React.Component {
                 {_url === 'error' ? null
                   : (
                     <div>
-
                       <iframe
                         width="560"
                         height="315"
@@ -141,7 +140,6 @@ export default class VideoContainer extends React.Component {
           </Modal.Content>
 
         </Modal>
-
         {
           url
             ? (
