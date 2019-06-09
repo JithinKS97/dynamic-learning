@@ -226,13 +226,17 @@ const SimTile = (props) => {
 };
 
 SimTile.propTypes = {
-  sim: PropTypes.objectOf(PropTypes.object),
+  sim: PropTypes.shape({
+    userId: PropTypes.string,
+    project_id: PropTypes.string,
+    username: PropTypes.string,
+  }),
   slides: PropTypes.arrayOf(PropTypes.object),
   curSlide: PropTypes.number,
   update: PropTypes.func,
   index: PropTypes.number,
   deleteSim: PropTypes.func,
-  isMember: PropTypes.number,
+  isMember: PropTypes.bool,
 };
 
 SimTile.defaultProps = {
@@ -255,6 +259,8 @@ const SimTiles = (props) => {
         <Menu vertical style={{ width: '100%' }}>
           {sims.map((sim, index) => (
             <SimTile
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
               index={index}
               sim={sim}
               slides={props.slides}
@@ -275,7 +281,7 @@ SimTiles.propTypes = {
   curSlide: PropTypes.number,
   update: PropTypes.func,
   deleteSim: PropTypes.func,
-  isMember: PropTypes.func,
+  isMember: PropTypes.bool,
 };
 
 SimTiles.defaultProps = {

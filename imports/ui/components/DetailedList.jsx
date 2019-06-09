@@ -131,7 +131,7 @@ ListTile.propTypes = {
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
-  time: PropTypes.string.isRequired,
+  time: PropTypes.number.isRequired,
   isMember: PropTypes.bool.isRequired,
 };
 

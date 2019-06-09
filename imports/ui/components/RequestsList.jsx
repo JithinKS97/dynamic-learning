@@ -99,7 +99,7 @@ const RequestsListContainer = withTracker(() => {
 
 RequestsList.propTypes = {
   loading: PropTypes.bool.isRequired,
-  requests: PropTypes.objectOf(PropTypes.object).isRequired,
+  requests: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default RequestsListContainer;

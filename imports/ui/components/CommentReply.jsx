@@ -134,7 +134,7 @@ CommentReply.propTypes = {
   reply: PropTypes.shape({
     comment: PropTypes.string,
     userId: PropTypes.string,
-    time: PropTypes.string,
+    time: PropTypes.number,
   }).isRequired,
   deleteReplyComment: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

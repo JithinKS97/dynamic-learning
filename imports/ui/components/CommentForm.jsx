@@ -60,7 +60,7 @@ export default class CommentForm extends Component {
 }
 
 CommentForm.propTypes = {
-  option: PropTypes.bool.isRequired,
+  option: PropTypes.number.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
   saveChanges: PropTypes.func.isRequired,

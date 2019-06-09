@@ -243,7 +243,7 @@ CommentBox.propTypes = {
   comment: PropTypes.shape({
     comment: PropTypes.string,
     userId: PropTypes.string,
-    time: PropTypes.string,
+    time: PropTypes.number,
     replies: PropTypes.arrayOf(PropTypes.object).isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,

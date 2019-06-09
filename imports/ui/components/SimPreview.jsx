@@ -101,7 +101,7 @@ SimPreview.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object),
   curSlide: PropTypes.number,
   index: PropTypes.number,
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   w: PropTypes.number,
   h: PropTypes.number,
 };
@@ -113,4 +113,5 @@ SimPreview.defaultProps = {
   slides: [],
   index: 0,
   save: () => null,
+  src: '',
 };
