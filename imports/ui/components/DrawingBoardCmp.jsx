@@ -502,11 +502,19 @@ export default class DrawingBoardCmp extends Component {
 }
 
 DrawingBoardCmp.propTypes = {
-  interactEnabled: PropTypes.bool.isRequired,
-  interact: PropTypes.func.isRequired,
-  toolbarVisible: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  saveAfterReset: PropTypes.func.isRequired,
+  interactEnabled: PropTypes.bool,
+  interact: PropTypes.func,
+  toolbarVisible: PropTypes.bool,
+  onChange: PropTypes.func,
+  saveAfterReset: PropTypes.func,
+};
+
+DrawingBoardCmp.defaultProps = {
+  interactEnabled: false,
+  interact: () => null,
+  toolbarVisible: false,
+  onChange: () => null,
+  saveAfterReset: () => null,
 };
 
 /**

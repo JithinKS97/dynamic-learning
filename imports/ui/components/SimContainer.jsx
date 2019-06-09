@@ -130,9 +130,17 @@ SimContainer.propTypes = {
   curSlide: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
-  saveChanges: PropTypes.func.isRequired,
-  undo: PropTypes.func.isRequired,
-  redo: PropTypes.func.isRequired,
-  save: PropTypes.func.isRequired,
-  interact: PropTypes.func.isRequired,
+  saveChanges: PropTypes.func,
+  undo: PropTypes.func,
+  redo: PropTypes.func,
+  save: PropTypes.func,
+  interact: PropTypes.func,
+};
+
+SimContainer.defaultProps = {
+  saveChanges: () => null,
+  undo: () => null,
+  redo: () => null,
+  save: () => null,
+  interact: () => null,
 };

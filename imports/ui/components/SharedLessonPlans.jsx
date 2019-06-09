@@ -64,7 +64,7 @@ export default class SharedLessonPlans extends React.Component {
   }
 
   displayLessonPlans = () => {
-    const { lessonplans, selectedLessonPlan } = this.state;
+    const { lessonplans } = this.state;
 
     return lessonplans.map((lessonplan, index) => (
       <Card
@@ -74,7 +74,8 @@ export default class SharedLessonPlans extends React.Component {
           this.setState({
             selectedLessonPlan: lessonplan,
           }, () => {
-            Meteor.call('getUsername', selectedLessonPlan.userId, (err, username) => {
+            const { selectedLessonPlan } = this.state;
+            Meteor.call('getUsername', selectedLessonPlan ? selectedLessonPlan.userId : '', (err, username) => {
               this.setState({
                 username,
               });
@@ -167,7 +168,7 @@ export default class SharedLessonPlans extends React.Component {
           </Modal.Content>
         </Modal>
         <Input ref={(e) => { this.searchTag = e; }} onChange={this.search} label="search" />
-        <div style={{ width: '100%', height: '100%', marginTop: '1.2rem' }} selection verticalAlign="middle">
+        <div style={{ width: '100%', height: '100%', marginTop: '1.2rem' }}>
           {this.displayLessonPlans()}
         </div>
       </div>
