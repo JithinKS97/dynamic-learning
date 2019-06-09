@@ -34,7 +34,7 @@ const SimTile = (props) => {
 
   useEffect(() => {
     Tracker.autorun(() => {
-      Meteor.call('getUsername', sim.userId, (err, username) => {
+      Meteor.call('getUsername', sim.userId, (_err, username) => {
         changeOwnerName(username);
       });
     });
@@ -132,7 +132,7 @@ const SimTile = (props) => {
                 ) : null}
                 {titleEditable ? (
                   <Input
-                    onChange={(e, d) => {
+                    onChange={(_e, d) => {
                       changeTempTitle(d.value);
                     }}
                     value={tempTitle}
