@@ -7,14 +7,11 @@ import FaClose from 'react-icons/lib/fa/close';
 import FaCode from 'react-icons/lib/fa/code';
 import MdNetworkCell from 'react-icons/lib/md/network-cell';
 import { Button } from 'semantic-ui-react';
-
 import FaCopy from 'react-icons/lib/fa/copy';
-
 import { Session } from 'meteor/session';
 import PropTypes from 'prop-types';
 import SimContainer from './SimContainer';
 import SimPreview from './SimPreview';
-
 import { generateSrc } from '../../functions/index.js';
 
 export default class SimsList extends React.Component {
@@ -99,7 +96,8 @@ export default class SimsList extends React.Component {
 
         if (isRndRequired) {
           return (
-            <div key={iframe.createdAt} className="sim-floating">
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={index} className="sim-floating">
               <Rnd
                 bounds=".canvas-container"
                 dragHandleClassName=".sim-handle"
@@ -231,7 +229,8 @@ export default class SimsList extends React.Component {
         return (
           <div
             style={{ marginBottom: calcMargin(iframes, index) }}
-            key={iframe.createdAt}
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
           >
             <Button
               style={{
@@ -293,7 +292,7 @@ SimsList.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object),
   isRndRequired: PropTypes.bool,
   isPreview: PropTypes.bool,
-  saveChanges: PropTypes.bool,
+  saveChanges: PropTypes.func,
   deleteSim: PropTypes.func,
   userId: PropTypes.string,
 };

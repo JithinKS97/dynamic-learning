@@ -1,61 +1,39 @@
-/* eslint-disable */
-import React from 'react'
-
-import TextBox from './TextBox'
+import React from 'react';
+import PropTypes from 'prop-types';
+import TextBox from './TextBox';
 
 export default class TextBoxes extends React.Component {
-
-  constructor(props) {
-
-    super(props)
-  }
-
-
   renderTextBoxes = () => {
+    const { slides, curSlide } = this.props;
 
-    const slides = this.props.slides
-    const curSlide = this.props.curSlide
+    if (!slides[curSlide]) { return; }
+    if (!slides[curSlide].textboxes) { return; }
 
-    if (!slides[curSlide])
-      return
-
-    if (!slides[curSlide].textboxes)
-      return
-
-    return slides[curSlide].textboxes.map((textbox, index) => {
-
-      return (
-        <div key={index}>
-          <TextBox
-            isPreview={this.props.isPreview}
-            saveChanges={this.props.saveChanges}
-            deleteTextBox={this.props.delete}
-            index={index}
-            value={textbox.value}
-            slides={this.props.slides}
-            curSlide={this.props.curSlide}
-            setCopiedState={this.props.setCopiedState}
-          />
-        </div>
-      )
-    })
+    return slides[curSlide].textboxes.map((textbox, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <div key={index}>
+        <TextBox
+          index={index}
+          value={textbox.value}
+          {...this.props}
+        />
+      </div>
+    ));
   }
 
   render() {
-
-    if (this.props.slides.length === 0)
-      return null
-
-    if (!this.props.slides[this.props.curSlide].textboxes)
-      return null
-
-    if (this.props.slides[this.props.curSlide].textboxes.length === 0)
-      return null
-
     return (
       <div>{this.renderTextBoxes()}</div>
-    )
+    );
   }
 }
 
+TextBoxes.propTypes = {
+  slides: PropTypes.arrayOf(PropTypes.object),
+  curSlide: PropTypes.number,
+};
 
+TextBoxes.defaultProps = {
+  slides: [{ textboxes: [] }],
+  curSlide: 0,
+};
