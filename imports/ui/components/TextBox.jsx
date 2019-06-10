@@ -129,6 +129,9 @@ export default class TextBox extends React.Component {
               this.keyStrokes += 1;
 
               setTimeout(() => {
+                // eslint-disable-next-line no-shadow
+                const { slides } = this.props;
+
                 if (this.keyStrokes > 0) {
                   saveChanges(slides, undefined, undefined, false);
                   this.keyStrokes = 0;
