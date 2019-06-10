@@ -63,6 +63,7 @@ export default class TextBox extends React.Component {
         onResize={(_e, _direction, ref) => {
           _slides[curSlide].textboxes[index].w = ref.offsetWidth;
           _slides[curSlide].textboxes[index].h = ref.offsetHeight;
+          saveChanges(_slides);
         }}
         enableResizing={{
           bottom: false,
@@ -77,7 +78,6 @@ export default class TextBox extends React.Component {
         onDragStop={(e, d) => {
           _slides[curSlide].textboxes[index].x = d.lastX;
           _slides[curSlide].textboxes[index].y = d.lastY;
-
           saveChanges(_slides);
         }}
       >
