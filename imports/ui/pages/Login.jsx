@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -101,7 +102,7 @@ export default class Login extends React.Component {
             </Form>
           </Card.Content>
           <Card.Content>
-            <Link to="/signup">Do&#39t have an account?</Link>
+            <Link to="/signup">Don't have an account?</Link>
           </Card.Content>
         </Card>
       </div>
