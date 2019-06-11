@@ -24,5 +24,6 @@ underscore@1.0.10
 semantic:ui
 session@1.2.0
 easy:search
-accounts-google@1.3.2
-accounts-github@1.4.2
+accounts-google
+accounts-github
+service-configuration

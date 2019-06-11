@@ -120,8 +120,9 @@ export default class TeacherClasses extends React.Component {
           onClose={() => this.handleClose()}
           size="tiny"
         >
-          <Modal.Header>
-            Students in your class
+          <Modal.Header> 
+            {this.state.clickedclass 
+              && this.getClasses().find(cl => cl.classcode === this.state.clickedclass).name}
             <Button className="close-button" onClick={() => this.handleClose()}>
               X
             </Button>

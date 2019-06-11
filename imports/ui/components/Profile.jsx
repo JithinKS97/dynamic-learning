@@ -34,7 +34,7 @@ export default class Profile extends React.Component {
 
       if (Meteor.user()) {
         this.setState({
-          user: Meteor.user().username
+          user: Meteor.user().username, 
         })
       }
       if (Meteor.user() && Meteor.user().profile) {
@@ -42,17 +42,23 @@ export default class Profile extends React.Component {
           type: Meteor.user().profile['accountType']
         })
       }
-      else {
+      if (Meteor.user() && Meteor.user().services && Meteor.user().services.github) {
         this.setState({
-          type: 'Student'
+          user: Meteor.user().services.github.username,
+          type: 'Standard'
         })
+      }
+      if (Meteor.user() && Meteor.user().services && Meteor.user().services.google) {
+        console.log(Meteor.user().services.google)
       }
       if (Meteor.user() && Meteor.user().school) {
         this.setState({
           school: Meteor.user().school
         })
       }
+
     })
+
   }
 
   render() {
@@ -61,15 +67,18 @@ export default class Profile extends React.Component {
         <div>
           Hello, {this.state.user}! <br />
           Your account type is {this.state.type}. <br />
-          Your school is {this.state.school}. <br />
           {
             (this.state.type === 'Student' || this.state.type === 'Teacher') &&
-            <Form noValidate onSubmit={this.updateSchool} style={{ marginTop: '1.2rem', width: '25%' }}>
-              <Form.Field>
-                <input ref={e => this.school = e} placeholder='School' />
-              </Form.Field>
-              <Button type='submit' style={{}}> Update School </Button>
-            </Form>
+            <div>
+              Your school is {this.state.school}. <br />
+              <Form noValidate onSubmit={this.updateSchool} style={{ marginTop: '1.2rem', width: '25%' }}>
+                <Form.Field>
+                  <input ref={e => this.school = e} placeholder='School' />
+                </Form.Field>
+                <Button type='submit' style={{}}> Update School </Button>
+
+              </Form>
+            </div>
           }
         </div>
         {
