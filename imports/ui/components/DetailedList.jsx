@@ -38,13 +38,11 @@ const ListTile = (props) => {
 
   const isOwner = Meteor.userId() === userId && !!isMember;
 
-  useEffect(() => {
-    Tracker.autorun(() => {
-      Meteor.call('getUsername', userId, (err, username) => {
-        changeOwnerName(username);
-      });
+  Tracker.autorun(() => {
+    Meteor.call('getUsername', userId, (err, username) => {
+      changeOwnerName(username);
     });
-  }, []);
+  });
 
   return (
     <Card

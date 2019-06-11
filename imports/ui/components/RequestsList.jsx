@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import {
@@ -11,19 +11,16 @@ import { Requests } from '../../api/requests';
 const RequestsList = (props) => {
   const [requestId, changeRequestId] = useState('');
   const [usernames, changeUsernames] = useState([]);
+  const { requests } = props;
 
-  useEffect(() => {
-    Meteor.call('getUsernames', props.requests.map(request => request.userId), (err, unames) => {
-      changeUsernames(unames);
-    });
-  }, []);
+  Meteor.call('getUsernames', requests.map(request => request.userId), (err, unames) => {
+    changeUsernames(unames);
+  });
 
   const findTime = time => moment(time);
   const { loading } = props;
 
   const displayTime = (index) => {
-    const { requests } = props;
-
     if (requests.length > 0) {
       return findTime(requests[index].updatedAt).fromNow();
     }
