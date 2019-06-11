@@ -16,7 +16,7 @@ const RequestsList = (props) => {
     Meteor.call('getUsernames', props.requests.map(request => request.userId), (err, unames) => {
       changeUsernames(unames);
     });
-  });
+  }, []);
 
   const findTime = time => moment(time);
   const { loading } = props;

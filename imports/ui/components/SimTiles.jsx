@@ -38,7 +38,7 @@ const SimTile = (props) => {
         changeOwnerName(username);
       });
     });
-  });
+  }, []);
 
   const findTime = () => moment(sim.time);
 

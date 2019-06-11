@@ -42,9 +42,10 @@ const ListTile = (props) => {
     Tracker.autorun(() => {
       Meteor.call('getUsername', userId, (err, username) => {
         changeOwnerName(username);
+        console.log('hello');
       });
     });
-  });
+  }, []);
 
   return (
     <Card
