@@ -1,9 +1,3 @@
-/* eslint-disable prefer-destructuring */
-/* eslint-disable react/jsx-no-target-blank */
-/* eslint-disable jsx-a11y/mouse-events-have-key-events */
-/* eslint-disable no-use-before-define */
-/* eslint-disable react/prop-types */
-/* eslint-disable import/extensions */
 import FaPencil from 'react-icons/lib/fa/pencil';
 import React, { useState, useEffect, Fragment } from 'react';
 import {
@@ -13,6 +7,7 @@ import { Tracker } from 'meteor/tracker';
 import FaCode from 'react-icons/lib/fa/code';
 import MdSave from 'react-icons/lib/md/save';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import { generateSrc, isValidp5EmbedTag } from '../../functions/index.js';
 import SimPreview from './SimPreview';
 
@@ -26,26 +21,26 @@ const SimTile = (props) => {
     deleteSim,
     isMember,
   } = props;
+
   const [selectedSim, setSelectedSim] = useState(null);
   const [onDelete, setOnDelete] = useState(false);
   const [tagEditable, changeTagEditable] = useState(false);
   const [titleEditable, changeTitleEditable] = useState(false);
   const [tempTag, changeTempTag] = useState('');
   const [tempTitle, changeTempTitle] = useState('');
+  const [ownerName, changeOwnerName] = useState('');
 
   const isOwner = Meteor.userId() === sim.userId && isMember;
 
   useEffect(() => {
     Tracker.autorun(() => {
-      Meteor.call('getUsername', sim.userId, (err, username) => {
+      Meteor.call('getUsername', sim.userId, (_err, username) => {
         changeOwnerName(username);
       });
     });
   });
 
   const findTime = () => moment(sim.time);
-
-  const [ownerName, changeOwnerName] = useState('');
 
   return (
     <div style={{ width: '100%' }}>
@@ -117,8 +112,8 @@ const SimTile = (props) => {
             userId={selectedSim ? selectedSim.userId : null}
             index={index}
             slides={slides}
-            curSlide={curSlide}
             save={update}
+            curSlide={curSlide}
             w={selectedSim ? selectedSim.w : 640}
             h={selectedSim ? selectedSim.h : 360}
             src={
@@ -137,7 +132,7 @@ const SimTile = (props) => {
                 ) : null}
                 {titleEditable ? (
                   <Input
-                    onChange={(e, d) => {
+                    onChange={(_e, d) => {
                       changeTempTitle(d.value);
                     }}
                     value={tempTitle}
@@ -208,8 +203,8 @@ const SimTile = (props) => {
                         changeTagEditable(false);
                         if (isValidp5EmbedTag(tempTag)) {
                           const tempSim = selectedSim;
-                          tempSim.username = tempTag.match('org/(.*)/embed')[1];
-                          tempSim.project_id = tempTag.match('embed/(.*)"')[1];
+                          [, tempSim.username] = tempTag.match('org/(.*)/embed');
+                          [, tempSim.project_id] = tempTag.match('embed/(.*)"');
                           setSelectedSim(tempSim);
                           slides[curSlide].iframes[index] = tempSim;
                           update();
@@ -230,6 +225,30 @@ const SimTile = (props) => {
   );
 };
 
+SimTile.propTypes = {
+  sim: PropTypes.shape({
+    userId: PropTypes.string,
+    project_id: PropTypes.string,
+    username: PropTypes.string,
+  }),
+  slides: PropTypes.arrayOf(PropTypes.object),
+  curSlide: PropTypes.number,
+  update: PropTypes.func,
+  index: PropTypes.number,
+  deleteSim: PropTypes.func,
+  isMember: PropTypes.bool,
+};
+
+SimTile.defaultProps = {
+  sim: {},
+  slides: [],
+  curSlide: 0,
+  update: () => null,
+  index: 0,
+  deleteSim: () => null,
+  isMember: false,
+};
+
 const SimTiles = (props) => {
   const { slides, curSlide } = props;
   const sims = slides[curSlide].iframes;
@@ -240,6 +259,8 @@ const SimTiles = (props) => {
         <Menu vertical style={{ width: '100%' }}>
           {sims.map((sim, index) => (
             <SimTile
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
               index={index}
               sim={sim}
               slides={props.slides}
@@ -253,6 +274,22 @@ const SimTiles = (props) => {
       ) : null}
     </Fragment>
   );
+};
+
+SimTiles.propTypes = {
+  slides: PropTypes.arrayOf(PropTypes.object),
+  curSlide: PropTypes.number,
+  update: PropTypes.func,
+  deleteSim: PropTypes.func,
+  isMember: PropTypes.bool,
+};
+
+SimTiles.defaultProps = {
+  slides: [],
+  curSlide: 0,
+  update: () => null,
+  deleteSim: () => null,
+  isMember: () => null,
 };
 
 export default SimTiles;

@@ -1,10 +1,3 @@
-/*
-  eslint-disable
-  react/jsx-no-bind,
-  no-return-assign,
-  no-unused-vars,
-  block-scoped-var
-*/
 import React, { Component } from 'react';
 import FaCode from 'react-icons/lib/fa/code';
 import { Meteor } from 'meteor/meteor';
@@ -15,11 +8,11 @@ import {
   Tab,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import PropTypes from 'prop-types';
 import SimsDirectories from './SimsDirectories';
 import SimPreview from './SimPreview';
 import SharedSims from './SharedSims';
 import { generateSrc } from '../../functions';
-
 /*
     This component is for the addition of simulations to the lessonplan.
 */
@@ -30,7 +23,6 @@ export default class AddSim extends Component {
     this.state = {
       isOpen: false,
       node: null,
-      username: '', // eslint-disable-line react/no-unused-state
     };
     this.handleOpen.bind(this);
     this.handleClose.bind(this);
@@ -40,38 +32,33 @@ export default class AddSim extends Component {
     Meteor.subscribe('sims.public');
   }
 
-  getNode(node) {
-    this.setState({ node }, () => {
-      const { userId } = this.state.node; // eslint-disable-line react/destructuring-assignment
-      Meteor.call('getUsername', userId, (err, username) => {
-        this.setState({ username }); // eslint-disable-line react/no-unused-state
-      });
-    });
+  getNode = (node) => {
+    this.setState({ node });
   }
 
-  addSim() {
+  addSim = () => {
     this.setState({ isOpen: true });
   }
 
-  handleOpen() {
+  handleOpen = () => {
     this.setState({ isOpen: true });
   }
 
-  handleClose() {
+  handleClose = () => {
     this.setState({ isOpen: false });
   }
 
-  addToLesson() {
+  addToLesson = () => {
     const { node } = this.state;
     if (node) {
       const {
-        slides, // eslint-disable-line react/prop-types
-        curSlide, // eslint-disable-line react/prop-types
+        slides,
+        curSlide,
       } = this.props;
       const allSlides = Object.values($.extend(true, {}, slides));
       const {
         username,
-        project_id, // eslint-disable-line camelcase
+        project_id,
         w,
         h,
       } = node;
@@ -85,10 +72,9 @@ export default class AddSim extends Component {
         data: {},
         pane: null,
       };
-
       allSlides[curSlide].iframes.push(sim);
-      // eslint-disable-next-line react/prop-types, react/destructuring-assignment
-      this.props.saveChanges(allSlides);
+      const { saveChanges } = this.props;
+      saveChanges(allSlides);
       this.setState({
         isOpen: false,
         node: null,
@@ -100,31 +86,21 @@ export default class AddSim extends Component {
     const panes = [
       {
         menuItem: 'Shared simulations',
-        render: () => <Tab.Pane style={{ height: '429px', overflow: 'auto' }}><SharedSims getNode={this.getNode.bind(this)} /></Tab.Pane>,
+        render: () => <Tab.Pane style={{ height: '429px', overflow: 'auto' }}><SharedSims getNode={this.getNode} /></Tab.Pane>,
       },
       {
         menuItem: 'My simulations',
         render: () => (
           <Tab.Pane>
-            {/* eslint-disable-next-line react/jsx-boolean-value */}
-            <SimsDirectories height={400} getNode={this.getNode.bind(this)} isPreview={true} />
+            <SimsDirectories height={400} getNode={this.getNode} isPreview />
           </Tab.Pane>
         ),
       },
     ];
     const {
       isOpen,
-      activeIndex,
       node,
     } = this.state;
-    // FIXME: this is pobably a bad idea
-    if (node) {
-      var { // eslint-disable-line no-var, vars-on-top
-        username,
-        project_id, // eslint-disable-line camelcase
-        linkToCode,
-      } = node;
-    }
 
     return (
       <div>
@@ -153,8 +129,8 @@ export default class AddSim extends Component {
               >
                 <Grid.Column width={8}>
                   <Tab
-                    ref={e => this.tab = e}
-                    onTabChange={(event, data) => {
+                    ref={(e) => { this.tab = e; }}
+                    onTabChange={() => {
                       this.setState({ node: null });
                     }}
                     panes={panes}
@@ -164,7 +140,7 @@ export default class AddSim extends Component {
                   ? (
                     <Grid.Column style={{ overflow: 'auto', marginTop: '43px' }}>
                       <SimPreview
-                        src={generateSrc(username, project_id)}
+                        src={generateSrc(node.username, node.project_id)}
                       />
                     </Grid.Column>
                   ) : <h2 style={{ margin: 'auto' }}>Select a simulation</h2>
@@ -173,7 +149,7 @@ export default class AddSim extends Component {
                   ? (
                     <Button
                       style={{ marginLeft: '0.8rem', visibility: node ? 'visible' : 'hidden' }}
-                      onClick={this.addToLesson.bind(this)}
+                      onClick={this.addToLesson}
                     >
                       Add to lesson
                     </Button>
@@ -185,17 +161,10 @@ export default class AddSim extends Component {
                       className="link-to-code"
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={node ? linkToCode : ''}
+                      href={node ? `https://editor.p5js.org/${node.username}/sketches/${node.project_id}` : ''}
                     >
                       <Button><FaCode /></Button>
                     </a>
-                  ) : null
-                }
-                {!!node && activeIndex === 0
-                  ? (
-                    <p style={{ paddingTop: '0.8rem' }}>
-                      {`Author: ${username}`}
-                    </p>
                   ) : null
                 }
               </Grid>
@@ -206,3 +175,14 @@ export default class AddSim extends Component {
     );
   }
 }
+
+AddSim.propTypes = {
+  curSlide: PropTypes.number,
+  slides: PropTypes.arrayOf(PropTypes.object),
+  saveChanges: PropTypes.func.isRequired,
+};
+
+AddSim.defaultProps = {
+  curSlide: 0,
+  slides: [{ iframes: [] }],
+};

@@ -1,11 +1,10 @@
-/* eslint-disable */
-import React from 'react'
-import MathQuill, { addStyles as addMathquillStyles } from 'react-mathquill'
-import Rnd from 'react-rnd'
-import TiArrowMove from 'react-icons/lib/ti/arrow-move'
-import FaClose from 'react-icons/lib/fa/close'
-import MdNetworkCell from 'react-icons/lib/md/network-cell'
-import FaCopy from "react-icons/lib/fa/copy";
+import React from 'react';
+import MathQuill, { addStyles as addMathquillStyles } from 'react-mathquill';
+import Rnd from 'react-rnd';
+import TiArrowMove from 'react-icons/lib/ti/arrow-move';
+import FaClose from 'react-icons/lib/fa/close';
+import MdNetworkCell from 'react-icons/lib/md/network-cell';
+import PropTypes from 'prop-types';
 
 // inserts the required css to the <head> block.
 // You can skip this, if you want to do that by your self.
@@ -13,26 +12,27 @@ import FaCopy from "react-icons/lib/fa/copy";
 export default class App extends React.Component {
   constructor() {
     super();
-    addMathquillStyles()
+    addMathquillStyles();
     this.state = {
       latex: '\\frac{1}{\\sqrt{2}}\\cdot 2',
-    }
+    };
   }
 
   render() {
     // bounds = '.drawing-board-canvas'
-    // enableResizing = {this.props.isPreview?false:true}
+    const { deleteTextBox, index } = this.props;
+    const { latex } = this.state;
+
     return (
       <Rnd
         // style = {{backgroundColor:'red'}}
-        className='textbox-floating'
-        enableResizing={true}
-        bounds='.drawing-board-canvas'
-        dragHandleClassName='.textbox-handle'
+        className="textbox-floating"
+        bounds=".drawing-board-canvas"
+        dragHandleClassName=".textbox-handle"
 
         position={{
           x: 100,
-          y: 100
+          y: 100,
         }}
 
         enableResizing={{
@@ -44,33 +44,38 @@ export default class App extends React.Component {
           right: false,
           top: false,
           topLeft: false,
-          topRight: false
+          topRight: false,
         }}
       >
         <MathQuill
-          latex={this.state.latex} // Initial latex value for the input field
-          onChange={latex => {
+          // Initial latex value for the input field
+          latex={latex}
+          onChange={(l) => {
             // Called everytime the input changes
-            this.setState({ latex })
+            this.setState({ latex: l });
           }}
         />
-        <div className='sim-nav' style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="sim-nav" style={{ display: 'flex', flexDirection: 'column' }}>
 
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', marginLeft: '0.5rem' }}>
+          <div style={{
+            display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', marginLeft: '0.5rem',
+          }}
+          >
 
             <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '0.1rem' }}>
-              <FaClose className='sim-delete' size='20' onClick={() => {
+              <FaClose
+                className="sim-delete"
+                size="20"
+                onClick={() => {
+                  if (confirm('Are you sure you want to delete the textbox?')) {
+                    deleteTextBox(index);
+                  }
+                }}
+              >
+                X
+              </FaClose>
 
-                const confirmation = confirm('Are you sure you want to delete the textbox?')
-
-                if (!confirmation)
-                  return
-
-                // this.props.deleteTextBox(this.props.index)
-
-              }}>X</FaClose>
-
-              <TiArrowMove size='22' className='textbox-handle' />
+              <TiArrowMove size="22" className="textbox-handle" />
 
             </div>
 
@@ -79,6 +84,11 @@ export default class App extends React.Component {
           </div>
         </div>
       </Rnd>
-    )
+    );
   }
 }
+
+App.propTypes = {
+  deleteTextBox: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+};

@@ -222,7 +222,15 @@ class Lesson extends React.Component {
                                 label = 'share the lesson'
                             />:null}
                            
-                                <VideoContainer userId = {this.props.lesson.userId} addVideo = {this.addVideo.bind(this)} url = {this.props.lesson.slides[this.state.curSlide]?this.props.lesson.slides[this.state.curSlide].url:null}/>
+                                <VideoContainer
+                                    userId = {this.props.lesson.userId}
+                                    addVideo = {this.addVideo.bind(this)}
+                                    url = {
+                                            this.props.lesson.slides[this.state.curSlide]?
+                                            this.props.lesson.slides[this.state.curSlide].url
+                                            :null
+                                        }
+                                    />
                         
 
                     </Grid.Column>

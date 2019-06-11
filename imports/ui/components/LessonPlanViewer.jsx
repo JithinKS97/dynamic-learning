@@ -1,11 +1,3 @@
-/*
-  eslint-disable
-  no-underscore-dangle,
-  no-return-assign,
-  react/prop-types,
-  react/jsx-no-bind,
-  react/jsx-boolean-value
-*/
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
@@ -75,6 +67,7 @@ class LessonPlanViewer extends Component {
 
   componentDidUpdate() {
     const { initialized } = this.state;
+    // eslint-disable-next-line react/prop-types
     const { lessonplanExists, lessonplan } = this.props;
     if (!initialized && lessonplanExists) {
       if (this.undoArray.length === 0 && lessonplan.slides.length !== 0) {
@@ -146,7 +139,7 @@ class LessonPlanViewer extends Component {
     return 900;
   };
 
-  next() {
+  next = () => {
     /**
      * If the current slide is the last slide, we cannot move forward.
      *
@@ -164,7 +157,7 @@ class LessonPlanViewer extends Component {
   }
 
 
-  previous() {
+  previous = () => {
     /**
      * If the current slide is not the beggining slide,
      * the current slide no. is decremented and the notes of that particular
@@ -178,7 +171,7 @@ class LessonPlanViewer extends Component {
     }
   }
 
-  pushSlide(slides) {
+  pushSlide = (slides) => {
     /**
      * To create a new slide, first the structure of slide is defined and
      * then pushed to the slides array. This is to avoid the undefined error
@@ -193,7 +186,7 @@ class LessonPlanViewer extends Component {
   }
 
 
-  saveChanges(theSlides, theCurSlide) {
+  saveChanges = (theSlides, theCurSlide) => {
     /**
      * This function is used in multiple places to save the changes (not in the databse, but
      * in the react state).
@@ -227,7 +220,7 @@ class LessonPlanViewer extends Component {
     }
   }
 
-  deleteSlide(index) {
+  deleteSlide = (index) => {
     /*
      * This function decides what to do when the X button is pressed in the
      * slide element. If there is only one element. it is not deleted,
@@ -254,7 +247,7 @@ class LessonPlanViewer extends Component {
     }
   }
 
-  deleteSim(index) {
+  deleteSim = (index) => {
     /*
      * This function decides what to do when cross button is pressed in the
      * simulation. The simulation is deleted from the iframes array of the
@@ -290,8 +283,8 @@ class LessonPlanViewer extends Component {
               <ListWithoutDelete
                 showTitle={false}
                 {...this.state}
-                delete={this.deleteSlide.bind(this)}
-                saveChanges={this.saveChanges.bind(this)}
+                delete={this.deleteSlide}
+                saveChanges={this.saveChanges}
               />
             </Grid.Column>
             <Grid.Column
@@ -311,22 +304,22 @@ class LessonPlanViewer extends Component {
               }}
               >
                 <TextBoxes
-                  isPreview={true}
+                  isPreview
                   deleteTextBox={() => {}}
                   slides={slides}
                   curSlide={curSlide}
-                  saveChanges={this.saveChanges.bind(this)}
+                  saveChanges={this.saveChanges}
                 />
                 <SimsList
                   navVisibility={false}
-                  isRndRequired={true}
-                  isPreview={true}
-                  saveChanges={this.saveChanges.bind(this)}
-                  delete={this.deleteSim.bind(this)}
+                  isRndRequired
+                  isPreview
+                  saveChanges={this.saveChanges}
+                  delete={this.deleteSim}
                   {...this.state}
-                  ref={e => this.simsList = e}
+                  ref={(e) => { this.simsList = e; }}
                 />
-                <DrawingBoardCmp toolbarVisible={false} ref={e => this.drawingBoard = e} />
+                <DrawingBoardCmp toolbarVisible={false} ref={(e) => { this.drawingBoard = e; }} />
               </div>
             </Grid.Column>
           </Grid.Row>

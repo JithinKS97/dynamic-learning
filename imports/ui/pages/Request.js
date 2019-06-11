@@ -100,6 +100,7 @@ class Request extends React.Component {
       .map(member => {
         return (
           <Card
+            key={member.userId}
             style={{
               display: "flex",
               flexDirection: "row",
@@ -161,7 +162,7 @@ class Request extends React.Component {
     if (!this.state.members) return;
 
     return this.state.membersName.map(member => {
-      return <li>{member.username}</li>;
+      return <li key={member.userId}>{member.username}</li>;
     });
   };
 
@@ -581,7 +582,7 @@ class Request extends React.Component {
               divided
               style={{ height: `${window.innerHeight * 0.85 - 48}px` }}
             >
-              <Grid.Column width={4} style={{ overflow: "auto" }} centered>
+              <Grid.Column width={4} style={{ overflow: "auto" }} centered = "true">
                 <Header as="h3" dividing>
                   Requests list
                 </Header>
@@ -679,7 +680,7 @@ class Request extends React.Component {
               </Button>
             </Modal.Header>
             <Modal.Content>
-              <div style={{ width: "100%" }} vertical>
+              <div style={{ width: "100%" }}>
                 {this.pendingRequestsList()}
                 {this.state.pendingMembers.length === 0 ? (
                   <p>No requests to show</p>

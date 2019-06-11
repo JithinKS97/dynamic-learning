@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign, react/prop-types */
+/* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
 import { Dropdown, Menu } from 'semantic-ui-react';
 import { fabric } from 'fabric';
@@ -10,6 +10,7 @@ import GoDash from 'react-icons/lib/go/dash';
 import MdPhotoSizeSelectSmall from 'react-icons/lib/md/photo-size-select-small';
 import MdFormatColorFill from 'react-icons/lib/md/format-color-fill';
 import MdClose from 'react-icons/lib/md/close';
+import PropTypes from 'prop-types';
 
 export default class DrawingBoardCmp extends Component {
   constructor(props) {
@@ -499,6 +500,22 @@ export default class DrawingBoardCmp extends Component {
     );
   }
 }
+
+DrawingBoardCmp.propTypes = {
+  interactEnabled: PropTypes.bool,
+  interact: PropTypes.func,
+  toolbarVisible: PropTypes.bool,
+  onChange: PropTypes.func,
+  saveAfterReset: PropTypes.func,
+};
+
+DrawingBoardCmp.defaultProps = {
+  interactEnabled: false,
+  interact: () => null,
+  toolbarVisible: false,
+  onChange: () => null,
+  saveAfterReset: () => null,
+};
 
 /**
  * db.getImg()

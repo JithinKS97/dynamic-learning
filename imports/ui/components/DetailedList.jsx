@@ -1,8 +1,3 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-alert */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable jsx-a11y/mouse-events-have-key-events */
 import React, {
   Fragment,
   useState,
@@ -39,9 +34,7 @@ const ListTile = (props) => {
     isMember,
   } = props;
 
-  const findTime = () => {
-    return moment(time);
-  };
+  const findTime = () => moment(time);
 
   const isOwner = Meteor.userId() === userId && !!isMember;
 
@@ -138,6 +131,8 @@ ListTile.propTypes = {
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired,
+  isMember: PropTypes.bool.isRequired,
 };
 
 const DetailedList = (props) => {
@@ -169,6 +164,7 @@ DetailedList.propTypes = {
   deleteItem: PropTypes.func.isRequired,
   changeTitleOfItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
+  isMember: PropTypes.bool.isRequired,
 };
 
 export default DetailedList;
