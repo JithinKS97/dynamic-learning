@@ -1,6 +1,7 @@
 import React, {
   Fragment,
   useState,
+  useEffect,
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -33,15 +34,18 @@ const ListTile = (props) => {
     isMember,
   } = props;
 
+  useEffect(() => {
+    Tracker.autorun(() => {
+      Meteor.call('getUsername', userId, (err, username) => {
+        changeOwnerName(username);
+      });
+    });
+  }, []);
+
   const findTime = () => moment(time);
 
   const isOwner = Meteor.userId() === userId && !!isMember;
 
-  Tracker.autorun(() => {
-    Meteor.call('getUsername', userId, (err, username) => {
-      changeOwnerName(username);
-    });
-  });
 
   return (
     <Card

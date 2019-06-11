@@ -1,5 +1,5 @@
 import FaPencil from 'react-icons/lib/fa/pencil';
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import {
   Card, Button, Menu, Modal, Input,
 } from 'semantic-ui-react';
@@ -32,11 +32,13 @@ const SimTile = (props) => {
 
   const isOwner = Meteor.userId() === sim.userId && isMember;
 
-  Tracker.autorun(() => {
-    Meteor.call('getUsername', sim.userId, (_err, username) => {
-      changeOwnerName(username);
+  useEffect(() => {
+    Tracker.autorun(() => {
+      Meteor.call('getUsername', sim.userId, (_err, username) => {
+        changeOwnerName(username);
+      });
     });
-  });
+  }, []);
 
   const findTime = () => moment(sim.time);
 
