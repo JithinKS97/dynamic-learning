@@ -1,7 +1,6 @@
 import React, {
   Fragment,
   useState,
-  useEffect,
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
