@@ -35,7 +35,7 @@ const SimTile = (props) => {
     Meteor.call('getUsername', sim.userId, (_err, username) => {
       changeOwnerName(username);
     });
-  }, [sim]);
+  }, [sim.userId]);
 
   const findTime = () => moment(sim.time);
 
