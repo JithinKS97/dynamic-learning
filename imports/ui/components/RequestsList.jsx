@@ -33,7 +33,7 @@ const RequestsList = (props) => {
 
   const displayUsername = (index) => {
     if (usernames.length > 0) {
-      if (usernames[index].username) { return usernames[index].username; }
+      if (usernames[index]) { return usernames[index].username; }
     }
   };
 
