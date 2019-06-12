@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -13,10 +15,10 @@ const RequestsList = (props) => {
   const [usernames, changeUsernames] = useState([]);
 
   useEffect(() => {
-    Meteor.call('getUsernames', props.requests.map(request => request.userId), (err, unames) => {
+    Meteor.call('getUsernames', props.requests.map(request => request.userId), (_err, unames) => {
       changeUsernames(unames);
     });
-  }, []);
+  }, [props.requests]);
 
   const findTime = time => moment(time);
   const { loading } = props;

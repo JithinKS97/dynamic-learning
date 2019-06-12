@@ -12,7 +12,6 @@ import {
   Input,
 } from 'semantic-ui-react';
 import FaPencil from 'react-icons/lib/fa/pencil';
-import { Tracker } from 'meteor/tracker';
 import MdSave from 'react-icons/lib/md/save';
 import moment from 'moment';
 
@@ -35,12 +34,10 @@ const ListTile = (props) => {
   } = props;
 
   useEffect(() => {
-    Tracker.autorun(() => {
-      Meteor.call('getUsername', userId, (err, username) => {
-        changeOwnerName(username);
-      });
+    Meteor.call('getUsername', userId, (err, username) => {
+      changeOwnerName(username);
     });
-  }, []);
+  }, [userId]);
 
   const findTime = () => moment(time);
 

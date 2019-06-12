@@ -3,7 +3,6 @@ import React, { useState, Fragment, useEffect } from 'react';
 import {
   Card, Button, Menu, Modal, Input,
 } from 'semantic-ui-react';
-import { Tracker } from 'meteor/tracker';
 import FaCode from 'react-icons/lib/fa/code';
 import MdSave from 'react-icons/lib/md/save';
 import moment from 'moment';
@@ -33,12 +32,10 @@ const SimTile = (props) => {
   const isOwner = Meteor.userId() === sim.userId && isMember;
 
   useEffect(() => {
-    Tracker.autorun(() => {
-      Meteor.call('getUsername', sim.userId, (_err, username) => {
-        changeOwnerName(username);
-      });
+    Meteor.call('getUsername', sim.userId, (_err, username) => {
+      changeOwnerName(username);
     });
-  }, []);
+  }, [sim]);
 
   const findTime = () => moment(sim.time);
 
