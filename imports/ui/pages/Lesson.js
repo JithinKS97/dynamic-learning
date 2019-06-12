@@ -175,13 +175,14 @@ class Lesson extends React.Component {
         this.save(this.props.lesson._id, slides)
     }
 
-    deleteSim(index) {
+    deleteSim = (index) => {
 
         /**
          * Deletes a particular sim in the slide
          * It accepts the index of the sim to be deleted
          * Takes a slide and delets slides[curSlide].iframes[index]
          */
+        
 
         if(this.props.lesson.userId != Meteor.userId())
             return
@@ -261,7 +262,7 @@ class Lesson extends React.Component {
                                     save = {this.save.bind(this)} 
                                     userId = {this.props.lesson.userId} 
                                     isRndRequired = {false} 
-                                    delete = {this.deleteSim.bind(this)} 
+                                    deleteSim = {this.deleteSim} 
                                     {...this.props.lesson} 
                                     curSlide = {this.state.curSlide}
                                 />
