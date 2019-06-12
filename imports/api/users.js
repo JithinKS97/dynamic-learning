@@ -46,5 +46,5 @@ if(Meteor.isServer) {
   Accounts.validateNewUser(validateNewUser)
   Meteor.publish('getAccounts', function () {
     return Meteor.users.find(); 
-  })
+s  })
 }
