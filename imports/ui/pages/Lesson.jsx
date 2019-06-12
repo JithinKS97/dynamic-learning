@@ -183,7 +183,6 @@ class Lesson extends React.Component {
       this.save(lesson._id, slides);
     }
 
-
     render() {
       const { lessonExists, lesson } = this.props;
       const { curSlide } = this.state;
