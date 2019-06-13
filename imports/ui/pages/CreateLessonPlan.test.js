@@ -1,37 +1,36 @@
-/* eslint-disable */
-import { Meteor } from "meteor/meteor";
-import React from "react";
-import { mount } from "enzyme";
-require("chai");
-import { expect } from "chai";
-import { Router, Route } from "react-router-dom";
-import { createMemoryHistory } from "history";
+/* eslint-disable no-undef */
+import { Meteor } from 'meteor/meteor';
+import React from 'react';
+import { mount, configure } from 'enzyme';
+import { expect } from 'chai';
+import { Router, Route } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+
+require('chai');
 
 if (Meteor.isClient) {
-  import { CreateLessonPlan } from "./CreateLessonPlan";
-  import { configure } from "enzyme";
-  import Adapter from "enzyme-adapter-react-16";
 
-  import { Oscillations, Oscillations1 } from "./CreateLessonPlanTestData.js";
+  import Adapter from 'enzyme-adapter-react-16';
+  import { CreateLessonPlan } from './CreateLessonPlan';
+  import { Oscillations, Oscillations1 } from './CreateLessonPlanTestData.js';
 
   configure({ adapter: new Adapter() });
 
-  describe("LessonplanCreator loading", function() {
+  describe('LessonplanCreator loading', () => {
     let div;
 
     before(() => {
-      div = document.createElement("div");
+      div = document.createElement('div');
       window.domNode = div;
       document.body.appendChild(div);
     });
 
-    it("should load successfully", function() {
+    it('should load successfully', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       wrapper.find(CreateLessonPlan).setState({ ...Oscillations });
@@ -40,22 +39,21 @@ if (Meteor.isClient) {
     });
   });
 
-  describe("Addition and deletion of slide", function() {
+  describe('Addition and deletion of slide', () => {
     let div;
 
     before(() => {
-      div = document.createElement("div");
+      div = document.createElement('div');
       window.domNode = div;
       document.body.appendChild(div);
     });
 
-    it("(no of slides = 2, curSlide = 1), after deletion curSlide should be 0 and content of slide 0 should be displayed", function() {
+    it('(no of slides = 2, curSlide = 1), after deletion curSlide should be 0 and content of slide 0 should be displayed', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
@@ -75,29 +73,28 @@ if (Meteor.isClient) {
       // console.log(CreateLessonPlanWrapper.state().curSlide)
 
       expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
-      expect(
-        CreateLessonPlanWrapper.state().slides[
-          CreateLessonPlanWrapper.state().curSlide
-        ]
-      ).to.deep.include(slideToShowAfterDeletion);
+      expect(CreateLessonPlanWrapper.state()
+        .slides[CreateLessonPlanWrapper.state().curSlide])
+        .to.deep.include(
+          slideToShowAfterDeletion,
+        );
 
       wrapper.unmount();
     });
 
-    it("(no of slides = 1, curSlide = 0), after deletion curSlide should be 0 and slides should reset", function() {
+    it('(no of slides = 1, curSlide = 0), after deletion curSlide should be 0 and slides should reset', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
       CreateLessonPlanWrapper.setState({
         curSlide: 0,
-        slides: [{ notes: "", iframes: [], textboxes: [] }]
+        slides: [{ notes: '', iframes: [], textboxes: [] }],
       });
 
       const instance = CreateLessonPlanWrapper.instance();
@@ -111,18 +108,17 @@ if (Meteor.isClient) {
       // console.log(CreateLessonPlanWrapper.state().curSlide)
 
       expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
-      expect(CreateLessonPlanWrapper.state().slides[0].notes).to.not.equal("");
+      expect(CreateLessonPlanWrapper.state().slides[0].notes).to.not.equal('');
 
       wrapper.unmount();
     });
 
-    it("(no of slides = 3, curSlide = 1, deletedSlide = 1), after deletion curSlide should be 1 and contents of next slide should be displayed", function() {
+    it('(no of slides = 3, curSlide = 1, deletedSlide = 1), after deletion curSlide should be 1 and contents of next slide should be displayed', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
@@ -140,30 +136,25 @@ if (Meteor.isClient) {
 
       // console.log(CreateLessonPlanWrapper.state().slides)
 
-      expect(instance.state.slides[instance.state.curSlide]).to.deep.include(
-        slideToShowAfterDeletion
-      );
+      expect(instance.state.slides[instance.state.curSlide])
+        .to.deep.include(slideToShowAfterDeletion);
 
       wrapper.unmount();
     });
 
-    it("(no of slides = 2, curSlide = 1), after insertion of slide, slides length = 3", function() {
+    it('(no of slides = 2, curSlide = 1), after insertion of slide, slides length = 3', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
       CreateLessonPlanWrapper.setState({
         curSlide: 1,
-        slides: [
-          { notes: "0", iframes: [], textboxes: [] },
-          { notes: "1", iframes: [], textBoxes: [] }
-        ]
+        slides: [{ notes: '0', iframes: [], textboxes: [] }, { notes: '1', iframes: [], textBoxes: [] }],
       });
 
       const instance = CreateLessonPlanWrapper.instance();
@@ -182,22 +173,21 @@ if (Meteor.isClient) {
     });
   });
 
-  describe("Navigation between slides", function() {
+  describe('Navigation between slides', () => {
     let div;
 
     before(() => {
-      div = document.createElement("div");
+      div = document.createElement('div');
       window.domNode = div;
       document.body.appendChild(div);
     });
 
-    it("(no of slides = 2, curSlide = 1), after navigation to slide 0, contents of slide 0 should be displayed", function() {
+    it('(no of slides = 2, curSlide = 1), after navigation to slide 0, contents of slide 0 should be displayed', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
@@ -215,38 +205,36 @@ if (Meteor.isClient) {
       // console.log(CreateLessonPlanWrapper.state().curSlide)
 
       expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
-      expect(
-        CreateLessonPlanWrapper.state().slides[
-          CreateLessonPlanWrapper.state().curSlide
-        ]
-      ).to.deep.include(CreateLessonPlanWrapper.state().slides[0]);
+      expect(CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide])
+        .to.deep.include(
+          CreateLessonPlanWrapper.state().slides[0],
+        );
 
       wrapper.unmount();
     });
   });
 
-  describe("Textbox", function() {
+  describe('Textbox', () => {
     let div;
 
     before(() => {
-      div = document.createElement("div");
+      div = document.createElement('div');
       window.domNode = div;
       document.body.appendChild(div);
     });
 
-    it("should insert a textbox", function() {
+    it('should insert a textbox', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
       CreateLessonPlanWrapper.setState({
-        slides: [{ notes: "0", iframes: [], textboxes: [] }]
+        slides: [{ notes: '0', iframes: [], textboxes: [] }],
       });
 
       const instance = CreateLessonPlanWrapper.instance();
@@ -259,30 +247,25 @@ if (Meteor.isClient) {
       // console.log(CreateLessonPlanWrapper.state().slides)
       // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-      //console.log(CreateLessonPlanWrapper.state().slides[0])
+      // console.log(CreateLessonPlanWrapper.state().slides[0])
 
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes[0].value
-      ).to.equal("new text box");
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes[0].value).to.equal('new text box');
 
       wrapper.unmount();
     });
 
-    it("should delete a textbox", function() {
+    it('should delete a textbox', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
       CreateLessonPlanWrapper.setState({
-        slides: [
-          { notes: "0", iframes: [], textboxes: [{ value: "sample value" }] }
-        ]
+        slides: [{ notes: '0', iframes: [], textboxes: [{ value: 'sample value' }] }],
       });
 
       const instance = CreateLessonPlanWrapper.instance();
@@ -295,38 +278,35 @@ if (Meteor.isClient) {
       // console.log(CreateLessonPlanWrapper.state().slides)
       // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-      //console.log(CreateLessonPlanWrapper.state().slides[0])
+      // console.log(CreateLessonPlanWrapper.state().slides[0])
 
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(0);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
       wrapper.unmount();
     });
   });
 
-  describe("Undo and redo", function() {
+  describe('Undo and redo', () => {
     let div;
 
     before(() => {
-      div = document.createElement("div");
+      div = document.createElement('div');
       window.domNode = div;
       document.body.appendChild(div);
     });
 
-    it("checks the working of undo", function() {
+    it('checks the working of undo', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
       CreateLessonPlanWrapper.setState({
-        slides: [{ notes: "0", iframes: [], textboxes: [] }]
+        slides: [{ notes: '0', iframes: [], textboxes: [] }],
       });
 
       const instance = CreateLessonPlanWrapper.instance();
@@ -339,49 +319,38 @@ if (Meteor.isClient) {
       instance.addTextBox();
 
       instance.undo();
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(2);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(2);
 
       instance.undo();
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(1);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
 
       instance.undo();
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(0);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
       instance.undo();
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(0);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
       instance.addTextBox();
       instance.deleteTextBox(0);
 
       instance.undo();
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(1);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
 
       wrapper.unmount();
     });
 
-    it("checks the working of redo", function() {
+    it('checks the working of redo', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
       CreateLessonPlanWrapper.setState({
-        slides: [{ notes: "0", iframes: [], textboxes: [] }]
+        slides: [{ notes: '0', iframes: [], textboxes: [] }],
       });
 
       const instance = CreateLessonPlanWrapper.instance();
@@ -393,45 +362,38 @@ if (Meteor.isClient) {
 
       instance.undo();
 
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(0);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
       instance.redo();
 
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(1);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
 
       instance.deleteTextBox(0);
 
       instance.undo();
       instance.redo();
 
-      expect(
-        CreateLessonPlanWrapper.state().slides[0].textboxes.length
-      ).to.equal(0);
+      expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
       wrapper.unmount();
     });
   });
 
-  describe("Changing size of the canvas", function() {
+  describe('Changing size of the canvas', () => {
     let div;
 
     before(() => {
-      div = document.createElement("div");
+      div = document.createElement('div');
       window.domNode = div;
       document.body.appendChild(div);
     });
 
-    it("checks the working of increase canvas size", function() {
+    it('checks the working of increase canvas size', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
@@ -443,39 +405,26 @@ if (Meteor.isClient) {
       instance.changePageCount(1);
 
       expect(
-        getComputedStyle(
-          wrapper
-            .find(".canvas-cont")
-            .at(0)
-            .getDOMNode()
-        ).getPropertyValue("height")
-      ).to.equal("1200px");
+        getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+      ).to.equal('1200px');
 
       instance.changePageCount(1);
 
       expect(
-        getComputedStyle(
-          wrapper
-            .find(".canvas-cont")
-            .at(0)
-            .getDOMNode()
-        ).getPropertyValue("height")
-      ).to.equal("1500px");
+        getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+      ).to.equal('1500px');
 
-      expect(CreateLessonPlanWrapper.state().slides[0].note).to.equal(
-        Oscillations.slides[0].note
-      );
+      expect(CreateLessonPlanWrapper.state().slides[0].note).to.equal(Oscillations.slides[0].note);
 
       wrapper.unmount();
     });
 
-    it("checks the working of decrease canvas size", function() {
+    it('checks the working of decrease canvas size', () => {
       const wrapper = mount(
         <Router history={createMemoryHistory()}>
           <Route path="/" render={() => <CreateLessonPlan />} />
         </Router>,
-
-        { attachTo: window.domNode }
+        { attachTo: window.domNode },
       );
 
       const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
@@ -487,24 +436,14 @@ if (Meteor.isClient) {
       instance.changePageCount(1);
 
       expect(
-        getComputedStyle(
-          wrapper
-            .find(".canvas-cont")
-            .at(0)
-            .getDOMNode()
-        ).getPropertyValue("height")
-      ).to.equal("1200px");
+        getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+      ).to.equal('1200px');
 
       instance.changePageCount(-1);
 
       expect(
-        getComputedStyle(
-          wrapper
-            .find(".canvas-cont")
-            .at(0)
-            .getDOMNode()
-        ).getPropertyValue("height")
-      ).to.equal("900px");
+        getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+      ).to.equal('900px');
 
       wrapper.unmount();
     });
