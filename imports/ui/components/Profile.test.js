@@ -3,17 +3,14 @@
 /* eslint-disable no-undef */
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, configure } from 'enzyme';
 import { expect } from 'chai';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-require('chai');
-
 if (Meteor.isClient) {
-  import Profile from './Profile';
-  import { configure } from 'enzyme';
   import Adapter from 'enzyme-adapter-react-16';
+  import Profile from './Profile';
 
   configure({ adapter: new Adapter() });
 

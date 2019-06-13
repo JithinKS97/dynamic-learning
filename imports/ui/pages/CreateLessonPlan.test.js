@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-filename-extension */
 /* eslint-disable no-undef */
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
@@ -9,539 +10,544 @@ import { createMemoryHistory } from 'history';
 require('chai');
 
 if (Meteor.isClient) {
-	import Adapter from 'enzyme-adapter-react-16';
-	import { CreateLessonPlan } from './CreateLessonPlan';
-	import { Oscillations, Oscillations1 } from './CreateLessonPlanTestData.js';
+  import Adapter from 'enzyme-adapter-react-16';
+  import { CreateLessonPlan } from './CreateLessonPlan';
+  import { Oscillations, Oscillations1 } from './CreateLessonPlanTestData.js';
 
-	configure({ adapter: new Adapter() });
+  configure({ adapter: new Adapter() });
 
-	describe('CreateLessonPlan', () => {
-		describe('Loading of CreateLessonplan', () => {
-			let div;
+  describe('CreateLessonPlan', () => {
+    describe('Loading of CreateLessonplan', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('should load successfully', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('should load successfully', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				wrapper.find(CreateLessonPlan).setState({ ...Oscillations });
+        wrapper.find(CreateLessonPlan).setState({ ...Oscillations });
 
-				wrapper.unmount();
-			});
-		});
+        wrapper.unmount();
+      });
+    });
 
-		describe('Addition and deletion of slide', () => {
-			let div;
+    describe('Addition and deletion of slide', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('(no of slides = 2, curSlide = 1), after insertion of slide, slides length = 3, curSlide = 2', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('(no of slides = 2, curSlide = 1), after insertion of slide, slides length = 3, curSlide = 2', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({
-					curSlide: 1,
-					slides: [ { notes: '0', iframes: [], textboxes: [] }, { notes: '1', iframes: [], textBoxes: [] } ]
-				});
+        CreateLessonPlanWrapper.setState({
+          curSlide: 1,
+          slides: [{ notes: '0', iframes: [], textboxes: [] }, { notes: '1', iframes: [], textBoxes: [] }],
+        });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				instance.addNewSlide();
+        instance.addNewSlide();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				expect(CreateLessonPlanWrapper.state().slides.length).to.equal(3);
-				expect(CreateLessonPlanWrapper.state().curSlide).to.equal(2);
+        expect(CreateLessonPlanWrapper.state().slides.length).to.equal(3);
+        expect(CreateLessonPlanWrapper.state().curSlide).to.equal(2);
 
-				wrapper.unmount();
-			});
+        wrapper.unmount();
+      });
 
-			it('(no of slides = 2, curSlide = 1), after deletion, curSlide should be 0 and content of slide 0 should be displayed', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('(no of slides = 2, curSlide = 1), after deletion, curSlide should be 0 and content of slide 0 should be displayed', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({ curSlide: 1, ...Oscillations });
+        CreateLessonPlanWrapper.setState({ curSlide: 1, ...Oscillations });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				const slideToShowAfterDeletion = instance.state.slides[0];
+        const slideToShowAfterDeletion = instance.state.slides[0];
 
-				instance.deleteSlide(1);
+        instance.deleteSlide(1);
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
-				expect(
-					CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide]
-				).to.deep.include(slideToShowAfterDeletion);
+        expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
+        expect(
+          CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide],
+        ).to.deep.include(slideToShowAfterDeletion);
 
-				wrapper.unmount();
-			});
+        wrapper.unmount();
+      });
 
-			it('(no of slides = 1, curSlide = 0), after deletion, curSlide should be 0 and slides should reset', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('(no of slides = 1, curSlide = 0), after deletion, curSlide should be 0 and slides should reset', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({
-					curSlide: 0,
-					slides: [ { notes: '', iframes: [], textboxes: [] } ]
-				});
+        CreateLessonPlanWrapper.setState({
+          curSlide: 0,
+          slides: [{ notes: '', iframes: [], textboxes: [] }],
+        });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				instance.deleteSlide(0);
+        instance.deleteSlide(0);
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
-				expect(CreateLessonPlanWrapper.state().slides[0].notes).to.not.equal('');
+        expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
+        expect(CreateLessonPlanWrapper.state().slides[0].notes).to.not.equal('');
 
-				wrapper.unmount();
-			});
+        wrapper.unmount();
+      });
 
-			it('(no of slides = 3, curSlide = 1, deletedSlide = 1), after deletion curSlide should be 1 and contents of next slide should be displayed', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('(no of slides = 3, curSlide = 1, deletedSlide = 1), after deletion curSlide should be 1 and contents of next slide should be displayed', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({ curSlide: 1, ...Oscillations1 });
+        CreateLessonPlanWrapper.setState({ curSlide: 1, ...Oscillations1 });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				const slideToShowAfterDeletion = instance.state.slides[2];
+        const slideToShowAfterDeletion = instance.state.slides[2];
 
-				instance.deleteSlide(1);
+        instance.deleteSlide(1);
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().slides)
 
-				expect(instance.state.slides[instance.state.curSlide]).to.deep.include(slideToShowAfterDeletion);
+        expect(instance.state.slides[instance.state.curSlide])
+          .to
+          .deep
+          .include(slideToShowAfterDeletion);
 
-				wrapper.unmount();
-			});
-		});
+        wrapper.unmount();
+      });
+    });
 
-		describe('Navigation between slides', () => {
-			let div;
+    describe('Navigation between slides', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('(no of slides = 2, curSlide = 1), after navigation to slide 0, contents of slide 0 should be displayed', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('(no of slides = 2, curSlide = 1), after navigation to slide 0, contents of slide 0 should be displayed', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({ curSlide: 1, ...Oscillations });
+        CreateLessonPlanWrapper.setState({ curSlide: 1, ...Oscillations });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				instance.saveChanges(undefined, 0);
+        instance.saveChanges(undefined, 0);
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
-				expect(
-					CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide]
-				).to.deep.include(CreateLessonPlanWrapper.state().slides[0]);
+        expect(CreateLessonPlanWrapper.state().curSlide).to.equal(0);
+        expect(
+          CreateLessonPlanWrapper.state().slides[CreateLessonPlanWrapper.state().curSlide],
+        ).to.deep.include(CreateLessonPlanWrapper.state().slides[0]);
 
-				wrapper.unmount();
-			});
-		});
+        wrapper.unmount();
+      });
+    });
 
-		describe('Textbox', () => {
-			let div;
+    describe('Textbox', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('should insert a textbox', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('should insert a textbox', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({
-					slides: [ { notes: '0', iframes: [], textboxes: [] } ]
-				});
+        CreateLessonPlanWrapper.setState({
+          slides: [{ notes: '0', iframes: [], textboxes: [] }],
+        });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				instance.addTextBox();
+        instance.addTextBox();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				// console.log(CreateLessonPlanWrapper.state().slides[0])
+        // console.log(CreateLessonPlanWrapper.state().slides[0])
 
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes[0].value).to.equal('new text box');
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes[0].value).to.equal('new text box');
 
-				wrapper.unmount();
-			});
+        wrapper.unmount();
+      });
 
-			it('should delete a textbox', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('should delete a textbox', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({
-					slides: [ { notes: '0', iframes: [], textboxes: [ { value: 'sample value' } ] } ]
-				});
+        CreateLessonPlanWrapper.setState({
+          slides: [{ notes: '0', iframes: [], textboxes: [{ value: 'sample value' }] }],
+        });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				instance.deleteTextBox(0);
+        instance.deleteTextBox(0);
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				// console.log(CreateLessonPlanWrapper.state().slides[0])
+        // console.log(CreateLessonPlanWrapper.state().slides[0])
 
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
-				wrapper.unmount();
-			});
-		});
+        wrapper.unmount();
+      });
+    });
 
-		describe('Undo and redo', () => {
-			let div;
+    describe('Undo and redo', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('checks the working of undo', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('checks the working of undo', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({
-					slides: [ { notes: '0', iframes: [], textboxes: [] } ]
-				});
+        CreateLessonPlanWrapper.setState({
+          slides: [{ notes: '0', iframes: [], textboxes: [] }],
+        });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				instance.addTextBox();
-				instance.addTextBox();
-				instance.addTextBox();
+        instance.addTextBox();
+        instance.addTextBox();
+        instance.addTextBox();
 
-				instance.undo();
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(2);
+        instance.undo();
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(2);
 
-				instance.undo();
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
+        instance.undo();
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
 
-				instance.undo();
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
+        instance.undo();
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
-				instance.undo();
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
+        instance.undo();
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
-				instance.addTextBox();
-				instance.deleteTextBox(0);
+        instance.addTextBox();
+        instance.deleteTextBox(0);
 
-				instance.undo();
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
+        instance.undo();
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
 
-				wrapper.unmount();
-			});
+        wrapper.unmount();
+      });
 
-			it('checks the working of redo', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('checks the working of redo', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({
-					slides: [ { notes: '0', iframes: [], textboxes: [] } ]
-				});
+        CreateLessonPlanWrapper.setState({
+          slides: [{ notes: '0', iframes: [], textboxes: [] }],
+        });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				// console.log(CreateLessonPlanWrapper.state().slides)
-				// console.log(CreateLessonPlanWrapper.state().curSlide)
+        // console.log(CreateLessonPlanWrapper.state().slides)
+        // console.log(CreateLessonPlanWrapper.state().curSlide)
 
-				instance.addTextBox();
+        instance.addTextBox();
 
-				instance.undo();
+        instance.undo();
 
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
-				instance.redo();
+        instance.redo();
 
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(1);
 
-				instance.deleteTextBox(0);
+        instance.deleteTextBox(0);
 
-				instance.undo();
-				instance.redo();
+        instance.undo();
+        instance.redo();
 
-				expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
+        expect(CreateLessonPlanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
-				wrapper.unmount();
-			});
-		});
+        wrapper.unmount();
+      });
+    });
 
-		describe('Changing size of the canvas', () => {
-			let div;
+    describe('Changing size of the canvas', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('checks the working of increase canvas size', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('checks the working of increase canvas size', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({ ...Oscillations });
+        CreateLessonPlanWrapper.setState({ ...Oscillations });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				instance.changePageCount(1);
+        instance.changePageCount(1);
 
-				expect(
-					getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')
-				).to.equal('1200px');
+        expect(
+          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+        ).to.equal('1200px');
 
-				instance.changePageCount(1);
+        instance.changePageCount(1);
 
-				expect(
-					getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')
-				).to.equal('1500px');
+        expect(
+          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+        ).to.equal('1500px');
 
-				expect(CreateLessonPlanWrapper.state().slides[0].note).to.equal(Oscillations.slides[0].note);
+        expect(CreateLessonPlanWrapper.state().slides[0].note)
+          .to
+          .equal(Oscillations.slides[0].note);
 
-				wrapper.unmount();
-			});
+        wrapper.unmount();
+      });
 
-			it('checks the working of decrease canvas size', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('checks the working of decrease canvas size', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({ ...Oscillations });
+        CreateLessonPlanWrapper.setState({ ...Oscillations });
 
-				const instance = CreateLessonPlanWrapper.instance();
+        const instance = CreateLessonPlanWrapper.instance();
 
-				instance.changePageCount(1);
+        instance.changePageCount(1);
 
-				expect(
-					getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')
-				).to.equal('1200px');
+        expect(
+          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+        ).to.equal('1200px');
 
-				instance.changePageCount(-1);
+        instance.changePageCount(-1);
 
-				expect(
-					getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')
-				).to.equal('900px');
+        expect(
+          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
+        ).to.equal('900px');
 
-				wrapper.unmount();
-			});
-		});
+        wrapper.unmount();
+      });
+    });
 
-		describe('Addition and deletion of sim', () => {
-			let div;
+    describe('Addition and deletion of sim', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('should add a sim to the current slide', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('should add a sim to the current slide', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
 
-				CreateLessonPlanWrapper.setState({ ...Oscillations });
+        CreateLessonPlanWrapper.setState({ ...Oscillations });
 
-				CreateLessonPlanWrapper.setState({ curSlide: 1 });
+        CreateLessonPlanWrapper.setState({ curSlide: 1 });
 
-				const AddSimWrapper = wrapper.find('AddSim');
+        const AddSimWrapper = wrapper.find('AddSim');
 
-				const AddSimInstance = AddSimWrapper.instance();
+        const AddSimInstance = AddSimWrapper.instance();
 
-				AddSimWrapper.setState({
-					node: {
-						username: 'jithunni.ks',
-						project_id: 'bHKMbX-hN',
-						w: '640px',
-						h: '360px'
-					}
-				});
+        AddSimWrapper.setState({
+          node: {
+            username: 'jithunni.ks',
+            project_id: 'bHKMbX-hN',
+            w: '640px',
+            h: '360px',
+          },
+        });
 
-				AddSimInstance.addToLesson();
+        AddSimInstance.addToLesson();
 
-				expect(CreateLessonPlanWrapper.state().slides[1].iframes.length).to.equal(1);
+        expect(CreateLessonPlanWrapper.state().slides[1].iframes.length).to.equal(1);
 
-				wrapper.unmount();
-			});
+        wrapper.unmount();
+      });
 
-			it('should delete sim', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('should delete sim', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const componentWrapper = wrapper.find(CreateLessonPlan);
+        const componentWrapper = wrapper.find(CreateLessonPlan);
 
-				componentWrapper.setState({ ...Oscillations });
+        componentWrapper.setState({ ...Oscillations });
 
-				const componentInstance = componentWrapper.instance();
+        const componentInstance = componentWrapper.instance();
 
-				componentInstance.deleteSim(0);
+        componentInstance.deleteSim(0);
 
-				expect(componentWrapper.state().slides[0].iframes.length).to.equal(0);
+        expect(componentWrapper.state().slides[0].iframes.length).to.equal(0);
 
-				wrapper.unmount();
-			});
-		});
+        wrapper.unmount();
+      });
+    });
 
-		describe('Interact and draw mode toggle', () => {
-			let div;
+    describe('Interact and draw mode toggle', () => {
+      let div;
 
-			before(() => {
-				div = document.createElement('div');
-				window.domNode = div;
-				document.body.appendChild(div);
-			});
+      before(() => {
+        div = document.createElement('div');
+        window.domNode = div;
+        document.body.appendChild(div);
+      });
 
-			it('should correctly enable and disable pointer events in canvas', () => {
-				const wrapper = mount(
-					<Router history={createMemoryHistory()}>
-						<Route path="/" render={() => <CreateLessonPlan />} />
-					</Router>,
-					{ attachTo: window.domNode }
-				);
+      it('should correctly enable and disable pointer events in canvas', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
 
-				const CreateLessonplanInstance = wrapper.find(CreateLessonPlan).instance();
+        const CreateLessonplanInstance = wrapper.find(CreateLessonPlan).instance();
 
-				expect(getComputedStyle(wrapper.find('canvas').at(0).getDOMNode()).getPropertyValue('pointer-events')).to.equal('auto');
-				expect(CreateLessonplanInstance.state.interactEnabled).to.equal(false);
+        expect(getComputedStyle(wrapper.find('canvas').at(0).getDOMNode()).getPropertyValue('pointer-events')).to.equal('auto');
+        expect(CreateLessonplanInstance.state.interactEnabled).to.equal(false);
 
-				CreateLessonplanInstance.interact();
+        CreateLessonplanInstance.interact();
 
-				expect(getComputedStyle(wrapper.find('canvas').at(0).getDOMNode()).getPropertyValue('pointer-events')).to.equal('none');
-				expect(CreateLessonplanInstance.state.interactEnabled).to.equal(true);
+        expect(getComputedStyle(wrapper.find('canvas').at(0).getDOMNode()).getPropertyValue('pointer-events')).to.equal('none');
+        expect(CreateLessonplanInstance.state.interactEnabled).to.equal(true);
 
-				wrapper.unmount();
-			});
-		});
-	});
+        wrapper.unmount();
+      });
+    });
+  });
 }
 
 /*
