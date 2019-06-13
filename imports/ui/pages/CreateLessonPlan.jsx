@@ -566,7 +566,6 @@ export class CreateLessonPlan extends React.Component {
     are made. Unchecking the interact, unsets the
     pointer events.
     */
-
     const { interactEnabled } = this.state;
 
     if (this.addSim.state.isOpen) return;

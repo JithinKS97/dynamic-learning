@@ -46,9 +46,9 @@ if (Meteor.isClient) {
 				div = document.createElement('div');
 				window.domNode = div;
 				document.body.appendChild(div);
-      });
-      
-      it('(no of slides = 2, curSlide = 1), after insertion of slide, slides length = 3, curSlide = 2', () => {
+			});
+
+			it('(no of slides = 2, curSlide = 1), after insertion of slide, slides length = 3, curSlide = 2', () => {
 				const wrapper = mount(
 					<Router history={createMemoryHistory()}>
 						<Route path="/" render={() => <CreateLessonPlan />} />
@@ -73,8 +73,8 @@ if (Meteor.isClient) {
 				// console.log(CreateLessonPlanWrapper.state().slides)
 				// console.log(CreateLessonPlanWrapper.state().curSlide)
 
-        expect(CreateLessonPlanWrapper.state().slides.length).to.equal(3);
-        expect(CreateLessonPlanWrapper.state().curSlide).to.equal(2);
+				expect(CreateLessonPlanWrapper.state().slides.length).to.equal(3);
+				expect(CreateLessonPlanWrapper.state().curSlide).to.equal(2);
 
 				wrapper.unmount();
 			});
@@ -510,6 +510,37 @@ if (Meteor.isClient) {
 				wrapper.unmount();
 			});
 		});
+
+		describe('Interact and draw mode toggle', () => {
+			let div;
+
+			before(() => {
+				div = document.createElement('div');
+				window.domNode = div;
+				document.body.appendChild(div);
+			});
+
+			it('should correctly enable and disable pointer events in canvas', () => {
+				const wrapper = mount(
+					<Router history={createMemoryHistory()}>
+						<Route path="/" render={() => <CreateLessonPlan />} />
+					</Router>,
+					{ attachTo: window.domNode }
+				);
+
+				const CreateLessonplanInstance = wrapper.find(CreateLessonPlan).instance();
+
+				expect(getComputedStyle(wrapper.find('canvas').at(0).getDOMNode()).getPropertyValue('pointer-events')).to.equal('auto');
+				expect(CreateLessonplanInstance.state.interactEnabled).to.equal(false);
+
+				CreateLessonplanInstance.interact();
+
+				expect(getComputedStyle(wrapper.find('canvas').at(0).getDOMNode()).getPropertyValue('pointer-events')).to.equal('none');
+				expect(CreateLessonplanInstance.state.interactEnabled).to.equal(true);
+
+				wrapper.unmount();
+			});
+		});
 	});
 }
 
@@ -522,9 +553,9 @@ if (Meteor.isClient) {
     2) Moving to any slide by pressing it - check
     3) Deletion of a slide - check
     4) Addition of new slide - check
-    5) Interact and draw
-    6) Addition of simulations
-    7) Undo and redo
+    5) Interact and draw - check
+    6) Addition of simulations - check
+    7) Undo and redo - check
     8) Increasing and decreasing - check
     9) According the position of simulation, allow or disallow changing of size of canvas
 */

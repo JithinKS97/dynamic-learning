@@ -14,7 +14,6 @@ export const Oscillations = {
           x: 50,
           y: 50,
           data: {},
-          pane: null,
         },
       ],
       pageCount: 0,
