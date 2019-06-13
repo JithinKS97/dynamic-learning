@@ -5,7 +5,7 @@ import { Tracker } from 'meteor/tracker';
 import {
   Button, Form, Modal,
 } from 'semantic-ui-react';
-import { Classes } from '../../api/classes';
+import Classes from '../../api/classes';
 
 export default class StudentClasses extends React.Component {
   constructor(props) {
