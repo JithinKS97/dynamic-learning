@@ -70,7 +70,6 @@ export default class AddSim extends Component {
         x: 50,
         y: 50,
         data: {},
-        pane: null,
       };
       allSlides[curSlide].iframes.push(sim);
       const { saveChanges } = this.props;
