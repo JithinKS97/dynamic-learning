@@ -451,7 +451,7 @@ if (Meteor.isClient) {
         wrapper.unmount();
       });
 
-      it('should not reduce the size of the canvas if a textbox/sim overflows after', () => {
+      it('should not reduce the size of the canvas if a textbox/sim overflows after the reduction ( checkCanvasSize returns 1)', () => {
         const wrapper = mount(
           <Router history={createMemoryHistory()}>
             <Route path="/" render={() => <CreateLessonPlan />} />
