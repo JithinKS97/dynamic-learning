@@ -450,6 +450,37 @@ if (Meteor.isClient) {
 
         wrapper.unmount();
       });
+
+      it('should not reduce the size of the canvas if a textbox/sim overflows after', () => {
+        const wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <CreateLessonPlan />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+
+        const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
+        const CreateLessonPlanInstance = CreateLessonPlanWrapper.instance();
+        CreateLessonPlanWrapper.setState({ ...Oscillations });
+        CreateLessonPlanInstance.changePageCount(1);
+        CreateLessonPlanWrapper.setState({
+          slides: [{
+            note: [],
+            iframes: [],
+            pageCount: 1,
+            textboxes: [
+              {
+                value: 'new text box',
+                x: 50,
+                y: 900,
+              },
+            ],
+          },
+          ],
+        });
+        expect(CreateLessonPlanInstance.checkCanvasSize()).to.equal(1);
+        wrapper.unmount();
+      });
     });
 
     describe('Addition and deletion of sim', () => {
@@ -563,5 +594,5 @@ if (Meteor.isClient) {
     6) Addition of simulations - check
     7) Undo and redo - check
     8) Increasing and decreasing - check
-    9) According the position of simulation, allow or disallow changing of size of canvas
+    9) According the position of simulation, allow or disallow changing of size of canvas - check
 */

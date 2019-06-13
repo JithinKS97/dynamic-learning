@@ -627,8 +627,7 @@ export class CreateLessonPlan extends React.Component {
     }
 
     const { scaleX } = this.state;
-
-    if (($('canvas')[0].height - 300) * scaleX < maxHeight) return 1;
+    if (($('.canvas-cont').height() - 300) * scaleX < maxHeight) return 1;
 
     return 0;
   }
