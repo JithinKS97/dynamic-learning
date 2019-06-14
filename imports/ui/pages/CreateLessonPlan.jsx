@@ -131,7 +131,7 @@ export class CreateLessonPlan extends React.Component {
           this.pushSlide(slides);
 
           this.setSizeOfPage(0);
-          this.db.reset('0');
+          this.db.reset();
 
           this.saveChanges(slides);
           this.interact();
@@ -281,7 +281,7 @@ export class CreateLessonPlan extends React.Component {
       () => {
         this.pageCount = 0;
         this.setSizeOfPage(0);
-        this.db.reset('0');
+        this.db.reset();
       },
     );
   }
@@ -331,7 +331,7 @@ export class CreateLessonPlan extends React.Component {
         const { slides } = this.state;
         this.pushSlide(slides);
         this.setSizeOfPage(0);
-        this.db.reset('0');
+        this.db.reset();
       },
     );
   }
@@ -690,7 +690,7 @@ export class CreateLessonPlan extends React.Component {
          * When reset is called, we need not push the slide to undostack
          */
         this.preventUndo = true;
-        this.db.reset('0');
+        this.db.reset();
         this.preventUndo = false;
         this.db.setImg(slides[curSlide].note);
 
@@ -701,11 +701,7 @@ export class CreateLessonPlan extends React.Component {
 
         if (!slides[curSlide].note) {
           this.preventUndo = true;
-          this.db.reset({
-            webStorage: false,
-            history: false,
-            background: true,
-          });
+          this.db.reset();
           this.preventUndo = false;
         }
       },
@@ -742,7 +738,7 @@ export class CreateLessonPlan extends React.Component {
 
     this.preventUndo = true;
 
-    this.db.reset('0');
+    this.db.reset();
 
     this.preventUndo = false;
 

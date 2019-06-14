@@ -14,54 +14,39 @@ if (Meteor.isClient) {
 
   configure({ adapter: new Adapter() });
 
-  describe('Loading profile page', () => {
+  describe('Profiles', () => {
     let div;
+    let wrapper;
 
     before(() => {
       div = document.createElement('div');
       window.domNode = div;
       document.body.appendChild(div);
     });
-
-    it('Should load profile properly', () => {
-      const wrapper = mount(
-        <Router history={createMemoryHistory()}>
-          <Route path="/" render={() => <Profile />} />
-        </Router>,
-        { attachTo: window.domNode },
-      );
-
-      wrapper.unmount();
-    });
-  });
-
-  describe('Testing functions relating to information on profile', () => {
-    let div;
-
-    before(() => {
-      div = document.createElement('div');
-      window.domNode = div;
-      document.body.appendChild(div);
+    describe('Loading profile page', () => {
+      it('Should load profile properly', () => {
+        wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <Profile />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+      });
     });
 
-    it('should update school properly', () => {
-      const wrapper = mount(
-        <Router history={createMemoryHistory()}>
-          <Route path="/" render={() => <Profile />} />
-        </Router>,
-        { attachTo: window.domNode },
-      );
+    describe('Testing functions relating to information on profile', () => {
+      it('should update school properly', () => {
+        const ProfileWrapper = wrapper.find(Profile);
+        ProfileWrapper.setState({ user: 'ad665' });
 
-      const ProfileWrapper = wrapper.find(Profile);
-      ProfileWrapper.setState({ user: 'ad665' });
+        const instance = ProfileWrapper.instance();
+        instance.school.value = 'Cornell University';
 
-      const instance = ProfileWrapper.instance();
-      instance.school.value = 'Cornell University';
+        instance.updateSchool();
+        expect(ProfileWrapper.state().school).to.equal('Cornell University');
 
-      instance.updateSchool();
-      expect(ProfileWrapper.state().school).to.equal('Cornell University');
-
-      wrapper.unmount();
+        wrapper.unmount();
+      });
     });
   });
 }

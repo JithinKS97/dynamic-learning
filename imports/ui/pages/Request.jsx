@@ -35,7 +35,7 @@ import 'semantic-ui-css/semantic.min.css';
     about the simulations that they are trying to make.
 */
 
-class Request extends React.Component {
+export class Request extends React.Component {
   constructor(props) {
     super(props);
 
