@@ -462,7 +462,7 @@ if (Meteor.isClient) {
         const CreateLessonPlanWrapper = wrapper.find(CreateLessonPlan);
         const CreateLessonPlanInstance = CreateLessonPlanWrapper.instance();
         CreateLessonPlanWrapper.setState({ ...Oscillations });
-        CreateLessonPlanInstance.changePageCount(1);
+        CreateLessonPlanInstance.changePageCount(1); // canvas size set to 1200px
         CreateLessonPlanWrapper.setState({
           slides: [{
             note: [],
@@ -472,9 +472,9 @@ if (Meteor.isClient) {
               {
                 value: 'new text box',
                 x: 50,
-                y: 900,
-              },
-            ],
+                y: 900, // the y value is 900 px, so after reduction
+              }, // canvas size becomes 900 which is < bottom most point ( 900 + height of textbox)
+            ], // So reduction should not be allowed
           },
           ],
         });
