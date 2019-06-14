@@ -20,11 +20,14 @@ if (Meteor.isClient) {
     let CreateLessonplanWrapper;
     let CreateLessonplanInstance;
 
-    describe('Loading of CreateLessonplan', () => {
+    describe('Mounting of CreateLessonplan', () => {
       before(() => {
         div = document.createElement('div');
         window.domNode = div;
         document.body.appendChild(div);
+      });
+
+      it('should mount successfully', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
             <Route path="/" render={() => <CreateLessonPlan />} />
@@ -33,9 +36,6 @@ if (Meteor.isClient) {
         );
         CreateLessonplanWrapper = wrapper.find(CreateLessonPlan);
         CreateLessonplanInstance = CreateLessonplanWrapper.instance();
-      });
-
-      it('should load successfully', () => {
         CreateLessonplanWrapper.setState({ ...Oscillations });
       });
     });
@@ -142,9 +142,6 @@ if (Meteor.isClient) {
         CreateLessonplanInstance.undo();
         expect(CreateLessonplanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
-        // CreateLessonplanInstance.undo();
-        // expect(CreateLessonplanWrapper.state().slides[0].textboxes.length).to.equal(2);
-
         CreateLessonplanInstance.addTextBox();
         CreateLessonplanInstance.deleteTextBox(0);
 
@@ -196,6 +193,7 @@ if (Meteor.isClient) {
           .to
           .equal(Oscillations.slides[0].note);
 
+        // Revert the changes
         CreateLessonplanInstance.changePageCount(-1);
         CreateLessonplanInstance.changePageCount(-1);
       });
