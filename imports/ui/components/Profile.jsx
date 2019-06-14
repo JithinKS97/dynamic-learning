@@ -34,7 +34,7 @@ export default class Profile extends React.Component {
 
       if (Meteor.user()) {
         this.setState({
-          user: Meteor.user().username, 
+          user: Meteor.user().username,
         })
       }
       if (Meteor.user() && Meteor.user().profile) {
@@ -42,14 +42,16 @@ export default class Profile extends React.Component {
           type: Meteor.user().profile['accountType']
         })
       }
-      if (Meteor.user() && Meteor.user().services && Meteor.user().services.github) {
-        this.setState({
-          user: Meteor.user().services.github.username,
-          type: 'Standard'
-        })
-      }
-      if (Meteor.user() && Meteor.user().services && Meteor.user().services.google) {
-        console.log(Meteor.user().services.google)
+      if (Meteor.user() && Meteor.user().services) {
+        if (Meteor.user().services.github) {
+          this.setState({
+            user: Meteor.user().services.github.username,
+            type: 'Standard'
+          })
+        }
+        else if (Meteor.user().services.google) {
+          console.log(Meteor.user().services.google)
+        }
       }
       if (Meteor.user() && Meteor.user().school) {
         this.setState({

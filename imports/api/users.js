@@ -1,12 +1,11 @@
-/* eslint-disable*/
-
 import SimpleSchema from 'simpl-schema';
 import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 
 export const validateNewUser = (user) => {
-  const email = user.emails[0].address;
+  const email = user.services.github ? user.services.github.email :
+    (user.services.google ? user.services.google.email : user.emails[0].address);
   new SimpleSchema({
     email: {
       type: String,
@@ -32,18 +31,21 @@ Meteor.methods({
     return _idArray.map(_id => usersMap[_id]);
   },
   'updateSchool'(username, school) {
-    Meteor.users.update({username: username}, { $set: {'school': school} }); 
+    Meteor.users.update({ username: username }, { $set: { 'school': school } });
   },
 
   'addClass'(username, classcode) {
-    Meteor.users.update({username: username}, { $push: {'classes': classcode} } )
+    Meteor.users.update({ username: username }, { $push: { 'classes': classcode } })
   },
   'deleteAllClasses'(username) {
-    Meteor.users.update({username: username}, { $set: {'classes': [] }})
+    Meteor.users.update({ username: username }, { $set: { 'classes': [] } })
+  },
+  'removeUser'(username) {
+    Meteor.users.remove({ username: username });
   }
 })
 
-if(Meteor.isServer) {
+if (Meteor.isServer) {
   Accounts.validateNewUser(validateNewUser)
   Meteor.publish('getAccounts', function () {
     return Meteor.users.find();
@@ -66,5 +68,4 @@ if(Meteor.isServer) {
         secret: process.env.googlesecret
       }
     });
-    return Meteor.users.find(); 
 }

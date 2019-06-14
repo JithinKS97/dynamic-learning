@@ -7,49 +7,57 @@ import { Tracker } from 'meteor/tracker'
 
 export default class SideBar extends React.Component {
 
-    constructor(props) {
+  constructor(props) {
 
-        super(props)
-        this.state = {
-            user: ''
-        }
-
+    super(props)
+    this.state = {
+      user: ''
     }
 
-    componentDidMount() {
+  }
 
-        Tracker.autorun(() => {
+  componentDidMount() {
 
-            if (Meteor.user())
-                this.setState({
-                    user: Meteor.user().username
-                })
-            if (Meteor.user() && Meteor.user().services && Meteor.user().services.github) {
-                this.setState({
-                    user: Meteor.user().services.github.username
-                })
-            }
+    Meteor.subscribe('getAccounts');
+    Meteor.subscribe('classes');
 
+    Tracker.autorun(() => {
+
+      if (Meteor.user())
+        this.setState({
+          user: Meteor.user().username
         })
-    }
+      if (Meteor.user() && Meteor.user().services) {
+        if (Meteor.user().services.github) {
+          this.setState({
+            user: Meteor.user().services.github.username
+          })
+        }
+        else if (Meteor.user().services.google) {
+          console.log(Meteor.user().services.google)
+        }
+      }
 
-    render() {
-        return (
-            <div id="menu">
-                <Link to='profile' style={{ paddingLeft: '0.8rem', marginTop: '0.8rem' }}>{`${this.state.user}`}</Link>
-                <ul>
+    })
+  }
 
-                    <Menu vertical style={{ marginTop: '0.8rem' }}>
-                        <Link to='lessonplans'><Menu.Item link>Manage lessonplans</Menu.Item></Link>
-                        <Link to='lessons'><Menu.Item link>Manage lessons</Menu.Item></Link>
-                        <Link to='classes'> <Menu.Item link> Classes </Menu.Item></Link>
-                        <Link to='uploadsim'><Menu.Item link>Manage simulations</Menu.Item></Link>
-                        <Link to='requests'><Menu.Item link>Help make simulations</Menu.Item></Link>
-                        <Link to='watchlesson'><Menu.Item link>Watch lesson</Menu.Item></Link>
-                    </Menu>
+  render() {
+    return (
+      <div id="menu">
+        <Link to='profile' style={{ paddingLeft: '0.8rem', marginTop: '0.8rem' }}>{`${this.state.user}`}</Link>
+        <ul>
 
-                </ul>
-            </div>
-        )
-    }
+          <Menu vertical style={{ marginTop: '0.8rem' }}>
+            <Link to='lessonplans'><Menu.Item link>Manage lessonplans</Menu.Item></Link>
+            <Link to='lessons'><Menu.Item link>Manage lessons</Menu.Item></Link>
+            <Link to='classes'> <Menu.Item link> Classes </Menu.Item></Link>
+            <Link to='uploadsim'><Menu.Item link>Manage simulations</Menu.Item></Link>
+            <Link to='requests'><Menu.Item link>Help make simulations</Menu.Item></Link>
+            <Link to='watchlesson'><Menu.Item link>Watch lesson</Menu.Item></Link>
+          </Menu>
+
+        </ul>
+      </div>
+    )
+  }
 }
