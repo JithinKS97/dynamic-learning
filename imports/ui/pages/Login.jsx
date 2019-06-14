@@ -1,5 +1,3 @@
-
-/* eslint-disable */
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Meteor } from 'meteor/meteor'
@@ -9,7 +7,7 @@ import FaGithub from 'react-icons/lib/fa/github';
 import FaGoogle from 'react-icons/lib/fa/google';
 import 'semantic-ui-css/semantic.min.css';
 
-import { Session } from 'meteor/session'
+import { Session } from 'meteor/session';
 
 export default class Login extends React.Component {
 
@@ -26,7 +24,6 @@ export default class Login extends React.Component {
         /* If the createlessonplan is opened without logging in and the user requires to login,
             The slides are stored to meteor sessions with the title stateToSave.
             It is obtained from here.
-
             If there is no value, returned, else the slides and the title is set to the state.
         */
 
@@ -182,4 +179,3 @@ export default class Login extends React.Component {
         )
     }
 }
-

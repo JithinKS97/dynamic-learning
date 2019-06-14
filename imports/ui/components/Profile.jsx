@@ -27,10 +27,10 @@ export default class Profile extends React.Component {
 
   componentDidMount() {
 
-    Meteor.subscribe('getAccounts');
-    Meteor.subscribe('classes');
-
     Tracker.autorun(() => {
+
+      Meteor.subscribe('getAccounts');
+      Meteor.subscribe('classes');
 
       if (Meteor.user()) {
         this.setState({
@@ -91,4 +91,3 @@ export default class Profile extends React.Component {
     )
   }
 }
-

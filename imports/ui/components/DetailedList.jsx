@@ -1,8 +1,3 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-alert */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable jsx-a11y/mouse-events-have-key-events */
 import React, {
   Fragment,
   useState,
@@ -17,7 +12,6 @@ import {
   Input,
 } from 'semantic-ui-react';
 import FaPencil from 'react-icons/lib/fa/pencil';
-import { Tracker } from 'meteor/tracker';
 import MdSave from 'react-icons/lib/md/save';
 import moment from 'moment';
 
@@ -39,19 +33,16 @@ const ListTile = (props) => {
     isMember,
   } = props;
 
-  const findTime = () => {
-    return moment(time);
-  };
+  useEffect(() => {
+    Meteor.call('getUsername', userId, (err, username) => {
+      changeOwnerName(username);
+    });
+  }, [userId]);
+
+  const findTime = () => moment(time);
 
   const isOwner = Meteor.userId() === userId && !!isMember;
 
-  useEffect(() => {
-    Tracker.autorun(() => {
-      Meteor.call('getUsername', userId, (err, username) => {
-        changeOwnerName(username);
-      });
-    });
-  });
 
   return (
     <Card
@@ -132,12 +123,19 @@ const ListTile = (props) => {
 };
 
 ListTile.propTypes = {
-  userId: PropTypes.string.isRequired,
+  userId: PropTypes.string,
   title: PropTypes.string.isRequired,
   changeTitleOfItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired,
+  isMember: PropTypes.bool,
+};
+
+ListTile.defaultProps = {
+  isMember: false,
+  userId: '',
 };
 
 const DetailedList = (props) => {
@@ -169,6 +167,11 @@ DetailedList.propTypes = {
   deleteItem: PropTypes.func.isRequired,
   changeTitleOfItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
+  isMember: PropTypes.bool,
+};
+
+DetailedList.defaultProps = {
+  isMember: false,
 };
 
 export default DetailedList;

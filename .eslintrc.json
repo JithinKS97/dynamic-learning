@@ -1,6 +1,7 @@
 {
   "parser": "babel-eslint",
   "parserOptions": {
+    "allowImportExportEverywhere": true,
     "ecmaVersion": 6,
     "sourceType": "module",
     "ecmaFeatures": {
@@ -16,6 +17,23 @@
   "plugins": ["meteor"],
   "extends": ["airbnb", "plugin:meteor/recommended"],
   "rules": {
-    "import/no-unresolved": ["error", { "ignore": ["^meteor/"] }]
+    "import/no-unresolved": ["error", { "ignore": ["^meteor/"] }],
+    "camelcase": "off",
+    "no-restricted-globals":"off",
+    "jsx-a11y/no-static-element-interactions":"off",
+    "jsx-a11y/click-events-have-key-events":"off",
+    "jsx-a11y/anchor-is-valid":"off",
+    "no-alert":"off",
+    "jsx-a11y/mouse-events-have-key-events":"off",
+    "no-underscore-dangle":"off",
+    "jsx-a11y/label-has-for":"off",
+    "jsx-a11y/label-has-associated-control":"off",
+    "react/button-has-type":"off",
+    "consistent-return":"off",
+    "array-callback-return":"off",
+    "jsx-a11y/iframe-has-title":"off",
+    "react/jsx-no-target-blank":"off",
+    "import/extensions": "off",
+    "meteor/no-session":"off"
   }
 }

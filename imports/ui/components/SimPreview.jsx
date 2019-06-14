@@ -1,80 +1,47 @@
-/* eslint-disable */
-import React from 'react'
-import Rnd from 'react-rnd'
-import { Dimmer, Loader } from 'semantic-ui-react'
+import React from 'react';
+import Rnd from 'react-rnd';
+import { Dimmer, Loader } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 export default class SimPreview extends React.Component {
-
   constructor(props) {
-
-    super(props)
+    super(props);
 
     this.state = {
-
       h: 360,
       w: 640,
-      loading: true
-    }
+      loading: true,
+    };
   }
 
   componentDidMount() {
-
+    const { w, h } = this.props;
     this.setState({
-
-      h: this.props.h,
-      w: this.props.w
-    })
+      h,
+      w,
+    });
   }
 
   iframeLoaded = () => {
-
     this.setState({
-      loading: false
-    })
-
-  }
-
-  getHeight() {
-
-
-    if (!this.props.slides) {
-      return 360
-    }
-    else if (this.props.h) {
-      this.setState({
-        h: this.props.h
-      })
-    }
-  }
-
-  getWidth() {
-
-    if (!this.props.slides) {
-      return 640
-    }
-    else if (this.props.w) {
-      this.setState({
-        w: this.props.w
-      })
-    }
-
-  }
+      loading: false,
+    });
+  };
 
   render() {
+    const {
+      slides, curSlide, index, src,
+    } = this.props;
+    const { loading, w, h } = this.state;
     return (
-
       <Rnd
         resizeHandleStyles={{
           width: '100px',
-          height: '100px'
+          height: '100px',
         }}
-
         style={{ position: 'relative', marginBottom: '1.6rem' }}
-
-        disableDragging={true}
-
+        disableDragging
         enableResizing={{
-
           bottom: false,
           bottomLeft: false,
           bottomRight: true,
@@ -82,44 +49,69 @@ export default class SimPreview extends React.Component {
           right: false,
           top: false,
           topLeft: false,
-          topRight: false
+          topRight: false,
+        }}
+        onResize={(e, direction, ref) => {
+          this.setState(
+            {
+              h: ref.offsetHeight,
+              w: ref.offsetWidth,
+            },
+            () => {
+              if (!slides) return;
+
+              slides[curSlide].iframes[
+                index
+              ].w = ref.offsetWidth;
+              slides[curSlide].iframes[
+                index
+              ].h = ref.offsetHeight;
+            },
+          );
         }}
 
-
-        onResize={(e, direction, ref, delta, position) => {
-
-          this.setState({
-
-            h: ref.offsetHeight,
-            w: ref.offsetWidth
-          }, () => {
-
-            if (!this.props.slides)
-              return
-
-            this.props.slides[this.props.curSlide].iframes[this.props.index].w = ref.offsetWidth
-            this.props.slides[this.props.curSlide].iframes[this.props.index].h = ref.offsetHeight
-          })
+        onResizeStop={() => {
+          const {
+            save,
+          } = this.props;
+          save();
         }}
-
       >
-        <Dimmer active={this.state.loading}>
+        <Dimmer active={loading}>
           <Loader />
         </Dimmer>
 
         <iframe
-          style={{ border: this.props.src ? '2px solid grey' : 'none' }}
-          className='iframe'
-          scrolling='no'
-          onLoad={this.iframeLoaded.bind(this)}
-          ref={e => this.iframe = e}
-          width={(this.state.w || 640) + 'px'}
-          height={(this.state.h || 360) + 'px'}
-          src={this.props.src}>
-        </iframe>
+          style={{ border: src ? '2px solid grey' : 'none' }}
+          className="iframe"
+          scrolling="no"
+          onLoad={this.iframeLoaded}
+          ref={(e) => { this.iframe = e; }}
+          width={`${w || 640}px`}
+          height={`${h || 360}px`}
+          src={src}
+        />
       </Rnd>
-
-    )
+    );
   }
-
 }
+
+SimPreview.propTypes = {
+  save: PropTypes.func,
+  slides: PropTypes.arrayOf(PropTypes.object),
+  curSlide: PropTypes.number,
+  index: PropTypes.number,
+  src: PropTypes.string,
+  w: PropTypes.number,
+  h: PropTypes.number,
+};
+
+SimPreview.defaultProps = {
+  w: 640,
+  h: 360,
+  curSlide: 0,
+  slides: [],
+  index: 0,
+  save: () => null,
+  src: '',
+};

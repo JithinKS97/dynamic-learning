@@ -5,7 +5,7 @@ import { Tracker } from 'meteor/tracker';
 import {
   Button, Form, Modal,
 } from 'semantic-ui-react';
-import { Classes } from '../../api/classes';
+import Classes from '../../api/classes';
 
 export default class StudentClasses extends React.Component {
   constructor(props) {
@@ -39,10 +39,11 @@ export default class StudentClasses extends React.Component {
   }
 
   getClasses = () => {
-    const user = Meteor.users.find({ username: this.state.user }).fetch()[0];
+    const { user } = this.state;
+    const _user = Meteor.users.find({ username: user }).fetch()[0];
     const clnames = [];
-    if (user.classes) {
-      user.classes.map((c) => {
+    if (_user.classes) {
+      _user.classes.map((c) => {
         const cl = Classes.find({ classcode: c }).fetch()[0];
         return clnames.push(cl);
       });
@@ -55,10 +56,11 @@ export default class StudentClasses extends React.Component {
   }
 
   addClass = () => {
+    const { classes, user } = this.state;
     const foundclass = Classes.findOne({ classcode: this.classcode.value });
-    if (foundclass && !(this.state.classes.includes(foundclass.classcode))) {
-      this.addStudent(this.classcode.value, this.state.user);
-      this.state.classes.push(this.classcode.value);
+    if (foundclass && !(classes.includes(foundclass.classcode))) {
+      this.addStudent(this.classcode.value, user);
+      classes.push(this.classcode.value);
     }
   }
 
@@ -86,18 +88,19 @@ export default class StudentClasses extends React.Component {
   }
 
   render() {
+    const { user, modalOpen, clickedclass } = this.state;
     return (
       <div>
         <Form style={{ marginTop: '1.2rem', width: '25%' }} noValidate onSubmit={() => this.addClass()}>
           <Form.Field>
-            <input ref={e => this.classcode = e} placeholder="Class code" />
+            <input ref={(e) => { this.classcode = e; }} placeholder="Class code" />
           </Form.Field>
           <Button type="submit"> Add new class </Button>
         </Form>
         <div style={{ paddingTop: '1.2rem' }}>
           <b> Your current classes </b>
         </div>
-        {this.state.user !== '' && this.getClasses().map(cl => (
+        {user !== '' && this.getClasses().map(cl => (
           <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
             {' '}
             {`${cl.name}: ${cl.classcode}`}
@@ -106,7 +109,7 @@ export default class StudentClasses extends React.Component {
         ))}
 
         <Modal
-          open={this.state.modalOpen}
+          open={modalOpen}
           onClose={() => this.handleClose()}
           size="tiny"
         >
@@ -119,7 +122,7 @@ export default class StudentClasses extends React.Component {
 
           <Modal.Content>
             <Modal.Description>
-              {this.state.clickedclass && this.classmatelist(this.state.clickedclass).map(
+              {clickedclass && this.classmatelist(clickedclass).map(
                 student => (
                   <div>
                     {' '}

@@ -1,9 +1,9 @@
-/* eslint-disable react/prop-types, react/no-array-index-key, no-return-assign */
 import React, { Component } from 'react';
 import { Comment, Header } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import CommentBox from './CommentBox';
 
 export default class commentsList extends Component {
@@ -31,11 +31,10 @@ export default class commentsList extends Component {
 
       return comments.map((comment, index) => {
         const { replies } = comment;
-
         return (
           <CommentBox
-            ref={el => this.commentRefs[index] = el}
-            key={index}
+            ref={(el) => { this.commentRefs[index] = el; }}
+            key={comment.time}
             index={index}
             comment={comment}
             {...this.props}
@@ -44,15 +43,13 @@ export default class commentsList extends Component {
         );
       });
     }
-
-    return null; // this is a hack
   }
 
   render() {
     return (
       <div>
         <Comment.Group>
-          <Header as="h3" dividing>
+          <Header style={{ marginBottom: '1.2rem' }} as="h3" dividing>
             Comments
           </Header>
           {this.showComments()}
@@ -69,3 +66,8 @@ export default class commentsList extends Component {
     );
   }
 }
+
+commentsList.propTypes = {
+  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
+  curSlide: PropTypes.number.isRequired,
+};
