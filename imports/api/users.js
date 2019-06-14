@@ -53,18 +53,18 @@ if (Meteor.isServer) {
     service: "github"
   }, {
       $set: {
-        clientId: Meteor.settings.github.clientId,
+        clientId: process.env.githubclient,
         loginStyle: "popup",
-        secret: Meteor.settings.github.secret
+        secret: process.env.githubsecret
       }
     });
   ServiceConfiguration.configurations.upsert({
     service: "google"
   }, {
       $set: {
-        clientId: Meteor.settings.google.clientId,
+        clientId: process.env.googleclient,
         loginStyle: "popup",
-        secret: Meteor.settings.google.secret
+        secret: process.env.googlesecret
       }
     });
 }
