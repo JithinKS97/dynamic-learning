@@ -7,6 +7,20 @@ import { expect } from 'chai';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
+/*
+    Unit tests covered
+
+    1) Mounting of Component
+    2) Addition and deletion ( different cases ) - check
+    3) Navigation between slides
+    4) Addition / deletion of textboxes
+    4) Interact and draw - check
+    5) Undo and redo - check
+    6) Changing size fo canvas (conditional also) - check
+    5) Addition / deletion of simulations - check
+    8) Interact and draw mode - check
+*/
+
 if (Meteor.isClient) {
   import Adapter from 'enzyme-adapter-react-16';
   import { CreateLessonPlan } from './CreateLessonPlan';
@@ -292,19 +306,3 @@ if (Meteor.isClient) {
     });
   });
 }
-
-/*
-    Unit tests needed
-
-    How do we test
-
-    1) Navigation between the slides, going to the next and previous slide - check
-    2) Moving to any slide by pressing it - check
-    3) Deletion of a slide - check
-    4) Addition of new slide - check
-    5) Interact and draw - check
-    6) Addition of simulations - check
-    7) Undo and redo - check
-    8) Increasing and decreasing - check
-    9) According the position of simulation, allow or disallow changing of size of canvas - check
-*/
