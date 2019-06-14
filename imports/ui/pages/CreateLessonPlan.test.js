@@ -128,16 +128,22 @@ if (Meteor.isClient) {
           slides: [{ notes: '0', iframes: [], textboxes: [] }],
         });
 
+        CreateLessonplanInstance.undoStacks = [];
+
         CreateLessonplanInstance.addTextBox();
         CreateLessonplanInstance.addTextBox();
         CreateLessonplanInstance.addTextBox();
 
+        // Clear undo stacks to remove the items during the last test
 
         CreateLessonplanInstance.undo();
         expect(CreateLessonplanWrapper.state().slides[0].textboxes.length).to.equal(2);
 
         CreateLessonplanInstance.undo();
         expect(CreateLessonplanWrapper.state().slides[0].textboxes.length).to.equal(1);
+
+        CreateLessonplanInstance.undo();
+        expect(CreateLessonplanWrapper.state().slides[0].textboxes.length).to.equal(0);
 
         CreateLessonplanInstance.undo();
         expect(CreateLessonplanWrapper.state().slides[0].textboxes.length).to.equal(0);
