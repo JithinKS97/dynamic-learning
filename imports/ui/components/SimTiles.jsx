@@ -286,7 +286,7 @@ SimTiles.defaultProps = {
   curSlide: 0,
   update: () => null,
   deleteSim: () => null,
-  isMember: () => null,
+  isMember: false,
 };
 
 export default SimTiles;

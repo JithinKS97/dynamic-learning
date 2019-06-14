@@ -223,6 +223,7 @@ export class CreateLessonPlan extends React.Component {
   };
 
   handleScroll = () => {
+    if (Meteor.isTest) return;
     /**
      * When transform is used the fixed value of position of drawing-board-controls is disabled
      * So as we scroll, the top value is explicitly brought down by changing the top value to

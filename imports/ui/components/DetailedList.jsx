@@ -123,14 +123,19 @@ const ListTile = (props) => {
 };
 
 ListTile.propTypes = {
-  userId: PropTypes.string.isRequired,
+  userId: PropTypes.string,
   title: PropTypes.string.isRequired,
   changeTitleOfItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
   time: PropTypes.number.isRequired,
-  isMember: PropTypes.bool.isRequired,
+  isMember: PropTypes.bool,
+};
+
+ListTile.defaultProps = {
+  isMember: false,
+  userId: '',
 };
 
 const DetailedList = (props) => {
@@ -162,7 +167,11 @@ DetailedList.propTypes = {
   deleteItem: PropTypes.func.isRequired,
   changeTitleOfItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
-  isMember: PropTypes.bool.isRequired,
+  isMember: PropTypes.bool,
+};
+
+DetailedList.defaultProps = {
+  isMember: false,
 };
 
 export default DetailedList;

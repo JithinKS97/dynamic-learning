@@ -201,6 +201,10 @@ export class Request extends React.Component {
   findTime = time => moment(time)
 
   push = (title) => {
+    const { isAuthenticated } = this.props;
+
+    if (!isAuthenticated) return;
+
     if (!title) return;
 
     const { slides, show } = this.state;
@@ -237,11 +241,13 @@ export class Request extends React.Component {
   }
 
   update = () => {
-    if (!Meteor.userId()) return;
+    const { isAuthenticated } = this.props;
+    if (!isAuthenticated) return;
 
     const { slides, _id } = this.state;
+    const { updateRequestToDB } = this.props;
 
-    Meteor.call('requests.update', _id, slides);
+    updateRequestToDB(_id, slides);
   };
 
   deleteSlide = (index) => {
@@ -855,6 +861,8 @@ Request.propTypes = {
   }),
   loading: PropTypes.bool,
   setTitle: PropTypes.func,
+  isAuthenticated: PropTypes.bool,
+  updateRequestToDB: PropTypes.func,
 };
 
 Request.defaultProps = {
@@ -862,6 +870,8 @@ Request.defaultProps = {
   request: { slides: [] },
   loading: true,
   setTitle: () => {},
+  isAuthenticated: false,
+  updateRequestToDB: () => {},
 };
 
 const RequestContainer = withTracker(({ match }) => {
@@ -896,6 +906,9 @@ const RequestContainer = withTracker(({ match }) => {
         editDescription,
       );
     },
+    isAuthenticated: !!Meteor.userId(),
+    isOwner: request.userId === Meteor.userId(),
+    updateRequestToDB: (_id, slides) => { Meteor.call('requests.update', _id, slides); },
   };
 })(Request);
 
