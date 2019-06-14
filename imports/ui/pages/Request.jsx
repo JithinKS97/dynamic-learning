@@ -389,9 +389,9 @@ export class Request extends React.Component {
     this.saveChanges(slides);
   };
 
-  setTitle = (e) => {
-    e.preventDefault();
+  setTitle = () => {
     const { editDescription, editTitle } = this.state;
+    const { setTitle } = this.props;
 
     if (!(editDescription && editTitle)) {
       alert('Fill the details');
@@ -401,16 +401,12 @@ export class Request extends React.Component {
     this.setState(
       {
         requestTitle: editTitle,
+        description: editDescription,
         showEditDescription: false,
       },
       () => {
         const { _id } = this.state;
-        Meteor.call(
-          'requests.title.update',
-          _id,
-          editTitle,
-          editDescription,
-        );
+        setTitle(_id, editTitle, editDescription);
       },
     );
   }
@@ -577,7 +573,7 @@ export class Request extends React.Component {
                 <Container textAlign="left" style={{ width: '100%' }}>
                   <div style={{ alignItems: 'center', display: 'flex' }}>
                     <div>
-                      <h1 style={{ height: '2.4rem', margin: 'auto 0' }}>
+                      <h1 className="requestTitle" style={{ height: '2.4rem', margin: 'auto 0' }}>
                         {requestTitle}
                       </h1>
                     </div>
@@ -596,7 +592,7 @@ export class Request extends React.Component {
                     ) : null}
                   </div>
 
-                  <p style={{ paddingLeft: '1.6rem', marginTop: '0.6rem' }}>
+                  <p className="requestDescription" style={{ paddingLeft: '1.6rem', marginTop: '0.6rem' }}>
                     {description}
                   </p>
                 </Container>
@@ -803,7 +799,7 @@ export class Request extends React.Component {
 
               <Modal.Content>
                 <Modal.Description>
-                  <Form onSubmit={this.setTitle}>
+                  <Form onSubmit={() => { this.setTitle(); }}>
                     <Form.Field>
                       <label>Title</label>
                       <Input
@@ -858,12 +854,14 @@ Request.propTypes = {
     pendingRequests: PropTypes.array,
   }),
   loading: PropTypes.bool,
+  setTitle: PropTypes.func,
 };
 
 Request.defaultProps = {
   requestExists: false,
   request: { slides: [] },
   loading: true,
+  setTitle: () => {},
 };
 
 const RequestContainer = withTracker(({ match }) => {
@@ -890,6 +888,14 @@ const RequestContainer = withTracker(({ match }) => {
     request,
     loading,
     requestExists,
+    setTitle: (_id, editTitle, editDescription) => {
+      Meteor.call(
+        'requests.title.update',
+        _id,
+        editTitle,
+        editDescription,
+      );
+    },
   };
 })(Request);
 

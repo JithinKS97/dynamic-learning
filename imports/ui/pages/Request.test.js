@@ -3,7 +3,7 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { mount, configure } from 'enzyme';
-// import { expect } from 'chai';
+import { expect } from 'chai';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -14,15 +14,18 @@ if (Meteor.isClient) {
   configure({ adapter: new Adapter() });
 
   describe('Request', () => {
-    describe('Loading of Request page', () => {
-      let div;
-      let RequestWrapper;
-      let wrapper;
+    let div;
+    let RequestWrapper;
+    let wrapper;
 
-      before(() => {
-        div = document.createElement('div');
-        window.domNode = div;
-        document.body.appendChild(div);
+    before(() => {
+      div = document.createElement('div');
+      window.domNode = div;
+      document.body.appendChild(div);
+    });
+
+    describe('Mounting of Request page', () => {
+      it('should mount successfully', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
             <Route path="/" render={() => <Request />} />
@@ -32,8 +35,13 @@ if (Meteor.isClient) {
         RequestWrapper = wrapper.find(Request);
         RequestInstance = RequestWrapper.instance();
       });
-
-      it('should load successfully', () => {
+      it('should set the title and description of the Requests forum', () => {
+        RequestInstance.setState({ editTitle: 'test-title', editDescription: 'test-description' });
+        RequestInstance.setTitle();
+        expect(RequestInstance.state.requestTitle).to.equal('test-title');
+        expect(RequestInstance.state.description).to.equal('test-description');
+        expect(wrapper.find('.requestTitle').text()).to.equal('test-title');
+        expect(wrapper.find('.requestDescription').text()).to.equal('test-description');
         wrapper.unmount();
       });
     });

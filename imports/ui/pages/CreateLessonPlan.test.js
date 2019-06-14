@@ -44,13 +44,14 @@ if (Meteor.isClient) {
       it('should mount successfully', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
-            <Route path="/" render={() => <CreateLessonPlan />} />
+            <Route path="/" render={() => <CreateLessonPlan lessonplanExists />} />
           </Router>,
           { attachTo: window.domNode },
         );
         CreateLessonplanWrapper = wrapper.find(CreateLessonPlan);
         CreateLessonplanInstance = CreateLessonplanWrapper.instance();
         CreateLessonplanWrapper.setState({ ...Oscillations });
+        CreateLessonplanWrapper.setState({ initialized: true });
       });
     });
 
@@ -142,13 +143,12 @@ if (Meteor.isClient) {
           slides: [{ notes: '0', iframes: [], textboxes: [] }],
         });
 
+        // Clear undo stacks to remove the items during the last test
         CreateLessonplanInstance.undoStacks = [];
 
         CreateLessonplanInstance.addTextBox();
         CreateLessonplanInstance.addTextBox();
         CreateLessonplanInstance.addTextBox();
-
-        // Clear undo stacks to remove the items during the last test
 
         CreateLessonplanInstance.undo();
         expect(CreateLessonplanWrapper.state().slides[0].textboxes.length).to.equal(2);
