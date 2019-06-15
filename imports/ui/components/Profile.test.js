@@ -17,6 +17,8 @@ if (Meteor.isClient) {
   describe('Profiles', () => {
     let div;
     let wrapper;
+    let ProfileWrapper;
+    let ProfileInstance;
 
     before(() => {
       div = document.createElement('div');
@@ -31,18 +33,17 @@ if (Meteor.isClient) {
           </Router>,
           { attachTo: window.domNode },
         );
+        ProfileWrapper = wrapper.find(Profile);
+        ProfileInstance = ProfileWrapper.instance();
       });
     });
 
     describe('Testing functions relating to information on profile', () => {
       it('should update school properly', () => {
-        const ProfileWrapper = wrapper.find(Profile);
-        ProfileWrapper.setState({ user: 'ad665' });
+        ProfileWrapper.setState({ user: 'ad665', type: 'Student' });
+        ProfileInstance.school.value = 'Cornell University';
 
-        const instance = ProfileWrapper.instance();
-        instance.school.value = 'Cornell University';
-
-        instance.updateSchool();
+        ProfileInstance.updateSchool();
         expect(ProfileWrapper.state().school).to.equal('Cornell University');
 
         wrapper.unmount();
