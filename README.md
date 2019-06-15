@@ -137,7 +137,7 @@ For feature enhancements, bug reports and contributions
 
 You can email me to jithunni.ks@gmail.com or you can create an issue in the repo.
 
-## Acknowledgement
+## Acknowledgement 
 
 I'm extremely thankful to Processing Foundation for having the faith in me and giving me an opportunity to start the project. There have been several situations where I have been stuck. I express my gratitude to my mentor [Saber Khan](https://github.com/saberkhaniscool), other members of Proessing Foundation [Cassie Tarakajian](https://github.com/catarak), [Lauren McCarthy](https://github.com/lmccart), [Daniel Shiffman](https://github.com/shiffman), [Cassey Reas](https://github.com/REAS) for getting back to me and providing me with intelligent advices and suggestions when I contacted them.
 
