@@ -252,7 +252,9 @@ export class Request extends React.Component {
 
   deleteSlide = (index) => {
     const { slides } = this.state;
-    const isOwner = slides[index].userId === Meteor.userId();
+    const { isOwner, isAuthenticated } = this.props;
+
+    if (!(isAuthenticated && isOwner)) return;
 
     if (isOwner) {
       if (slides.length !== 1) {
@@ -480,10 +482,8 @@ export class Request extends React.Component {
       editTitle,
       editDescription,
     } = this.state;
-    const { requestExists } = this.props;
+    const { requestExists, isOwner } = this.props;
     if (members) { this.isMember = members.includes(Meteor.userId()); }
-
-    const isOwner = userId === Meteor.userId();
 
     if (redirectToLessonplan) { return <Redirect to={`/createlessonplan/${_id}`} />; }
 
@@ -863,6 +863,7 @@ Request.propTypes = {
   setTitle: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   updateRequestToDB: PropTypes.func,
+  isOwner: PropTypes.bool,
 };
 
 Request.defaultProps = {
@@ -872,6 +873,7 @@ Request.defaultProps = {
   setTitle: () => {},
   isAuthenticated: false,
   updateRequestToDB: () => {},
+  isOwner: false,
 };
 
 const RequestContainer = withTracker(({ match }) => {

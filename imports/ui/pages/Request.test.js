@@ -107,6 +107,68 @@ if (Meteor.isClient) {
         expect(RequestInstance.state.slides.length).to.equal(1);
         wrapper.unmount();
       });
+      it('should not delete a slide if user is not authenticated', () => {
+        wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <Request isAuthenticated />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+        RequestWrapper = wrapper.find(Request);
+        RequestInstance = RequestWrapper.instance();
+
+        RequestWrapper.setState({
+          slides: [{
+            title: 'slide-1', userId: '', time: '', comments: [], iframes: [],
+          }],
+        });
+
+        RequestInstance.deleteSlide(0);
+        expect(RequestInstance.state.slides[0].title).to.equal('slide-1');
+        wrapper.unmount();
+      });
+      it('should delete a slide only if user is authenticated and owner', () => {
+        wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <Request isAuthenticated isOwner />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+        RequestWrapper = wrapper.find(Request);
+        RequestInstance = RequestWrapper.instance();
+
+        RequestWrapper.setState({
+          slides: [{
+            title: '', userId: '', time: '', comments: [], iframes: [],
+          }],
+        });
+
+        RequestInstance.push('slide-1');
+        RequestInstance.deleteSlide(0);
+        expect(RequestInstance.state.slides[0].title).to.equal('');
+        wrapper.unmount();
+      });
+      it('should not delete a slide if a user is authenticated and not owner', () => {
+        wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <Request isAuthenticated />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+        RequestWrapper = wrapper.find(Request);
+        RequestInstance = RequestWrapper.instance();
+
+        RequestWrapper.setState({
+          slides: [{
+            title: '', userId: '', time: '', comments: [], iframes: [],
+          }],
+        });
+
+        RequestInstance.push('slide-1');
+        RequestInstance.deleteSlide(0);
+        expect(RequestInstance.state.slides[0].title).to.equal('slide-1');
+        wrapper.unmount();
+      });
     });
   });
 }
