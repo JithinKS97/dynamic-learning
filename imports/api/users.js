@@ -51,26 +51,22 @@ Meteor.methods({
 if (Meteor.isServer) {
   Accounts.validateNewUser(validateNewUser);
   Meteor.publish('getAccounts', () => Meteor.users.find());
-  const { settings: { google } } = Meteor;
-  const { settings: { github } } = Meteor;
-
   ServiceConfiguration.configurations.upsert({
     service: 'github',
   }, {
     $set: {
-      clientId: github.clientId,
+      clientId: process.env.githubclient,
       loginStyle: 'popup',
-      secret: github.secret,
+      secret: process.env.githubsecret,
     },
   });
-
   ServiceConfiguration.configurations.upsert({
     service: 'google',
   }, {
     $set: {
-      clientId: google.clientId,
+      clientId: process.env.googleclient,
       loginStyle: 'popup',
-      secret: google.secret,
+      secret: process.env.googlesecret,
     },
   });
 }
