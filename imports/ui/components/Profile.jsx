@@ -16,10 +16,10 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
-    Meteor.subscribe('getAccounts');
-    Meteor.subscribe('classes');
-
     Tracker.autorun(() => {
+      Meteor.subscribe('getAccounts');
+      Meteor.subscribe('classes');
+
       if (Meteor.user()) {
         this.setState({
           user: Meteor.user().username,
@@ -29,10 +29,16 @@ export default class Profile extends React.Component {
         this.setState({
           type: Meteor.user().profile.accountType,
         });
-      } else {
-        this.setState({
-          type: 'Student',
-        });
+      }
+      if (Meteor.user() && Meteor.user().services) {
+        if (Meteor.user().services.github) {
+          this.setState({
+            user: Meteor.user().services.github.username,
+            type: 'Standard',
+          });
+        } else if (Meteor.user().services.google) {
+          console.log(Meteor.user().services.google);
+        }
       }
       if (Meteor.user() && Meteor.user().school) {
         this.setState({
@@ -43,21 +49,19 @@ export default class Profile extends React.Component {
   }
 
   updateSchool = () => {
-    const { user, school } = this.state;
-    Meteor.call('updateSchool', user, school.value);
+    const { user } = this.state;
+    Meteor.call('updateSchool', user, this.school.value);
     this.setState({
       school: this.school.value,
     });
   }
 
   render() {
-    const { type, user, school } = this.state;
-
+    const { user, type, school } = this.state;
     return (
       <div>
         <div>
           Hello,
-          {' '}
           {' '}
           {user}
           !
@@ -69,21 +73,23 @@ export default class Profile extends React.Component {
           .
           {' '}
           <br />
-          Your school is
-          {' '}
-          {school}
-          .
-          {' '}
-          <br />
           {
             (type === 'Student' || type === 'Teacher')
             && (
-            <Form noValidate onSubmit={this.updateSchool} style={{ marginTop: '1.2rem', width: '25%' }}>
-              <Form.Field>
-                <input ref={(e) => { this.school = e; }} placeholder="School" />
-              </Form.Field>
-              <Button type="submit" style={{}}> Update School </Button>
-            </Form>
+            <div>
+              Your school is
+              {' '}
+              {school}
+              .
+              {' '}
+              <br />
+              <Form noValidate onSubmit={this.updateSchool} style={{ marginTop: '1.2rem', width: '25%' }}>
+                <Form.Field>
+                  <input ref={(e) => { this.school = e; }} placeholder="School" />
+                </Form.Field>
+                <Button type="submit" style={{}}> Update School </Button>
+              </Form>
+            </div>
             )
           }
         </div>

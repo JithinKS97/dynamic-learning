@@ -10,7 +10,6 @@ import CreateLessonPlanContainer from '../ui/pages/CreateLessonPlan';
 import Lesson from '../ui/pages/Lesson';
 import LoadScreen from '../ui/pages/LoadScreen';
 import Explore from '../ui/pages/Explore';
-
 import Signup from '../ui/pages/Signup';
 import NotFound from '../ui/pages/NotFound';
 
@@ -28,7 +27,8 @@ const authenticatedPages = [
   '/dashboard/lessons',
   '/dashboard/watchlesson',
   '/lesson',
-  '/profile',
+  '/dashboard/profile',
+  '/dashboard/classes'
 ];
 
 export const onAuthChange = (isAuthenticated) => {
