@@ -1,11 +1,9 @@
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import { Meteor } from 'meteor/meteor';
 import { expect } from 'chai';
 import { Requests } from './requests';
 
 if (Meteor.isServer) {
-  // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-  describe('Requests', function () {
+  describe('Requests', () => {
     const requestOne = {
       _id: 'requestId1',
       requestTitle: 'testTitle',
@@ -54,14 +52,14 @@ if (Meteor.isServer) {
       updatedAt: 0,
     };
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    beforeEach(function () {
+
+    beforeEach(() => {
       Requests.remove({});
       Requests.insert(requestOne);
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should update requests if authenticated', function () {
+
+    it('should update requests if authenticated', () => {
       const slides = [{
         comments: [
           {
@@ -92,8 +90,8 @@ if (Meteor.isServer) {
       expect(request).to.deep.include({ slides });
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should update title if authenticated', function () {
+
+    it('should update title if authenticated', () => {
       const requestTitle = 'updatedTitle';
       Meteor.server.method_handlers['requests.title.update'].apply({ userId: requestOne.userId }, [requestOne._id, requestTitle]);
       const request = Requests.findOne(requestOne._id);
@@ -101,9 +99,9 @@ if (Meteor.isServer) {
       expect(request).to.deep.include({ requestTitle });
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should not update requestTitle if not authenticated', function () {
-      expect(function () { // eslint-disable-line no-undef, func-names, prefer-arrow-callback
+
+    it('should not update requestTitle if not authenticated', () => {
+      expect(() => {
         Meteor.server.method_handlers['requests.title.update'].apply({}, [requestOne._id]);
       }).to.throw();
     });

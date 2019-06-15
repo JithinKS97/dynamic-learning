@@ -1,12 +1,10 @@
-/* eslint-disable no-underscore-dangle, no-unused-expressions */
 import { Meteor } from 'meteor/meteor';
 import { expect } from 'chai';
 import { LessonPlans } from './lessonplans';
 import { Requests } from './requests';
 
 if (Meteor.isServer) {
-  // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-  describe('Lessonplans', function () {
+  describe('Lessonplans', () => {
     const lessonplanOne = {
       _id: 'testLessonPlanId1',
       name: 'first lessonplan',
@@ -39,53 +37,51 @@ if (Meteor.isServer) {
       updatedAt: 0,
     };
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    beforeEach(function () {
+
+    beforeEach(() => {
       LessonPlans.remove({});
       LessonPlans.insert(lessonplanOne);
       LessonPlans.insert(lessonplanTwo);
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should not insert a lessonplan if not authenticated', function () {
+
+    it('should not insert a lessonplan if not authenticated', () => {
       expect(() => {
         Meteor.server.method_handlers['lessonplans.insert']();
       }).to.throw();
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should insert a lessonplan and its request if authenticated', function () {
+
+    it('should insert a lessonplan and its request if authenticated', () => {
       const { userId } = lessonplanOne;
-      const _id = Meteor.server.method_handlers['lessonplans.insert'].apply({ userId });
-      expect(LessonPlans.findOne({ _id, userId })).to.exist;
-      expect(Requests.findOne({ _id, userId })).to.exist;
+      const _id = Meteor.server.method_handlers['lessonplans.insert'].apply({ userId }, ['title-1']);
+
+      expect(LessonPlans.findOne({ _id, userId }).title).to.equal('title-1');
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should remove lessonplan and its request if authenticated', function () {
+
+    it('should remove lessonplan and its request if authenticated', () => {
       Meteor.server.method_handlers['lessonplans.remove'].apply({ userId: lessonplanOne.userId }, [lessonplanOne._id]);
-      expect(LessonPlans.findOne({ _id: lessonplanOne._id })).to.not.exist;
-      expect(Requests.findOne({ _id: lessonplanOne._id })).to.not.exist;
+      expect(LessonPlans.findOne({ _id: lessonplanOne._id })).to.equal(null);
+      expect(Requests.findOne({ _id: lessonplanOne._id })).to.equal(null);
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should not remove lessonplan if not authenticated', function () {
-      // eslint-disable-next-line func-names, prefer-arrow-callback
-      expect(function () {
+
+    it('should not remove lessonplan if not authenticated', () => {
+      expect(() => {
         Meteor.server.method_handlers['lessonplans.remove'].apply({}, [lessonplanOne._id]);
       }).to.throw();
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should not remove lessonplan if id is invalid', function () {
-      // eslint-disable-next-line func-names, prefer-arrow-callback
-      expect(function () {
+
+    it('should not remove lessonplan if id is invalid', () => {
+      expect(() => {
         Meteor.server.method_handlers['lessonplans.remove'].apply({ userId: lessonplanOne.userId });
       }).to.throw();
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should update lessonplan', function () {
+
+    it('should update lessonplan', () => {
       const slides = [{
         note: 'updatedData',
         iframes: [{
@@ -101,8 +97,8 @@ if (Meteor.isServer) {
       expect(lessonplan).to.deep.include({ slides, name: lessonplanOne.name });
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should not update if user was not creator', function () {
+
+    it('should not update if user was not creator', () => {
       const slides = [{
         note: 'updatedData',
         iframes: [{
@@ -123,8 +119,8 @@ if (Meteor.isServer) {
       expect(lessonplan).to.deep.include(lessonplanOne);
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it("should return a user's lessonplan", function () {
+
+    it("should return a user's lessonplan", () => {
       const res = Meteor.server.publish_handlers.lessonplans.apply({
         userId: lessonplanOne.userId,
       });
@@ -133,8 +129,8 @@ if (Meteor.isServer) {
       expect(lessonplans[0]).to.deep.include(lessonplanOne);
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
-    it('should return 0 lessonplan for user that has none', function () {
+
+    it('should return 0 lessonplan for user that has none', () => {
       const res = Meteor.server.publish_handlers.lessonplans.apply({ userId: 'testId' });
       const lessonplans = res.fetch();
       expect(lessonplans.length).to.equal(0);

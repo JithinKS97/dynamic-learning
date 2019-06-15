@@ -1,6 +1,7 @@
-/* eslint-disable object-shorthand, meteor/audit-argument-checks */
+/* eslint-disable object-shorthand */
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import SimpleSchema from 'simpl-schema';
 import moment from 'moment';
 import { Index, MongoDBEngine } from 'meteor/easy:search';
@@ -42,9 +43,14 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'lessonplans.insert'(title) { // eslint-disable-line object-shorthand
+  'lessonplans.insert'(title) { // eslint-disable-line
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
+    }
+
+    check(title, String);
+    if (title.length < 0) {
+      throw new Meteor.Error('Title cannot be empty!');
     }
 
     return LessonPlans.insert(
@@ -87,12 +93,20 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    check(_id, String);
+    check(tags, Array);
+
     LessonPlans.update({ _id }, { $set: { tags } });
   },
 
   'lessonplans.folder.insert'(title) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
+    }
+
+    check(title, String);
+    if (title.length < 0) {
+      throw new Meteor.Error('Title cannot be empty!');
     }
 
     return LessonPlans.insert({
@@ -109,7 +123,7 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    check(_id, String);
     new SimpleSchema({
       _id: {
         type: String,
@@ -126,6 +140,9 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    check(_id, String);
+    check(parent_id, String);
+
     LessonPlans.update({ _id }, { $set: { parent_id } });
   },
 
@@ -133,7 +150,8 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    check(_id, String);
+    check(expanded, Boolean);
     LessonPlans.update({ _id }, { $set: { expanded } });
   },
 
@@ -141,7 +159,8 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    check(_id, String);
+    check(slides, Array);
     LessonPlans.update(
       { _id, userId: this.userId },
       { $set: { slides, updatedAt: moment().valueOf() } },
@@ -152,7 +171,8 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    check(_id, String);
+    check(title, String);
     LessonPlans.update(
       { _id, userId: this.userId },
       { $set: { title, updatedAt: moment().valueOf() } },
@@ -164,18 +184,25 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    check(_id, String);
+    check(isPublic, Boolean);
+
     LessonPlans.update({ _id }, { $set: { isPublic } });
   },
 
   'lessonplans.description'(_id, description) { // eslint-disable-line object-shorthand
+    check(_id, String);
+    check(description, String);
     LessonPlans.update({ _id }, { $set: { description } });
   },
 
   'lessonplans.removeDescription'(_id) { // eslint-disable-line object-shorthand
+    check(_id, String);
     LessonPlans.update({ _id }, { $set: { description: {} } });
   },
 
   'lessonplans.addDescriptionField'(_id) { // eslint-disable-line object-shorthand
+    check(_id, String);
     LessonPlans.update({ _id }, { $set: { description: {} } });
   },
 });
