@@ -1,0 +1,11 @@
+{
+    "public": {},
+    "github": {
+        "clientId": "fc3f0490e3f3e82e0684", 
+        "secret": "ba976fd67e5e2c61d7a35748110824e17ad09529"
+    }, 
+    "google": {
+        "clientId": "925594225432-ltkea35srn7keqp6jqi3scgt1u36jfhb.apps.googleusercontent.com", 
+        "secret": "9J9JZXJvMKcp0abaPzV_fnIB"
+    }
+}

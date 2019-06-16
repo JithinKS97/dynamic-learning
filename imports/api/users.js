@@ -51,13 +51,14 @@ Meteor.methods({
 if (Meteor.isServer) {
   Accounts.validateNewUser(validateNewUser);
   Meteor.publish('getAccounts', () => Meteor.users.find());
+  const { settings: { github } } = Meteor;
   ServiceConfiguration.configurations.upsert({
     service: 'github',
   }, {
     $set: {
-      clientId: process.env.githubclient,
+      clientId: github.clientId,
       loginStyle: 'popup',
-      secret: process.env.githubsecret,
+      secret: github.secret,
     },
   });
   ServiceConfiguration.configurations.upsert({

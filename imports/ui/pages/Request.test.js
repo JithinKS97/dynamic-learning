@@ -110,7 +110,7 @@ if (Meteor.isClient) {
       it('should not delete a slide if user is not authenticated', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
-            <Route path="/" render={() => <Request isAuthenticated />} />
+            <Route path="/" render={() => <Request isOwner />} />
           </Router>,
           { attachTo: window.domNode },
         );
