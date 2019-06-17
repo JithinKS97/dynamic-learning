@@ -47,7 +47,7 @@ export default class SharedSims extends React.Component {
     const { ownerNames } = this.state;
 
     if (ownerNames.length > 0) {
-      if (ownerNames[index].username) { return ownerNames[index].username; }
+      if (ownerNames[index]) { return ownerNames[index].username; }
     }
   }
 
