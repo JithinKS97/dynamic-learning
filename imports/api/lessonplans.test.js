@@ -59,13 +59,11 @@ if (Meteor.isServer) {
       expect(LessonPlans.findOne({ _id, userId }).title).to.equal('title-1');
     });
 
-
     it('should remove lessonplan and its request if authenticated', () => {
       Meteor.server.method_handlers['lessonplans.remove'].apply({ userId: lessonplanOne.userId }, [lessonplanOne._id]);
-      expect(LessonPlans.findOne({ _id: lessonplanOne._id })).to.equal(null);
-      expect(Requests.findOne({ _id: lessonplanOne._id })).to.equal(null);
+      expect(LessonPlans.findOne({ _id: lessonplanOne._id })).to.equal(undefined);
+      expect(Requests.findOne({ _id: lessonplanOne._id })).to.equal(undefined);
     });
-
 
     it('should not remove lessonplan if not authenticated', () => {
       expect(() => {
@@ -73,13 +71,11 @@ if (Meteor.isServer) {
       }).to.throw();
     });
 
-
     it('should not remove lessonplan if id is invalid', () => {
       expect(() => {
         Meteor.server.method_handlers['lessonplans.remove'].apply({ userId: lessonplanOne.userId });
       }).to.throw();
     });
-
 
     it('should update lessonplan', () => {
       const slides = [{
