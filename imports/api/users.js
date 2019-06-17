@@ -66,9 +66,9 @@ if (Meteor.isServer) {
     service: 'github',
   }, {
     $set: {
-      clientId: github.clientId,
+      clientId: process.env.githubclient,
       loginStyle: 'popup',
-      secret: github.secret,
+      secret: process.env.githubsecret,
     },
   });
   ServiceConfiguration.configurations.upsert({
