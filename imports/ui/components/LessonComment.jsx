@@ -34,6 +34,13 @@ export default class LessonComment extends React.Component {
         })
     }
 
+    deleteComment = (_id) => {
+        Meteor.call('comments.delete', _id);
+        this.setState({
+            comments: Comments.find().fetch()
+        });
+    }
+
     addComment = () => {
         const { lessonid } = this.props;
         Meteor.call('comments.insert', this.comment.value, Meteor.userId(), lessonid);
@@ -53,8 +60,22 @@ export default class LessonComment extends React.Component {
                             padding: '0.8rem', marginBottom: '0.8rem', marginTop: '0.8rem', backgroundColor: '#eeeeee',
                         }}>
                             <Comment.Content>
-                                <Comment.Author> {Meteor.users.findOne({ _id: comment.userid }).username} </Comment.Author>
+                                {
+                                    Meteor.userId() === comment.userid &&
+                                    <Button
+                                        onClick={() => this.deleteComment(comment._id)}
+                                        style={{ float: 'right' }}
+                                    >
+                                        X
+                                </Button>
+                                }
+                                <Comment.Author>
+                                    <b>
+                                        {Meteor.users.findOne({ _id: comment.userid }).username}
+                                    </b>
+                                </Comment.Author>
                                 {comment.content}
+
                             </Comment.Content>
                         </Comment>
                     );

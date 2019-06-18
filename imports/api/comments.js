@@ -18,7 +18,17 @@ Meteor.methods({
             lessonid, 
             date: Date.now()
         }); 
+    }, 
+
+    'comments.delete': function(_id) {
+        if (!this.userId) {
+            throw new Meteor.Error('not-authorized'); 
+        }
+        Comments.remove({
+            _id
+        }); 
     }
+    
 })
 
 export default Comments; 
