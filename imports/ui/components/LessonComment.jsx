@@ -20,7 +20,7 @@ export default class LessonComment extends React.Component {
 
     componentDidMount() {
         Meteor.subscribe('comments');
-        Meteor.subscribe('getAccounts'); 
+        Meteor.subscribe('getAccounts');
 
         Tracker.autorun(() => {
             if (Meteor.user()) {
@@ -35,11 +35,11 @@ export default class LessonComment extends React.Component {
     }
 
     addComment = () => {
-        const { lessonid } = this.props; 
-        Meteor.call('comments.insert', this.comment.value, Meteor.userId(), lessonid); 
+        const { lessonid } = this.props;
+        Meteor.call('comments.insert', this.comment.value, Meteor.userId(), lessonid);
         this.setState({
             comments: Comments.find().fetch()
-        }); 
+        });
     }
 
     render = () => {
@@ -49,15 +49,15 @@ export default class LessonComment extends React.Component {
             <div style={{ paddingTop: '1.5rem', marginLeft: '1.2rem', width: '40%' }}>
                 {comments.map(comment => {
                     return (
-                    <Comment style={{
-                        padding: '0.8rem', marginBottom: '0.8rem', marginTop: '0.8rem', backgroundColor: '#eeeeee',
-                      }}> 
-                        <Comment.Content> 
-                            <Comment.Author> {Meteor.users.findOne({_id: comment.userid}).username} </Comment.Author>
-                            {comment.content}
-                        </Comment.Content>
-                    </Comment> 
-                    ); 
+                        <Comment style={{
+                            padding: '0.8rem', marginBottom: '0.8rem', marginTop: '0.8rem', backgroundColor: '#eeeeee',
+                        }}>
+                            <Comment.Content>
+                                <Comment.Author> {Meteor.users.findOne({ _id: comment.userid }).username} </Comment.Author>
+                                {comment.content}
+                            </Comment.Content>
+                        </Comment>
+                    );
                     // <div> {comment.lessonid === lessonid && comment.content} </div>
                 })}
                 <Form
