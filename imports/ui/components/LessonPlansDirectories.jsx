@@ -333,6 +333,7 @@ class LessonPlansDirectories extends Component {
             }}
             theme={FileExplorerTheme}
             canDrop={canDrop}
+            rowHeight={55}
             treeData={treeData}
             // eslint-disable-next-line react/no-unused-state
             onChange={theTreeData => this.setState({ treeData: theTreeData })}
@@ -359,7 +360,7 @@ class LessonPlansDirectories extends Component {
                   className="icon__button"
                   style={{ display: theNode.isFile ? 'block' : 'none' }}
                 >
-                  <FaEdit size={17} color="black" />
+                  <FaEdit size={17} color="black" style={{marginTop: '0.8rem'}} />
                 </button>,
                 <button
                   onClick={() => {
@@ -374,7 +375,7 @@ class LessonPlansDirectories extends Component {
                   style={{ display: theNode.isFile ? 'block' : 'none' }}
                   className="icon__button"
                 >
-                  <MdSettings size={17} color="black" />
+                  <MdSettings size={17} color="black" style={{marginTop: '0.8rem'}}/>
                 </button>,
                 <button
                   className="icon__button"
@@ -392,10 +393,10 @@ class LessonPlansDirectories extends Component {
                     Meteor.call('lessonplans.remove', theNode._id);
                   }}
                 >
-                  <FaTrash size={17} color="black" />
+                  <FaTrash size={17} color="black" style={{marginTop: '0.8rem'}}/>
                 </button>,
                 <Button
-                  style={{ marginLeft: '0.5rem' }}
+                  style={{ marginLeft: '0.5rem'}}
                   onClick={() => this.openClassModal(theNode._id, theNode.title)}
                 >
                   Add to class

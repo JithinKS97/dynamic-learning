@@ -121,7 +121,7 @@ export default class TeacherClasses extends React.Component {
             </div>
             <div style={{ paddingLeft: '1rem' }}>
               {Classes.findOne({ classcode: cl.classcode }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => {
-                return (<Link to={`/createlessonplan/${lesson}`} > {LessonPlans.findOne({ _id: lesson }) && LessonPlans.findOne({ _id: lesson }).title} </Link>)
+                return (<div> <Link to={`/createlessonplan/${lesson}`} > {LessonPlans.findOne({ _id: lesson }) && LessonPlans.findOne({ _id: lesson }).title} </Link> </div>)
               })}
             </div>
           </div>
