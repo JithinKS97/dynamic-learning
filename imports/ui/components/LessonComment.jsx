@@ -53,15 +53,15 @@ export default class LessonComment extends React.Component {
       const { lessonid } = this.props;
       return (
         <div style={{ paddingTop: '1.5rem', marginLeft: '1.2rem', width: '40%' }}>
-          {comments.map(comment => (
+          {comments.map(comment => { 
+              return (lessonid === comment.lessonid && 
             <Comment style={{
               padding: '0.8rem', marginBottom: '0.8rem', marginTop: '0.8rem', backgroundColor: '#eeeeee',
             }}
             >
               <Comment.Content>
                 {
-                                    Meteor.userId() === comment.userid
-                                    && (
+                                    Meteor.userId() === comment.userid && (
                                     <Button
                                       onClick={() => this.deleteComment(comment._id)}
                                       style={{ float: 'right' }}
@@ -79,7 +79,7 @@ export default class LessonComment extends React.Component {
 
               </Comment.Content>
             </Comment>
-          ))}
+          )}) }
           <Form
             style={{ marginTop: '0.5rem', marginBottom: '0.9rem' }}
             onSubmit={() => this.addComment()}
