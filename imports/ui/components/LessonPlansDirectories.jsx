@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 import { withTracker } from 'meteor/react-meteor-data';
 import 'react-sortable-tree/style.css';
 import { Redirect } from 'react-router-dom';
@@ -20,7 +21,7 @@ import FaEdit from 'react-icons/lib/fa/edit';
 import MdSettings from 'react-icons/lib/md/settings';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import TagsInput from 'react-tagsinput';
-
+import Classes from '../../api/classes';
 import { LessonPlans } from '../../api/lessonplans';
 import LessonPlanViewer from './LessonPlanViewer';
 
@@ -44,7 +45,30 @@ class LessonPlansDirectories extends Component {
       isPublic: null,
       tags: [],
       redirectToLessonPlan: false,
+      classes: []
     };
+  }
+
+  componentDidMount() {
+    Meteor.subscribe('getAccounts');
+    Meteor.subscribe('classes');
+
+    Tracker.autorun(() => {
+      if (Meteor.user()) {
+        this.setState({
+          user: Meteor.user().username,
+        });
+      }
+      if (Meteor.user() && Meteor.user().classes) {
+        this.setState({
+          classes: Meteor.user().classes,
+        });
+      } else {
+        this.setState({
+          classes: [],
+        });
+      }
+    });
   }
 
   handleOpen = () => this.setState({ modalOpen: true });
@@ -75,6 +99,14 @@ class LessonPlansDirectories extends Component {
     this.handleClose();
     Meteor.call('lessonplans.insert', this.lessonPlanName.value);
     this.lessonPlanName.value = '';
+  }
+
+  openClassModal = (id, title) => {
+    this.setState({
+      addToClassId: id,
+      classmodal: true, 
+      title
+    })
   }
 
   editTitle = () => {
@@ -182,7 +214,7 @@ class LessonPlansDirectories extends Component {
           <Modal.Header>
             Lessonplan details
             <Button className="close-button" onClick={this.handleClose}>
-                &times;
+              &times;
             </Button>
           </Modal.Header>
           <Modal.Content>
@@ -362,10 +394,47 @@ class LessonPlansDirectories extends Component {
                 >
                   <FaTrash size={17} color="black" />
                 </button>,
+                <Button
+                  style={{ marginLeft: '0.5rem' }}
+                  onClick={() => this.openClassModal(theNode._id, theNode.title)}
+                >
+                  Add to class
+                </Button>
               ],
             })}
           />
         </div>
+        <Modal
+          open={this.state.classmodal}
+          onClose={() => this.setState({ classmodal: false })}
+          size="tiny"
+        >
+          <Modal.Header>
+            Select a class to add {this.state.title} to
+            <Button className="close-button" onClick={() => this.setState({ classmodal: false })}>
+              X
+            </Button>
+          </Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+              {this.state.classes.map(c => {
+                return (
+                  <div>
+                    <Button
+                      style={{ marginBottom: '0.5rem' }}
+                      onClick={() => {
+                        Meteor.call('classes.addlesson', c, this.state.addToClassId); 
+                        this.setState({classmodal: false}); 
+                      }}
+                    >
+                      {Classes.findOne({ classcode: c }).name}
+                    </Button>
+                  </div>
+                )
+              })}
+            </Modal.Description>
+          </Modal.Content>
+        </Modal>
       </div>
     );
   }
