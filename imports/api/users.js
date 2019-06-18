@@ -7,8 +7,18 @@ import { Meteor } from 'meteor/meteor';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 
 export const validateNewUser = (user) => {
-  const email = user.services.github ? user.services.github.email
-    : (user.services.google ? user.services.google.email : user.emails[0].address);
+  let email = ''; 
+  if (user.services) {
+    if (user.services.github) {
+      email = user.services.github.email; 
+    }
+    else {
+      email = user.services.google.email; 
+    }
+  }
+  else {
+    email = user.emails[0].address; 
+  }
   new SimpleSchema({
     email: {
       type: String,
@@ -56,9 +66,9 @@ if (Meteor.isServer) {
     service: 'github',
   }, {
     $set: {
-      clientId: github.clientId,
+      clientId: process.env.githubclient,
       loginStyle: 'popup',
-      secret: github.secret,
+      secret: process.env.githubsecret,
     },
   });
   ServiceConfiguration.configurations.upsert({

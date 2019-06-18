@@ -89,6 +89,10 @@ export class Request extends React.Component {
     };
   }
 
+  componentDidMount() {
+    Meteor.subscribe('getAccounts'); 
+  }
+  
   componentWillReceiveProps(nextProps) {
     if (this.props === nextProps) return;
 
@@ -158,6 +162,17 @@ export class Request extends React.Component {
             >
                 Accept
             </Button>
+            <Button 
+              style={{ float: 'right' }}
+              onClick={() => this.setState({
+                infouser: member.username, 
+                infouserType: Meteor.users.findOne({username: member.username}).profile.accountType, 
+                infouserEmail: Meteor.users.findOne({username: member.username}).emails[0].address,
+                viewinfo: true
+              })}  
+            >
+              View Info
+            </Button>  
           </Card.Content>
         </Card>
       ));
@@ -481,6 +496,10 @@ export class Request extends React.Component {
       showEditDescription,
       editTitle,
       editDescription,
+      infouser, 
+      infouserType, 
+      infouserEmail,
+      viewinfo
     } = this.state;
     const { requestExists, isOwner } = this.props;
     if (members) { this.isMember = members.includes(Meteor.userId()); }
@@ -693,6 +712,33 @@ export class Request extends React.Component {
             </Grid.Row>
           </Grid>
 
+          <Modal
+          open={viewinfo}
+          onClose={() => this.setState({viewinfo: false})}
+          size="tiny"
+        >
+          <Modal.Header>
+            {infouser}
+            <Button className="close-button" onClick={() => this.setState({viewinfo: false})}>
+              X
+            </Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Modal.Description>
+              Account Type:
+              {' '}
+              {infouserType}
+              {' '}
+              <br />
+              Email:
+              {' '}
+              {infouserEmail}
+            </Modal.Description>
+
+          </Modal.Content>
+
+        </Modal>
           <Modal size="tiny" open={showMembershipRequests}>
             <Modal.Header>
               Membership requests
