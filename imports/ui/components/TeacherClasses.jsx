@@ -5,7 +5,7 @@ import { Tracker } from 'meteor/tracker';
 import {
   Button, Form, Modal,
 } from 'semantic-ui-react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import Classes from '../../api/classes';
 import { LessonPlans } from '../../api/lessonplans';
 
@@ -47,8 +47,8 @@ export default class TeacherClasses extends React.Component {
     Math.random()
       .toString(36)
       .substring(2, 5) + Math.random()
-        .toString(36)
-        .substring(2, 5)
+      .toString(36)
+      .substring(2, 5)
   )
 
   // this function can ONLY be called by a teacher, will allow a new class to be created
@@ -120,9 +120,17 @@ export default class TeacherClasses extends React.Component {
               {' '}
             </div>
             <div style={{ paddingLeft: '1rem' }}>
-              {Classes.findOne({ classcode: cl.classcode }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => {
-                return (<div> <Link to={`/createlessonplan/${lesson}`} > {Meteor.user() && LessonPlans.findOne({ _id: lesson }) && LessonPlans.findOne({ _id: lesson }).title} </Link> </div>)
-              })}
+              {Classes.findOne({ classcode: cl.classcode }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
+                <div>
+                  {' '}
+                  <Link to={`/createlessonplan/${lesson}`}>
+                    {' '}
+                    {Meteor.user() && LessonPlans.findOne({ _id: lesson }) && LessonPlans.findOne({ _id: lesson }).title}
+                    {' '}
+                  </Link>
+                  {' '}
+                </div>
+              ))}
             </div>
           </div>
         ))}

@@ -27,7 +27,13 @@ Meteor.methods({
         Comments.remove({
             _id
         }); 
-    }
+    },
+
+    // 'comments.remove': function() {
+    //     Comments.remove({
+
+    //     }); 
+    // }
     
 })
 
