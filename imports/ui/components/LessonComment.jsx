@@ -33,43 +33,43 @@ export default class LessonComment extends React.Component {
     });
   }
 
-    deleteComment = (_id) => {
-      Meteor.call('comments.delete', _id);
-      this.setState({
-        comments: Comments.find().fetch(),
-      });
-    }
+  deleteComment = (_id) => {
+    Meteor.call('comments.delete', _id);
+    this.setState({
+      comments: Comments.find().fetch(),
+    });
+  }
 
-    addComment = () => {
-      const { lessonid } = this.props;
-      Meteor.call('comments.insert', this.comment.value, Meteor.userId(), lessonid);
-      this.setState({
-        comments: Comments.find().fetch(),
-      });
-    }
+  addComment = () => {
+    const { lessonid } = this.props;
+    Meteor.call('comments.insert', this.comment.value, Meteor.userId(), lessonid);
+    this.setState({
+      comments: Comments.find().fetch(),
+    });
+  }
 
-    render = () => {
-      const { comments } = this.state;
-      const { lessonid } = this.props;
-      return (
-        <div style={{ paddingTop: '1.5rem', marginLeft: '1.2rem', width: '40%' }}>
-          {comments.map(comment => { 
-              return (lessonid === comment.lessonid && 
+  render = () => {
+    const { comments } = this.state;
+    const { lessonid } = this.props;
+    return (
+      <div style={{ paddingTop: '1.5rem', marginLeft: '1.2rem', width: '40%' }}>
+        {comments.map(comment => (lessonid === comment.lessonid
+          && (
             <Comment style={{
               padding: '0.8rem', marginBottom: '0.8rem', marginTop: '0.8rem', backgroundColor: '#eeeeee',
             }}
             >
               <Comment.Content>
                 {
-                                    Meteor.userId() === comment.userid && (
-                                    <Button
-                                      onClick={() => this.deleteComment(comment._id)}
-                                      style={{ float: 'right' }}
-                                    >
-                                        X
+                  Meteor.userId() === comment.userid && (
+                    <Button
+                      onClick={() => this.deleteComment(comment._id)}
+                      style={{ float: 'right' }}
+                    >
+                      X
                                     </Button>
-                                    )
-                                }
+                  )
+                }
                 <Comment.Author>
                   <b>
                     {Meteor.users.findOne({ _id: comment.userid }).username}
@@ -79,20 +79,21 @@ export default class LessonComment extends React.Component {
 
               </Comment.Content>
             </Comment>
-          )}) }
-          <Form
-            style={{ marginTop: '0.5rem', marginBottom: '0.9rem' }}
-            onSubmit={() => this.addComment()}
-          >
-            <Form.Field>
-              {/* eslint-disable-next-line no-return-assign */}
-              <textarea rows="3" placeholder="Comment" ref={e => this.comment = e} />
-            </Form.Field>
-            <Form.Field>
-              <Button type="submit">Submit</Button>
-            </Form.Field>
-          </Form>
-        </div>
-      );
-    }
+          )
+        ))}
+        <Form
+          style={{ marginTop: '0.5rem', marginBottom: '0.9rem' }}
+          onSubmit={() => this.addComment()}
+        >
+          <Form.Field>
+            {/* eslint-disable-next-line no-return-assign */}
+            <textarea rows="3" placeholder="Comment" ref={e => this.comment = e} />
+          </Form.Field>
+          <Form.Field>
+            <Button type="submit">Submit</Button>
+          </Form.Field>
+        </Form>
+      </div>
+    );
+  }
 }
