@@ -12,6 +12,7 @@ import VideoContainer from '../components/VideoContainer';
 import SimsList from '../components/SimsList';
 import AddSim from '../components/AddSim';
 import LessonComment from '../components/LessonComment'; 
+import Votes from '../components/Votes'; 
 
 class Lesson extends React.Component {
   constructor(props) {
@@ -76,7 +77,6 @@ class Lesson extends React.Component {
 
     Meteor.call('lessons.update', _id, slides);
   }
-
 
   saveChanges = (slides, curSlide) => {
     /**
@@ -212,6 +212,8 @@ class Lesson extends React.Component {
                     label="share the lesson"
                   />
                 ) : null}
+
+                <Votes lessonid={lesson._id} /> 
 
                 <VideoContainer
                   userId={lesson.userId}

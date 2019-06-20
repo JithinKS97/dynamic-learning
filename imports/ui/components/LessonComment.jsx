@@ -5,6 +5,7 @@ import {
 } from 'semantic-ui-react';
 import Comments from '../../api/comments';
 import 'semantic-ui-css/semantic.min.css';
+import { Meteor } from 'meteor/meteor';
 
 // this component allows us to view the comments made by a user on a lesson
 
