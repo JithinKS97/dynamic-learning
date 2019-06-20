@@ -11,6 +11,7 @@ import 'semantic-ui-css/semantic.min.css';
 import VideoContainer from '../components/VideoContainer';
 import SimsList from '../components/SimsList';
 import AddSim from '../components/AddSim';
+import LessonComment from '../components/LessonComment'; 
 
 class Lesson extends React.Component {
   constructor(props) {
@@ -289,6 +290,9 @@ class Lesson extends React.Component {
               ) : null}
             </Grid.Row>
           </Grid>
+          <LessonComment 
+            lessonid={lesson._id}
+          /> 
         </div>
 
       );

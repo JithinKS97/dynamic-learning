@@ -5,7 +5,9 @@ import { Tracker } from 'meteor/tracker';
 import {
   Button, Form, Modal,
 } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import Classes from '../../api/classes';
+import { LessonPlans } from '../../api/lessonplans';
 
 export default class StudentClasses extends React.Component {
   constructor(props) {
@@ -19,6 +21,8 @@ export default class StudentClasses extends React.Component {
   componentDidMount() {
     Meteor.subscribe('getAccounts');
     Meteor.subscribe('classes');
+    Meteor.subscribe('lessonplans');
+    Meteor.subscribe('lessonplans.public');
 
     Tracker.autorun(() => {
       if (Meteor.user()) {
@@ -101,10 +105,25 @@ export default class StudentClasses extends React.Component {
           <b> Your current classes </b>
         </div>
         {user !== '' && this.getClasses().map(cl => (
-          <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
-            {' '}
-            {`${cl.name}: ${cl.classcode}`}
-            {' '}
+          <div>
+            <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
+              {' '}
+              {`${cl.name}: ${cl.classcode}`}
+              {' '}
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              {Classes.findOne({ classcode: cl.classcode }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
+                <div>
+                  {' '}
+                  <Link to={`/createlessonplan/${lesson}`}>
+                    {' '}
+                    {Meteor.user() && LessonPlans.findOne({ _id: lesson }) && LessonPlans.findOne({ _id: lesson }).title}
+                    {' '}
+                  </Link>
+                  {' '}
+                </div>
+              ))}
+            </div>
           </div>
         ))}
 

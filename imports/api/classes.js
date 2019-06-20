@@ -19,6 +19,7 @@ Meteor.methods({
       name,
       instructor,
       roster: [],
+      lessons: [],
     });
     Meteor.call('addClass', instructor, classcode);
   },
@@ -34,6 +35,15 @@ Meteor.methods({
     Meteor.call('addClass', studentname, classcode);
   },
 
+  'classes.addlesson': function(classcode, lessonid) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized'); 
+    }
+    Classes.update(
+      { classcode }, 
+      { $push: { lessons: lessonid } }, 
+    ); 
+  }
   // 'classes.remove'() {
   //     return Classes.remove({});
   // }

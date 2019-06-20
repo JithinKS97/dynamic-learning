@@ -11,7 +11,7 @@ import 'semantic-ui-css/semantic.min.css';
 const vals = [
   { key: 's', text: 'Student', value: 'Student' },
   { key: 't', text: 'Teacher', value: 'Teacher' },
-  { key: 'd', text: 'Developer', value: 'Developer' },
+  { key: 'd', text: 'Standard', value: 'Standard' },
 ];
 
 export default class Signup extends React.Component {
