@@ -1152,7 +1152,7 @@ export class CreateLessonPlan extends React.Component {
 
                 {!!Meteor.userId() && userId === Meteor.userId() ? (
                   <Link to={`/request/${_id}`}>
-                    <Menu.Item link>Request for new sim</Menu.Item>
+                    <Menu.Item link>Discussion forum</Menu.Item>
                   </Link>
                 ) : null}
                 <Menu.Item

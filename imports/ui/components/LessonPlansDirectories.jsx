@@ -45,7 +45,7 @@ class LessonPlansDirectories extends Component {
       isPublic: null,
       tags: [],
       redirectToLessonPlan: false,
-      classes: []
+      classes: [],
     };
   }
 
@@ -55,9 +55,9 @@ class LessonPlansDirectories extends Component {
 
     Tracker.autorun(() => {
       if (Meteor.user()) {
-        this.setState({
-          user: Meteor.user().username,
-        });
+        // this.setState({
+        //   user: Meteor.user().username,
+        // });
       }
       if (Meteor.user() && Meteor.user().classes) {
         this.setState({
@@ -104,9 +104,9 @@ class LessonPlansDirectories extends Component {
   openClassModal = (id, title) => {
     this.setState({
       addToClassId: id,
-      classmodal: true, 
-      title
-    })
+      classmodal: true,
+      title,
+    });
   }
 
   editTitle = () => {
@@ -151,6 +151,9 @@ class LessonPlansDirectories extends Component {
       tags,
       title,
       node,
+      classmodal,
+      addToClassId,
+      classes,
     } = this.state;
     // eslint-disable-next-line react/prop-types
     const { lessonplansExists, treeData } = this.props;
@@ -280,6 +283,14 @@ class LessonPlansDirectories extends Component {
                   />
                 ) : null}
               <Button onClick={this.editTitle} style={{ marginLeft: '2rem' }}>{editable ? 'Submit' : 'Edit title'}</Button>
+              <Button
+                style={{ marginLeft: '2rem' }}
+                onClick={
+                  () => this.openClassModal(selectedLessonPlanId, title)
+                  }
+              >
+                Add to class
+              </Button>
               <br />
               <Checkbox
                 style={{ margin: '0.8rem 0' }}
@@ -333,7 +344,6 @@ class LessonPlansDirectories extends Component {
             }}
             theme={FileExplorerTheme}
             canDrop={canDrop}
-            rowHeight={55}
             treeData={treeData}
             // eslint-disable-next-line react/no-unused-state
             onChange={theTreeData => this.setState({ treeData: theTreeData })}
@@ -360,7 +370,7 @@ class LessonPlansDirectories extends Component {
                   className="icon__button"
                   style={{ display: theNode.isFile ? 'block' : 'none' }}
                 >
-                  <FaEdit size={17} color="black" style={{marginTop: '0.8rem'}} />
+                  <FaEdit size={17} color="black" style={{ marginTop: '0.8rem' }} />
                 </button>,
                 <button
                   onClick={() => {
@@ -375,7 +385,7 @@ class LessonPlansDirectories extends Component {
                   style={{ display: theNode.isFile ? 'block' : 'none' }}
                   className="icon__button"
                 >
-                  <MdSettings size={17} color="black" style={{marginTop: '0.8rem'}}/>
+                  <MdSettings size={17} color="black" style={{ marginTop: '0.8rem' }} />
                 </button>,
                 <button
                   className="icon__button"
@@ -393,46 +403,42 @@ class LessonPlansDirectories extends Component {
                     Meteor.call('lessonplans.remove', theNode._id);
                   }}
                 >
-                  <FaTrash size={17} color="black" style={{marginTop: '0.8rem'}}/>
+                  <FaTrash size={17} color="black" style={{ marginTop: '0.8rem' }} />
                 </button>,
-                <Button
-                  style={{ marginLeft: '0.5rem'}}
-                  onClick={() => this.openClassModal(theNode._id, theNode.title)}
-                >
-                  Add to class
-                </Button>
               ],
             })}
           />
         </div>
         <Modal
-          open={this.state.classmodal}
+          open={classmodal}
           onClose={() => this.setState({ classmodal: false })}
           size="tiny"
         >
           <Modal.Header>
-            Select a class to add {this.state.title} to
+            Select a class to add
+            {' '}
+            {title}
+            {' '}
+              to
             <Button className="close-button" onClick={() => this.setState({ classmodal: false })}>
               X
             </Button>
           </Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              {this.state.classes.map(c => {
-                return (
-                  <div>
-                    <Button
-                      style={{ marginBottom: '0.5rem' }}
-                      onClick={() => {
-                        Meteor.call('classes.addlesson', c, this.state.addToClassId); 
-                        this.setState({classmodal: false}); 
-                      }}
-                    >
-                      {Classes.findOne({ classcode: c }).name}
-                    </Button>
-                  </div>
-                )
-              })}
+              {classes.map(c => (
+                <div>
+                  <Button
+                    style={{ marginBottom: '0.5rem' }}
+                    onClick={() => {
+                      Meteor.call('classes.addlesson', c, addToClassId);
+                      this.setState({ classmodal: false });
+                    }}
+                  >
+                    {Classes.findOne({ classcode: c }).name}
+                  </Button>
+                </div>
+              ))}
             </Modal.Description>
           </Modal.Content>
         </Modal>
