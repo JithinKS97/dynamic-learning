@@ -1,3 +1,5 @@
+/* eslint-disable func-names */
+/* eslint-disable prefer-arrow-callback */
 /* eslint-disable no-underscore-dangle, no-unused-expressions */
 import { Meteor } from 'meteor/meteor';
 import { expect } from 'chai';
@@ -19,7 +21,6 @@ if (Meteor.isServer) {
       expect(res).to.be.true;
     });
 
-    // eslint-disable-next-line no-undef, func-names, prefer-arrow-callback
     it('should reject invalid address', function () {
       const testUser = {
         emails: [

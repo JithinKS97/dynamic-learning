@@ -9,21 +9,21 @@ import { ServiceConfiguration } from 'meteor/service-configuration';
 
 export const validateNewUser = (user) => {
   let email = '';
-  // if (user.services) {
-  //   if (user.services.github) {
-  //     email = user.services.github.email;
-  //   } else {
-  //     email = user.services.google.email;
-  //   }
-  // } else {
-  //   email = user.emails[0].address;
-  // }
-  // new SimpleSchema({
-  //   email: {
-  //     type: String,
-  //     regEx: SimpleSchema.RegEx.Email,
-  //   },
-  // }).validate({ email });
+  if (user.services) {
+    if (user.services.github) {
+      email = user.services.github.email;
+    } else if (user.services.google) {
+      email = user.services.google.email;
+    } else {
+      email = user.emails[0].address;
+    }
+  }
+  new SimpleSchema({
+    email: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Email,
+    },
+  }).validate({ email });
   return true;
 };
 
@@ -63,7 +63,6 @@ Meteor.methods({
 if (Meteor.isServer) {
   Accounts.validateNewUser(validateNewUser);
   Meteor.publish('getAccounts', () => Meteor.users.find());
-  const { settings: { github } } = Meteor;
   ServiceConfiguration.configurations.upsert({
     service: 'github',
   }, {
