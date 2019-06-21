@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { Tracker } from 'meteor/tracker';
 import {

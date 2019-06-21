@@ -615,7 +615,9 @@ export class CreateLessonPlan extends React.Component {
 
   redo = () => {
     /**
-     * When undo is called, the current state is saved to redoStack
+     * When redo is called, the slide in the top of redo stack is popped.
+     * It is then pushed to the undostack.
+     * Then the popped slide is set.
      */
     const { curSlide, slides } = this.state;
 
@@ -676,7 +678,6 @@ export class CreateLessonPlan extends React.Component {
         */
 
     const temp = this.db.getImg();
-
     this.pageCount += option;
     $('.upper-canvas')[0].style.height = `${($('.upper-canvas')[0].height + option * 300).toString()}px`;
     $('.lower-canvas')[0].style.height = `${($('.lower-canvas')[0].height + option * 300).toString()}px`;
@@ -684,11 +685,6 @@ export class CreateLessonPlan extends React.Component {
     $('.lower-canvas')[0].height += option * 300;
     $('.canvas-container')[0].style.height = $('.lower-canvas')[0].style.height;
     this.db.b.setHeight($('.upper-canvas')[0].height);
-
-    /**
-     * When reset is called here, we need not push to undo stack
-     */
-
     this.db.setImg(temp);
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
