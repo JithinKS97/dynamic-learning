@@ -6,6 +6,8 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
 import { Lessons } from '../../api/lessons';
+import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'; 
+import FaThumbsDown from 'react-icons/lib/fa/thumbs-down'
 
 export default class Votes extends React.Component {
 
@@ -57,17 +59,17 @@ export default class Votes extends React.Component {
     upvoted = () => {
         const lesson = Lessons.findOne({_id: this.props.lessonid}); 
         if (lesson) {
-            return lesson.upvotes.includes(this.state.userid) ? {backgroundColor: 'lightblue'} : {}; 
+            return lesson.upvotes.includes(this.state.userid) ? 'blue' : ''; 
         }
-        return {backgroundColor: 'gray'}; 
+        return '';
     }
 
     downvoted = () => {
         const lesson = Lessons.findOne({_id: this.props.lessonid}); 
         if (lesson) {
-            return lesson.downvotes.includes(this.state.userid) ? {backgroundColor: 'lightblue'} : {}; 
+            return lesson.downvotes.includes(this.state.userid) ? 'blue' : ''; 
         }
-        return {backgroundColor: 'gray'}; 
+        return ''; 
     }
 
     numupvotes = () => {
@@ -85,21 +87,19 @@ export default class Votes extends React.Component {
         }
         return 0; 
     }
-    
+
     render() {
         return (
             <div style={{paddingBottom: '0.6rem'}}>
                 <Button 
                     onClick={() => this.upvote()} 
-                    style={this.upvoted()}
                 >
-                    Upvote ({this.numupvotes()})
+                    <FaThumbsUp color={this.upvoted()} /> ({this.numupvotes()})
                 </Button>
                 <Button 
                     onClick={() => this.downvote()} 
-                    style={this.downvoted()}
                 >
-                    Downvote ({this.numdownvotes()})
+                    <FaThumbsDown color={this.downvoted()} /> ({this.numdownvotes()})
                 </Button>
             </div>
         );
