@@ -60,8 +60,6 @@ export class Request extends React.Component {
       show: false,
       slides: [],
       curSlide: 0,
-      selectedSim: null,
-      selectedSimIndex: null,
 
       requestTitle: '',
       description: '',
@@ -69,16 +67,11 @@ export class Request extends React.Component {
       editTitle: '',
       editDescription: '',
 
-      loading: true,
-      initialized: false,
-
       topicTitleModalOpen: false,
       topicTitle: '',
 
       showEditDescription: false,
       redirectToLessonplan: false,
-
-      isHovering: false,
 
       showMembershipRequests: false,
       pendingMembers: [],
@@ -100,16 +93,14 @@ export class Request extends React.Component {
      * If the title for the first slide has not been yet set, show is false
      */
 
-    const { request, loading } = nextProps;
+    const { request } = nextProps;
 
     const show = !!request.slides[0].title;
 
     this.setState(
       {
         ...request,
-        loading,
         show,
-        initialized: true,
 
         editDescription: request.description,
         editTitle: request.requestTitle,
@@ -248,7 +239,6 @@ export class Request extends React.Component {
       slides.push(slide);
       this.setState(
         {
-          title,
           slides,
           curSlide,
         },
@@ -264,9 +254,9 @@ export class Request extends React.Component {
     if (!isAuthenticated) return;
 
     const { slides, _id } = this.state;
-    const { updateRequestToDB } = this.props;
+    const { updateToDatabase } = this.props;
 
-    updateRequestToDB(_id, slides);
+    updateToDatabase(_id, slides);
   };
 
   deleteSlide = (index) => {
@@ -305,7 +295,6 @@ export class Request extends React.Component {
       {
         curSlide: 0,
         slides,
-        title: '',
         show: false,
       },
       () => {
@@ -495,6 +484,7 @@ export class Request extends React.Component {
       infouserType,
       infouserEmail,
       viewinfo,
+      isAuthenticated,
     } = this.state;
     const { requestExists, isOwner } = this.props;
     if (members) { this.isMember = members.includes(Meteor.userId()); }
@@ -671,10 +661,13 @@ export class Request extends React.Component {
                   <h2>Create a topic to start the discussion</h2>
                 )}
 
-                {show && !!Meteor.userId() && this.isMember ? (
+                {show && isAuthenticated && this.isMember ? (
                   <CommentForm
-                    option={-1}
-                    {...this.state}
+                    // indexOfComment is -1 since it is the main form.
+                    // indexOfComment > 0 for commentForm for replies
+                    indexOfComment={-1}
+                    slides={slides}
+                    curSlide={curSlide}
                     updateSlides={this.updateSlides}
                   />
                 ) : null}
@@ -901,20 +894,18 @@ Request.propTypes = {
     members: PropTypes.array,
     pendingRequests: PropTypes.array,
   }),
-  loading: PropTypes.bool,
   setTitle: PropTypes.func,
   isAuthenticated: PropTypes.bool,
-  updateRequestToDB: PropTypes.func,
+  updateToDatabase: PropTypes.func,
   isOwner: PropTypes.bool,
 };
 
 Request.defaultProps = {
   requestExists: false,
   request: { slides: [] },
-  loading: true,
   setTitle: () => {},
   isAuthenticated: false,
-  updateRequestToDB: () => {},
+  updateToDatabase: () => {},
   isOwner: false,
 };
 
@@ -952,7 +943,7 @@ const RequestContainer = withTracker(({ match }) => {
     },
     isAuthenticated: !!Meteor.userId(),
     isOwner: request.userId === Meteor.userId(),
-    updateRequestToDB: (_id, slides) => { Meteor.call('requests.update', _id, slides); },
+    updateToDatabase: (_id, slides) => { Meteor.call('requests.update', _id, slides); },
   };
 })(Request);
 

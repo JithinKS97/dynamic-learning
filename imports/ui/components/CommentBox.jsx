@@ -224,7 +224,7 @@ export default class CommentBox extends React.Component {
               ? (
                 <div>
                   <CommentForm
-                    option={index}
+                    indexOfComment={index}
                     slides={slides}
                     curSlide={curSlide}
                     updateSlides={updateSlides}

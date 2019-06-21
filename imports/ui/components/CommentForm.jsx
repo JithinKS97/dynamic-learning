@@ -11,12 +11,12 @@ export default class CommentForm extends Component {
 
   postComment = () => {
     const {
-      option,
+      indexOfComment,
       slides,
       curSlide,
-      updateSlide,
+      updateSlides,
     } = this.props;
-    if (option === -1) {
+    if (indexOfComment === -1) {
       if (this.comment.value) {
         const comment = this.comment.value;
         slides[curSlide].comments.push({
@@ -25,26 +25,26 @@ export default class CommentForm extends Component {
           time: Date.now(),
           replies: [],
         });
-        updateSlide(slides);
+        updateSlides(slides);
         this.comment.value = '';
       }
     } else if (this.comment.value) {
       const comment = this.comment.value;
-      slides[curSlide].comments[option].replies.push({
+      slides[curSlide].comments[indexOfComment].replies.push({
         comment,
         userId: Meteor.userId(),
         time: Date.now(),
       });
-      updateSlide(slides);
+      updateSlides(slides);
       this.comment.value = '';
     }
   }
 
   render() {
-    const { option } = this.props;
+    const { indexOfComment } = this.props;
     return (
       <Form
-        style={{ marginLeft: option === -1 ? '0rem' : '1.6rem', maxWidth: '650px', marginBottom: '0.9rem' }}
+        style={{ marginLeft: indexOfComment === -1 ? '0rem' : '1.6rem', maxWidth: '650px', marginBottom: '0.9rem' }}
         onSubmit={this.postComment}
       >
         <Form.Field>
@@ -60,8 +60,8 @@ export default class CommentForm extends Component {
 }
 
 CommentForm.propTypes = {
-  option: PropTypes.number.isRequired,
+  indexOfComment: PropTypes.number.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
-  updateSlide: PropTypes.func.isRequired,
+  updateSlides: PropTypes.func.isRequired,
 };

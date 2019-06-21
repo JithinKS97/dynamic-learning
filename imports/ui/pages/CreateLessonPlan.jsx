@@ -82,11 +82,6 @@ export class CreateLessonPlan extends React.Component {
     */
 
     this.pageCount = 0;
-    this.pushSlide.bind(this);
-    this.save.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-
-    this.changePageCount.bind(this);
 
     this.undoStacks = [];
     this.redoStacks = [];
@@ -204,7 +199,7 @@ export class CreateLessonPlan extends React.Component {
 
     if (e.keyCode === 83 && e.ctrlKey) {
       e.preventDefault();
-      this.save();
+      this.saveToDatabase();
     }
 
     if (e.keyCode === 68 && e.ctrlKey) {
@@ -267,7 +262,7 @@ export class CreateLessonPlan extends React.Component {
   }
 
   addNewSlide = () => {
-    /* this.savethis.savethis.savethis.savethis.savethis.savethis.savethis.save
+    /*
         Used for creating a new slide
     */
 
@@ -337,7 +332,7 @@ export class CreateLessonPlan extends React.Component {
     );
   }
 
-  save = () => {
+  saveToDatabase = () => {
     /* This function is intended for saving the slides to the database.
             If not logged in, user is asked to login first.
         */
@@ -1028,7 +1023,7 @@ export class CreateLessonPlan extends React.Component {
                   undo={this.undo}
                   redo={this.redo}
                   ref={(e) => { this.simsList = e; }}
-                  save={this.save}
+                  save={this.saveToDatabase}
                   interact={this.interact}
                 />
 
@@ -1148,7 +1143,7 @@ export class CreateLessonPlan extends React.Component {
 
                 <Menu.Item
                   onClick={() => {
-                    this.save();
+                    this.saveToDatabase();
                   }}
                 >
                   {Meteor.userId() === userId || !Meteor.userId()
