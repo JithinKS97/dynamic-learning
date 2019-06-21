@@ -123,7 +123,7 @@ export class CreateLessonPlan extends React.Component {
         const { slides, curSlide } = this.state;
 
         if (slides.length === 0) {
-          this.pushSlide(slides);
+          this.pushSlide();
 
           this.setSizeOfPage(0);
           this.db.reset();
@@ -134,14 +134,12 @@ export class CreateLessonPlan extends React.Component {
           this.pageCount = slides[curSlide].pageCount || 0;
 
           /* The size of the page is set first, then we completely reset the canvas
-                And the notes are drawn back to the canvas
-            */
+              And the notes are drawn back to the canvas
+          */
 
           this.setSizeOfPage(this.pageCount);
-
           this.db.reset();
           this.db.setImg(slides[curSlide].note);
-
           this.updateSlides(slides);
           this.interact();
         }
@@ -210,10 +208,10 @@ export class CreateLessonPlan extends React.Component {
 
   saveAfterReset = () => {
     const { slides, curSlide } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
-    _slides[curSlide].note = this.db.getImg();
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    updatedSlides[curSlide].note = this.db.getImg();
     this.setState({
-      slides: _slides,
+      slides: updatedSlides,
     });
   };
 
@@ -231,12 +229,12 @@ export class CreateLessonPlan extends React.Component {
 
   setSizeOfPage = (pageCount) => {
     /*
-            This function sets the size of the canvas. By default the size of the page is
-            900px. The user can add extra poges. With each addition the size of the page
-            increases by 300px.
-            First the size of the container is incremented, then the canvas's size is
-            incremented
-        */
+      This function sets the size of the canvas. By default the size of the page is
+      900px. The user can add extra poges. With each addition the size of the page
+      increases by 300px.
+      First the size of the container is incremented, then the canvas's size is
+      incremented
+    */
 
     $('.canvas-container')[0].style.height = `${900 + pageCount * 300}px`;
     $('.upper-canvas')[0].style.height = $('.canvas-container')[0].style.height;
@@ -248,10 +246,10 @@ export class CreateLessonPlan extends React.Component {
 
   onChange = () => {
     /*
-            Whenever board:reset or board:StopDrawing event occurs, this function is called.
-            Here we retrieve the current slide no. and note from the states. The notes are
-            updated and stored back to the state.
-        */
+      Whenever board:reset or board:StopDrawing event occurs, this function is called.
+      Here we retrieve the current slide no. and note from the states. The notes are
+      updated and stored back to the state.
+    */
     const { slides } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
@@ -268,7 +266,7 @@ export class CreateLessonPlan extends React.Component {
 
     let { curSlide } = this.state;
     const { slides } = this.state;
-    this.pushSlide(slides);
+    this.pushSlide();
     curSlide = slides.length - 1;
     this.setState(
       {
@@ -293,10 +291,12 @@ export class CreateLessonPlan extends React.Component {
     );
   }
 
-  pushSlide = (slides) => {
+  pushSlide = () => {
     /* To create a new slide, first the structure of slide is defined and
            then pushed to the slides array.
         */
+
+    const { slides } = this.state;
 
     const newSlide = {
       note: [],
@@ -324,8 +324,7 @@ export class CreateLessonPlan extends React.Component {
         slides: [],
       },
       () => {
-        const { slides } = this.state;
-        this.pushSlide(slides);
+        this.pushSlide();
         this.setSizeOfPage(0);
         this.db.reset();
       },
@@ -648,9 +647,7 @@ export class CreateLessonPlan extends React.Component {
         /**
          * When reset is called, we need not push the slide to undostack
          */
-        this.preventUndo = true;
         this.db.reset();
-        this.preventUndo = false;
         this.db.setImg(slides[curSlide].note);
 
         /**
@@ -659,9 +656,7 @@ export class CreateLessonPlan extends React.Component {
          */
 
         if (!slides[curSlide].note) {
-          this.preventUndo = true;
           this.db.reset();
-          this.preventUndo = false;
         }
       },
     );
@@ -692,7 +687,6 @@ export class CreateLessonPlan extends React.Component {
 
     /**
      * When reset is called here, we need not push to undo stack
-     * preventUndo variable is used for preventing object being added to undoStacks
      */
 
     this.db.setImg(temp);
