@@ -169,4 +169,8 @@ Meteor.methods({
       { $set: { shared, updatedAt: moment().valueOf() } },
     );
   },
+
+  'lessons.addupdown'(_id) {
+    Lessons.update({_id}, {$set: {upvotes: [], downvotes: []}}); 
+  }
 });

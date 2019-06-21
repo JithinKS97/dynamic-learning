@@ -213,7 +213,7 @@ class Lesson extends React.Component {
                   />
                 ) : null}
 
-                <Votes lessonid={lesson._id} /> 
+                  <Votes lessonid={lesson._id} />
 
                 <VideoContainer
                   userId={lesson.userId}

@@ -56,6 +56,9 @@ Meteor.methods({
   removeUser(username) {
     Meteor.users.remove({ username });
   },
+  setUsername(_id, username) {
+    Meteor.users.update({_id}, {$set: {username}})
+  }
 });
 
 if (Meteor.isServer) {
