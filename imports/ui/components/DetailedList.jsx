@@ -47,7 +47,7 @@ const ListTile = (props) => {
   return (
     <Card
       onClick={() => {
-        if (!slideChangeDisable) { handleClick(undefined, index); }
+        if (!slideChangeDisable) { handleClick(index); }
       }}
       style={{
         margin: '0', display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between',

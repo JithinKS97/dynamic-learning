@@ -14,7 +14,7 @@ export default class CommentForm extends Component {
       option,
       slides,
       curSlide,
-      saveChanges,
+      updateSlide,
     } = this.props;
     if (option === -1) {
       if (this.comment.value) {
@@ -25,7 +25,7 @@ export default class CommentForm extends Component {
           time: Date.now(),
           replies: [],
         });
-        saveChanges(slides);
+        updateSlide(slides);
         this.comment.value = '';
       }
     } else if (this.comment.value) {
@@ -35,7 +35,7 @@ export default class CommentForm extends Component {
         userId: Meteor.userId(),
         time: Date.now(),
       });
-      saveChanges(slides);
+      updateSlide(slides);
       this.comment.value = '';
     }
   }
@@ -63,5 +63,5 @@ CommentForm.propTypes = {
   option: PropTypes.number.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
-  saveChanges: PropTypes.func.isRequired,
+  updateSlide: PropTypes.func.isRequired,
 };

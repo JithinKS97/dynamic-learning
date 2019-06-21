@@ -283,7 +283,8 @@ export class Request extends React.Component {
           curSlide = 0;
         }
         if (curSlide === slides.length) curSlide = slides.length - 1;
-        this.saveChanges(slides, curSlide);
+        this.changeSlide(curSlide);
+        this.updateSlides(slides);
       } else this.reset();
     }
   };
@@ -313,38 +314,28 @@ export class Request extends React.Component {
     );
   }
 
-  saveChanges = (slides, curSlide) => {
-    if (slides === undefined) {
-      this.setState(
-        {
-          curSlide,
-        },
-        () => {
-          this.commentsList.collapse();
-          this.update();
-        },
-      );
-    } else if (curSlide === undefined) {
-      this.setState(
-        {
-          slides,
-        },
-        () => {
-          this.update();
-        },
-      );
-    } else {
-      this.setState(
-        {
-          slides,
-          curSlide,
-        },
-        () => {
-          this.update();
-        },
-      );
-    }
-  };
+  updateSlides = (updatedSlides) => {
+    this.setState(
+      {
+        slides: updatedSlides,
+      },
+      () => {
+        this.update();
+      },
+    );
+  }
+
+  changeSlide = (toSlideNo) => {
+    this.setState(
+      {
+        curSlide: toSlideNo,
+      },
+      () => {
+        this.commentsList.collapse();
+        this.update();
+      },
+    );
+  }
 
   pushSim = (title, username, project_id) => {
     const { members } = this.state;
@@ -389,31 +380,31 @@ export class Request extends React.Component {
     const { iframes } = slides[curSlide];
     iframes.splice(index, 1);
     slides[curSlide].iframes = iframes;
-    this.saveChanges(slides);
+    this.updateSlides(slides);
   };
 
   deleteComment = (index) => {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments.splice(index, 1);
-    this.saveChanges(slides);
+    this.updateSlides(slides);
   }
 
   editComment = (editedComment, index) => {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments[index].comment = editedComment;
-    this.saveChanges(slides);
+    this.updateSlides(slides);
   };
 
   deleteReplyComment = (index, subIndex) => {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments[index].replies.splice(subIndex, 1);
-    this.saveChanges(slides);
+    this.updateSlides(slides);
   }
 
   editReplyComment = (index, subIndex, editedComment) => {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
-    this.saveChanges(slides);
+    this.updateSlides(slides);
   };
 
   setTitle = () => {
@@ -445,7 +436,7 @@ export class Request extends React.Component {
 
     _slides[index].title = newTitle;
 
-    this.saveChanges(_slides);
+    this.updateSlides(_slides);
 
     return true;
   };
@@ -653,7 +644,7 @@ export class Request extends React.Component {
                   <DetailedList
                     items={slides}
                     curSlide={curSlide}
-                    handleClick={this.saveChanges}
+                    handleClick={this.changeSlide}
                     deleteItem={this.deleteSlide}
                     changeTitleOfItem={this.changeTitleOfSlide}
                     isMember={this.isMember}
@@ -670,7 +661,7 @@ export class Request extends React.Component {
                     ref={(el) => { this.commentsList = el; }}
                     slides={slides}
                     curSlide={curSlide}
-                    saveChanges={this.saveChanges}
+                    updateSlides={this.updateSlides}
                     deleteReplyComment={this.deleteReplyComment}
                     deleteComment={this.deleteComment}
                     editComment={this.editComment}
@@ -684,7 +675,7 @@ export class Request extends React.Component {
                   <CommentForm
                     option={-1}
                     {...this.state}
-                    saveChanges={this.saveChanges}
+                    updateSlides={this.updateSlides}
                   />
                 ) : null}
               </Grid.Column>

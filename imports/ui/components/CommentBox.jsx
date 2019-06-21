@@ -124,7 +124,7 @@ export default class CommentBox extends React.Component {
       editComment,
       slides,
       curSlide,
-      saveChanges,
+      updateSlides,
     } = this.props;
     const {
       username,
@@ -227,7 +227,7 @@ export default class CommentBox extends React.Component {
                     option={index}
                     slides={slides}
                     curSlide={curSlide}
-                    saveChanges={saveChanges}
+                    updateSlides={updateSlides}
                   />
                 </div>
               ) : null}
@@ -254,5 +254,5 @@ CommentBox.propTypes = {
   editReplyComment: PropTypes.func.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
-  saveChanges: PropTypes.func.isRequired,
+  updateSlides: PropTypes.func.isRequired,
 };
