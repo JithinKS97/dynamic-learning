@@ -57,6 +57,8 @@ Meteor.methods({
       shared: false,
       updatedAt: moment().valueOf(),
       createdAt: Date.now(),
+      upvotes: [], // will contain IDs of users who upvoted
+      downvotes: []
     });
   },
 
@@ -111,6 +113,52 @@ Meteor.methods({
     );
   },
 
+  'lessons.upvote'(lessonid, userid) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized'); 
+    }
+    if (Lessons.findOne({_id: lessonid}).upvotes.includes(userid)) {
+      Lessons.update(
+        {_id: lessonid}, 
+        {$pull: {upvotes: userid}}
+      ); 
+      return; 
+    }
+    if (Lessons.findOne({_id: lessonid}).downvotes.includes(userid)) {
+      Lessons.update(
+        {_id: lessonid}, 
+        {$pull: {downvotes: userid}}
+      ); 
+    }
+    Lessons.update(
+      {_id: lessonid}, 
+      {$push: {upvotes: userid}}
+    ); 
+  },
+
+  'lessons.downvote'(lessonid, userid) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized'); 
+    }
+    if (Lessons.findOne({_id: lessonid}).downvotes.includes(userid)) {
+      Lessons.update(
+        {_id: lessonid}, 
+        {$pull: {downvotes: userid}}
+      ); 
+      return; 
+    }
+    if (Lessons.findOne({_id: lessonid}).upvotes.includes(userid)) {
+      Lessons.update(
+        {_id: lessonid}, 
+        {$pull: {upvotes: userid}}
+      ); 
+    }
+    Lessons.update(
+      {_id: lessonid}, 
+      {$push: {downvotes: userid}}
+    ); 
+  },
+
   'lessons.shareLesson'(_id, shared) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
@@ -121,4 +169,8 @@ Meteor.methods({
       { $set: { shared, updatedAt: moment().valueOf() } },
     );
   },
+
+  'lessons.addupdown'(_id) {
+    Lessons.update({_id}, {$set: {upvotes: [], downvotes: []}}); 
+  }
 });
