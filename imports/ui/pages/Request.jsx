@@ -211,9 +211,9 @@ export class Request extends React.Component {
   findTime = time => moment(time)
 
   push = (title) => {
-    const { isAuthenticated } = this.props;
+    const { isAuthenticated, isOwner } = this.props;
 
-    if (!isAuthenticated) return;
+    if (!(isAuthenticated && isOwner)) return;
 
     if (!title) return;
 
@@ -328,7 +328,8 @@ export class Request extends React.Component {
 
   pushSim = (title, username, project_id) => {
     const { members } = this.state;
-    if (members) { this.isMember = members.includes(Meteor.userId()); }
+    const { currentUserId } = this.props;
+    if (members) { this.isMember = members.includes(currentUserId); }
 
     if (!(Meteor.userId() && this.isMember)) return;
 
@@ -396,9 +397,11 @@ export class Request extends React.Component {
     this.updateSlides(slides);
   };
 
-  setTitle = () => {
+  setTitleAndDescription = () => {
     const { editDescription, editTitle } = this.state;
-    const { setTitle } = this.props;
+    const { updateTitleInTheDatabase, isOwner, isAuthenticated } = this.props;
+
+    if (!(isAuthenticated && isOwner)) return;
 
     if (!(editDescription && editTitle)) {
       alert('Fill the details');
@@ -413,7 +416,7 @@ export class Request extends React.Component {
       },
       () => {
         const { _id } = this.state;
-        setTitle(_id, editTitle, editDescription);
+        updateTitleInTheDatabase(_id, editTitle, editDescription);
       },
     );
   }
@@ -484,12 +487,18 @@ export class Request extends React.Component {
       infouserType,
       infouserEmail,
       viewinfo,
-      isAuthenticated,
     } = this.state;
-    const { requestExists, isOwner } = this.props;
-    if (members) { this.isMember = members.includes(Meteor.userId()); }
+
+    const {
+      requestExists, isOwner, currentUserId, isAuthenticated,
+    } = this.props;
+    if (members) { this.isMember = members.includes(currentUserId); }
 
     if (redirectToLessonplan) { return <Redirect to={`/createlessonplan/${_id}`} />; }
+
+    // console.log(show);
+    // console.log(isAuthenticated);
+    // console.log(this.isMember);
 
     return (
       <div>
@@ -618,7 +627,7 @@ export class Request extends React.Component {
                   Topics
                 </Header>
 
-                {Meteor.userId() && this.isMember ? (
+                {Meteor.userId() && isOwner ? (
                   <Button
                     onClick={() => {
                       this.setState({
@@ -648,6 +657,7 @@ export class Request extends React.Component {
                 {show ? (
                   <CommentsList
                     isMember={this.isMember}
+                    isAuthenticated={isAuthenticated}
                     ref={(el) => { this.commentsList = el; }}
                     slides={slides}
                     curSlide={curSlide}
@@ -669,6 +679,8 @@ export class Request extends React.Component {
                     slides={slides}
                     curSlide={curSlide}
                     updateSlides={this.updateSlides}
+                    isMember={this.isMember}
+                    isAuthenticated={isAuthenticated}
                   />
                 ) : null}
               </Grid.Column>
@@ -840,7 +852,7 @@ export class Request extends React.Component {
 
               <Modal.Content>
                 <Modal.Description>
-                  <Form onSubmit={() => { this.setTitle(); }}>
+                  <Form onSubmit={() => { this.setTitleAndDescription(); }}>
                     <Form.Field>
                       <label>Title</label>
                       <Input
@@ -894,19 +906,21 @@ Request.propTypes = {
     members: PropTypes.array,
     pendingRequests: PropTypes.array,
   }),
-  setTitle: PropTypes.func,
+  updateTitleInTheDatabase: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   updateToDatabase: PropTypes.func,
   isOwner: PropTypes.bool,
+  currentUserId: PropTypes.string,
 };
 
 Request.defaultProps = {
   requestExists: false,
   request: { slides: [] },
-  setTitle: () => {},
+  updateTitleInTheDatabase: () => {},
   isAuthenticated: false,
   updateToDatabase: () => {},
   isOwner: false,
+  currentUserId: '',
 };
 
 const RequestContainer = withTracker(({ match }) => {
@@ -933,7 +947,7 @@ const RequestContainer = withTracker(({ match }) => {
     request,
     loading,
     requestExists,
-    setTitle: (_id, editTitle, editDescription) => {
+    updateTitleInTheDatabase: (_id, editTitle, editDescription) => {
       Meteor.call(
         'requests.title.update',
         _id,
@@ -944,6 +958,7 @@ const RequestContainer = withTracker(({ match }) => {
     isAuthenticated: !!Meteor.userId(),
     isOwner: request.userId === Meteor.userId(),
     updateToDatabase: (_id, slides) => { Meteor.call('requests.update', _id, slides); },
+    currentUserId: Meteor.userId(),
   };
 })(Request);
 

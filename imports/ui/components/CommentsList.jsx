@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Comment, Header } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { Link } from 'react-router-dom';
-import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import CommentBox from './CommentBox';
 
@@ -46,6 +45,7 @@ export default class commentsList extends Component {
   }
 
   render() {
+    const { isAuthenticated } = this.props;
     return (
       <div>
         <Comment.Group>
@@ -54,7 +54,7 @@ export default class commentsList extends Component {
           </Header>
           {this.showComments()}
         </Comment.Group>
-        {Meteor.userId()
+        {isAuthenticated
           ? null : (
             <h3>
               <Link to="/login">Login</Link>
@@ -70,4 +70,5 @@ export default class commentsList extends Component {
 commentsList.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };

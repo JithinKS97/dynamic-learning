@@ -15,7 +15,12 @@ export default class CommentForm extends Component {
       slides,
       curSlide,
       updateSlides,
+      isAuthenticated,
+      isMember,
     } = this.props;
+
+    if (!(isAuthenticated && isMember)) return;
+
     if (indexOfComment === -1) {
       if (this.comment.value) {
         const comment = this.comment.value;
@@ -64,4 +69,6 @@ CommentForm.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
   updateSlides: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  isMember: PropTypes.bool.isRequired,
 };
