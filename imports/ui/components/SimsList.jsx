@@ -64,16 +64,16 @@ export default class SimsList extends React.Component {
       slides,
       isRndRequired,
       isPreview,
-      saveChanges,
+      updateSlides,
       deleteSim,
       userId,
     } = this.props;
 
     // eslint-disable-next-line react/destructuring-assignment
-    const _slides = Object.values($.extend(true, {}, slides));
+    const updatedSlides = Object.values($.extend(true, {}, slides));
 
-    if (_slides.length !== 0) {
-      const { iframes } = _slides[curSlide];
+    if (updatedSlides.length !== 0) {
+      const { iframes } = updatedSlides[curSlide];
 
       return iframes.map((iframe, index) => {
         /* Rnd is the react component which is used for dragging and resizing
@@ -121,10 +121,10 @@ export default class SimsList extends React.Component {
                     sims[i].style['pointer-events'] = 'unset';
                   }
 
-                  _slides[curSlide].iframes[index].x = d.lastX;
-                  _slides[curSlide].iframes[index].y = d.lastY;
+                  updatedSlides[curSlide].iframes[index].x = d.lastX;
+                  updatedSlides[curSlide].iframes[index].y = d.lastY;
 
-                  saveChanges(_slides);
+                  updateSlides(updatedSlides);
                 }}
                 enableResizing={{
                   bottom: false,
@@ -137,11 +137,11 @@ export default class SimsList extends React.Component {
                   topRight: false,
                 }}
                 onResize={(e, direction, ref) => {
-                  _slides[curSlide].iframes[index].w = isPreview
+                  updatedSlides[curSlide].iframes[index].w = isPreview
                     ? ref.offsetWidth
                     : ref.offsetWidth - 40;
-                  _slides[curSlide].iframes[index].h = ref.offsetHeight;
-                  saveChanges(_slides);
+                  updatedSlides[curSlide].iframes[index].h = ref.offsetHeight;
+                  updateSlides(updatedSlides);
                 }}
               >
                 {/* The index is passed so that we can pass and retrieve
@@ -204,7 +204,7 @@ export default class SimsList extends React.Component {
                       <FaCopy
                         style={{ marginTop: '0.5rem' }}
                         onClick={() => {
-                          this.handleCopy(_slides, curSlide, index);
+                          this.handleCopy(updatedSlides, curSlide, index);
                         }}
                         className="sim-copy"
                         size="18"
@@ -292,9 +292,9 @@ SimsList.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object),
   isRndRequired: PropTypes.bool,
   isPreview: PropTypes.bool,
-  saveChanges: PropTypes.func,
   deleteSim: PropTypes.func,
   userId: PropTypes.string,
+  updateSlides: PropTypes.func,
 };
 
 SimsList.defaultProps = {
@@ -303,7 +303,7 @@ SimsList.defaultProps = {
   slides: [{}],
   isRndRequired: true,
   isPreview: false,
-  saveChanges: () => null,
   deleteSim: () => null,
   userId: '',
+  updateSlides: () => null,
 };

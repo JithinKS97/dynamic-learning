@@ -110,7 +110,7 @@ if (Meteor.isClient) {
       it('(no of slides = 2, curSlide = 1), after navigation to slide 0, contents of slide 0 should be displayed', () => {
         CreateLessonplanWrapper.setState({ curSlide: 1, ...Oscillations });
 
-        CreateLessonplanInstance.saveChanges(undefined, 0);
+        CreateLessonplanInstance.changeSlide(0);
 
         expect(CreateLessonplanWrapper.state().curSlide).to.equal(0);
         expect(

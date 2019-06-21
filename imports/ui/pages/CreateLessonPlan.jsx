@@ -27,7 +27,7 @@ import MdUndo from 'react-icons/lib/md/undo';
 import MdRedo from 'react-icons/lib/md/redo';
 import TextBoxes from '../components/TextBoxes';
 import AddSim from '../components/AddSim';
-import Lists from '../components/List';
+import SlidesList from '../components/List';
 import SimsList from '../components/SimsList';
 import { LessonPlans } from '../../api/lessonplans';
 import DrawingBoardCmp from '../components/DrawingBoardCmp';
@@ -133,7 +133,7 @@ export class CreateLessonPlan extends React.Component {
           this.setSizeOfPage(0);
           this.db.reset();
 
-          this.saveChanges(slides);
+          this.updateSlides(slides);
           this.interact();
         } else {
           this.pageCount = slides[curSlide].pageCount || 0;
@@ -147,7 +147,7 @@ export class CreateLessonPlan extends React.Component {
           this.db.reset();
           this.db.setImg(slides[curSlide].note);
 
-          this.saveChanges(slides);
+          this.updateSlides(slides);
           this.interact();
         }
       },
@@ -258,12 +258,12 @@ export class CreateLessonPlan extends React.Component {
             updated and stored back to the state.
         */
     const { slides } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
+    const updatedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
     const note = this.db.getImg();
-    _slides[curSlide].note = note;
-    _slides[curSlide].pageCount = this.pageCount;
-    this.saveChanges(_slides);
+    updatedSlides[curSlide].note = note;
+    updatedSlides[curSlide].pageCount = this.pageCount;
+    this.updateSlides(updatedSlides);
   }
 
   addNewSlide = () => {
@@ -293,7 +293,7 @@ export class CreateLessonPlan extends React.Component {
         slides,
       },
       () => {
-        this.saveChanges(undefined, newIndex);
+        this.changeSlide(newIndex);
       },
     );
   }
@@ -429,83 +429,45 @@ export class CreateLessonPlan extends React.Component {
     }
   };
 
-  saveChanges = (_slides, _curSlide, shouldNotLoad, shouldNotPushToUndoStack) => {
-    /* This function is used in multiple places to save the changes (not in the database, but
-        in the react state).
-        Depending upon the changes made, they are saved looking upon arguments given when the
-        function was called.
-    */
+  changeSlide = (toSlideNo) => {
+    const { slides } = this.state;
+    this.setState(
+      {
+        curSlide: toSlideNo,
+      },
+      () => {
+        // eslint-disable-next-line no-shadow
+        const { curSlide } = this.state;
+        this.pageCount = slides[curSlide].pageCount || 0;
+        this.setSizeOfPage(this.pageCount);
+        this.db.reset();
+        this.db.setImg(slides[curSlide].note);
+        this.simsList.loadDataToSketches();
+      },
+    );
+  }
 
+  updateSlides = (updatedSlides, shouldNotLoad, shouldNotPushToUndoStack) => {
     const { slides, curSlide } = this.state;
+    const slide = slides[curSlide];
+    if (!shouldNotPushToUndoStack) this.pushToUndoStacks(slide);
 
-    if (_slides === undefined) {
-      const slide = slides[curSlide];
-
-      if (this.undoStacks[curSlide]) {
-        if (this.undoStacks[curSlide].length === 0) {
-          if (!shouldNotPushToUndoStack) this.pushToUndoStacks(slide);
-        }
-      }
-
-      this.setState(
-        {
-          curSlide: _curSlide,
-        },
-        () => {
-          // eslint-disable-next-line no-shadow
-          const { curSlide } = this.state;
-          this.pageCount = slides[curSlide].pageCount || 0;
-          this.setSizeOfPage(this.pageCount);
-
-          this.db.reset();
-
-          this.db.setImg(slides[curSlide].note);
-          this.simsList.loadDataToSketches();
-        },
-      );
-    } else if (_curSlide === undefined) {
-      const slide = slides[curSlide];
-      if (!shouldNotPushToUndoStack) this.pushToUndoStacks(slide);
-
-      this.setState(
-        {
-          slides: _slides,
-        },
-        () => {
-          /**
+    this.setState(
+      {
+        slides: updatedSlides,
+      },
+      () => {
+        /**
            * shouldNotLoad is true only when a sim is individually updated and saved
            * Here, we need not load data to all the sims
            * So if shouldNotLoad is true, we return without calling loadDatatoSketches
            */
 
-          if (shouldNotLoad) return;
+        if (shouldNotLoad) return;
 
-          this.simsList.loadDataToSketches();
-        },
-      );
-    } else {
-      const slide = slides[curSlide];
-
-      if (!shouldNotPushToUndoStack) this.pushToUndoStacks(slide);
-
-      this.setState(
-        {
-          slides: _slides,
-          curSlide: _curSlide,
-        },
-        () => {
-          // eslint-disable-next-line no-shadow
-          const { curSlide, slides } = this.state;
-          this.pageCount = slides[curSlide].pageCount || 0;
-          this.setSizeOfPage(this.pageCount);
-
-          this.db.reset();
-
-          this.db.setImg(slides[curSlide].note);
-          this.simsList.loadDataToSketches();
-        },
-      );
-    }
+        this.simsList.loadDataToSketches();
+      },
+    );
   }
 
   deleteSlide = (index) => {
@@ -515,10 +477,10 @@ export class CreateLessonPlan extends React.Component {
         */
 
     const { slides } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
+    const updatedSlides = Object.values($.extend(true, {}, slides));
 
-    if (_slides.length !== 1) {
-      _slides.splice(index, 1);
+    if (updatedSlides.length !== 1) {
+      updatedSlides.splice(index, 1);
 
       let { curSlide } = this.state;
       this.undoStacks.splice(index, 1);
@@ -526,9 +488,10 @@ export class CreateLessonPlan extends React.Component {
       if (index === 0) {
         curSlide = 0;
       }
-      if (curSlide === _slides.length) curSlide = _slides.length - 1;
+      if (curSlide === updatedSlides.length) curSlide = updatedSlides.length - 1;
 
-      this.saveChanges(_slides, curSlide);
+      this.changeSlide(curSlide);
+      this.updateSlides(updatedSlides);
     } else {
       this.undoStacks = [];
       this.reset();
@@ -541,22 +504,22 @@ export class CreateLessonPlan extends React.Component {
         current slide and the changes are saved.
     */
     const { slides } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
+    const updatedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
-    const { iframes } = _slides[curSlide];
+    const { iframes } = updatedSlides[curSlide];
     iframes.splice(index, 1);
-    _slides[curSlide].iframes = iframes;
-    this.saveChanges(_slides);
+    updatedSlides[curSlide].iframes = iframes;
+    this.updateSlides(updatedSlides);
   }
 
   deleteTextBox = (index) => {
     const { slides } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
+    const updatedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
-    const { textboxes } = _slides[curSlide];
+    const { textboxes } = updatedSlides[curSlide];
     textboxes.splice(index, 1);
-    _slides[curSlide].textboxes = textboxes;
-    this.saveChanges(_slides);
+    updatedSlides[curSlide].textboxes = textboxes;
+    this.updateSlides(updatedSlides);
   };
 
   interact = () => {
@@ -737,34 +700,28 @@ export class CreateLessonPlan extends React.Component {
      * preventUndo variable is used for preventing object being added to undoStacks
      */
 
-    this.preventUndo = true;
-
-    this.db.reset();
-
-    this.preventUndo = false;
-
     this.db.setImg(temp);
     const { slides, curSlide } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
-    _slides[curSlide].pageCount = this.pageCount;
-    this.saveChanges(_slides);
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    updatedSlides[curSlide].pageCount = this.pageCount;
+    this.updateSlides(updatedSlides);
   }
 
   addTextBox = () => {
     const { curSlide, slides } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
+    const updatedSlides = Object.values($.extend(true, {}, slides));
 
-    if (!_slides[curSlide].textboxes) {
-      _slides[curSlide].textboxes = [];
+    if (!updatedSlides[curSlide].textboxes) {
+      updatedSlides[curSlide].textboxes = [];
     }
 
     const newTextBox = {
       value: 'new text box',
     };
 
-    _slides[curSlide].textboxes.push(newTextBox);
+    updatedSlides[curSlide].textboxes.push(newTextBox);
 
-    this.saveChanges(_slides);
+    this.updateSlides(updatedSlides);
   };
 
   setCopiedState = (set) => {
@@ -1021,14 +978,14 @@ export class CreateLessonPlan extends React.Component {
                 Create Slide
               </Button>
               <h1>{curSlide + 1}</h1>
-              <Lists
+              <SlidesList
                 slides={slides}
                 curSlide={curSlide}
-                saveChanges={this.saveChanges}
-                delete={this.deleteSlide}
+                deleteSlide={this.deleteSlide}
                 setStateAfterRearranging={this.setStateAfterRearranging}
                 from="createLessonplan"
                 isPreview={false}
+                changeSlide={this.changeSlide}
               />
             </Grid.Column>
             <Grid.Column
@@ -1054,7 +1011,7 @@ export class CreateLessonPlan extends React.Component {
                 <TextBoxes
                   slides={slides}
                   curSlide={curSlide}
-                  saveChanges={this.saveChanges}
+                  updateSlides={this.updateSlides}
                   deleteTextBox={this.deleteTextBox}
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
@@ -1063,7 +1020,7 @@ export class CreateLessonPlan extends React.Component {
                 <SimsList
                   slides={slides}
                   curSlide={curSlide}
-                  saveChanges={this.saveChanges}
+                  updateSlides={this.updateSlides}
                   deleteSim={this.deleteSim}
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
@@ -1091,7 +1048,7 @@ export class CreateLessonPlan extends React.Component {
                 ref={(e) => { this.addSim = e; }}
                 curSlide={curSlide}
                 slides={slides}
-                saveChanges={this.saveChanges}
+                updateSlides={this.updateSlides}
               />
 
               <Menu color="blue" icon vertical>
@@ -1533,21 +1490,21 @@ export class CreateLessonPlan extends React.Component {
                           if (Session.get('copiedObject')) {
                             const object = Session.get('copiedObject');
 
-                            const _slides = Object.values(
+                            const updatedSlides = Object.values(
                               $.extend(true, {}, slides),
                             );
 
                             if (object.type === 'sim') {
-                              _slides[curSlide].iframes.push(
+                              updatedSlides[curSlide].iframes.push(
                                 object.copiedObject,
                               );
                             } else if (object.type === 'text') {
-                              _slides[curSlide].textboxes.push(
+                              updatedSlides[curSlide].textboxes.push(
                                 object.copiedObject,
                               );
                             }
 
-                            this.saveChanges(_slides);
+                            this.updateSlides(updatedSlides);
                           }
                         }}
                         color="blue"

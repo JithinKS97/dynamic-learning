@@ -668,7 +668,8 @@ export class Request extends React.Component {
                   <CommentsList
                     isMember={this.isMember}
                     ref={(el) => { this.commentsList = el; }}
-                    {...this.state}
+                    slides={slides}
+                    curSlide={curSlide}
                     saveChanges={this.saveChanges}
                     deleteReplyComment={this.deleteReplyComment}
                     deleteComment={this.deleteComment}

@@ -20,7 +20,7 @@ const SortableItem = SortableElement(({
     <div
       className="ui button"
       style={{ width: '100%', textAlign: 'left', backgroundColor: index === props.curSlide ? 'lightGreen' : '#e0e1e2' }}
-      onClick={() => { props.saveChanges(undefined, slideNo); }}
+      onClick={() => { props.changeSlide(slideNo); }}
     >
       {props.isPreview ? slide.title : slideNo + 1}
     </div>
@@ -30,7 +30,7 @@ const SortableItem = SortableElement(({
         className="ui button"
         onClick={() => {
           const confirmation = confirm('Are you sure you want to delete?');
-          if (confirmation === true) { props.delete(slideNo); }
+          if (confirmation === true) { props.deleteSlide(slideNo); }
         }}
       >
         X
@@ -79,7 +79,7 @@ const List = (props) => {
       pressDelay={200}
       items={renderSlides()}
       updateBeforeSortStart={(node) => {
-        props.saveChanges(undefined, node.index);
+        props.changeSlide(node.index);
       }}
       onSortEnd={onSortEnd}
     />
@@ -89,7 +89,7 @@ const List = (props) => {
 List.propTypes = {
   setStateAfterRearranging: PropTypes.func.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
-  saveChanges: PropTypes.func.isRequired,
+  changeSlide: PropTypes.func.isRequired,
 };
 
 export default List;

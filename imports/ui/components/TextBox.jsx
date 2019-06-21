@@ -32,38 +32,38 @@ export default class TextBox extends React.Component {
     const {
       curSlide,
       index,
-      saveChanges,
+      updateSlides,
       deleteTextBox,
       isPreview,
       slides,
     } = this.props;
-    const _slides = JSON.parse(JSON.stringify(slides));
+    const updatedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
       <Rnd
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
-          width: _slides[curSlide].textboxes[index].w
-            ? _slides[curSlide].textboxes[index].w
+          width: updatedSlides[curSlide].textboxes[index].w
+            ? updatedSlides[curSlide].textboxes[index].w
             : 400,
-          height: _slides[curSlide].textboxes[index].h
-            ? _slides[curSlide].textboxes[index].h
+          height: updatedSlides[curSlide].textboxes[index].h
+            ? updatedSlides[curSlide].textboxes[index].h
             : 200,
         }}
         dragHandleClassName=".textbox-handle"
         position={{
-          x: _slides[curSlide].textboxes[index].x
-            ? _slides[curSlide].textboxes[index].x
+          x: updatedSlides[curSlide].textboxes[index].x
+            ? updatedSlides[curSlide].textboxes[index].x
             : 100,
-          y: _slides[curSlide].textboxes[index].y
-            ? _slides[curSlide].textboxes[index].y
+          y: updatedSlides[curSlide].textboxes[index].y
+            ? updatedSlides[curSlide].textboxes[index].y
             : 100,
         }}
         onResize={(_e, _direction, ref) => {
-          _slides[curSlide].textboxes[index].w = ref.offsetWidth;
-          _slides[curSlide].textboxes[index].h = ref.offsetHeight;
-          saveChanges(_slides);
+          updatedSlides[curSlide].textboxes[index].w = ref.offsetWidth;
+          updatedSlides[curSlide].textboxes[index].h = ref.offsetHeight;
+          updateSlides(updatedSlides);
         }}
         enableResizing={{
           bottom: false,
@@ -75,10 +75,10 @@ export default class TextBox extends React.Component {
           topLeft: false,
           topRight: false,
         }}
-        onDragStop={(e, d) => {
-          _slides[curSlide].textboxes[index].x = d.lastX;
-          _slides[curSlide].textboxes[index].y = d.lastY;
-          saveChanges(_slides);
+        onDragStop={(_e, d) => {
+          updatedSlides[curSlide].textboxes[index].x = d.lastX;
+          updatedSlides[curSlide].textboxes[index].y = d.lastY;
+          updateSlides(updatedSlides);
         }}
       >
         <div
@@ -98,20 +98,20 @@ export default class TextBox extends React.Component {
               color: 'white',
               fontSize: '20px',
               border: '1px solid #404040',
-              width: _slides[curSlide].textboxes[index].w
-                ? `${_slides[curSlide].textboxes[index].w}px`
+              width: updatedSlides[curSlide].textboxes[index].w
+                ? `${updatedSlides[curSlide].textboxes[index].w}px`
                 : '400px',
-              height: _slides[curSlide].textboxes[index].h
-                ? `${_slides[curSlide].textboxes[index].h}px`
+              height: updatedSlides[curSlide].textboxes[index].h
+                ? `${updatedSlides[curSlide].textboxes[index].h}px`
                 : '200px',
             }}
             value={
-              _slides[curSlide].textboxes[index].value
-                ? _slides[curSlide].textboxes[index].value
+              updatedSlides[curSlide].textboxes[index].value
+                ? updatedSlides[curSlide].textboxes[index].value
                 : ''
             }
             onChange={(e) => {
-              _slides[curSlide].textboxes[index].value = e.target.value;
+              updatedSlides[curSlide].textboxes[index].value = e.target.value;
 
               /**
                * The below code ensures that slides are pushed to the undo stack only when there is
@@ -133,18 +133,18 @@ export default class TextBox extends React.Component {
                 const { slides } = this.props;
 
                 if (this.keyStrokes > 0) {
-                  saveChanges(slides, undefined, undefined, false);
+                  updateSlides(slides);
                   this.keyStrokes = 0;
                 }
               }, 1500);
 
-              saveChanges(_slides, undefined, undefined, true);
+              updateSlides(updatedSlides, undefined, true);
             }}
             onDrag={() => {
-              _slides[curSlide].textboxes[index].w = this.textarea.offsetWidth;
-              _slides[curSlide].textboxes[index].h = this.textarea.offsetHeight;
+              updatedSlides[curSlide].textboxes[index].w = this.textarea.offsetWidth;
+              updatedSlides[curSlide].textboxes[index].h = this.textarea.offsetHeight;
 
-              saveChanges(_slides);
+              updateSlides(updatedSlides);
             }}
           />
           {isPreview ? null : (
@@ -189,7 +189,7 @@ export default class TextBox extends React.Component {
                   <FaCopy
                     style={{ marginTop: '0.5rem' }}
                     onClick={() => {
-                      this.handleCopy(_slides, curSlide, index);
+                      this.handleCopy(updatedSlides, curSlide, index);
                     }}
                     className="sim-copy"
                     size="18"
@@ -209,21 +209,21 @@ export default class TextBox extends React.Component {
 }
 
 TextBox.propTypes = {
-  saveChanges: PropTypes.func,
   index: PropTypes.number,
   deleteTextBox: PropTypes.func,
   isPreview: PropTypes.bool,
   slides: PropTypes.arrayOf(PropTypes.object),
   curSlide: PropTypes.number,
   setCopiedState: PropTypes.func,
+  updateSlides: PropTypes.func,
 };
 
 TextBox.defaultProps = {
-  saveChanges: () => null,
   index: 0,
   deleteTextBox: () => null,
   isPreview: true,
   slides: [{}],
   curSlide: 0,
   setCopiedState: () => null,
+  updateSlides: () => null,
 };
