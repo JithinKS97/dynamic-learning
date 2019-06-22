@@ -181,14 +181,14 @@ export class CreateLessonPlan extends React.Component {
       if (this.copiedObject) {
         this.db.paste(this.copiedObject);
         this.copiedObject = null;
-        this.db.props.onChange();
+        this.onChange();
       }
     }
 
     if (e.keyCode === 46) {
       this.db.b.remove(...this.db.b.getActiveObjects());
       this.db.b.discardActiveObject().renderAll();
-      this.db.props.onChange();
+      this.onChange();
     }
 
     if (e.keyCode === 90 && e.ctrlKey) this.undo();
@@ -1073,13 +1073,17 @@ export class CreateLessonPlan extends React.Component {
                             { slides },
                           );
                         } catch (error) {
+                          if (slides[0].note.length === 0 && slides.length === 1) {
+                            this.setState({
+                              redirectToDashboard: true,
+                            });
+                            return;
+                          }
                           if (error) {
-                            const confirmation = confirm(
+                            if (!confirm(
                               'Are you sure you want to leave. Any unsaved changes will be lost!',
-                            );
-
-                            if (!confirmation) return;
-                          } else return;
+                            )) { return; }
+                          }
                         }
 
                         this.setState({
