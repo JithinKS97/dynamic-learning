@@ -300,7 +300,7 @@ class Lesson extends React.Component {
           /> */}
           <div style={{ margin: '2.4rem' }}>
             <CommentsList
-              slides={[{ comments: [] }]}
+              slides={[{ comments: [{ comment: 'Comment', replies: [{ comment: 'Reply' }] }] }]}
               curSlide={0}
               isMember
               isAuthenticated
