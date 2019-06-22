@@ -374,13 +374,17 @@ export class Request extends React.Component {
   };
 
   deleteComment = (index) => {
+    const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
+    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index].userId)) { return; }
     slides[curSlide].comments.splice(index, 1);
     this.updateSlides(slides);
   }
 
   editComment = (editedComment, index) => {
+    const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
+    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index].userId)) { return; }
     slides[curSlide].comments[index].comment = editedComment;
     slides[curSlide].comments[index].lastEditedTime = Date.now();
     this.updateSlides(slides);
@@ -388,12 +392,20 @@ export class Request extends React.Component {
 
   deleteReplyComment = (index, subIndex) => {
     const { slides, curSlide } = this.state;
+    const { isAuthenticated, currentUserId } = this.props;
+    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index]
+      .replies[subIndex].userId)
+    ) { return; }
     slides[curSlide].comments[index].replies.splice(subIndex, 1);
     this.updateSlides(slides);
   }
 
   editReplyComment = (index, subIndex, editedComment) => {
     const { slides, curSlide } = this.state;
+    const { isAuthenticated, currentUserId } = this.props;
+    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index]
+      .replies[subIndex].userId)
+    ) { return; }
     slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
     slides[curSlide].comments[index].replies[subIndex].lastEditedTime = Date.now();
     this.updateSlides(slides);
