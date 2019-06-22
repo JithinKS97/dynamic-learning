@@ -2,9 +2,9 @@
   "name": "DynamicLearning",
   "private": true,
   "scripts": {
-    "start": "meteor run --settings settings.json",
-    "test": "meteor test --once --full-app --driver-package meteortesting:mocha --settings settings.json",
-    "full-test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha --settings settings.json",
+    "start": "meteor run",
+    "test": "meteor test --once --full-app --driver-package meteortesting:mocha",
+    "full-test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "lint": "eslint ."
   },
   "dependencies": {
