@@ -80,31 +80,18 @@ class Lesson extends React.Component {
     Meteor.call('lessons.update', _id, slides);
   }
 
-  saveChanges = (slides, curSlide) => {
-    /**
-     * This function is used to save any changes happening to the state
-     * It accepts 2 parameters slides and curSlide
-     *
-     */
+  changeSlide = (toSlideNo) => {
+    this.setState({
+      curSlide: toSlideNo,
+    });
+  }
 
+  updateSlides = (updateSlides) => {
     const { lesson } = this.props;
-
-    if (slides === undefined) {
-      this.setState({
-        curSlide,
-      });
-    } else if (curSlide === undefined) {
-      this.setState({
-      }, () => {
-        this.save(lesson._id, slides);
-      });
-    } else {
-      this.setState({
-        curSlide,
-      }, () => {
-        this.save(lesson._id, slides);
-      });
-    }
+    this.setState({
+    }, () => {
+      this.save(lesson._id, updateSlides);
+    });
   }
 
   deleteSlide = (index) => {
@@ -130,7 +117,8 @@ class Lesson extends React.Component {
         curSlide = 0;
       }
       if (curSlide === slides.length) { curSlide = slides.length - 1; }
-      this.saveChanges(slides, curSlide);
+      this.changeSlide(curSlide);
+      this.updateSlides(slides);
     } else {
       this.reset();
     }
@@ -245,14 +233,13 @@ class Lesson extends React.Component {
                   Add Sim
 
                 </Button>
-                :
                 {/**
                   AddSim component adds a sim to the lesson. See the function addToLesson function
                   inside the AddSim component to know how the sim gets added.
               */}
 
                 <AddSim
-                  updateSlides={this.saveChanges}
+                  updateSlides={this.updateSlides}
                   slides={lesson.slides}
                   curSlide={curSlide}
                   isPreview
@@ -282,7 +269,7 @@ class Lesson extends React.Component {
               <HorizontalList
                 userId={lesson.userId}
                 deleteSlide={this.deleteSlide}
-                saveChanges={this.saveChanges}
+                changeSlide={this.changeSlide}
                 slides={lesson.slides}
               />
               {lesson.userId === Meteor.userId() ? (

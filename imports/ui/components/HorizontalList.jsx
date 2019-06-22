@@ -7,7 +7,7 @@ export default class HorizontalList extends Component {
     const {
       slides,
       userId,
-      saveChanges,
+      changeSlide,
       deleteSlide,
     } = this.props;
 
@@ -22,7 +22,7 @@ export default class HorizontalList extends Component {
           justifyContent: userId === Meteor.userId() ? 'space-around' : 'center',
         }}
       >
-        <Button onClick={() => { saveChanges(undefined, index); }}>
+        <Button onClick={() => { changeSlide(index); }}>
           {index + 1}
         </Button>
         {userId === Meteor.userId()
@@ -47,13 +47,13 @@ export default class HorizontalList extends Component {
 HorizontalList.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object),
   userId: PropTypes.string,
-  saveChanges: PropTypes.func,
+  changeSlide: PropTypes.func,
   deleteSlide: PropTypes.func,
 };
 
 HorizontalList.defaultProps = {
   slides: [],
   userId: '',
-  saveChanges: () => null,
+  changeSlide: () => null,
   deleteSlide: () => null,
 };
