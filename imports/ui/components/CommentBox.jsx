@@ -70,8 +70,8 @@ export default class CommentBox extends React.Component {
   }
 
   findLastEditedTime() {
-    const { comment: { edited } } = this.props;
-    return moment(edited);
+    const { comment: { lastEditedTime } } = this.props;
+    return moment(lastEditedTime);
   }
 
   showDownArrow() {
@@ -131,7 +131,7 @@ export default class CommentBox extends React.Component {
       curSlide,
       updateSlides,
       isAuthenticated,
-      comment: { edited },
+      comment: { lastEditedTime },
     } = this.props;
     const {
       username,
@@ -165,7 +165,7 @@ export default class CommentBox extends React.Component {
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
-              {edited ? (
+              {lastEditedTime ? (
                 <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                   <div>
                     (edited)
@@ -263,7 +263,7 @@ CommentBox.propTypes = {
     userId: PropTypes.string,
     time: PropTypes.number,
     replies: PropTypes.arrayOf(PropTypes.object).isRequired,
-    edited: PropTypes.number,
+    lastEditedTime: PropTypes.number,
   }).isRequired,
   index: PropTypes.number.isRequired,
   editComment: PropTypes.func.isRequired,

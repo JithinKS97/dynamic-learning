@@ -29,13 +29,13 @@ export default class CommentReply extends React.Component {
   }
 
   findLastEditedTime() {
-    const { reply: { edited } } = this.props;
-    return moment(edited);
+    const { reply: { lastEditedTime } } = this.props;
+    return moment(lastEditedTime);
   }
 
   render() {
     const {
-      reply: { userId, comment, edited },
+      reply: { userId, comment, lastEditedTime },
       deleteReplyComment,
       index,
       subIndex,
@@ -77,7 +77,7 @@ export default class CommentReply extends React.Component {
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
-              {edited ? (
+              {lastEditedTime ? (
                 <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                   <div>
                     (edited)
@@ -149,7 +149,7 @@ CommentReply.propTypes = {
     comment: PropTypes.string,
     userId: PropTypes.string,
     time: PropTypes.number,
-    edited: PropTypes.number,
+    lastEditedTime: PropTypes.number,
   }).isRequired,
   deleteReplyComment: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
