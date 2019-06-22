@@ -86,12 +86,9 @@ class Lesson extends React.Component {
     });
   }
 
-  updateSlides = (updateSlides) => {
+  updateSlides = (updatedSlides) => {
     const { lesson } = this.props;
-    this.setState({
-    }, () => {
-      this.save(lesson._id, updateSlides);
-    });
+    this.save(lesson._id, updatedSlides);
   }
 
   deleteSlide = (index) => {
