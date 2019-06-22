@@ -12,18 +12,22 @@ export const validateNewUser = (user) => {
   if (user.services) {
     if (user.services.github) {
       email = user.services.github.email;
-    } else if (user.services.google) {
+      return;
+    } if (user.services.google) {
       email = user.services.google.email;
-    } else {
-      email = user.emails[0].address;
+      return;
     }
   }
+
+  if (!email) { email = user.emails[0].address; }
+
   new SimpleSchema({
     email: {
       type: String,
       regEx: SimpleSchema.RegEx.Email,
     },
   }).validate({ email });
+
   return true;
 };
 
