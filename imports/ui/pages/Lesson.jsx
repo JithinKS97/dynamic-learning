@@ -11,8 +11,10 @@ import 'semantic-ui-css/semantic.min.css';
 import VideoContainer from '../components/VideoContainer';
 import SimsList from '../components/SimsList';
 import AddSim from '../components/AddSim';
-import LessonComment from '../components/LessonComment'; 
-import Votes from '../components/Votes'; 
+// import LessonComment from '../components/LessonComment';
+import Votes from '../components/Votes';
+import CommentForm from '../components/CommentForm';
+import CommentsList from '../components/CommentsList';
 
 class Lesson extends React.Component {
   constructor(props) {
@@ -84,6 +86,7 @@ class Lesson extends React.Component {
      * It accepts 2 parameters slides and curSlide
      *
      */
+
     const { lesson } = this.props;
 
     if (slides === undefined) {
@@ -213,7 +216,7 @@ class Lesson extends React.Component {
                   />
                 ) : null}
 
-                  <Votes lessonid={lesson._id} />
+                <Votes lessonid={lesson._id} />
 
                 <VideoContainer
                   userId={lesson.userId}
@@ -249,7 +252,7 @@ class Lesson extends React.Component {
               */}
 
                 <AddSim
-                  saveChanges={this.saveChanges}
+                  updateSlides={this.saveChanges}
                   slides={lesson.slides}
                   curSlide={curSlide}
                   isPreview
@@ -292,9 +295,26 @@ class Lesson extends React.Component {
               ) : null}
             </Grid.Row>
           </Grid>
-          <LessonComment 
+          {/* <LessonComment
             lessonid={lesson._id}
-          /> 
+          /> */}
+          <div style={{ margin: '2.4rem' }}>
+            <CommentsList
+              slides={[{ comments: [] }]}
+              curSlide={0}
+              isMember
+              isAuthenticated
+              updateSlides={() => {}}
+            />
+            <CommentForm
+              indexOfComment={-1}
+              slides={[{ comments: [] }]}
+              curSlide={0}
+              updateSlides={() => {}}
+              isMember
+              isAuthenticated
+            />
+          </div>
         </div>
 
       );
