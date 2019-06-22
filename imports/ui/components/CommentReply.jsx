@@ -28,9 +28,14 @@ export default class CommentReply extends React.Component {
     return moment(time);
   }
 
+  findLastEditedTime() {
+    const { reply: { edited } } = this.props;
+    return moment(edited);
+  }
+
   render() {
     const {
-      reply: { userId, comment },
+      reply: { userId, comment, edited },
       deleteReplyComment,
       index,
       subIndex,
@@ -72,6 +77,15 @@ export default class CommentReply extends React.Component {
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
+              {edited ? (
+                <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
+                  <div>
+                    (edited)
+                    {' '}
+                    {this.findLastEditedTime().fromNow()}
+                  </div>
+                </Comment.Metadata>
+              ) : null}
             </div>
 
             {isEditable ? null : (
@@ -135,6 +149,7 @@ CommentReply.propTypes = {
     comment: PropTypes.string,
     userId: PropTypes.string,
     time: PropTypes.number,
+    edited: PropTypes.number,
   }).isRequired,
   deleteReplyComment: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

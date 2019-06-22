@@ -382,6 +382,7 @@ export class Request extends React.Component {
   editComment = (editedComment, index) => {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments[index].comment = editedComment;
+    slides[curSlide].comments[index].edited = Date.now();
     this.updateSlides(slides);
   };
 
@@ -394,6 +395,7 @@ export class Request extends React.Component {
   editReplyComment = (index, subIndex, editedComment) => {
     const { slides, curSlide } = this.state;
     slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
+    slides[curSlide].comments[index].replies[subIndex].edited = Date.now();
     this.updateSlides(slides);
   };
 

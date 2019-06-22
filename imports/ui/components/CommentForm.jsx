@@ -29,6 +29,7 @@ export default class CommentForm extends Component {
           userId: Meteor.userId(),
           time: Date.now(),
           replies: [],
+          edited: null,
         });
         updateSlides(slides);
         this.comment.value = '';
@@ -39,6 +40,7 @@ export default class CommentForm extends Component {
         comment,
         userId: Meteor.userId(),
         time: Date.now(),
+        edited: null,
       });
       updateSlides(slides);
       this.comment.value = '';

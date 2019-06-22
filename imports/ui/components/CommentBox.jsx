@@ -69,6 +69,11 @@ export default class CommentBox extends React.Component {
     return moment(time);
   }
 
+  findLastEditedTime() {
+    const { comment: { edited } } = this.props;
+    return moment(edited);
+  }
+
   showDownArrow() {
     const { replyVis, isEditable } = this.state;
     const { replies } = this.props;
@@ -126,6 +131,7 @@ export default class CommentBox extends React.Component {
       curSlide,
       updateSlides,
       isAuthenticated,
+      comment: { edited },
     } = this.props;
     const {
       username,
@@ -159,6 +165,15 @@ export default class CommentBox extends React.Component {
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
+              {edited ? (
+                <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
+                  <div>
+                    (edited)
+                    {' '}
+                    {this.findLastEditedTime().fromNow()}
+                  </div>
+                </Comment.Metadata>
+              ) : null}
             </div>
 
             {!isEditable ? <Comment.Text style={{ padding: '0.8rem 0', width: '95%' }}>{comment}</Comment.Text> : null}
@@ -248,6 +263,7 @@ CommentBox.propTypes = {
     userId: PropTypes.string,
     time: PropTypes.number,
     replies: PropTypes.arrayOf(PropTypes.object).isRequired,
+    edited: PropTypes.number,
   }).isRequired,
   index: PropTypes.number.isRequired,
   editComment: PropTypes.func.isRequired,
