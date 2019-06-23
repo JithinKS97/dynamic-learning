@@ -26,7 +26,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Requests.update({ _id, members: { $nin: [memberId] } }, { $push: { pendingRequests: memberId } });
+    Requests.update({ _id, pendingRequests: { $nin: [memberId] }, members: { $nin: [memberId] } }, { $push: { pendingRequests: memberId } });
   },
 
   'requests.addMember'(_id, memberId) {
