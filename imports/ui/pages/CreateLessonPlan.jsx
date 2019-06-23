@@ -1113,25 +1113,28 @@ export class CreateLessonPlan extends React.Component {
                 </Menu.Item>
 
                 <Menu.Item>
-                  <div>
-                    <Button
-                      color="teal"
-                      onClick={() => {
-                        this.undo();
-                      }}
-                      attached="left"
-                    >
-                      <MdUndo />
-                    </Button>
-                    <Button
-                      color="teal"
-                      onClick={() => {
-                        this.redo();
-                      }}
-                      attached="right"
-                    >
-                      <MdRedo />
-                    </Button>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div>
+                      <Button
+                        color="teal"
+                        onClick={() => {
+                          this.undo();
+                        }}
+                        attached="left"
+                      >
+                        <MdUndo />
+                      </Button>
+                      <Button
+                        color="teal"
+                        onClick={() => {
+                          this.redo();
+                        }}
+                        attached="right"
+                      >
+                        <MdRedo />
+                      </Button>
+                    </div>
+                    <p style={{ marginTop: '1rem' }}>Undo/redo</p>
                   </div>
                 </Menu.Item>
 
