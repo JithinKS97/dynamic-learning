@@ -31,6 +31,7 @@ const ListTile = (props) => {
     handleClick,
     time,
     isMember,
+    curSlide,
   } = props;
 
   useEffect(() => {
@@ -50,7 +51,12 @@ const ListTile = (props) => {
         if (!slideChangeDisable) { handleClick(index); }
       }}
       style={{
-        margin: '0', display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between',
+        margin: '0',
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+        backgroundColor: curSlide === index ? '#F2F2F2' : 'white',
       }}
     >
       <Card.Content
@@ -131,6 +137,7 @@ ListTile.propTypes = {
   handleClick: PropTypes.func.isRequired,
   time: PropTypes.number.isRequired,
   isMember: PropTypes.bool,
+  curSlide: PropTypes.number.isRequired,
 };
 
 ListTile.defaultProps = {
@@ -144,6 +151,7 @@ const DetailedList = (props) => {
     deleteItem,
     changeTitleOfItem,
     handleClick,
+    curSlide,
   } = props;
   const renderSlides = () => items.map((item, index) => (
     <ListTile
@@ -157,6 +165,7 @@ const DetailedList = (props) => {
       handleClick={handleClick}
       time={item.time}
       isMember={props.isMember}
+      curSlide={curSlide}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
@@ -168,6 +177,7 @@ DetailedList.propTypes = {
   changeTitleOfItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
   isMember: PropTypes.bool,
+  curSlide: PropTypes.number.isRequired,
 };
 
 DetailedList.defaultProps = {

@@ -58,7 +58,7 @@ Meteor.methods({
       updatedAt: moment().valueOf(),
       createdAt: Date.now(),
       upvotes: [], // will contain IDs of users who upvoted
-      downvotes: []
+      downvotes: [],
     });
   },
 
@@ -115,48 +115,48 @@ Meteor.methods({
 
   'lessons.upvote'(lessonid, userid) {
     if (!this.userId) {
-      throw new Meteor.Error('not-authorized'); 
+      throw new Meteor.Error('not-authorized');
     }
-    if (Lessons.findOne({_id: lessonid}).upvotes.includes(userid)) {
+    if (Lessons.findOne({ _id: lessonid }).upvotes.includes(userid)) {
       Lessons.update(
-        {_id: lessonid}, 
-        {$pull: {upvotes: userid}}
-      ); 
-      return; 
+        { _id: lessonid },
+        { $pull: { upvotes: userid } },
+      );
+      return;
     }
-    if (Lessons.findOne({_id: lessonid}).downvotes.includes(userid)) {
+    if (Lessons.findOne({ _id: lessonid }).downvotes.includes(userid)) {
       Lessons.update(
-        {_id: lessonid}, 
-        {$pull: {downvotes: userid}}
-      ); 
+        { _id: lessonid },
+        { $pull: { downvotes: userid } },
+      );
     }
     Lessons.update(
-      {_id: lessonid}, 
-      {$push: {upvotes: userid}}
-    ); 
+      { _id: lessonid },
+      { $push: { upvotes: userid } },
+    );
   },
 
   'lessons.downvote'(lessonid, userid) {
     if (!this.userId) {
-      throw new Meteor.Error('not-authorized'); 
+      throw new Meteor.Error('not-authorized');
     }
-    if (Lessons.findOne({_id: lessonid}).downvotes.includes(userid)) {
+    if (Lessons.findOne({ _id: lessonid }).downvotes.includes(userid)) {
       Lessons.update(
-        {_id: lessonid}, 
-        {$pull: {downvotes: userid}}
-      ); 
-      return; 
+        { _id: lessonid },
+        { $pull: { downvotes: userid } },
+      );
+      return;
     }
-    if (Lessons.findOne({_id: lessonid}).upvotes.includes(userid)) {
+    if (Lessons.findOne({ _id: lessonid }).upvotes.includes(userid)) {
       Lessons.update(
-        {_id: lessonid}, 
-        {$pull: {upvotes: userid}}
-      ); 
+        { _id: lessonid },
+        { $pull: { upvotes: userid } },
+      );
     }
     Lessons.update(
-      {_id: lessonid}, 
-      {$push: {downvotes: userid}}
-    ); 
+      { _id: lessonid },
+      { $push: { downvotes: userid } },
+    );
   },
 
   'lessons.shareLesson'(_id, shared) {
@@ -171,6 +171,6 @@ Meteor.methods({
   },
 
   'lessons.addupdown'(_id) {
-    Lessons.update({_id}, {$set: {upvotes: [], downvotes: []}}); 
-  }
+    Lessons.update({ _id }, { $set: { upvotes: [], downvotes: [] } });
+  },
 });
