@@ -435,7 +435,12 @@ class LessonPlansDirectories extends Component {
                       this.setState({ classmodal: false });
                     }}
                   >
-                    {Classes.findOne({ classcode: c }).name}
+                    {
+                      Classes
+                        .findOne({ classcode: c })
+                        ? Classes.findOne({ classcode: c }).name
+                        : null
+                    }
                   </Button>
                 </div>
               ))}
