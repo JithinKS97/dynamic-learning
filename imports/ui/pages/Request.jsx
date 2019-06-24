@@ -82,6 +82,7 @@ export class Request extends React.Component {
 
       showMembers: false,
       backPressed: false,
+      _idToNameMappings: {},
     };
   }
 
@@ -91,9 +92,6 @@ export class Request extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props === nextProps) return;
-
-    console.log('hello');
-    console.log(nextProps);
 
     /**
      * If the title for the first slide has not been yet set, show is false
@@ -195,11 +193,20 @@ export class Request extends React.Component {
   };
 
   generateMembersList = () => {
-    const { members } = this.state;
+    const { members, allMembers } = this.state;
     if (members) {
       Meteor.call('getUsernames', members, (err, membersName) => {
         this.setState({
           membersName,
+        });
+      });
+    }
+    if (allMembers) {
+      Meteor.call('getUsernames', members, (err, membersName) => {
+        const _idToNameMappings = {};
+        membersName.map((member) => { _idToNameMappings[member.userId] = member.username; });
+        this.setState({
+          _idToNameMappings,
         });
       });
     }
@@ -518,8 +525,9 @@ export class Request extends React.Component {
       infouserEmail,
       viewinfo,
       backPressed,
+      _idToNameMappings,
     } = this.state;
-
+    console.log(_idToNameMappings);
     const {
       requestExists, isOwner, currentUserId, isAuthenticated, updateToDatabase,
     } = this.props;
@@ -688,6 +696,7 @@ export class Request extends React.Component {
                     deleteItem={this.deleteSlide}
                     changeTitleOfItem={this.changeTitleOfSlide}
                     isMember={this.isMember}
+                    _idToNameMappings={_idToNameMappings}
                   />
                 ) : null}
               </Grid.Column>
@@ -697,6 +706,7 @@ export class Request extends React.Component {
               >
                 {show ? (
                   <CommentsList
+                    _idToNameMappings={_idToNameMappings}
                     isMember={this.isMember}
                     isAuthenticated={isAuthenticated}
                     ref={(el) => { this.commentsList = el; }}
@@ -748,6 +758,7 @@ export class Request extends React.Component {
                     update={updateToDatabase}
                     deleteSim={this.deleteSim}
                     isMember={this.isMember}
+                    _idToNameMappings={_idToNameMappings}
                   />
                 ) : null}
               </Grid.Column>

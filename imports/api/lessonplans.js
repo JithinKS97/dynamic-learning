@@ -83,6 +83,7 @@ Meteor.methods({
           description: '',
           members: [this.userId],
           pendingRequests: [],
+          allMembers: [this.userId],
         });
       },
     );

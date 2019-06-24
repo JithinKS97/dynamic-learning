@@ -1,5 +1,5 @@
 import FaPencil from 'react-icons/lib/fa/pencil';
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
 import {
   Card, Button, Menu, Modal, Input,
 } from 'semantic-ui-react';
@@ -19,6 +19,7 @@ const SimTile = (props) => {
     index,
     deleteSim,
     isMember,
+    username,
   } = props;
 
   const [selectedSim, setSelectedSim] = useState(null);
@@ -27,15 +28,8 @@ const SimTile = (props) => {
   const [titleEditable, changeTitleEditable] = useState(false);
   const [tempTag, changeTempTag] = useState('');
   const [tempTitle, changeTempTitle] = useState('');
-  const [ownerName, changeOwnerName] = useState('');
 
   const isOwner = Meteor.userId() === sim.userId && isMember;
-
-  useEffect(() => {
-    Meteor.call('getUsername', sim.userId, (_err, username) => {
-      changeOwnerName(username);
-    });
-  }, [sim.userId]);
 
   const findTime = () => moment(sim.time);
 
@@ -50,7 +44,7 @@ const SimTile = (props) => {
         <Card.Content style={{ flex: 14 }}>
           <Card.Header>{sim.title}</Card.Header>
           <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
-            <div>{ownerName}</div>
+            <div>{username}</div>
             <div style={{ marginLeft: '0.2rem' }}>{findTime().fromNow()}</div>
           </Card.Meta>
         </Card.Content>
@@ -234,6 +228,7 @@ SimTile.propTypes = {
   index: PropTypes.number,
   deleteSim: PropTypes.func,
   isMember: PropTypes.bool,
+  username: PropTypes.string,
 };
 
 SimTile.defaultProps = {
@@ -244,6 +239,7 @@ SimTile.defaultProps = {
   index: 0,
   deleteSim: () => null,
   isMember: false,
+  username: '',
 };
 
 const SimTiles = (props) => {
@@ -265,6 +261,7 @@ const SimTiles = (props) => {
               update={props.update}
               deleteSim={props.deleteSim}
               isMember={props.isMember}
+              username={props._idToNameMappings[sim.userId]}
             />
           ))}
         </Menu>
@@ -279,6 +276,7 @@ SimTiles.propTypes = {
   update: PropTypes.func,
   deleteSim: PropTypes.func,
   isMember: PropTypes.bool,
+  _idToNameMappings: PropTypes.objectOf(PropTypes.string),
 };
 
 SimTiles.defaultProps = {
@@ -287,6 +285,7 @@ SimTiles.defaultProps = {
   update: () => null,
   deleteSim: () => null,
   isMember: false,
+  _idToNameMappings: {},
 };
 
 export default SimTiles;

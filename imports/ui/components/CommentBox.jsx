@@ -9,7 +9,6 @@ import {
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
-import { Tracker } from 'meteor/tracker';
 import PropTypes from 'prop-types';
 import CommentForm from './CommentForm';
 import CommentReply from './CommentReply';
@@ -19,19 +18,10 @@ export default class CommentBox extends React.Component {
     super(props);
 
     this.state = {
-      username: '',
       replyVis: false,
       isEditable: false,
       tempComment: '',
     };
-
-    const { comment: { userId } } = this.props;
-
-    Tracker.autorun(() => {
-      Meteor.call('getUsername', userId, (err, username) => {
-        this.setState({ username });
-      });
-    });
   }
 
   componentDidMount() {
@@ -132,9 +122,9 @@ export default class CommentBox extends React.Component {
       updateSlides,
       isAuthenticated,
       comment: { lastEditedTime },
+      username,
     } = this.props;
     const {
-      username,
       isEditable,
       tempComment,
       replyVis,
@@ -275,4 +265,5 @@ CommentBox.propTypes = {
   curSlide: PropTypes.number.isRequired,
   updateSlides: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
+  username: PropTypes.string.isRequired,
 };

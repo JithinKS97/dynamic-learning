@@ -1,7 +1,6 @@
 import React, {
   Fragment,
   useState,
-  useEffect,
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -19,7 +18,6 @@ const ListTile = (props) => {
   const [isEditable, enableEditable] = useState(false);
   const [tempTitle, changeTempTitle] = useState('');
   const input = useRef();
-  const [ownerName, changeOwnerName] = useState('');
   const [slideChangeDisable, changeSlideChangeDisable] = useState(false);
 
   const {
@@ -32,13 +30,8 @@ const ListTile = (props) => {
     time,
     isMember,
     curSlide,
+    username,
   } = props;
-
-  useEffect(() => {
-    Meteor.call('getUsername', userId, (err, username) => {
-      changeOwnerName(username);
-    });
-  }, [userId]);
 
   const findTime = () => moment(time);
 
@@ -72,7 +65,7 @@ const ListTile = (props) => {
           />
         ) : <Card.Header style={{ width: '100%' }}>{title}</Card.Header>}
         <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
-          <div>{ownerName}</div>
+          <div>{username}</div>
           <div style={{ marginLeft: '0.2rem' }}>{findTime().fromNow()}</div>
         </Card.Meta>
       </Card.Content>
@@ -138,6 +131,7 @@ ListTile.propTypes = {
   time: PropTypes.number.isRequired,
   isMember: PropTypes.bool,
   curSlide: PropTypes.number.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 ListTile.defaultProps = {
@@ -152,6 +146,7 @@ const DetailedList = (props) => {
     changeTitleOfItem,
     handleClick,
     curSlide,
+    _idToNameMappings,
   } = props;
   const renderSlides = () => items.map((item, index) => (
     <ListTile
@@ -166,6 +161,7 @@ const DetailedList = (props) => {
       time={item.time}
       isMember={props.isMember}
       curSlide={curSlide}
+      username={_idToNameMappings[item.userId]}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
@@ -178,6 +174,7 @@ DetailedList.propTypes = {
   handleClick: PropTypes.func.isRequired,
   isMember: PropTypes.bool,
   curSlide: PropTypes.number.isRequired,
+  _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 DetailedList.defaultProps = {

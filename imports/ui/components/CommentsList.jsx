@@ -24,7 +24,7 @@ export default class commentsList extends Component {
   }
 
   showComments() {
-    const { slides, curSlide } = this.props;
+    const { slides, curSlide, _idToNameMappings } = this.props;
     if (slides.length > 0) {
       const { comments } = slides[curSlide];
 
@@ -35,6 +35,7 @@ export default class commentsList extends Component {
             ref={(el) => { this.commentRefs[index] = el; }}
             key={comment.time}
             index={index}
+            username={_idToNameMappings[comment.userId]}
             comment={comment}
             {...this.props}
             replies={replies}
@@ -71,4 +72,5 @@ commentsList.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
+  _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
 };
