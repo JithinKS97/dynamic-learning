@@ -393,8 +393,8 @@ export class Request extends React.Component {
     const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
     if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index].userId)) { return; }
-    const deletedComment = slides[curSlide].comments.splice(index, 1);
-    this.updateSlides(slides, 'editComment', { _id: deletedComment._id, curSlide });
+    const deletedCommentId = slides[curSlide].comments.splice(index, 1)[0]._id;
+    this.updateSlides(slides, 'editComment', { _id: deletedCommentId, curSlide });
   }
 
   editComment = (editedComment, index, _id) => {
@@ -527,7 +527,6 @@ export class Request extends React.Component {
       backPressed,
       _idToNameMappings,
     } = this.state;
-    console.log(_idToNameMappings);
     const {
       requestExists, isOwner, currentUserId, isAuthenticated, updateToDatabase,
     } = this.props;
