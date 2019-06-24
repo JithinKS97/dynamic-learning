@@ -92,6 +92,9 @@ export class Request extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props === nextProps) return;
 
+    console.log('hello');
+    console.log(nextProps);
+
     /**
      * If the title for the first slide has not been yet set, show is false
      */
@@ -334,7 +337,7 @@ export class Request extends React.Component {
 
   pushSim = (title, username, project_id) => {
     const { members } = this.state;
-    const { currentUserId } = this.props;
+    const { currentUserId, updateToDatabase } = this.props;
     if (members) { this.isMember = members.includes(currentUserId); }
 
     if (!(Meteor.userId() && this.isMember)) return;
@@ -358,7 +361,7 @@ export class Request extends React.Component {
     this.setState({
       slides,
     });
-    this.update();
+    updateToDatabase(slides, 'memberOp');
   }
 
   deleteSim = (index, userId) => {
@@ -376,7 +379,7 @@ export class Request extends React.Component {
     const { iframes } = slides[curSlide];
     iframes.splice(index, 1);
     slides[curSlide].iframes = iframes;
-    this.updateSlides(slides);
+    this.updateSlides(slides, 'editSim', { index, curSlide });
   };
 
   deleteComment = (index) => {
@@ -402,8 +405,12 @@ export class Request extends React.Component {
     if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index]
       .replies[subIndex].userId)
     ) { return; }
-    slides[curSlide].comments[index].replies.splice(subIndex, 1);
-    this.updateSlides(slides);
+    const deletedReplyId = slides[curSlide].comments[index].replies.splice(subIndex, 1)[0]._id;
+    this.updateSlides(slides, 'editReply', {
+      curSlide,
+      commentId: slides[curSlide].comments[index]._id,
+      replyId: deletedReplyId,
+    });
   }
 
   editReplyComment = (index, subIndex, editedComment) => {
@@ -414,7 +421,11 @@ export class Request extends React.Component {
     ) { return; }
     slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
     slides[curSlide].comments[index].replies[subIndex].lastEditedTime = Date.now();
-    this.updateSlides(slides);
+    this.updateSlides(slides, 'editReply', {
+      curSlide,
+      commentId: slides[curSlide].comments[index]._id,
+      replyId: slides[curSlide].comments[index].replies[subIndex]._id,
+    });
   };
 
   setTitleAndDescription = () => {
@@ -510,7 +521,7 @@ export class Request extends React.Component {
     } = this.state;
 
     const {
-      requestExists, isOwner, currentUserId, isAuthenticated,
+      requestExists, isOwner, currentUserId, isAuthenticated, updateToDatabase,
     } = this.props;
     if (members) { this.isMember = members.includes(currentUserId); }
 
@@ -734,7 +745,7 @@ export class Request extends React.Component {
                   <SimTiles
                     slides={slides}
                     curSlide={curSlide}
-                    update={this.update}
+                    update={updateToDatabase}
                     deleteSim={this.deleteSim}
                     isMember={this.isMember}
                   />

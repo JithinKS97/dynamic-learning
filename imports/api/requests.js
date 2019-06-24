@@ -18,16 +18,16 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    let requests;
     switch (operation) {
       case 'editingSlidesList':
         Requests.update({ _id, userId: this.userId }, { $set: { slides, updatedAt: moment().valueOf() } });
         break;
-      case 'postComment':
+      case 'memberOp':
         Requests.update({ _id, members: { $in: [this.userId] } }, { $set: { slides, updatedAt: moment().valueOf() } });
         break;
       case 'editComment':
-        const requests = Requests.findOne({ _id });
+        requests = Requests.findOne({ _id });
         if (
           requests
             .slides[args.curSlide]
@@ -36,6 +36,37 @@ Meteor.methods({
             .userId === this.userId
         ) {
           Requests.update({ _id, members: { $in: [this.userId] } }, { $set: { slides, updatedAt: moment().valueOf() } });
+        } else {
+          throw new Meteor.Error('not-authorized');
+        }
+        break;
+      case 'editReply':
+        requests = Requests.findOne({ _id });
+        if (
+          requests
+            .slides[args.curSlide]
+            .comments
+            .filter(comment => comment._id === args.commentId)[0]
+            .replies
+            .filter(reply => reply._id === args.replyId)[0]
+            .userId === this.userId
+        ) {
+          Requests.update({ _id, members: { $in: [this.userId] } }, { $set: { slides, updatedAt: moment().valueOf() } });
+        } else {
+          throw new Meteor.Error('not-authorized');
+        }
+        break;
+      case 'editSim':
+        requests = Requests.findOne({ _id });
+        if (
+          requests
+            .slides[args.curSlide]
+            .iframes[args.index]
+            .userId === this.userId
+        ) {
+          Requests.update({ _id, members: { $in: [this.userId] } }, { $set: { slides, updatedAt: moment().valueOf() } });
+        } else {
+          throw new Meteor.Error('not-authorized');
         }
         break;
       default:

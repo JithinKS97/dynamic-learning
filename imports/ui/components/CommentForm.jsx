@@ -35,7 +35,7 @@ export default class CommentForm extends Component {
           replies: [],
           edited: null,
         });
-        updateSlides(slides, 'postComment');
+        updateSlides(slides, 'memberOp');
         this.comment.value = '';
       }
     } else if (this.comment.value) {
@@ -47,7 +47,7 @@ export default class CommentForm extends Component {
         time: Date.now(),
         edited: null,
       });
-      updateSlides(slides, 'postComment');
+      updateSlides(slides, 'memberOp');
       this.comment.value = '';
     }
   }

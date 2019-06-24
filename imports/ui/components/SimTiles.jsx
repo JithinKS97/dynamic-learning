@@ -153,7 +153,7 @@ const SimTile = (props) => {
                           tempSim.title = tempTitle;
                           setSelectedSim(tempSim);
                           slides[curSlide].iframes[index] = tempSim;
-                          update();
+                          update(slides, 'editSim', { curSlide, index });
                         }
                       }
                     }}
@@ -204,7 +204,7 @@ const SimTile = (props) => {
                           [, tempSim.project_id] = tempTag.match('embed/(.*)"');
                           setSelectedSim(tempSim);
                           slides[curSlide].iframes[index] = tempSim;
-                          update();
+                          update(slides, 'editSim', { curSlide, index });
                         }
                       }
                     }}
