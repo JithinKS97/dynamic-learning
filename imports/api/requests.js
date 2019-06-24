@@ -29,6 +29,14 @@ Meteor.methods({
     Requests.update({ _id, pendingRequests: { $nin: [memberId] }, members: { $nin: [memberId] } }, { $push: { pendingRequests: memberId } });
   },
 
+  'requests.changeOpenedTime'(_id) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Requests.update({ _id }, { $set: { createdAt: Date.now() } });
+  },
+
   'requests.addMember'(_id, memberId) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');

@@ -415,7 +415,13 @@ export class Request extends React.Component {
   };
 
   setTitleAndDescription = () => {
-    const { editDescription, editTitle } = this.state;
+    const {
+      editDescription,
+      editTitle,
+      requestTitle,
+      description,
+      _id,
+    } = this.state;
     const { updateTitleInTheDatabase, isOwner, isAuthenticated } = this.props;
 
     if (!(isAuthenticated && isOwner)) return;
@@ -423,6 +429,10 @@ export class Request extends React.Component {
     if (!(editDescription && editTitle)) {
       alert('Fill the details');
       return;
+    }
+
+    if (requestTitle === '' && description === '') {
+      Meteor.call('requests.changeOpenedTime', _id);
     }
 
     this.setState(
