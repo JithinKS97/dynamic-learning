@@ -406,9 +406,7 @@ export class CreateLessonPlan extends React.Component {
 
     const { curSlide } = this.state;
 
-    if (!this.undoStacks[curSlide]) {
-      this.undoStacks[curSlide] = [];
-    }
+    this.undoStacks[curSlide] = this.undoStacks[curSlide] || [];
 
     try {
       expect(oldSlide).to.deep.include(
@@ -1097,7 +1095,7 @@ export class CreateLessonPlan extends React.Component {
                 ) : null}
 
                 {!!Meteor.userId() && userId === Meteor.userId() ? (
-                  <Link to={`/request/${_id}`}>
+                  <Link to={{ pathname: `/request/${_id}`, state: { from: 'createlessonplan' } }}>
                     <Menu.Item link>Discussion forum</Menu.Item>
                   </Link>
                 ) : null}

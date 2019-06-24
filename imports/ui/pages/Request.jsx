@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
@@ -79,6 +81,7 @@ export class Request extends React.Component {
       membersName: [],
 
       showMembers: false,
+      backPressed: false,
     };
   }
 
@@ -501,6 +504,7 @@ export class Request extends React.Component {
       infouserType,
       infouserEmail,
       viewinfo,
+      backPressed,
     } = this.state;
 
     const {
@@ -509,6 +513,14 @@ export class Request extends React.Component {
     if (members) { this.isMember = members.includes(currentUserId); }
 
     if (redirectToLessonplan) { return <Redirect to={`/createlessonplan/${_id}`} />; }
+    if (backPressed) {
+      if (this.props.location.state.from === 'dashboard') {
+        return <Redirect to="/dashboard/requests" />;
+      // eslint-disable-next-line no-else-return
+      } else {
+        return <Redirect to={`/createlessonplan/${_id}`} />;
+      }
+    }
 
     // console.log(show);
     // console.log(isAuthenticated);
@@ -519,7 +531,9 @@ export class Request extends React.Component {
         <Menu style={{ margin: 0 }}>
           <Menu.Item
             onClick={() => {
-              history.back();
+              this.setState({
+                backPressed: true,
+              });
             }}
           >
             Back
