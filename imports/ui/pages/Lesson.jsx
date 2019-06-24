@@ -284,6 +284,7 @@ class Lesson extends React.Component {
           /> */}
           <div style={{ margin: '2.4rem' }}>
             <CommentsList
+              _idToNameMappings={{}}
               slides={[{ comments: [{ comment: 'Comment', replies: [{ comment: 'Reply' }] }] }]}
               curSlide={0}
               isMember
