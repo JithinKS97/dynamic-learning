@@ -1,8 +1,11 @@
+/* eslint-disable prefer-template */
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Form, Button } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
+
+const generateRandomId = () => Math.random().toString(36).substr(2, 16);
 
 export default class CommentForm extends Component {
   componentDidMount() {
@@ -25,24 +28,26 @@ export default class CommentForm extends Component {
       if (this.comment.value) {
         const comment = this.comment.value;
         slides[curSlide].comments.push({
+          _id: generateRandomId(),
           comment,
           userId: Meteor.userId(),
           time: Date.now(),
           replies: [],
           edited: null,
         });
-        updateSlides(slides);
+        updateSlides(slides, 'postComment');
         this.comment.value = '';
       }
     } else if (this.comment.value) {
       const comment = this.comment.value;
       slides[curSlide].comments[indexOfComment].replies.push({
+        _id: generateRandomId(),
         comment,
         userId: Meteor.userId(),
         time: Date.now(),
         edited: null,
       });
-      updateSlides(slides);
+      updateSlides(slides, 'postComment');
       this.comment.value = '';
     }
   }

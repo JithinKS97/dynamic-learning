@@ -214,9 +214,9 @@ export class Request extends React.Component {
   findTime = time => moment(time)
 
   push = (title) => {
-    const { isAuthenticated, isOwner } = this.props;
+    const { isOwner, isAuthenticated, updateToDatabase } = this.props;
 
-    if (!(isAuthenticated && isOwner)) return;
+    if (!(isOwner && isAuthenticated)) return;
 
     if (!title) return;
 
@@ -229,7 +229,7 @@ export class Request extends React.Component {
       slides[0].userId = Meteor.userId();
       slides[0].time = Date.now();
       this.setState({ slides, show: true }, () => {
-        this.update();
+        updateToDatabase(slides, 'editingSlidesList');
       });
     } else {
       const slide = {
@@ -246,7 +246,7 @@ export class Request extends React.Component {
           curSlide,
         },
         () => {
-          this.update();
+          updateToDatabase(slides, 'editingSlidesList');
         },
       );
     }
@@ -277,7 +277,7 @@ export class Request extends React.Component {
         }
         if (curSlide === slides.length) curSlide = slides.length - 1;
         this.changeSlide(curSlide);
-        this.updateSlides(slides);
+        this.updateSlides(slides, 'editingSlidesList');
       } else this.reset();
     }
   };
@@ -306,13 +306,16 @@ export class Request extends React.Component {
     );
   }
 
-  updateSlides = (updatedSlides) => {
+  updateSlides = (updatedSlides, operation, args) => {
+    const { isAuthenticated, updateToDatabase } = this.props;
+    if (!(isAuthenticated)) return;
     this.setState(
       {
         slides: updatedSlides,
       },
       () => {
-        this.update();
+        const { slides } = this.state;
+        updateToDatabase(slides, operation, args);
       },
     );
   }
@@ -380,17 +383,17 @@ export class Request extends React.Component {
     const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
     if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index].userId)) { return; }
-    slides[curSlide].comments.splice(index, 1);
-    this.updateSlides(slides);
+    const deletedComment = slides[curSlide].comments.splice(index, 1);
+    this.updateSlides(slides, 'editComment', { _id: deletedComment._id, curSlide });
   }
 
-  editComment = (editedComment, index) => {
+  editComment = (editedComment, index, _id) => {
     const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
     if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index].userId)) { return; }
     slides[curSlide].comments[index].comment = editedComment;
     slides[curSlide].comments[index].lastEditedTime = Date.now();
-    this.updateSlides(slides);
+    this.updateSlides(slides, 'editComment', { _id, curSlide });
   };
 
   deleteReplyComment = (index, subIndex) => {
@@ -415,13 +418,7 @@ export class Request extends React.Component {
   };
 
   setTitleAndDescription = () => {
-    const {
-      editDescription,
-      editTitle,
-      requestTitle,
-      description,
-      _id,
-    } = this.state;
+    const { editDescription, editTitle } = this.state;
     const { updateTitleInTheDatabase, isOwner, isAuthenticated } = this.props;
 
     if (!(isAuthenticated && isOwner)) return;
@@ -431,10 +428,6 @@ export class Request extends React.Component {
       return;
     }
 
-    if (requestTitle === '' && description === '') {
-      Meteor.call('requests.changeOpenedTime', _id);
-    }
-
     this.setState(
       {
         requestTitle: editTitle,
@@ -442,8 +435,7 @@ export class Request extends React.Component {
         showEditDescription: false,
       },
       () => {
-        const { _id } = this.state;
-        updateTitleInTheDatabase(_id, editTitle, editDescription);
+        updateTitleInTheDatabase(editTitle, editDescription);
       },
     );
   }
@@ -451,11 +443,11 @@ export class Request extends React.Component {
   changeTitleOfSlide = (newTitle, index) => {
     if (!newTitle) return false;
     const { slides } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
+    const updatedSlides = Object.values($.extend(true, {}, slides));
 
-    _slides[index].title = newTitle;
+    updatedSlides[index].title = newTitle;
 
-    this.updateSlides(_slides);
+    this.updateSlides(updatedSlides, 'editingSlidesList');
 
     return true;
   };
@@ -985,17 +977,17 @@ const RequestContainer = withTracker(({ match }) => {
     request,
     loading,
     requestExists,
-    updateTitleInTheDatabase: (_id, editTitle, editDescription) => {
+    updateTitleInTheDatabase: (editTitle, editDescription) => {
       Meteor.call(
         'requests.title.update',
-        _id,
+        request._id,
         editTitle,
         editDescription,
       );
     },
     isAuthenticated: !!Meteor.userId(),
     isOwner: request.userId === Meteor.userId(),
-    updateToDatabase: (_id, slides) => { Meteor.call('requests.update', _id, slides); },
+    updateToDatabase: (slides, operation, args) => { Meteor.call('requests.update', request._id, slides, operation, args); },
     currentUserId: Meteor.userId(),
   };
 })(Request);

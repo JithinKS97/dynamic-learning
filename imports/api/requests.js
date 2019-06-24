@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable max-len */
 /* eslint-disable object-shorthand, meteor/audit-argument-checks, import/prefer-default-export */
 import { Mongo } from 'meteor/mongo';
@@ -13,12 +14,32 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'requests.update'(_id, slides) {
+  'requests.update'(_id, slides, operation, args) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Requests.update({ _id }, { $set: { slides, updatedAt: moment().valueOf() } });
+    switch (operation) {
+      case 'editingSlidesList':
+        Requests.update({ _id, userId: this.userId }, { $set: { slides, updatedAt: moment().valueOf() } });
+        break;
+      case 'postComment':
+        Requests.update({ _id, members: { $in: [this.userId] } }, { $set: { slides, updatedAt: moment().valueOf() } });
+        break;
+      case 'editComment':
+        const requests = Requests.findOne({ _id });
+        if (
+          requests
+            .slides[args.curSlide]
+            .comments
+            .filter(comment => comment._id === args._id)[0]
+            .userId === this.userId
+        ) {
+          Requests.update({ _id, members: { $in: [this.userId] } }, { $set: { slides, updatedAt: moment().valueOf() } });
+        }
+        break;
+      default:
+    }
   },
 
   'requests.addPendingRequest'(_id, memberId) {

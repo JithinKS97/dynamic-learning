@@ -125,7 +125,7 @@ export default class CommentBox extends React.Component {
       comment: { userId },
       deleteComment,
       index,
-      comment: { comment },
+      comment: { comment, _id },
       editComment,
       slides,
       curSlide,
@@ -220,7 +220,7 @@ export default class CommentBox extends React.Component {
                       this.setState({
                         isEditable: false,
                       }, () => {
-                        editComment(tempComment, index);
+                        editComment(tempComment, index, _id);
                       });
                     }
                   }}
