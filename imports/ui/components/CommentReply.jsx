@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
 import moment from 'moment';
 import {
   Comment,
@@ -14,13 +13,7 @@ import PropTypes from 'prop-types';
 export default class CommentReply extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { username: '', isEditable: false, tempComment: '' };
-    Tracker.autorun(() => {
-      const { reply: { userId } } = this.props;
-      Meteor.call('getUsername', userId, (err, username) => {
-        this.setState({ username });
-      });
-    });
+    this.state = { isEditable: false, tempComment: '' };
   }
 
   findTime() {
@@ -41,9 +34,10 @@ export default class CommentReply extends React.Component {
       subIndex,
       editReplyComment,
       isMember,
+      username,
     } = this.props;
 
-    const { username, isEditable, tempComment } = this.state;
+    const { isEditable, tempComment } = this.state;
 
     const isOwner = userId === Meteor.userId() && isMember;
     return (
@@ -156,4 +150,5 @@ CommentReply.propTypes = {
   subIndex: PropTypes.number.isRequired,
   editReplyComment: PropTypes.func.isRequired,
   isMember: PropTypes.bool.isRequired,
+  username: PropTypes.string.isRequired,
 };

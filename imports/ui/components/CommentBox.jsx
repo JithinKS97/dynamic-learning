@@ -38,6 +38,7 @@ export default class CommentBox extends React.Component {
       editReplyComment,
       isMember,
       index,
+      _idToNameMappings,
     } = this.props;
     if (replies) {
       return (replies.map((reply, i) => (
@@ -49,6 +50,7 @@ export default class CommentBox extends React.Component {
           editReplyComment={editReplyComment}
           isMember={isMember}
           index={index}
+          username={_idToNameMappings[reply.userId]}
         />
       )));
     }
@@ -266,4 +268,5 @@ CommentBox.propTypes = {
   updateSlides: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   username: PropTypes.string.isRequired,
+  _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
 };
