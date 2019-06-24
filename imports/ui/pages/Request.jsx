@@ -98,6 +98,14 @@ export class Request extends React.Component {
      */
 
     const { request } = nextProps;
+    let { curSlide } = this.state;
+
+    if (curSlide > request.slides.length - 1) {
+      curSlide = request.slides.length - 1;
+      this.setState({
+        curSlide,
+      });
+    }
 
     const show = !!request.slides[0].title;
 
