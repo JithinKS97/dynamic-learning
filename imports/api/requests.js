@@ -125,6 +125,7 @@ Meteor.methods({
         description: '',
         members: [this.userId],
         pendingRequests: [],
+        createdAt: Date.now(),
       },
     });
   },
