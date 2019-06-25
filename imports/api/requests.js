@@ -94,9 +94,15 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Requests.update({ _id, members: { $nin: [memberId] } }, { $push: { members: memberId } });
-    Requests.update({ _id, members: { $in: [memberId] } }, { $pull: { pendingRequests: memberId } });
-    Requests.update({ _id, allMembers: { $nin: [memberId] } }, { $push: { allMembers: memberId } });
+    // userId: this.userId ensures that only owner of the forum can accept members
+
+    // members: { $nin: [memberId] } ensures that userId of a user is added only ones into the members list.
+    Requests.update({ _id, userId: this.userId, members: { $nin: [memberId] } }, { $push: { members: memberId } });
+    // Removes the userId from the pendingRequests list when added to members list.
+    Requests.update({ _id, userId: this.userId, members: { $in: [memberId] } }, { $pull: { pendingRequests: memberId } });
+    // allMembers contains userIds of all the members, event that has been left. When a member leaves a forum
+    // they are removed from members list, not from allMembers list.
+    Requests.update({ _id, userId: this.userId, allMembers: { $nin: [memberId] } }, { $push: { allMembers: memberId } });
   },
 
   'requests.removeMember'(_id, memberId) {

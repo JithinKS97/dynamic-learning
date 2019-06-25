@@ -1,5 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
@@ -31,32 +29,56 @@ import CommentsList from '../components/CommentsList';
 import SimTiles from '../components/SimTiles';
 import 'semantic-ui-css/semantic.min.css';
 
-/* This component renders the page where the teachers post
-    the requests for the new simulation
-    and the teachers and the other users have discussions
-    about the simulations that they are trying to make.
-*/
+/**
+ * This component renders the Discussion forum page.
+ * The forum is opened by the owner of a lessonplan.
+ * Teachers, programmers and students discuss in this page about the lesson
+ * and making new simulations.
+ * The forum is made up of sequence of slides.
+ * Each slide contains a discussion thread and sequence of simulations.
+ */
 
 export class Request extends React.Component {
   constructor(props) {
     super(props);
 
-    /*
-    If there are no topics, some elements need not be displayed,
-    show variable is used to hide them.
-    slides hold the contents of each slide. Each slide constitute
-    the new request topics, the comments
-    of each users and the simulations uploaded by them.
-
-    curSlide holds the number of the current slide that is displayed.
-
-    Iniitialized is set to true after the data is fetched from the
-    database and set to the state.
-    See the componentDidUpdate lifecycle method.
-
-    selectedSim holds the sim that is currently selected and
-    displayed inside the modal.
-  */
+    /**
+     * Explanation about the state variables used -
+     *
+     * show - If there are no topics, certain elements need to be hidden. show is used for this.
+     *
+     * slides - slides is an array and each slide holds comments (Array) and simulations (Array).
+     *
+     * curSlide - Holds the current slide no.
+     *
+     * requestTitle and description - carries the title and description at the top of the page.
+     *
+     * editTitle and editDescription - carries the values in the input components
+     * (input and text area) in the modal box that appears when edit (Pencil) button is pressed.
+     *
+     * topicTitleModalOpen - shows the modal box that lets to enter the title of the new thread
+     * created when Create new topic button is pressed.
+     *
+     * topicTitle - holds the name of the title of the new thread.
+     *
+     * showEditDescription - shows up the modal box that lets edit the title and description of
+     * the lessonplan
+     *
+     * redirectToLessonplan - when true, redirects to the corresponding lessonplan of the forum.
+     *
+     * showMembershipRequests - Opens up the modal box that shows the pending membership requests.
+     *
+     * pendingMembers - an array of userIds of requesters.
+     *
+     * membersName - names of the members of the forums.
+     *
+     * showMembers - opens up the modal box that shows members of the forum.
+     *
+     * backPressed - to redirect to the previous page.
+     *
+     * _idToNameMappings = stores a mapping from userIds to usernames of
+     * all the members (even that left)
+    */
 
     this.state = {
       show: false,
@@ -91,15 +113,14 @@ export class Request extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // Only rerender when the props change.
     if (this.props === nextProps) return;
-
-    /**
-     * If the title for the first slide has not been yet set, show is false
-     */
 
     const { request } = nextProps;
     let { curSlide } = this.state;
 
+    // To ensure that when a slide is deleted, current Slide value is not beyond
+    // the number of slides there are.
     if (curSlide > request.slides.length - 1) {
       curSlide = request.slides.length - 1;
       this.setState({
@@ -107,6 +128,7 @@ export class Request extends React.Component {
       });
     }
 
+    // If the title has not been set for the first slide, then show must be false.
     const show = !!request.slides[0].title;
 
     this.setState(
@@ -114,10 +136,14 @@ export class Request extends React.Component {
         ...request,
         show,
 
+        // The input fields in the title, description modal box set to the existing title
+        // description values
         editDescription: request.description,
         editTitle: request.requestTitle,
       },
       () => {
+        // If title and description has not been yet set, the title, description modal
+        // box is open
         const { requestTitle, description } = this.state;
         if (!(requestTitle && description)) {
           this.setState({
@@ -131,7 +157,54 @@ export class Request extends React.Component {
     );
   }
 
+  generatePendingMembersList = () => {
+    // pendingRequests contains userIds of users who have sent requests for
+    // joining the forum, but not accepted yet.
+    // getUsernames fetches usernames of these users.
+    // It returns array of objects. Each object is of the form { username, userId }
+    const { pendingRequests } = this.state;
+    if (pendingRequests) {
+      Meteor.call(
+        'getUsernames',
+        pendingRequests,
+        (_err, pendingMembers) => {
+          this.setState({
+            pendingMembers,
+          });
+        },
+      );
+    }
+  };
+
+  generateMembersList = () => {
+    // members contain userIds of members of the discussion forum.
+    const { members } = this.state;
+    if (members) {
+      Meteor.call('getUsernames', members, (_err, membersName) => {
+        this.setState({
+          membersName,
+        });
+      });
+    }
+    // allMembers contain userIds of all the present members and also members who left the forum
+    // _idToNameMappings helps to instantly get the username with their userId.
+    // _idToNameMappings[userId] returns username.
+    const { allMembers } = this.state;
+    if (allMembers) {
+      Meteor.call('getUsernames', members, (_err, membersName) => {
+        const _idToNameMappings = {};
+        membersName.map((member) => { _idToNameMappings[member.userId] = member.username; });
+        this.setState({
+          _idToNameMappings,
+        });
+      });
+    }
+  };
+
   pendingRequestsList = () => {
+    // Generates a list of cards from the pendingMembers
+    // The card contains an accept button when pressed adds the
+    // user as the member of the discussion forum by invoking 'requests.addMember'
     const { pendingMembers, _id } = this.state;
     return pendingMembers
       .filter(item => item)
@@ -155,6 +228,7 @@ export class Request extends React.Component {
                   _id,
                   member.userId,
                   () => {
+                    // regenerates the pennding members list which updates the list.
                     this.generatePendingUsersNamesList();
                   },
                   () => {
@@ -184,41 +258,6 @@ export class Request extends React.Component {
         </Card>
       ));
   }
-
-  generatePendingMembersList = () => {
-    const { pendingRequests } = this.state;
-    if (pendingRequests) {
-      Meteor.call(
-        'getUsernames',
-        pendingRequests,
-        (err, pendingMembers) => {
-          this.setState({
-            pendingMembers,
-          });
-        },
-      );
-    }
-  };
-
-  generateMembersList = () => {
-    const { members, allMembers } = this.state;
-    if (members) {
-      Meteor.call('getUsernames', members, (err, membersName) => {
-        this.setState({
-          membersName,
-        });
-      });
-    }
-    if (allMembers) {
-      Meteor.call('getUsernames', members, (err, membersName) => {
-        const _idToNameMappings = {};
-        membersName.map((member) => { _idToNameMappings[member.userId] = member.username; });
-        this.setState({
-          _idToNameMappings,
-        });
-      });
-    }
-  };
 
   displayMembersName = () => {
     const { members, membersName } = this.state;
@@ -542,17 +581,14 @@ export class Request extends React.Component {
 
     if (redirectToLessonplan) { return <Redirect to={`/createlessonplan/${_id}`} />; }
     if (backPressed) {
-      if (this.props.location.state.from === 'dashboard') {
+      const { location: { state: { from } } } = this.props;
+      if (from === 'dashboard') {
         return <Redirect to="/dashboard/requests" />;
       // eslint-disable-next-line no-else-return
       } else {
         return <Redirect to={`/createlessonplan/${_id}`} />;
       }
     }
-
-    // console.log(show);
-    // console.log(isAuthenticated);
-    // console.log(this.isMember);
 
     return (
       <div>
@@ -970,6 +1006,7 @@ Request.propTypes = {
   updateToDatabase: PropTypes.func,
   isOwner: PropTypes.bool,
   currentUserId: PropTypes.string,
+  location: PropTypes.objectOf(PropTypes.Object),
 };
 
 Request.defaultProps = {
@@ -980,6 +1017,7 @@ Request.defaultProps = {
   updateToDatabase: () => {},
   isOwner: false,
   currentUserId: '',
+  location: {},
 };
 
 const RequestContainer = withTracker(({ match }) => {
