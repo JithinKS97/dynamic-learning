@@ -20,7 +20,7 @@ Meteor.methods({
     }
     let requests;
     switch (operation) {
-      case 'editingSlidesList':
+      case 'modifySlidesList':
         Requests.update({ _id, userId: this.userId }, { $set: { slides, updatedAt: moment().valueOf() } });
         break;
       case 'memberOp':
