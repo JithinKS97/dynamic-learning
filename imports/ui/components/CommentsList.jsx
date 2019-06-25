@@ -51,7 +51,7 @@ export default class commentsList extends Component {
       <div>
         <Comment.Group>
           <Header style={{ marginBottom: '1.2rem' }} as="h3" dividing>
-            Comments
+            Forum
           </Header>
           {this.showComments()}
         </Comment.Group>

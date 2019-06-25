@@ -61,7 +61,7 @@ export default class CommentForm extends Component {
       >
         <Form.Field>
           {/* eslint-disable-next-line no-return-assign */}
-          <textarea rows="3" placeholder="Comment" ref={e => this.comment = e} />
+          <textarea rows="3" placeholder="Type something..." ref={e => this.comment = e} />
         </Form.Field>
         <Form.Field>
           <Button type="submit">Submit</Button>
