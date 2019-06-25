@@ -283,7 +283,7 @@ class Lesson extends React.Component {
             lessonid={lesson._id}
           /> */}
           <div style={{ margin: '2.4rem' }}>
-            <CommentsList
+            {/* <CommentsList
               slides={[{ comments: [{ comment: 'Comment', replies: [{ comment: 'Reply' }] }] }]}
               curSlide={0}
               isMember
@@ -297,7 +297,7 @@ class Lesson extends React.Component {
               updateSlides={() => {}}
               isMember
               isAuthenticated
-            />
+            /> */}
           </div>
         </div>
 

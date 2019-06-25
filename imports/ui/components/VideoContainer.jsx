@@ -114,8 +114,7 @@ export default class VideoContainer extends React.Component {
                   : (
                     <div>
                       <iframe
-                        width="560"
-                        height="315"
+                        style={{width: '100%', marginTop:'40px', height: '360px'}}
                         src={`//www.youtube.com/embed/${this.getId(_url)}?rel=0&amp;showinfo=0`}
                         frameBorder="0"
                         allowFullScreen
