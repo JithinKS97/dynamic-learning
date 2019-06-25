@@ -58,7 +58,7 @@ export default class SimContainer extends React.Component {
     */
 
     const {
-      curSlide, index, slides, saveChanges, undo, redo, save, interact,
+      curSlide, index, slides, updateSlides, undo, redo, save, interact,
     } = this.props;
 
     const tempSlides = Object.values($.extend(true, {}, slides));
@@ -72,7 +72,7 @@ export default class SimContainer extends React.Component {
        * To indicate this, a third parameter true is passed
        */
 
-      saveChanges(tempSlides, undefined, true);
+      updateSlides(tempSlides, true);
     } else if (e.data.operation === 'load') {
       this.otherWindow.postMessage(
         { operation: 'load', data: tempSlides[curSlide].iframes[index].data },
@@ -130,7 +130,7 @@ SimContainer.propTypes = {
   curSlide: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
-  saveChanges: PropTypes.func,
+  updateSlides: PropTypes.func,
   undo: PropTypes.func,
   redo: PropTypes.func,
   save: PropTypes.func,
@@ -138,7 +138,7 @@ SimContainer.propTypes = {
 };
 
 SimContainer.defaultProps = {
-  saveChanges: () => null,
+  updateSlides: () => null,
   undo: () => null,
   redo: () => null,
   save: () => null,

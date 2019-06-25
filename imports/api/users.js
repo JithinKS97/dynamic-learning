@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable meteor/audit-argument-checks */
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-nested-ternary */
@@ -7,24 +8,26 @@ import { Meteor } from 'meteor/meteor';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 
 export const validateNewUser = (user) => {
-  let email = ''; 
+  let email = '';
   if (user.services) {
     if (user.services.github) {
-      email = user.services.github.email; 
-    }
-    else {
-      email = user.services.google.email; 
+      email = user.services.github.email;
+      return;
+    } if (user.services.google) {
+      email = user.services.google.email;
+      return;
     }
   }
-  else {
-    email = user.emails[0].address; 
-  }
+
+  if (!email) { email = user.emails[0].address; }
+
   new SimpleSchema({
     email: {
       type: String,
       regEx: SimpleSchema.RegEx.Email,
     },
   }).validate({ email });
+
   return true;
 };
 
@@ -56,12 +59,14 @@ Meteor.methods({
   removeUser(username) {
     Meteor.users.remove({ username });
   },
+  setUsername(_id, username) {
+    Meteor.users.update({ _id }, { $set: { username } });
+  },
 });
 
 if (Meteor.isServer) {
   Accounts.validateNewUser(validateNewUser);
   Meteor.publish('getAccounts', () => Meteor.users.find());
-  const { settings: { github } } = Meteor;
   ServiceConfiguration.configurations.upsert({
     service: 'github',
   }, {

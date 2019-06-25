@@ -1,7 +1,6 @@
 import React, {
   Fragment,
   useState,
-  useEffect,
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -19,7 +18,6 @@ const ListTile = (props) => {
   const [isEditable, enableEditable] = useState(false);
   const [tempTitle, changeTempTitle] = useState('');
   const input = useRef();
-  const [ownerName, changeOwnerName] = useState('');
   const [slideChangeDisable, changeSlideChangeDisable] = useState(false);
 
   const {
@@ -29,17 +27,13 @@ const ListTile = (props) => {
     deleteItem,
     index,
     handleClick,
-    time,
+    createdAt,
     isMember,
+    curSlide,
+    username,
   } = props;
 
-  useEffect(() => {
-    Meteor.call('getUsername', userId, (err, username) => {
-      changeOwnerName(username);
-    });
-  }, [userId]);
-
-  const findTime = () => moment(time);
+  const findTime = () => moment(createdAt);
 
   const isOwner = Meteor.userId() === userId && !!isMember;
 
@@ -47,10 +41,15 @@ const ListTile = (props) => {
   return (
     <Card
       onClick={() => {
-        if (!slideChangeDisable) { handleClick(undefined, index); }
+        if (!slideChangeDisable) { handleClick(index); }
       }}
       style={{
-        margin: '0', display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between',
+        margin: '0',
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+        backgroundColor: curSlide === index ? '#F2F2F2' : 'white',
       }}
     >
       <Card.Content
@@ -66,7 +65,7 @@ const ListTile = (props) => {
           />
         ) : <Card.Header style={{ width: '100%' }}>{title}</Card.Header>}
         <Card.Meta style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'row' }}>
-          <div>{ownerName}</div>
+          <div>{username}</div>
           <div style={{ marginLeft: '0.2rem' }}>{findTime().fromNow()}</div>
         </Card.Meta>
       </Card.Content>
@@ -129,8 +128,10 @@ ListTile.propTypes = {
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
-  time: PropTypes.number.isRequired,
+  createdAt: PropTypes.number.isRequired,
   isMember: PropTypes.bool,
+  curSlide: PropTypes.number.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 ListTile.defaultProps = {
@@ -144,6 +145,8 @@ const DetailedList = (props) => {
     deleteItem,
     changeTitleOfItem,
     handleClick,
+    curSlide,
+    _idToNameMappings,
   } = props;
   const renderSlides = () => items.map((item, index) => (
     <ListTile
@@ -155,8 +158,10 @@ const DetailedList = (props) => {
       index={index}
       title={item.title}
       handleClick={handleClick}
-      time={item.time}
+      createdAt={item.createdAt}
       isMember={props.isMember}
+      curSlide={curSlide}
+      username={_idToNameMappings[item.userId]}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
@@ -168,6 +173,8 @@ DetailedList.propTypes = {
   changeTitleOfItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
   isMember: PropTypes.bool,
+  curSlide: PropTypes.number.isRequired,
+  _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 DetailedList.defaultProps = {

@@ -72,8 +72,8 @@ export default class AddSim extends Component {
         data: {},
       };
       allSlides[curSlide].iframes.push(sim);
-      const { saveChanges } = this.props;
-      saveChanges(allSlides);
+      const { updateSlides } = this.props;
+      updateSlides(allSlides);
       this.setState({
         isOpen: false,
         node: null,
@@ -178,7 +178,7 @@ export default class AddSim extends Component {
 AddSim.propTypes = {
   curSlide: PropTypes.number,
   slides: PropTypes.arrayOf(PropTypes.object),
-  saveChanges: PropTypes.func.isRequired,
+  updateSlides: PropTypes.func.isRequired,
 };
 
 AddSim.defaultProps = {

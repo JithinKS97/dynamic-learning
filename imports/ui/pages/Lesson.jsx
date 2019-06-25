@@ -11,7 +11,10 @@ import 'semantic-ui-css/semantic.min.css';
 import VideoContainer from '../components/VideoContainer';
 import SimsList from '../components/SimsList';
 import AddSim from '../components/AddSim';
-import LessonComment from '../components/LessonComment'; 
+// import LessonComment from '../components/LessonComment';
+import Votes from '../components/Votes';
+import CommentForm from '../components/CommentForm';
+import CommentsList from '../components/CommentsList';
 
 class Lesson extends React.Component {
   constructor(props) {
@@ -77,31 +80,15 @@ class Lesson extends React.Component {
     Meteor.call('lessons.update', _id, slides);
   }
 
+  changeSlide = (toSlideNo) => {
+    this.setState({
+      curSlide: toSlideNo,
+    });
+  }
 
-  saveChanges = (slides, curSlide) => {
-    /**
-     * This function is used to save any changes happening to the state
-     * It accepts 2 parameters slides and curSlide
-     *
-     */
+  updateSlides = (updatedSlides) => {
     const { lesson } = this.props;
-
-    if (slides === undefined) {
-      this.setState({
-        curSlide,
-      });
-    } else if (curSlide === undefined) {
-      this.setState({
-      }, () => {
-        this.save(lesson._id, slides);
-      });
-    } else {
-      this.setState({
-        curSlide,
-      }, () => {
-        this.save(lesson._id, slides);
-      });
-    }
+    this.save(lesson._id, updatedSlides);
   }
 
   deleteSlide = (index) => {
@@ -127,7 +114,8 @@ class Lesson extends React.Component {
         curSlide = 0;
       }
       if (curSlide === slides.length) { curSlide = slides.length - 1; }
-      this.saveChanges(slides, curSlide);
+      this.changeSlide(curSlide);
+      this.updateSlides(slides);
     } else {
       this.reset();
     }
@@ -213,6 +201,8 @@ class Lesson extends React.Component {
                   />
                 ) : null}
 
+                <Votes lessonid={lesson._id} />
+
                 <VideoContainer
                   userId={lesson.userId}
                   addVideo={this.addVideo}
@@ -240,14 +230,13 @@ class Lesson extends React.Component {
                   Add Sim
 
                 </Button>
-                :
                 {/**
                   AddSim component adds a sim to the lesson. See the function addToLesson function
                   inside the AddSim component to know how the sim gets added.
               */}
 
                 <AddSim
-                  saveChanges={this.saveChanges}
+                  updateSlides={this.updateSlides}
                   slides={lesson.slides}
                   curSlide={curSlide}
                   isPreview
@@ -277,7 +266,7 @@ class Lesson extends React.Component {
               <HorizontalList
                 userId={lesson.userId}
                 deleteSlide={this.deleteSlide}
-                saveChanges={this.saveChanges}
+                changeSlide={this.changeSlide}
                 slides={lesson.slides}
               />
               {lesson.userId === Meteor.userId() ? (
@@ -290,9 +279,27 @@ class Lesson extends React.Component {
               ) : null}
             </Grid.Row>
           </Grid>
-          <LessonComment 
+          {/* <LessonComment
             lessonid={lesson._id}
-          /> 
+          /> */}
+          <div style={{ margin: '2.4rem' }}>
+            <CommentsList
+              _idToNameMappings={{}}
+              slides={[{ comments: [{ comment: 'Comment', replies: [{ comment: 'Reply' }] }] }]}
+              curSlide={0}
+              isMember
+              isAuthenticated
+              updateSlides={() => {}}
+            />
+            <CommentForm
+              indexOfComment={-1}
+              slides={[{ comments: [] }]}
+              curSlide={0}
+              updateSlides={() => {}}
+              isMember
+              isAuthenticated
+            />
+          </div>
         </div>
 
       );

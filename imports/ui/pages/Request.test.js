@@ -9,9 +9,9 @@ import { createMemoryHistory } from 'history';
 
 /**
  * Test cases to write -
- * Editing of title and description
- * Addition and deletion of slide (authenticated and not authenticated)
- * Editing the title of slide
+ * Editing of title and description - check
+ * Addition and deletion of slide (authenticated and not authenticated) - check
+ * Editing the title and description of slide - check
  * Adding and deleting comments
  * Replying to comments
  * Adding simulation
@@ -41,7 +41,7 @@ if (Meteor.isClient) {
       it('should mount successfully', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
-            <Route path="/" render={() => <Request />} />
+            <Route path="/" render={() => <Request isAuthenticated isOwner />} />
           </Router>,
           { attachTo: window.domNode },
         );
@@ -50,7 +50,7 @@ if (Meteor.isClient) {
       });
       it('should set the title and description of the Requests forum', () => {
         RequestInstance.setState({ editTitle: 'test-title', editDescription: 'test-description' });
-        RequestInstance.setTitle();
+        RequestInstance.setTitleAndDescription();
         RequestInstance.isMember = true;
         expect(RequestInstance.state.requestTitle).to.equal('test-title');
         expect(RequestInstance.state.description).to.equal('test-description');
@@ -60,10 +60,10 @@ if (Meteor.isClient) {
       });
     });
     describe('Addition and deletion of slide', () => {
-      it('should add a slide if authenticated', () => {
+      it('should add a slide if authenticated and isOwner', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
-            <Route path="/" render={() => <Request isAuthenticated />} />
+            <Route path="/" render={() => <Request isAuthenticated isOwner />} />
           </Router>,
           { attachTo: window.domNode },
         );
@@ -160,13 +160,51 @@ if (Meteor.isClient) {
 
         RequestWrapper.setState({
           slides: [{
-            title: '', userId: '', time: '', comments: [], iframes: [],
+            title: 'slide-1', userId: '', time: '', comments: [], iframes: [],
           }],
         });
 
-        RequestInstance.push('slide-1');
         RequestInstance.deleteSlide(0);
         expect(RequestInstance.state.slides[0].title).to.equal('slide-1');
+        wrapper.unmount();
+      });
+      it('should edit the title and description if authenticated and is owner', () => {
+        wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <Request isAuthenticated isOwner />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+        RequestWrapper = wrapper.find(Request);
+        RequestInstance = RequestWrapper.instance();
+
+        RequestWrapper.setState({
+          editDescription: 'sample-description',
+          editTitle: 'sample-title',
+        });
+
+        RequestInstance.setTitleAndDescription();
+
+        expect(RequestInstance.state.requestTitle).to.equal('sample-title');
+        expect(RequestInstance.state.description).to.equal('sample-description');
+        wrapper.unmount();
+      });
+      it('should add comment if authenticated and is member', () => {
+        wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <Request isAuthenticated isOwner requestExists currentUserId="member-1" />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+        RequestWrapper = wrapper.find(Request);
+        RequestInstance = RequestWrapper.instance();
+        RequestInstance.setState({
+          slides: [{
+            title: 'slide-1', userId: '', time: '', comments: [], iframes: [],
+          }],
+          members: ['member-1'],
+        });
+        RequestInstance.push('slide-1');
         wrapper.unmount();
       });
     });

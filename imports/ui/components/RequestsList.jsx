@@ -70,7 +70,13 @@ const RequestsList = (props) => {
   });
 
   if (requestId) {
-    return <Redirect to={`/request/${requestId}`} />;
+    return (
+      <Redirect to={{
+        pathname: `/request/${requestId}`,
+        state: { from: 'dashboard' },
+      }}
+      />
+    );
   }
 
   return (

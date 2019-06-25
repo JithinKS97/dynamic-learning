@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 /* eslint-disable meteor/audit-argument-checks */
 /* eslint-disable func-names */
 import { Mongo } from 'meteor/mongo';
@@ -37,13 +38,13 @@ Meteor.methods({
 
   'classes.addlesson': function(classcode, lessonid) {
     if (!this.userId) {
-      throw new Meteor.Error('not-authorized'); 
+      throw new Meteor.Error('not-authorized');
     }
     Classes.update(
-      { classcode }, 
-      { $push: { lessons: lessonid } }, 
-    ); 
-  }
+      { classcode, lessons: { $nin: [lessonid] } },
+      { $push: { lessons: lessonid } },
+    );
+  },
   // 'classes.remove'() {
   //     return Classes.remove({});
   // }

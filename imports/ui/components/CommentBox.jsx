@@ -9,7 +9,6 @@ import {
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
-import { Tracker } from 'meteor/tracker';
 import PropTypes from 'prop-types';
 import CommentForm from './CommentForm';
 import CommentReply from './CommentReply';
@@ -19,19 +18,10 @@ export default class CommentBox extends React.Component {
     super(props);
 
     this.state = {
-      username: '',
       replyVis: false,
       isEditable: false,
       tempComment: '',
     };
-
-    const { comment: { userId } } = this.props;
-
-    Tracker.autorun(() => {
-      Meteor.call('getUsername', userId, (err, username) => {
-        this.setState({ username });
-      });
-    });
   }
 
   componentDidMount() {
@@ -48,25 +38,32 @@ export default class CommentBox extends React.Component {
       editReplyComment,
       isMember,
       index,
+      _idToNameMappings,
     } = this.props;
     if (replies) {
       return (replies.map((reply, i) => (
         <CommentReply
-          key={reply.time}
+          key={reply.createdAt}
           subIndex={i}
           reply={reply}
           deleteReplyComment={deleteReplyComment}
           editReplyComment={editReplyComment}
           isMember={isMember}
           index={index}
+          username={_idToNameMappings[reply.userId]}
         />
       )));
     }
   }
 
   findTime() {
-    const { comment: { time } } = this.props;
-    return moment(time);
+    const { comment: { createdAt } } = this.props;
+    return moment(createdAt);
+  }
+
+  findLastEditedTime() {
+    const { comment: { lastEditedTime } } = this.props;
+    return moment(lastEditedTime);
   }
 
   showDownArrow() {
@@ -120,14 +117,16 @@ export default class CommentBox extends React.Component {
       comment: { userId },
       deleteComment,
       index,
-      comment: { comment },
+      comment: { comment, _id },
       editComment,
       slides,
       curSlide,
-      saveChanges,
+      updateSlides,
+      isAuthenticated,
+      comment: { lastEditedTime },
+      username,
     } = this.props;
     const {
-      username,
       isEditable,
       tempComment,
       replyVis,
@@ -158,6 +157,15 @@ export default class CommentBox extends React.Component {
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
+              {lastEditedTime ? (
+                <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
+                  <div>
+                    (edited)
+                    {' '}
+                    {this.findLastEditedTime().fromNow()}
+                  </div>
+                </Comment.Metadata>
+              ) : null}
             </div>
 
             {!isEditable ? <Comment.Text style={{ padding: '0.8rem 0', width: '95%' }}>{comment}</Comment.Text> : null}
@@ -204,7 +212,7 @@ export default class CommentBox extends React.Component {
                       this.setState({
                         isEditable: false,
                       }, () => {
-                        editComment(tempComment, index);
+                        editComment(tempComment, index, _id);
                       });
                     }
                   }}
@@ -224,10 +232,12 @@ export default class CommentBox extends React.Component {
               ? (
                 <div>
                   <CommentForm
-                    option={index}
+                    indexOfComment={index}
                     slides={slides}
                     curSlide={curSlide}
-                    saveChanges={saveChanges}
+                    updateSlides={updateSlides}
+                    isAuthenticated={isAuthenticated}
+                    isMember={isMember}
                   />
                 </div>
               ) : null}
@@ -243,8 +253,9 @@ CommentBox.propTypes = {
   comment: PropTypes.shape({
     comment: PropTypes.string,
     userId: PropTypes.string,
-    time: PropTypes.number,
+    createdAt: PropTypes.number,
     replies: PropTypes.arrayOf(PropTypes.object).isRequired,
+    lastEditedTime: PropTypes.number,
   }).isRequired,
   index: PropTypes.number.isRequired,
   editComment: PropTypes.func.isRequired,
@@ -254,5 +265,8 @@ CommentBox.propTypes = {
   editReplyComment: PropTypes.func.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
-  saveChanges: PropTypes.func.isRequired,
+  updateSlides: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  username: PropTypes.string.isRequired,
+  _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
 };

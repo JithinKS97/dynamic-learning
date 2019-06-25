@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
 import moment from 'moment';
 import {
   Comment,
@@ -14,31 +13,31 @@ import PropTypes from 'prop-types';
 export default class CommentReply extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { username: '', isEditable: false, tempComment: '' };
-    Tracker.autorun(() => {
-      const { reply: { userId } } = this.props;
-      Meteor.call('getUsername', userId, (err, username) => {
-        this.setState({ username });
-      });
-    });
+    this.state = { isEditable: false, tempComment: '' };
   }
 
   findTime() {
-    const { reply: { time } } = this.props;
-    return moment(time);
+    const { reply: { createdAt } } = this.props;
+    return moment(createdAt);
+  }
+
+  findLastEditedTime() {
+    const { reply: { lastEditedTime } } = this.props;
+    return moment(lastEditedTime);
   }
 
   render() {
     const {
-      reply: { userId, comment },
+      reply: { userId, comment, lastEditedTime },
       deleteReplyComment,
       index,
       subIndex,
       editReplyComment,
       isMember,
+      username,
     } = this.props;
 
-    const { username, isEditable, tempComment } = this.state;
+    const { isEditable, tempComment } = this.state;
 
     const isOwner = userId === Meteor.userId() && isMember;
     return (
@@ -72,6 +71,15 @@ export default class CommentReply extends React.Component {
               <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
                 <div>{this.findTime().fromNow()}</div>
               </Comment.Metadata>
+              {lastEditedTime ? (
+                <Comment.Metadata style={{ paddingLeft: '0.8rem', paddingTop: '0.15rem' }}>
+                  <div>
+                    (edited)
+                    {' '}
+                    {this.findLastEditedTime().fromNow()}
+                  </div>
+                </Comment.Metadata>
+              ) : null}
             </div>
 
             {isEditable ? null : (
@@ -134,11 +142,13 @@ CommentReply.propTypes = {
   reply: PropTypes.shape({
     comment: PropTypes.string,
     userId: PropTypes.string,
-    time: PropTypes.number,
+    createdAt: PropTypes.number,
+    lastEditedTime: PropTypes.number,
   }).isRequired,
   deleteReplyComment: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   subIndex: PropTypes.number.isRequired,
   editReplyComment: PropTypes.func.isRequired,
   isMember: PropTypes.bool.isRequired,
+  username: PropTypes.string.isRequired,
 };

@@ -1,8 +1,11 @@
+/* eslint-disable prefer-template */
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Form, Button } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
+
+const generateRandomId = () => Math.random().toString(36).substr(2, 16);
 
 export default class CommentForm extends Component {
   componentDidMount() {
@@ -11,45 +14,54 @@ export default class CommentForm extends Component {
 
   postComment = () => {
     const {
-      option,
+      indexOfComment,
       slides,
       curSlide,
-      saveChanges,
+      updateSlides,
+      isAuthenticated,
+      isMember,
     } = this.props;
-    if (option === -1) {
+
+    if (!(isAuthenticated && isMember)) return;
+
+    if (indexOfComment === -1) {
       if (this.comment.value) {
         const comment = this.comment.value;
         slides[curSlide].comments.push({
+          _id: generateRandomId(),
           comment,
           userId: Meteor.userId(),
-          time: Date.now(),
+          createdAt: Date.now(),
           replies: [],
+          edited: null,
         });
-        saveChanges(slides);
+        updateSlides(slides, 'memberOp');
         this.comment.value = '';
       }
     } else if (this.comment.value) {
       const comment = this.comment.value;
-      slides[curSlide].comments[option].replies.push({
+      slides[curSlide].comments[indexOfComment].replies.push({
+        _id: generateRandomId(),
         comment,
         userId: Meteor.userId(),
-        time: Date.now(),
+        createdAt: Date.now(),
+        edited: null,
       });
-      saveChanges(slides);
+      updateSlides(slides, 'memberOp');
       this.comment.value = '';
     }
   }
 
   render() {
-    const { option } = this.props;
+    const { indexOfComment } = this.props;
     return (
       <Form
-        style={{ marginLeft: option === -1 ? '0rem' : '1.6rem', maxWidth: '650px', marginBottom: '0.9rem' }}
+        style={{ marginLeft: indexOfComment === -1 ? '0rem' : '1.6rem', maxWidth: '650px', marginBottom: '0.9rem' }}
         onSubmit={this.postComment}
       >
         <Form.Field>
           {/* eslint-disable-next-line no-return-assign */}
-          <textarea rows="3" placeholder="Comment" ref={e => this.comment = e} />
+          <textarea rows="3" placeholder="Type something..." ref={e => this.comment = e} />
         </Form.Field>
         <Form.Field>
           <Button type="submit">Submit</Button>
@@ -60,8 +72,10 @@ export default class CommentForm extends Component {
 }
 
 CommentForm.propTypes = {
-  option: PropTypes.number.isRequired,
+  indexOfComment: PropTypes.number.isRequired,
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   curSlide: PropTypes.number.isRequired,
-  saveChanges: PropTypes.func.isRequired,
+  updateSlides: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  isMember: PropTypes.bool.isRequired,
 };
