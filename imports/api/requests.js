@@ -86,7 +86,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Requests.update({ _id }, { $set: { createdAt: Date.now() } });
+    Requests.update({ _id, userId: this.userId }, { $set: { createdAt: Date.now() } });
   },
 
   'requests.addMember'(_id, memberId) {

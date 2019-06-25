@@ -115,7 +115,6 @@ export class Request extends React.Component {
   componentWillReceiveProps(nextProps) {
     // Only rerender when the props change.
     if (this.props === nextProps) return;
-
     const { request } = nextProps;
     let { curSlide } = this.state;
 
@@ -317,16 +316,6 @@ export class Request extends React.Component {
     }
   }
 
-  update = () => {
-    const { isAuthenticated } = this.props;
-    if (!isAuthenticated) return;
-
-    const { slides, _id } = this.state;
-    const { updateToDatabase } = this.props;
-
-    updateToDatabase(_id, slides);
-  };
-
   deleteSlide = (index) => {
     const { slides } = this.state;
     const { isOwner, isAuthenticated } = this.props;
@@ -399,7 +388,6 @@ export class Request extends React.Component {
       },
       () => {
         this.commentsList.collapse();
-        this.update();
       },
     );
   }
@@ -440,7 +428,6 @@ export class Request extends React.Component {
 
   deleteSim = (index) => {
     // Used to delete the sim
-
     if (!confirm('Are you sure you want to delete this sim')) {
       return;
     }
@@ -454,18 +441,24 @@ export class Request extends React.Component {
   };
 
   deleteComment = (index) => {
+    // The index of the comment is passed to delete it
     const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
+    // Don't mutate state variables directly
     const updatedSlides = Object.values($.extend(true, {}, slides));
     if (
       !(isAuthenticated && currentUserId
         === slides[curSlide].comments[index].userId)
     ) { return; }
     const deletedCommentId = updatedSlides[curSlide].comments.splice(index, 1)[0]._id;
+    // Each comment has an Id associated with it
+    // In the server side, it is ensured that only the owner of the comment
+    // is allowed to delete it
     this.updateSlides(updatedSlides, 'editComment', { _id: deletedCommentId, curSlide });
   }
 
   editComment = (editedComment, index, _id) => {
+    // Comment is edited here
     const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
@@ -476,6 +469,8 @@ export class Request extends React.Component {
   };
 
   deleteReplyComment = (index, subIndex) => {
+    // Reply to the comment is deleted
+    // Reply comment is identified by the subIndex
     const { slides, curSlide } = this.state;
     const { isAuthenticated, currentUserId } = this.props;
     if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index]
@@ -484,7 +479,8 @@ export class Request extends React.Component {
     const updatedSlides = Object.values($.extend(true, {}, slides));
     const deletedReplyId = updatedSlides[curSlide]
       .comments[index]
-      .replies.splice(subIndex, 1)[0]._id;
+      .replies.splice(subIndex, 1)[0]
+      ._id;
     this.updateSlides(updatedSlides, 'editReply', {
       curSlide,
       commentId: updatedSlides[curSlide].comments[index]._id,
@@ -493,6 +489,7 @@ export class Request extends React.Component {
   }
 
   editReplyComment = (index, subIndex, editedComment) => {
+    // Reply comment is edited here
     const { slides, curSlide } = this.state;
     const { isAuthenticated, currentUserId } = this.props;
     if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index]
@@ -509,10 +506,18 @@ export class Request extends React.Component {
   };
 
   setTitleAndDescription = () => {
-    const { editDescription, editTitle } = this.state;
+    const {
+      editDescription, editTitle, requestTitle, description, _id,
+    } = this.state;
     const { updateTitleInTheDatabase, isOwner, isAuthenticated } = this.props;
 
     if (!(isAuthenticated && isOwner)) return;
+
+    // description and requestTitle is empty string when forum is opened
+    // So openedTime should be reset
+    if (!(description && requestTitle)) {
+      Meteor.call('requests.changeOpenedTime', _id);
+    }
 
     if (!(editDescription && editTitle)) {
       alert('Fill the details');
@@ -696,7 +701,7 @@ export class Request extends React.Component {
           <Menu.Item style={{ backgroundColor: '#E5E4E2' }}>
             Opened
             {' '}
-            {this.findTime(createdAt).fromNow()}
+            {this.findTime(createdAt || Date.now()).fromNow()}
           </Menu.Item>
         </Menu>
         <Segment style={{ marginTop: '0px' }}>
