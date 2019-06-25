@@ -370,7 +370,7 @@ class LessonPlansDirectories extends Component {
                   className="icon__button"
                   style={{ display: theNode.isFile ? 'block' : 'none' }}
                 >
-                  <FaEdit size={17} color="black" style={{ marginTop: '0.8rem' }} />
+                  <FaEdit size={17} color="black" />
                 </button>,
                 <button
                   onClick={() => {
@@ -385,7 +385,7 @@ class LessonPlansDirectories extends Component {
                   style={{ display: theNode.isFile ? 'block' : 'none' }}
                   className="icon__button"
                 >
-                  <MdSettings size={17} color="black" style={{ marginTop: '0.8rem' }} />
+                  <MdSettings size={17} color="black" />
                 </button>,
                 <button
                   className="icon__button"
@@ -403,7 +403,7 @@ class LessonPlansDirectories extends Component {
                     Meteor.call('lessonplans.remove', theNode._id);
                   }}
                 >
-                  <FaTrash size={17} color="black" style={{ marginTop: '0.8rem' }} />
+                  <FaTrash size={17} color="black" />
                 </button>,
               ],
             })}
