@@ -27,13 +27,13 @@ const ListTile = (props) => {
     deleteItem,
     index,
     handleClick,
-    time,
+    createdAt,
     isMember,
     curSlide,
     username,
   } = props;
 
-  const findTime = () => moment(time);
+  const findTime = () => moment(createdAt);
 
   const isOwner = Meteor.userId() === userId && !!isMember;
 
@@ -128,7 +128,7 @@ ListTile.propTypes = {
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
-  time: PropTypes.number.isRequired,
+  createdAt: PropTypes.number.isRequired,
   isMember: PropTypes.bool,
   curSlide: PropTypes.number.isRequired,
   username: PropTypes.string.isRequired,
@@ -158,7 +158,7 @@ const DetailedList = (props) => {
       index={index}
       title={item.title}
       handleClick={handleClick}
-      time={item.time}
+      createdAt={item.createdAt}
       isMember={props.isMember}
       curSlide={curSlide}
       username={_idToNameMappings[item.userId]}

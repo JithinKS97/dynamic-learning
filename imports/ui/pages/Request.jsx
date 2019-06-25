@@ -106,6 +106,7 @@ export class Request extends React.Component {
       backPressed: false,
       _idToNameMappings: {},
     };
+    // If the current user is the member of the forum
   }
 
   componentDidMount() {
@@ -149,7 +150,6 @@ export class Request extends React.Component {
             showEditDescription: true,
           });
         }
-
         this.generatePendingMembersList();
         this.generateMembersList();
       },
@@ -274,25 +274,28 @@ export class Request extends React.Component {
     // isOwner is true when the current user is the one who opened the forum
     // isAuthenticated is true if the user is authenticated
     // updateDatabase is a function used to update the slides to the database
-    const { isOwner, isAuthenticated, updateToDatabase } = this.props;
+    const {
+      isOwner, isAuthenticated, updateToDatabase, currentUserId,
+    } = this.props;
 
     if (!(isOwner && isAuthenticated)) return;
 
-    // If title is nil, no slide is created
+    // If title is empty string, no slide is created
     if (!title) return;
 
     const { slides, show } = this.state;
 
-    // Don't mutate the state variables directly
+    // Don't mutate the state variables directly, updatedSlides is created and changes done on it
     const updatedSlides = Object.values($.extend(true, {}, slides));
 
     const curSlide = slides.length;
 
     if (show === false) {
       updatedSlides[0].title = title;
-      updatedSlides[0].userId = Meteor.userId();
+      updatedSlides[0].userId = currentUserId;
       updatedSlides[0].time = Date.now();
       this.setState({ slides: updatedSlides, show: true }, () => {
+        // Only owner of the forum can 'modifySlidesList'
         updateToDatabase(updatedSlides, 'modifySlidesList');
       });
     } else {
@@ -300,8 +303,8 @@ export class Request extends React.Component {
         title,
         comments: [],
         iframes: [],
-        userId: Meteor.userId(),
-        time: Date.now(),
+        userId: currentUserId,
+        createdAt: Date.now(),
       };
       updatedSlides.push(slide);
       this.setState(
@@ -319,35 +322,40 @@ export class Request extends React.Component {
   deleteSlide = (index) => {
     const { slides } = this.state;
     const { isOwner, isAuthenticated } = this.props;
-    // Don't mutate state variables directly
+    // Don't mutate state variables directly, so a copy is created and changes made in it
     const updatedSlides = Object.values($.extend(true, {}, slides));
 
     if (!(isAuthenticated && isOwner)) return;
 
-    if (isOwner) {
-      if (updatedSlides.length !== 1) {
-        updatedSlides.splice(index, 1);
-        let { curSlide } = this.state;
-        if (index === 0) {
-          curSlide = 0;
-        }
-        if (curSlide === updatedSlides.length) curSlide = slides.length - 1;
-        this.changeSlide(curSlide);
-        this.updateSlides(updatedSlides, 'modifySlidesList');
-      } else this.reset();
-    }
+    if (updatedSlides.length !== 1) {
+      updatedSlides.splice(index, 1);
+      let { curSlide } = this.state;
+      if (index === 0) {
+        curSlide = 0;
+      }
+      if (curSlide === updatedSlides.length) curSlide = updatedSlides.length - 1;
+      // If curSlide is the last slide and last slide is the one to get deleted
+      // curSlide should be decremented
+      this.changeSlide(curSlide);
+      this.updateSlides(updatedSlides, 'modifySlidesList');
+    } else this.reset();
   };
 
   reset = () => {
     // resets the slideslist
     const slides = [];
-    const { updateToDatabase } = this.props;
+    const {
+      updateToDatabase, isOwner, isAuthenticated, currentUserId,
+    } = this.props;
+
+    // Only owner of the forum is allowed to do this
+    if (!(isOwner && isAuthenticated)) { return; }
 
     const slide = {
       comments: [],
       iframes: [],
       title: '',
-      userId: Meteor.userId(),
+      userId: currentUserId,
     };
 
     slides.push(slide);
@@ -367,8 +375,7 @@ export class Request extends React.Component {
   updateSlides = (updatedSlides, operation, args) => {
     // Updates the slides in the state
     // operation is used to authenticate different operations in the server side
-    const { isAuthenticated, updateToDatabase } = this.props;
-    if (!(isAuthenticated)) return;
+    const { updateToDatabase } = this.props;
     this.setState(
       {
         slides: updatedSlides,
@@ -395,18 +402,18 @@ export class Request extends React.Component {
   pushSim = (title, username, project_id) => {
     // pushSim adds a sim to the simulations array of the current slide
     // Only members of the forum are allowed to do this
-    const { members } = this.state;
-    const { currentUserId, updateToDatabase } = this.props;
-    if (members) { this.isMember = members.includes(currentUserId); }
+    const {
+      updateToDatabase, isAuthenticated, currentUserId, isMember,
+    } = this.props;
 
-    if (!(Meteor.userId() && this.isMember)) return;
+    if (!(isAuthenticated && isMember)) return;
 
     const { slides, curSlide } = this.state;
 
     const updatedSlides = Object.values($.extend(true, {}, slides));
 
     const objectToPush = {
-      userId: Meteor.userId(),
+      userId: currentUserId,
       username,
       project_id,
       w: 640,
@@ -538,6 +545,8 @@ export class Request extends React.Component {
 
   changeTitleOfSlide = (newTitle, index) => {
     if (!newTitle) return false;
+    const { isOwner, isAuthenticated } = this.props;
+    if (!(isOwner && isAuthenticated)) { return; }
     const { slides } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
 
@@ -549,7 +558,9 @@ export class Request extends React.Component {
   };
 
   handleJoin = () => {
-    if (!Meteor.userId()) {
+    // Only autenticated people can join the discussion
+    const { isAuthenticated, currentUserId } = this.props;
+    if (!isAuthenticated) {
       alert('Login to participate in the discussion');
       return;
     }
@@ -559,7 +570,7 @@ export class Request extends React.Component {
     Meteor.call(
       'requests.addPendingRequest',
       _id,
-      Meteor.userId(),
+      currentUserId,
       () => {
         alert('Your request has been send');
       },
@@ -568,10 +579,11 @@ export class Request extends React.Component {
 
   handleLeave = () => {
     const { _id } = this.state;
+    const { currentUserId } = this.props;
     Meteor.call(
       'requests.removeMember',
       _id,
-      Meteor.userId(),
+      currentUserId,
       () => {
         alert('You have left the forum');
       },
@@ -580,8 +592,6 @@ export class Request extends React.Component {
 
   render = () => {
     const {
-      members,
-      userId,
       redirectToLessonplan,
       _id,
       pendingMembers,
@@ -606,9 +616,8 @@ export class Request extends React.Component {
       _idToNameMappings,
     } = this.state;
     const {
-      requestExists, isOwner, currentUserId, isAuthenticated, updateToDatabase,
+      requestExists, isOwner, isAuthenticated, updateToDatabase, isMember,
     } = this.props;
-    if (members) { this.isMember = members.includes(currentUserId); }
 
     if (redirectToLessonplan) { return <Redirect to={`/createlessonplan/${_id}`} />; }
     if (backPressed) {
@@ -651,7 +660,7 @@ export class Request extends React.Component {
             </Menu.Item>
           ) : null}
 
-          {Meteor.userId() && !this.isMember ? (
+          {isAuthenticated && !isMember ? (
             <Menu.Item
               onClick={() => {
                 this.handleJoin();
@@ -661,9 +670,9 @@ export class Request extends React.Component {
             </Menu.Item>
           ) : null}
 
-          {Meteor.userId()
-          && this.isMember
-          && Meteor.userId() !== userId ? (
+          {isAuthenticated
+          && isMember
+          && !isOwner ? (
             <Menu.Item
               onClick={() => {
                 this.handleLeave();
@@ -673,7 +682,7 @@ export class Request extends React.Component {
             </Menu.Item>
             ) : null}
 
-          {Meteor.userId() === userId && this.isMember ? (
+          {isOwner && isMember ? (
             <Menu.Item
               onClick={() => {
                 this.setState({
@@ -719,7 +728,7 @@ export class Request extends React.Component {
                         {requestTitle}
                       </h1>
                     </div>
-                    {isOwner && this.isMember ? (
+                    {isOwner && isMember ? (
                       <Button
                         onClick={() => {
                           this.setState({
@@ -750,7 +759,7 @@ export class Request extends React.Component {
                   Topics
                 </Header>
 
-                {Meteor.userId() && isOwner ? (
+                {isAuthenticated && isOwner ? (
                   <Button
                     onClick={() => {
                       this.setState({
@@ -769,7 +778,7 @@ export class Request extends React.Component {
                     handleClick={this.changeSlide}
                     deleteItem={this.deleteSlide}
                     changeTitleOfItem={this.changeTitleOfSlide}
-                    isMember={this.isMember}
+                    isMember={isMember}
                     _idToNameMappings={_idToNameMappings}
                   />
                 ) : null}
@@ -781,7 +790,7 @@ export class Request extends React.Component {
                 {show ? (
                   <CommentsList
                     _idToNameMappings={_idToNameMappings}
-                    isMember={this.isMember}
+                    isMember={isMember}
                     isAuthenticated={isAuthenticated}
                     ref={(el) => { this.commentsList = el; }}
                     slides={slides}
@@ -796,7 +805,7 @@ export class Request extends React.Component {
                   <h2>Create a topic to start the discussion</h2>
                 )}
 
-                {show && isAuthenticated && this.isMember ? (
+                {show && isAuthenticated && isMember ? (
                   <CommentForm
                     // indexOfComment is -1 since it is the main form.
                     // indexOfComment > 0 for commentForm for replies
@@ -804,7 +813,7 @@ export class Request extends React.Component {
                     slides={slides}
                     curSlide={curSlide}
                     updateSlides={this.updateSlides}
-                    isMember={this.isMember}
+                    isMember={isMember}
                     isAuthenticated={isAuthenticated}
                   />
                 ) : null}
@@ -817,7 +826,7 @@ export class Request extends React.Component {
                   Uploaded sims
                 </Header>
 
-                {Meteor.userId() && this.isMember ? (
+                {isAuthenticated && isMember ? (
                   <div style={{ marginBottom: '1.6rem' }}>
                     {show ? (
                       <Upload methodToRun={this.pushSim} />
@@ -831,7 +840,7 @@ export class Request extends React.Component {
                     curSlide={curSlide}
                     update={updateToDatabase}
                     deleteSim={this.deleteSim}
-                    isMember={this.isMember}
+                    isMember={isMember}
                     _idToNameMappings={_idToNameMappings}
                   />
                 ) : null}
@@ -919,7 +928,7 @@ export class Request extends React.Component {
                 <Form.Field>
                   <Button
                     onClick={() => {
-                      if (Meteor.userId() && this.isMember) { this.push(topicTitle); }
+                      this.push(topicTitle);
 
                       this.setState({
                         topicTitle: '',
@@ -1038,6 +1047,7 @@ Request.propTypes = {
   isOwner: PropTypes.bool,
   currentUserId: PropTypes.string,
   location: PropTypes.objectOf(PropTypes.Object),
+  isMember: PropTypes.bool,
 };
 
 Request.defaultProps = {
@@ -1049,6 +1059,7 @@ Request.defaultProps = {
   isOwner: false,
   currentUserId: '',
   location: {},
+  isMember: false,
 };
 
 const RequestContainer = withTracker(({ match }) => {
@@ -1084,6 +1095,7 @@ const RequestContainer = withTracker(({ match }) => {
       );
     },
     isAuthenticated: !!Meteor.userId(),
+    isMember: request.members ? request.members.includes(Meteor.userId()) : false,
     isOwner: request.userId === Meteor.userId(),
     updateToDatabase: (slides, operation, args) => { Meteor.call('requests.update', request._id, slides, operation, args); },
     currentUserId: Meteor.userId(),
