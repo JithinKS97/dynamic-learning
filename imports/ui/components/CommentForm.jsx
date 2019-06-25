@@ -31,7 +31,7 @@ export default class CommentForm extends Component {
           _id: generateRandomId(),
           comment,
           userId: Meteor.userId(),
-          time: Date.now(),
+          createdAt: Date.now(),
           replies: [],
           edited: null,
         });
@@ -44,7 +44,7 @@ export default class CommentForm extends Component {
         _id: generateRandomId(),
         comment,
         userId: Meteor.userId(),
-        time: Date.now(),
+        createdAt: Date.now(),
         edited: null,
       });
       updateSlides(slides, 'memberOp');

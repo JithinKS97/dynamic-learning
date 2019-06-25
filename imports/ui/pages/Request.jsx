@@ -293,7 +293,7 @@ export class Request extends React.Component {
     if (show === false) {
       updatedSlides[0].title = title;
       updatedSlides[0].userId = currentUserId;
-      updatedSlides[0].time = Date.now();
+      updatedSlides[0].createdAt = Date.now();
       this.setState({ slides: updatedSlides, show: true }, () => {
         // Only owner of the forum can 'modifySlidesList'
         updateToDatabase(updatedSlides, 'modifySlidesList');
@@ -421,7 +421,7 @@ export class Request extends React.Component {
       x: 0,
       y: 0,
       title,
-      time: Date.now(),
+      createdAt: Date.now(),
     };
 
     updatedSlides[curSlide].iframes.push(objectToPush);

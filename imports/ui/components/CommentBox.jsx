@@ -43,7 +43,7 @@ export default class CommentBox extends React.Component {
     if (replies) {
       return (replies.map((reply, i) => (
         <CommentReply
-          key={reply.time}
+          key={reply.createdAt}
           subIndex={i}
           reply={reply}
           deleteReplyComment={deleteReplyComment}
@@ -57,8 +57,8 @@ export default class CommentBox extends React.Component {
   }
 
   findTime() {
-    const { comment: { time } } = this.props;
-    return moment(time);
+    const { comment: { createdAt } } = this.props;
+    return moment(createdAt);
   }
 
   findLastEditedTime() {
@@ -253,7 +253,7 @@ CommentBox.propTypes = {
   comment: PropTypes.shape({
     comment: PropTypes.string,
     userId: PropTypes.string,
-    time: PropTypes.number,
+    createdAt: PropTypes.number,
     replies: PropTypes.arrayOf(PropTypes.object).isRequired,
     lastEditedTime: PropTypes.number,
   }).isRequired,
