@@ -46,7 +46,7 @@ Meteor.methods({
           requests
             .slides[args.curSlide]
             .comments
-            // The comment is found out by matching IDs
+            // The comment is found out by matching ids
             .filter(comment => comment._id === args._id)[0]
             // ownership of comment is checked
             .userId === this.userId
@@ -131,7 +131,7 @@ Meteor.methods({
     // userId: this.userId ensures that only owner of the forum can accept members
 
     // members: { $nin: [memberId] } ensures that userId of a
-    // user is added only ones into the members list.
+    // user is added only once into the members list.
     Requests.update(
       { _id, userId: this.userId, members: { $nin: [memberId] } },
       { $push: { members: memberId } },
@@ -141,9 +141,8 @@ Meteor.methods({
       { _id, userId: this.userId, members: { $in: [memberId] } },
       { $pull: { pendingRequests: memberId } },
     );
-    // allMembers contains userIds of all the members,
-    // event that has been left. When a member leaves a forum
-    // they are removed from members list, not from allMembers list.
+    // allMembers contain userIds of all the members,
+    // even those that have been left.
     Requests.update(
       { _id, userId: this.userId, allMembers: { $nin: [memberId] } },
       { $push: { allMembers: memberId } },
@@ -154,8 +153,10 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-    // When a user leaves frome a requsest forum
+    // When a user leaves frome a request forum
     // Checked if request.members.includes(currentUserId)
+    // When a member leaves a forum,
+    // they are removed from members list, not from allMembers list.
     Requests.update(
       { _id, members: { $in: [this.userId] } },
       { $pull: { members: this.userId } },
