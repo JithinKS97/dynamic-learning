@@ -80,9 +80,11 @@ export default class SharedLessonPlans extends React.Component {
             <div>
               {_idToNameMappings[lessonplan.userId]}
             </div>
+            {' | '}
             <div style={{ marginLeft: '0.4rem' }}>
                 created
-              {''}
+            </div>
+            <div style={{ marginLeft: '0.1rem' }}>
               {this.displayTime(index)}
             </div>
           </Card.Meta>
