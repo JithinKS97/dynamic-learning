@@ -131,12 +131,13 @@ ListTile.propTypes = {
   createdAt: PropTypes.number.isRequired,
   isMember: PropTypes.bool,
   curSlide: PropTypes.number.isRequired,
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
 };
 
 ListTile.defaultProps = {
   isMember: false,
   userId: '',
+  username: '',
 };
 
 const DetailedList = (props) => {

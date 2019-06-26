@@ -267,6 +267,10 @@ CommentBox.propTypes = {
   curSlide: PropTypes.number.isRequired,
   updateSlides: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
   _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
+};
+
+CommentBox.defaultProps = {
+  username: '',
 };

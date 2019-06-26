@@ -39,12 +39,11 @@ Meteor.methods({
     }
   },
   getUsernames(_idArray) {
-    const users = Meteor.users.find({}).fetch();
-    const usersMap = {};
-    users.map((user) => {
-      usersMap[user._id] = { userId: user._id, username: user.username };
-    });
-    return _idArray.map(_id => usersMap[_id]);
+    const users = Meteor.users.find({ _id: { $in: _idArray } }).fetch();
+    return users.map(user => ({
+      userId: user._id,
+      username: user.username,
+    }));
   },
   updateSchool(username, school) {
     Meteor.users.update({ username }, { $set: { school } });
