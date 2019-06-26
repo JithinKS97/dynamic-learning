@@ -21,17 +21,18 @@ Meteor.methods({
     switch (operation) {
       case 'modifySlidesList':
         Requests.update(
-          // Only owner of the forum is allowed this update (So request.userId === this.userId)
+          // Only owner of the forum is allowed this update
+          // (So request.userId === this.userId is true)
           { _id, userId: this.userId },
           { $set: { slides, updatedAt: moment().valueOf() } },
         );
         break;
-      // memberOp is member operations, Request.update is done only if
-      // current user is a member of the forum
+      // memberOp is member operations, Request.update is done only
+      // if current user is present in request.members array
       case 'memberOp':
         Requests.update(
           // Only members of the forum are allowed to perform this operation,
-          // So request.members should include this.userId
+          // So request.members (array) should include this.userId
           { _id, members: { $in: [this.userId] } },
           { $set: { slides, updatedAt: moment().valueOf() } },
         );
@@ -39,13 +40,13 @@ Meteor.methods({
       case 'editComment':
         requests = Requests.findOne({ _id });
         // Only owner of the comment allowed to perform this
-        // _id of the comment is present in args._id
+        // args._id is the ID of the comment to be edited
         // comment.userId === this.userId
         if (
           requests
             .slides[args.curSlide]
             .comments
-            // The comment is found out by matching _id
+            // The comment is found out by matching IDs
             .filter(comment => comment._id === args._id)[0]
             // ownership of comment is checked
             .userId === this.userId
@@ -101,11 +102,14 @@ Meteor.methods({
   },
 
   'requests.addPendingRequest'(_id) {
+    // Only authenticated users are allowed to perform this
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
     Requests.update(
+      // When a userId is added to pendingRequests list
+      // Its checked already if the userId is present to avoid duplication
       { _id, pendingRequests: { $nin: [this.userId] }, members: { $nin: [this.userId] } },
       { $push: { pendingRequests: this.userId } },
     );
@@ -150,7 +154,8 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    // When a user leaves frome a requsest forum
+    // Checked if request.members.includes(currentUserId)
     Requests.update(
       { _id, members: { $in: [this.userId] } },
       { $pull: { members: this.userId } },
@@ -162,7 +167,7 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    // Only owner can reset the forum
     Requests.update({
       _id,
       userId: this.userId,
@@ -184,7 +189,7 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    // Only owner of the forum can update title
     Requests.update({
       _id,
       userId: this.userId,
