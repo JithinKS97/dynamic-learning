@@ -17,7 +17,7 @@ export default class SharedLessonPlans extends React.Component {
       lessonplan: null,
       username: '',
       loading: true,
-      ownerNames: [],
+      _idToNameMappings: {},
     };
     this.displayLessonPlans.bind(this);
   }
@@ -33,9 +33,13 @@ export default class SharedLessonPlans extends React.Component {
         loading,
       }, () => {
         const { lessonplans } = this.state;
-        Meteor.call('getUsernames', lessonplans.map(lessonplan => lessonplan.userId), (err, usernames) => {
+        Meteor.call('getUsernames', lessonplans.map(lessonplan => lessonplan.userId), (err, users) => {
+          const _idToNameMappings = {};
+          users.map((user) => {
+            _idToNameMappings[user.userId] = user.username;
+          });
           this.setState({
-            ownerNames: usernames,
+            _idToNameMappings,
           });
         });
       });
@@ -44,14 +48,6 @@ export default class SharedLessonPlans extends React.Component {
 
   componentWillUnmount() {
     this.lessonplansTracker.stop();
-  }
-
-  displayName = (index) => {
-    const { ownerNames } = this.state;
-
-    if (ownerNames.length > 0) {
-      if (ownerNames[index].username) { return ownerNames[index].username; }
-    }
   }
 
   findTime = time => moment(time);
@@ -64,7 +60,7 @@ export default class SharedLessonPlans extends React.Component {
   }
 
   displayLessonPlans = () => {
-    const { lessonplans } = this.state;
+    const { lessonplans, _idToNameMappings } = this.state;
 
     return lessonplans.map((lessonplan, index) => (
       <Card
@@ -73,13 +69,6 @@ export default class SharedLessonPlans extends React.Component {
         onClick={() => {
           this.setState({
             selectedLessonPlan: lessonplan,
-          }, () => {
-            const { selectedLessonPlan } = this.state;
-            Meteor.call('getUsername', selectedLessonPlan ? selectedLessonPlan.userId : '', (err, username) => {
-              this.setState({
-                username,
-              });
-            });
           });
         }}
       >
@@ -90,11 +79,11 @@ export default class SharedLessonPlans extends React.Component {
           }}
           >
             <div>
-              {this.displayName(index)}
+              {_idToNameMappings[lessonplan.userId]}
             </div>
             <div style={{ marginLeft: '0.4rem' }}>
                 created
-              {' '}
+              {''}
               {this.displayTime(index)}
             </div>
           </Card.Meta>
