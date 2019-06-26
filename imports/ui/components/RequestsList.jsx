@@ -16,11 +16,11 @@ const RequestsList = (props) => {
 
   useEffect(() => {
     Meteor.call('getUsernames', props.requests.map(request => request.userId), (_err, users) => {
-      const tempMapping = {};
+      const tempMappings = {};
       users.map((user) => {
-        tempMapping[user.userId] = user.username;
+        tempMappings[user.userId] = user.username;
       });
-      changeIdToNameMappings(tempMapping);
+      changeIdToNameMappings(tempMappings);
     });
   }, [props.requests]);
 

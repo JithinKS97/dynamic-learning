@@ -15,7 +15,6 @@ export default class SharedLessonPlans extends React.Component {
     this.state = {
       lessonplans: [],
       lessonplan: null,
-      username: '',
       loading: true,
       _idToNameMappings: {},
     };
@@ -109,7 +108,9 @@ export default class SharedLessonPlans extends React.Component {
   }
 
   render() {
-    const { loading, lessonplan, username } = this.state;
+    const {
+      loading, lessonplan, _idToNameMappings, selectedLessonPlan,
+    } = this.state;
     return (
       <div>
 
@@ -153,7 +154,7 @@ export default class SharedLessonPlans extends React.Component {
           </Modal.Header>
           <Modal.Content>
             <LessonPlanViewer _id={this.getId.bind(this)()} />
-            <h3>{`Author: ${username}`}</h3>
+            <h3>{`Author: ${selectedLessonPlan ? _idToNameMappings[selectedLessonPlan.userId] : null}`}</h3>
           </Modal.Content>
         </Modal>
         <Input ref={(e) => { this.searchTag = e; }} onChange={this.search} label="search" />
