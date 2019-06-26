@@ -1055,7 +1055,7 @@ Request.propTypes = {
   updateToDatabase: PropTypes.func,
   isOwner: PropTypes.bool,
   currentUserId: PropTypes.string,
-  location: PropTypes.objectOf(PropTypes.Object),
+  location: PropTypes.objectOf(PropTypes.string),
   isMember: PropTypes.bool,
   changeOpenedTime: PropTypes.func,
 };

@@ -9,10 +9,11 @@ import { createMemoryHistory } from 'history';
 
 /**
  * Test cases to write -
+ *
  * Editing of title and description - check
  * Addition and deletion of slide (authenticated and not authenticated) - check
  * Editing the title and description of slide - check
- * Adding and deleting comments
+ * Adding and deleting comments - check
  * Replying to comments
  * Adding simulation
  * Editing the simulation
@@ -192,7 +193,7 @@ if (Meteor.isClient) {
     });
 
     describe('Comments', () => {
-      it('should add comment if authenticated and is member', () => {
+      it('should add and delete comment if authenticated and is member (delete only if user owns the comment)', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
             <Route
@@ -232,6 +233,8 @@ if (Meteor.isClient) {
         CommentFormInstance.postComment();
         expect(RequestInstance.state.slides[0].comments[0].comment).to.equal('test-comment');
         expect(RequestInstance.state.slides[0].comments[0].userId).to.equal('userId-1');
+        RequestInstance.deleteComment(0);
+        expect(RequestInstance.state.slides[0].comments.length).to.equal(0);
         wrapper.unmount();
       });
     });

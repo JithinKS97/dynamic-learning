@@ -123,7 +123,7 @@ ListTile.propTypes = {
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
-  createdAt: PropTypes.number.isRequired,
+  createdAt: PropTypes.number,
   curSlide: PropTypes.number.isRequired,
   username: PropTypes.string,
   isOwner: PropTypes.bool.isRequired,
@@ -131,6 +131,7 @@ ListTile.propTypes = {
 
 ListTile.defaultProps = {
   username: '',
+  createdAt: Date.now(),
 };
 
 const DetailedList = (props) => {
