@@ -558,8 +558,8 @@ export class Request extends React.Component {
   };
 
   handleJoin = () => {
-    // Only autenticated people can join the discussion
-    const { isAuthenticated, currentUserId } = this.props;
+    // Only authenticated people can join the discussion
+    const { isAuthenticated } = this.props;
     if (!isAuthenticated) {
       alert('Login to participate in the discussion');
       return;
@@ -570,7 +570,6 @@ export class Request extends React.Component {
     Meteor.call(
       'requests.addPendingRequest',
       _id,
-      currentUserId,
       () => {
         alert('Your request has been send');
       },
@@ -578,12 +577,12 @@ export class Request extends React.Component {
   };
 
   handleLeave = () => {
-    const { _id } = this.state;
-    const { currentUserId } = this.props;
+    const { _id, members } = this.state;
+    const { currentUserId, isAuthenticated } = this.props;
+    if (!(isAuthenticated && members.includes(currentUserId))) { return; }
     Meteor.call(
       'requests.removeMember',
       _id,
-      currentUserId,
       () => {
         alert('You have left the forum');
       },
