@@ -58,6 +58,27 @@ if (Meteor.isClient) {
         expect(wrapper.find('.requestDescription').text()).to.equal('test-description');
         wrapper.unmount();
       });
+      it('should edit the title and description if authenticated and is owner', () => {
+        wrapper = mount(
+          <Router history={createMemoryHistory()}>
+            <Route path="/" render={() => <Request isAuthenticated isOwner />} />
+          </Router>,
+          { attachTo: window.domNode },
+        );
+        RequestWrapper = wrapper.find(Request);
+        RequestInstance = RequestWrapper.instance();
+
+        RequestWrapper.setState({
+          editDescription: 'sample-description',
+          editTitle: 'sample-title',
+        });
+
+        RequestInstance.setTitleAndDescription();
+
+        expect(RequestInstance.state.requestTitle).to.equal('sample-title');
+        expect(RequestInstance.state.description).to.equal('sample-description');
+        wrapper.unmount();
+      });
     });
     describe('Addition and deletion of slide', () => {
       it('should add a slide if authenticated and isOwner', () => {
@@ -168,43 +189,49 @@ if (Meteor.isClient) {
         expect(RequestInstance.state.slides[0].title).to.equal('slide-1');
         wrapper.unmount();
       });
-      it('should edit the title and description if authenticated and is owner', () => {
-        wrapper = mount(
-          <Router history={createMemoryHistory()}>
-            <Route path="/" render={() => <Request isAuthenticated isOwner />} />
-          </Router>,
-          { attachTo: window.domNode },
-        );
-        RequestWrapper = wrapper.find(Request);
-        RequestInstance = RequestWrapper.instance();
+    });
 
-        RequestWrapper.setState({
-          editDescription: 'sample-description',
-          editTitle: 'sample-title',
-        });
-
-        RequestInstance.setTitleAndDescription();
-
-        expect(RequestInstance.state.requestTitle).to.equal('sample-title');
-        expect(RequestInstance.state.description).to.equal('sample-description');
-        wrapper.unmount();
-      });
+    describe('Comments', () => {
       it('should add comment if authenticated and is member', () => {
         wrapper = mount(
           <Router history={createMemoryHistory()}>
-            <Route path="/" render={() => <Request isAuthenticated isOwner requestExists currentUserId="member-1" />} />
+            <Route
+              path="/"
+              render={() => (
+                <Request
+                  isAuthenticated
+                  isOwner
+                  requestExists
+                  currentUserId="userId-1"
+                  isMember
+                  request={{
+                    slides: [{
+                      title: 'slide-1',
+                      userId: 'userId-1',
+                      time: '',
+                      comments: [],
+                      iframes: [],
+                    }],
+                    _idToNameMappings: { 'userId-1': 'user-1' },
+                    show: true,
+                    requestTitle: 'title',
+                    description: 'description',
+                  }}
+                />
+              )}
+            />
           </Router>,
           { attachTo: window.domNode },
         );
+        wrapper.setProps();
         RequestWrapper = wrapper.find(Request);
         RequestInstance = RequestWrapper.instance();
-        RequestInstance.setState({
-          slides: [{
-            title: 'slide-1', userId: '', time: '', comments: [], iframes: [],
-          }],
-          members: ['member-1'],
-        });
-        RequestInstance.push('slide-1');
+        RequestInstance.setState();
+        const CommentFormInstance = wrapper.find('CommentForm').instance();
+        CommentFormInstance.comment.value = 'test-comment';
+        CommentFormInstance.postComment();
+        expect(RequestInstance.state.slides[0].comments[0].comment).to.equal('test-comment');
+        expect(RequestInstance.state.slides[0].comments[0].userId).to.equal('userId-1');
         wrapper.unmount();
       });
     });
