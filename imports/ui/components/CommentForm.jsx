@@ -20,6 +20,7 @@ export default class CommentForm extends Component {
       updateSlides,
       isAuthenticated,
       isMember,
+      currentUserId,
     } = this.props;
 
     if (!(isAuthenticated && isMember)) return;
@@ -30,8 +31,8 @@ export default class CommentForm extends Component {
         slides[curSlide].comments.push({
           _id: generateRandomId(),
           comment,
-          userId: Meteor.userId(),
-          time: Date.now(),
+          userId: currentUserId,
+          createdAt: Date.now(),
           replies: [],
           edited: null,
         });
@@ -44,7 +45,7 @@ export default class CommentForm extends Component {
         _id: generateRandomId(),
         comment,
         userId: Meteor.userId(),
-        time: Date.now(),
+        createdAt: Date.now(),
         edited: null,
       });
       updateSlides(slides, 'memberOp');
@@ -61,7 +62,7 @@ export default class CommentForm extends Component {
       >
         <Form.Field>
           {/* eslint-disable-next-line no-return-assign */}
-          <textarea rows="3" placeholder="Comment" ref={e => this.comment = e} />
+          <textarea rows="3" placeholder="Type something..." ref={e => this.comment = e} />
         </Form.Field>
         <Form.Field>
           <Button type="submit">Submit</Button>
@@ -78,4 +79,5 @@ CommentForm.propTypes = {
   updateSlides: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   isMember: PropTypes.bool.isRequired,
+  currentUserId: PropTypes.string.isRequired,
 };

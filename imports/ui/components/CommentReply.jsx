@@ -17,8 +17,8 @@ export default class CommentReply extends React.Component {
   }
 
   findTime() {
-    const { reply: { time } } = this.props;
-    return moment(time);
+    const { reply: { createdAt } } = this.props;
+    return moment(createdAt);
   }
 
   findLastEditedTime() {
@@ -142,7 +142,7 @@ CommentReply.propTypes = {
   reply: PropTypes.shape({
     comment: PropTypes.string,
     userId: PropTypes.string,
-    time: PropTypes.number,
+    createdAt: PropTypes.number,
     lastEditedTime: PropTypes.number,
   }).isRequired,
   deleteReplyComment: PropTypes.func.isRequired,

@@ -21,22 +21,18 @@ const ListTile = (props) => {
   const [slideChangeDisable, changeSlideChangeDisable] = useState(false);
 
   const {
-    userId,
     changeTitleOfItem,
     title,
     deleteItem,
     index,
     handleClick,
-    time,
-    isMember,
+    createdAt,
     curSlide,
     username,
+    isOwner,
   } = props;
 
-  const findTime = () => moment(time);
-
-  const isOwner = Meteor.userId() === userId && !!isMember;
-
+  const findTime = () => moment(createdAt);
 
   return (
     <Card
@@ -122,21 +118,20 @@ const ListTile = (props) => {
 };
 
 ListTile.propTypes = {
-  userId: PropTypes.string,
   title: PropTypes.string.isRequired,
   changeTitleOfItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
-  time: PropTypes.number.isRequired,
-  isMember: PropTypes.bool,
+  createdAt: PropTypes.number,
   curSlide: PropTypes.number.isRequired,
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
+  isOwner: PropTypes.bool.isRequired,
 };
 
 ListTile.defaultProps = {
-  isMember: false,
-  userId: '',
+  username: '',
+  createdAt: Date.now(),
 };
 
 const DetailedList = (props) => {
@@ -147,6 +142,8 @@ const DetailedList = (props) => {
     handleClick,
     curSlide,
     _idToNameMappings,
+    currentUserId,
+    isOwner,
   } = props;
   const renderSlides = () => items.map((item, index) => (
     <ListTile
@@ -158,10 +155,12 @@ const DetailedList = (props) => {
       index={index}
       title={item.title}
       handleClick={handleClick}
-      time={item.time}
+      createdAt={item.createdAt}
       isMember={props.isMember}
       curSlide={curSlide}
       username={_idToNameMappings[item.userId]}
+      currentUserId={currentUserId}
+      isOwner={isOwner}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
@@ -175,6 +174,8 @@ DetailedList.propTypes = {
   isMember: PropTypes.bool,
   curSlide: PropTypes.number.isRequired,
   _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
+  currentUserId: PropTypes.string.isRequired,
+  isOwner: PropTypes.bool.isRequired,
 };
 
 DetailedList.defaultProps = {

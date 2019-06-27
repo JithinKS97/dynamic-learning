@@ -13,7 +13,7 @@ export default class SharedSims extends React.Component {
     this.state = {
       sims: [],
       loading: true,
-      ownerNames: [],
+      _idToNameMappings: {},
     };
     this.displaySims.bind(this);
   }
@@ -28,9 +28,13 @@ export default class SharedSims extends React.Component {
         loading,
       }, () => {
         const { sims } = this.state;
-        Meteor.call('getUsernames', sims.map(sim => sim.userId), (err, usernames) => {
+        Meteor.call('getUsernames', sims.map(sim => sim.userId), (err, users) => {
+          const _idToNameMappings = {};
+          users.map((user) => {
+            _idToNameMappings[user.userId] = user.username;
+          });
           this.setState({
-            ownerNames: usernames,
+            _idToNameMappings,
           });
         });
       });
@@ -43,14 +47,6 @@ export default class SharedSims extends React.Component {
 
   findTime = time => moment(time);
 
-  displayName = (index) => {
-    const { ownerNames } = this.state;
-
-    if (ownerNames.length > 0) {
-      if (ownerNames[index]) { return ownerNames[index].username; }
-    }
-  }
-
   displayTime = (index) => {
     const { sims } = this.state;
     if (sims.length > 0) {
@@ -59,7 +55,7 @@ export default class SharedSims extends React.Component {
   }
 
   displaySims = () => {
-    const { sims } = this.state;
+    const { sims, _idToNameMappings } = this.state;
     const { getNode } = this.props;
 
     return sims.map((sim, index) => (
@@ -79,7 +75,7 @@ export default class SharedSims extends React.Component {
           }}
           >
             <div>
-              {this.displayName(index)}
+              {_idToNameMappings[sim.userId]}
             </div>
             <div style={{ marginLeft: '0.4rem' }}>
                 added

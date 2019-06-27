@@ -31,7 +31,7 @@ const SimTile = (props) => {
 
   const isOwner = Meteor.userId() === sim.userId && isMember;
 
-  const findTime = () => moment(sim.time);
+  const findTime = () => moment(sim.createdAt);
 
   return (
     <div style={{ width: '100%' }}>

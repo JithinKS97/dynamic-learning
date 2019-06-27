@@ -283,7 +283,8 @@ class Lesson extends React.Component {
             lessonid={lesson._id}
           /> */}
           <div style={{ margin: '2.4rem' }}>
-            {/* <CommentsList
+            <CommentsList
+              _idToNameMappings={{}}
               slides={[{ comments: [{ comment: 'Comment', replies: [{ comment: 'Reply' }] }] }]}
               curSlide={0}
               isMember

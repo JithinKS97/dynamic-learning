@@ -1,5 +1,4 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import moment from 'moment';
 import {
   Comment,
@@ -43,7 +42,7 @@ export default class CommentBox extends React.Component {
     if (replies) {
       return (replies.map((reply, i) => (
         <CommentReply
-          key={reply.time}
+          key={reply.createdAt}
           subIndex={i}
           reply={reply}
           deleteReplyComment={deleteReplyComment}
@@ -57,8 +56,8 @@ export default class CommentBox extends React.Component {
   }
 
   findTime() {
-    const { comment: { time } } = this.props;
-    return moment(time);
+    const { comment: { createdAt } } = this.props;
+    return moment(createdAt);
   }
 
   findLastEditedTime() {
@@ -68,9 +67,9 @@ export default class CommentBox extends React.Component {
 
   showDownArrow() {
     const { replyVis, isEditable } = this.state;
-    const { replies } = this.props;
+    const { replies, currentUserId } = this.props;
     if (replyVis === false) {
-      if (!Meteor.userId()) {
+      if (!currentUserId) {
         if (replies.length === 0) {
           return null;
         }
@@ -125,13 +124,14 @@ export default class CommentBox extends React.Component {
       isAuthenticated,
       comment: { lastEditedTime },
       username,
+      currentUserId,
     } = this.props;
     const {
       isEditable,
       tempComment,
       replyVis,
     } = this.state;
-    const isOwner = Meteor.userId() === userId && isMember;
+    const isOwner = currentUserId === userId && isMember;
     return (
       <div>
         <Comment style={{
@@ -228,7 +228,7 @@ export default class CommentBox extends React.Component {
         {replyVis ? (
           <div>
             <div>{this.showReplies()}</div>
-            {Meteor.userId() && isMember
+            {currentUserId && isMember
               ? (
                 <div>
                   <CommentForm
@@ -253,7 +253,7 @@ CommentBox.propTypes = {
   comment: PropTypes.shape({
     comment: PropTypes.string,
     userId: PropTypes.string,
-    time: PropTypes.number,
+    createdAt: PropTypes.number,
     replies: PropTypes.arrayOf(PropTypes.object).isRequired,
     lastEditedTime: PropTypes.number,
   }).isRequired,
@@ -267,6 +267,11 @@ CommentBox.propTypes = {
   curSlide: PropTypes.number.isRequired,
   updateSlides: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
   _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
+  currentUserId: PropTypes.string.isRequired,
+};
+
+CommentBox.defaultProps = {
+  username: '',
 };
