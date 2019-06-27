@@ -17,8 +17,22 @@
   height:'100%';
 }
 
-@media (min-width:800px) {
-  
+@media (max-width:960px) {
+  div.ui.vertical.menu {
+    width: 13rem;
+  }
+}
+
+@media (max-width: 860px) {
+  div.ui.vertical.menu {
+    width: 10rem; 
+  }
+}
+
+@media (max-width: 600px) {
+  div.ui.vertical.menu {
+    width: 8rem; 
+  }
 }
 
 .upper-canvas {
