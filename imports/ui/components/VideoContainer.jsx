@@ -75,6 +75,7 @@ export default class VideoContainer extends React.Component {
             if (!confirmation) { return; }
             addVideo(null);
           }}
+          className="lessonbutton"
         >
           X
         </Button>
@@ -155,8 +156,8 @@ export default class VideoContainer extends React.Component {
                       loading: false,
                     });
                   }}
-                  width="720"
-                  height="480"
+                  width="540"
+                  height="360"
                   src={`//www.youtube.com/embed/${this.getId(url)}?rel=0&amp;showinfo=0`}
                   frameBorder="0"
                   allowFullScreen

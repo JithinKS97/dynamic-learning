@@ -182,10 +182,10 @@ class Lesson extends React.Component {
           </Dimmer>
 
           <Grid divided="vertically" style={{ height: '100vh', boxSizing: 'border-box' }}>
-            <Grid.Row divided style={{ height: '80vh' }}>
+            <Grid.Row divided style={{ height: '80vh' }} className="vidsim">
               <Grid.Column style={{ padding: '2.4rem', width: '50vw' }}>
 
-                <Link to="/dashboard/lessons"><Button style={{ marginBottom: '0.8rem' }}>Back to dashboard</Button></Link>
+                <Link to="/dashboard/lessons"><Button style={{ marginBottom: '0.8rem' }} className="lessonbutton">Back to dashboard</Button></Link>
 
                 {/** Share check box should be visible only to the owner of the lesson */}
 
@@ -226,6 +226,7 @@ class Lesson extends React.Component {
                 <Button
                   style={{ marginBottom: '0.8rem', visibility: lesson.userId === Meteor.userId() ? 'visible' : 'hidden' }}
                   onClick={() => { this.addSim.addSim(); }}
+                  className="lessonbutton"
                 >
                   Add Sim
 
@@ -282,7 +283,7 @@ class Lesson extends React.Component {
           {/* <LessonComment
             lessonid={lesson._id}
           /> */}
-          <div style={{ margin: '2.4rem' }}>
+          <div style={{ margin: '2.4rem' }} className="forum">
             <CommentsList
               _idToNameMappings={{}}
               slides={[{ comments: [{ comment: 'Comment', replies: [{ comment: 'Reply' }] }] }]}
@@ -298,7 +299,7 @@ class Lesson extends React.Component {
               updateSlides={() => {}}
               isMember
               isAuthenticated
-            /> */}
+            />
           </div>
         </div>
 

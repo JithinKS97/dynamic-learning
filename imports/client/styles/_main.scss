@@ -17,9 +17,23 @@
   height:'100%';
 }
 
+@media (max-width: 1200px) {
+  iframe {
+    width: 450px; 
+    height: 300px; 
+  }
+}
+
 @media (max-width:960px) {
   div.ui.vertical.menu {
     width: 13rem;
+  }
+  iframe {
+    width: 360px; 
+    height: 240px; 
+  }
+  .lessonbutton {
+    font-size: 10px !important; 
   }
 }
 
@@ -32,6 +46,34 @@
 @media (max-width: 600px) {
   div.ui.vertical.menu {
     width: 8rem; 
+  }
+}
+
+
+@media (max-height: 650px) {
+  .vidsim {
+    margin-bottom: 40px !important; 
+  }
+  .forum {
+    margin-top: 70px !important; 
+  }
+}
+
+@media (max-height: 450px) {
+  .vidsim {
+    margin-bottom: 130px !important; 
+  }
+  .forum {
+    margin-top: 190px !important; 
+  }
+}
+
+@media (max-height: 400px) {
+  .vidsim {
+    margin-bottom: 160px !important; 
+  }
+  .forum {
+    margin-top: 220px !important; 
   }
 }
 
