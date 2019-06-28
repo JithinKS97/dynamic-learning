@@ -191,6 +191,7 @@ class Lesson extends React.Component {
 
                 {lesson.userId === Meteor.userId() ? (
                   <Checkbox
+                    className="sharelesson"
                     checked={lesson.shared}
                     ref={(e) => { this.checkbox = e; }}
                     onChange={() => {
