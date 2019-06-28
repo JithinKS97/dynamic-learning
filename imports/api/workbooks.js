@@ -7,10 +7,10 @@ import moment from 'moment';
 import { Index, MongoDBEngine } from 'meteor/easy:search';
 import { Requests } from './requests';
 
-export const LessonPlans = new Mongo.Collection('lessonplans');
+export const Workbooks = new Mongo.Collection('workbooks');
 
-export const LessonPlansIndex = new Index({
-  collection: LessonPlans,
+export const WorkbooksIndex = new Index({
+  collection: Workbooks,
   fields: ['title', 'tags'],
   engine: new MongoDBEngine({
     selector(searchObject, options, aggregation) {
@@ -31,19 +31,19 @@ export const LessonPlansIndex = new Index({
 });
 
 if (Meteor.isServer) {
-  Meteor.publish('lessonplans', function () { // eslint-disable-line func-names
-    return LessonPlans.find({
+  Meteor.publish('workbooks', function () { // eslint-disable-line func-names
+    return Workbooks.find({
       $or: [{ userId: this.userId }, { isPublic: true }],
     });
   });
 
-  Meteor.publish('lessonplans.public', function () { // eslint-disable-line func-names, prefer-arrow-callback
-    return LessonPlans.find({ isPublic: true });
+  Meteor.publish('workbooks.public', function () { // eslint-disable-line func-names, prefer-arrow-callback
+    return Workbooks.find({ isPublic: true });
   });
 }
 
 Meteor.methods({
-  'lessonplans.insert'(title) { // eslint-disable-line
+  'workbooks.insert'(title) { // eslint-disable-line
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
@@ -53,12 +53,12 @@ Meteor.methods({
       throw new Meteor.Error('Title cannot be empty!');
     }
 
-    return LessonPlans.insert(
+    return Workbooks.insert(
       {
-        /* There will be a Request document for each Lessonplan document.
-                It is created along with Lessonplan document.
-                So it is given the same id as the Lessonplan document, docs is the
-                id of the inserted LessonPlan document.
+        /* There will be a Request document for each Workbook document.
+                It is created along with Workbook document.
+                So it is given the same id as the Workbook document, docs is the
+                id of the inserted Workbook document.
             */
 
         title,
@@ -89,7 +89,7 @@ Meteor.methods({
     );
   },
 
-  'lessonplans.tagsChange'(_id, tags) { // eslint-disable-line object-shorthand
+  'workbooks.tagsChange'(_id, tags) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
@@ -97,10 +97,10 @@ Meteor.methods({
     check(_id, String);
     check(tags, Array);
 
-    LessonPlans.update({ _id }, { $set: { tags } });
+    Workbooks.update({ _id }, { $set: { tags } });
   },
 
-  'lessonplans.folder.insert'(title) { // eslint-disable-line object-shorthand
+  'workbooks.folder.insert'(title) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
@@ -110,7 +110,7 @@ Meteor.methods({
       throw new Meteor.Error('Title cannot be empty!');
     }
 
-    return LessonPlans.insert({
+    return Workbooks.insert({
       userId: this.userId,
       title,
       isFile: false,
@@ -120,7 +120,7 @@ Meteor.methods({
     });
   },
 
-  'lessonplans.remove'(_id) { // eslint-disable-line object-shorthand
+  'workbooks.remove'(_id) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
@@ -132,11 +132,11 @@ Meteor.methods({
       },
     }).validate({ _id });
 
-    LessonPlans.remove({ _id, userId: this.userId });
+    Workbooks.remove({ _id, userId: this.userId });
     Requests.remove({ _id, userId: this.userId });
   },
 
-  'lessonplans.directoryChange'(_id, parent_id) { // eslint-disable-line object-shorthand, camelcase
+  'workbooks.directoryChange'(_id, parent_id) { // eslint-disable-line object-shorthand, camelcase
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
@@ -144,43 +144,43 @@ Meteor.methods({
     check(_id, String);
     check(parent_id, String);
 
-    LessonPlans.update({ _id }, { $set: { parent_id } });
+    Workbooks.update({ _id }, { $set: { parent_id } });
   },
 
-  'lessonplans.folder.visibilityChange'(_id, expanded) { // eslint-disable-line object-shorthand
+  'workbooks.folder.visibilityChange'(_id, expanded) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
     check(_id, String);
     check(expanded, Boolean);
-    LessonPlans.update({ _id }, { $set: { expanded } });
+    Workbooks.update({ _id }, { $set: { expanded } });
   },
 
-  'lessonplans.update'(_id, slides) { // eslint-disable-line object-shorthand
+  'workbooks.update'(_id, slides) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
     check(_id, String);
     check(slides, Array);
-    LessonPlans.update(
+    Workbooks.update(
       { _id, userId: this.userId },
       { $set: { slides, updatedAt: moment().valueOf() } },
     );
   },
 
-  'lessonplans.updateTitle'(_id, title) { // eslint-disable-line object-shorthand
+  'workbooks.updateTitle'(_id, title) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
     check(_id, String);
     check(title, String);
-    LessonPlans.update(
+    Workbooks.update(
       { _id, userId: this.userId },
       { $set: { title, updatedAt: moment().valueOf() } },
     );
   },
 
-  'lessonplans.visibilityChange'(_id, isPublic) { // eslint-disable-line object-shorthand
+  'workbooks.visibilityChange'(_id, isPublic) { // eslint-disable-line object-shorthand
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
@@ -188,22 +188,22 @@ Meteor.methods({
     check(_id, String);
     check(isPublic, Boolean);
 
-    LessonPlans.update({ _id }, { $set: { isPublic } });
+    Workbooks.update({ _id }, { $set: { isPublic } });
   },
 
-  'lessonplans.description'(_id, description) { // eslint-disable-line object-shorthand
+  'workbooks.description'(_id, description) { // eslint-disable-line object-shorthand
     check(_id, String);
     check(description, String);
-    LessonPlans.update({ _id }, { $set: { description } });
+    Workbooks.update({ _id }, { $set: { description } });
   },
 
-  'lessonplans.removeDescription'(_id) { // eslint-disable-line object-shorthand
+  'workbooks.removeDescription'(_id) { // eslint-disable-line object-shorthand
     check(_id, String);
-    LessonPlans.update({ _id }, { $set: { description: {} } });
+    Workbooks.update({ _id }, { $set: { description: {} } });
   },
 
-  'lessonplans.addDescriptionField'(_id) { // eslint-disable-line object-shorthand
+  'workbooks.addDescriptionField'(_id) { // eslint-disable-line object-shorthand
     check(_id, String);
-    LessonPlans.update({ _id }, { $set: { description: {} } });
+    Workbooks.update({ _id }, { $set: { description: {} } });
   },
 });

@@ -1,14 +1,17 @@
 import React from 'react';
 import { Grid, Header, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import FaBook from 'react-icons/lib/fa/book';
+import FaPlayCircle from 'react-icons/lib/fa/play-circle';
+import FaCode from 'react-icons/lib/fa/code';
 import SharedLessons from '../components/SharedLessons';
-import SharedLessonPlans from '../components/SharedLessonPlans';
+import SharedWorkbooks from '../components/SharedWorkbooks';
 import RequestsList from '../components/RequestsList';
 
 export default class Explore extends React.Component {
   constructor(props) {
     super(props);
-    Meteor.subscribe('lessonplans.public');
+    Meteor.subscribe('workbooks.public');
     Meteor.subscribe('lessons.public');
   }
 
@@ -21,21 +24,21 @@ export default class Explore extends React.Component {
         <Grid style={{ marginTop: '0.8rem' }} columns={3} divided>
           <Grid.Row style={{ height: '100vh', scrolling: 'no' }}>
             <Grid.Column>
-              <Header as="h3">Lessonplans</Header>
-              <p>Search for lessonplans or create your own</p>
-              <Link to="/createlessonplan">
-                <Button style={{ marginBottom: '1.6rem' }}>
-                  Create a new Lessonplan
-                </Button>
-              </Link>
-              <SharedLessonPlans />
+              <Header as="h3">
+                <FaBook /> Workbooks
+              </Header>
+              <SharedWorkbooks />
             </Grid.Column>
             <Grid.Column>
-              <Header as="h3">Lessons</Header>
+              <Header as="h3">
+                <FaPlayCircle /> Lessons
+              </Header>
               <SharedLessons />
             </Grid.Column>
             <Grid.Column>
-              <Header as="h3">Help make simulations</Header>
+              <Header as="h3">
+                <FaCode /> Help make simulations
+              </Header>
               <RequestsList />
             </Grid.Column>
           </Grid.Row>

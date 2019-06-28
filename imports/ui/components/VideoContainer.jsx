@@ -56,7 +56,7 @@ export default class VideoContainer extends React.Component {
             });
           }}
         >
-          Add youtube link
+          Add YouTube link
         </Button>
 
       );
@@ -108,7 +108,7 @@ export default class VideoContainer extends React.Component {
             <Modal.Description>
               <Form>
                 <Form.Field>
-                  <label>Youtube url</label>
+                  <label>YouTube link</label>
                   <input onChange={this.urlHandle.bind(this)} ref={(e) => { this.url = e; }} />
                 </Form.Field>
                 {_url === 'error' ? null

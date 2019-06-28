@@ -6,7 +6,7 @@ import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
 
 import Login from '../ui/pages/Login';
-import CreateLessonPlanContainer from '../ui/pages/CreateLessonPlan';
+import CreateWorkbookContainer from '../ui/pages/CreateWorkbook';
 import Lesson from '../ui/pages/Lesson';
 import LoadScreen from '../ui/pages/LoadScreen';
 import Explore from '../ui/pages/Explore';
@@ -19,9 +19,9 @@ import Dashboard from '../ui/pages/Dashboard';
 
 
 export const history = createBrowserHistory();
-const publicPages = ['/', '/signup', '/createlessonplan', '/login', '/explore'];
+const publicPages = ['/', '/signup', '/createworkbook', '/login', '/explore'];
 const authenticatedPages = [
-  '/dashboard/lessonplans',
+  '/dashboard/workbooks',
   '/dashboard/requests',
   '/dashboard/uploadsim',
   '/dashboard/lessons',
@@ -36,7 +36,7 @@ export const onAuthChange = (isAuthenticated) => {
   const isAuthenticatedPage = authenticatedPages.includes(window.location.pathname);
 
   if (isPublicPage && isAuthenticated) {
-    history.replace('/dashboard/lessonplans');
+    history.replace('/dashboard/workbooks');
   } else if (isAuthenticatedPage && !isAuthenticated) {
     history.replace('/');
   }
@@ -49,9 +49,9 @@ export const AppRouter = (
         <PublicRoute exact path="/" component={LoadScreen} />
         <PublicRoute exact path="/explore" component={Explore} />
         <PublicRoute exact path="/login" component={Login} />
-        <PublicRoute path="/createlessonplan/:_id" component={CreateLessonPlanContainer} />
+        <PublicRoute path="/createworkbook/:_id" component={CreateWorkbookContainer} />
         <PublicRoute path="/lesson/:_id" component={Lesson} />
-        <PublicRoute path="/createlessonplan" component={CreateLessonPlanContainer} />
+        <PublicRoute path="/createworkbook" component={CreateWorkbookContainer} />
         <PublicRoute path="/signup" component={Signup} />
         <PublicRoute path="/request/:_id" component={Request} />
         <PrivateRoute path="/sandbox" component={SandBox} />

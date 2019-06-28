@@ -1,3 +1,2 @@
 node_modules/
-.vscode/
-.meteor/
+.DS_Store

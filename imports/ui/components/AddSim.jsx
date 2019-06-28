@@ -14,7 +14,7 @@ import SimPreview from './SimPreview';
 import SharedSims from './SharedSims';
 import { generateSrc } from '../../functions';
 /*
-    This component is for the addition of simulations to the lessonplan.
+    This component is for the addition of simulations to the workbook.
 */
 
 export default class AddSim extends Component {

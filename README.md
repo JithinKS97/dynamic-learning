@@ -58,11 +58,11 @@ of these React components. These main React page components can be found in 'cli
 The routes of each of the pages can be found in the 'clients/routes' directory. Detailed documentation for each
 of the components are provided in the components' js files.
 
-### 1) Lessonplan creator
+### 1) Workbook creator
 
-##### Component - CreateLessonPlan
+##### Component - CreateWorkbook
 
-This is the area where teachers create the lessonplans. It is basically a drawing app on which simulations and textboxes can be added. Each lessonplan consists of a sequence of slides which is an array. Each element in the array consists of annotations of string type, array of simulations, array of textboxes.
+This is the area where teachers create the workbooks. It is basically a drawing app on which simulations and textboxes can be added. Each workbook consists of a sequence of slides which is an array. Each element in the array consists of annotations of string type, array of simulations, array of textboxes.
 
 Each simulation is an iframe which is obtained from the online p5 text editor export feature.
 
@@ -72,23 +72,23 @@ Each simulation is an iframe which is obtained from the online p5 text editor ex
 
 The login and sign up features are made by making use of the inbuilt authentication tools in Meteor.
 
-### 3) The lessonplans, simulations, lessons organization
+### 3) The workbooks, simulations, lessons organization
 
-##### Components - LessonplansDirectories, LessonsDirectories, SimsDirectories
+##### Components - WorkbooksDirectories, LessonsDirectories, SimsDirectories
 
-React Sortable tree component (https://github.com/frontend-collective/react-sortable-tree) is used for building the interface for the organization of lessonplans, lessons and the uploaded simulations.
+React Sortable tree component (https://github.com/frontend-collective/react-sortable-tree) is used for building the interface for the organization of workbooks, lessons and the uploaded simulations.
 
 ### 4) Request Forum
 
 ##### Component - Request
 
-For each lessonplan, a request forum can be created by the teacher where a request for a new simulation can be made. These requests are visible to all the other users of the app and anyone logged in can participate in the discussion for the development of a new simulation.
+For each workbook, a request forum can be created by the teacher where a request for a new simulation can be made. These requests are visible to all the other users of the app and anyone logged in can participate in the discussion for the development of a new simulation.
 
-### 5) Sharing of lessonplans, lessons and simulations
+### 5) Sharing of workbooks, lessons and simulations
 
-##### Components - SharedSims, SharedLessonPlans, SharedLessons
+##### Components - SharedSims, SharedWorkbooks, SharedLessons
 
-The users can share lessonplans, lessons and the simulations with the other users if they want. I've used the meteor easy search component for implementing the search (https://github.com/matteodem/meteor-easy-search)
+The users can share workbooks, lessons and the simulations with the other users if they want. I've used the meteor easy search component for implementing the search (https://github.com/matteodem/meteor-easy-search)
 
 ### 6) Creation of Lessons
 
@@ -100,7 +100,7 @@ This is the component where we can create lessons. Each lesson consists of a ser
 
 ##### Component - Explore
 
-Users who are not logged in visiting the app will be able to view all the lessons, lessonplans and request forums that have been created and shared with public so that they get an idea about the app.
+Users who are not logged in visiting the app will be able to view all the lessons, workbooks and request forums that have been created and shared with public so that they get an idea about the app.
 
 ### 8) Adding simulations and the communication between them and the app
 
