@@ -43,7 +43,7 @@ class SimsDirectories extends React.Component {
     const { simsExists, treeData } = this.props;
     if (simsExists) {
       if (treeData.length === 0 && Meteor.userId()) {
-        return <h3>You havent added any simulations yet !</h3>;
+        return <h3>You havent added any simulations yet!</h3>;
       } return null;
     }
   }

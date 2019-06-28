@@ -31,7 +31,7 @@ import 'semantic-ui-css/semantic.min.css';
 
 /**
  * This component renders the Discussion forum page.
- * The forum is opened by the owner of a lessonplan.
+ * The forum is opened by the owner of a workbook.
  * Teachers, programmers and students discuss in this page about the lesson
  * and making new simulations.
  * The forum is made up of sequence of slides.
@@ -62,9 +62,9 @@ export class Request extends React.Component {
      * topicTitle - holds the name of the title of the new thread.
      *
      * showEditDescription - shows up the modal box that lets edit the title and description of
-     * the lessonplan
+     * the workbook
      *
-     * redirectToLessonplan - when true, redirects to the corresponding lessonplan of the forum.
+     * redirectToWorkbook - when true, redirects to the corresponding workbook of the forum.
      *
      * showMembershipRequests - Opens up the modal box that shows the pending membership requests.
      *
@@ -95,7 +95,7 @@ export class Request extends React.Component {
       topicTitle: '',
 
       showEditDescription: false,
-      redirectToLessonplan: false,
+      redirectToWorkbook: false,
 
       showMembershipRequests: false,
       pendingMembers: [],
@@ -593,7 +593,7 @@ export class Request extends React.Component {
 
   render = () => {
     const {
-      redirectToLessonplan,
+      redirectToWorkbook,
       _id,
       pendingMembers,
       createdAt,
@@ -624,14 +624,14 @@ export class Request extends React.Component {
       isMember,
       currentUserId,
     } = this.props;
-    if (redirectToLessonplan) { return <Redirect to={`/createlessonplan/${_id}`} />; }
+    if (redirectToWorkbook) { return <Redirect to={`/createworkbook/${_id}`} />; }
     if (backPressed) {
       const { location: { state: { from } } } = this.props;
       if (from === 'dashboard') {
         return <Redirect to="/dashboard/requests" />;
       // eslint-disable-next-line no-else-return
       } else {
-        return <Redirect to={`/createlessonplan/${_id}`} />;
+        return <Redirect to={`/createworkbook/${_id}`} />;
       }
     }
     return (
@@ -980,7 +980,7 @@ export class Request extends React.Component {
                   onClick={() => {
                     if (!(requestTitle && description)) {
                       this.setState({
-                        redirectToLessonplan: true,
+                        redirectToWorkbook: true,
                       });
                     } else {
                       this.setState({

@@ -75,7 +75,7 @@ export default class Tree extends Component {
   };
 
   render() {
-    const removeLessonPlansInside = (node) => {
+    const removeWorkbooksInside = (node) => {
       /* The deletion takes place recursively.
           If the node is a file, using the id in it, it is removed
           from the database.
@@ -93,7 +93,7 @@ export default class Tree extends Component {
       }
       // eslint-disable-next-line array-callback-return
       node.children.map((child) => {
-        removeLessonPlansInside(child);
+        removeWorkbooksInside(child);
       });
     };
 
@@ -224,7 +224,7 @@ export default class Tree extends Component {
                     }
 
                     if (!node.isFile) {
-                      removeLessonPlansInside(node);
+                      removeWorkbooksInside(node);
                     }
 
                     Meteor.call('lessons.remove', node._id);

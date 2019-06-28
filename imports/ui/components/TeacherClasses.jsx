@@ -7,7 +7,8 @@ import {
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import Classes from '../../api/classes';
-import { LessonPlans } from '../../api/lessonplans';
+import { Workbooks } from '../../api/workbooks';
+
 
 export default class TeacherClasses extends React.Component {
   constructor(props) {
@@ -21,8 +22,8 @@ export default class TeacherClasses extends React.Component {
   componentDidMount() {
     Meteor.subscribe('getAccounts');
     Meteor.subscribe('classes');
-    Meteor.subscribe('lessonplans');
-    Meteor.subscribe('lessonplans.public');
+    Meteor.subscribe('workbooks');
+    Meteor.subscribe('workbooks.public');
 
     Tracker.autorun(() => {
       if (Meteor.user()) {
@@ -123,9 +124,9 @@ export default class TeacherClasses extends React.Component {
               {Classes.findOne({ classcode: cl.classcode }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
                 <div>
                   {' '}
-                  <Link to={`/createlessonplan/${lesson}`}>
+                  <Link to={`/createworkbook/${lesson}`}>
                     {' '}
-                    {Meteor.user() && LessonPlans.findOne({ _id: lesson }) && LessonPlans.findOne({ _id: lesson }).title}
+                    {Meteor.user() && Workbooks.findOne({ _id: lesson }) && Workbooks.findOne({ _id: lesson }).title}
                     {' '}
                   </Link>
                   {' '}

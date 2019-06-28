@@ -522,7 +522,7 @@ DrawingBoardCmp.defaultProps = {
  * db.setImg()
  * db.reset()
  *
- * These are the three functions which this component makes available to CreateLessonPlan
+ * These are the three functions which this component makes available to CreateWorkbook
  *
  * If we want to replace drawingboard.js someday, all it takes is to replace the above
  * three functions

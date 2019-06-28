@@ -5,34 +5,34 @@ import {
 import FaCodeFork from 'react-icons/lib/fa/code-fork';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import LessonPlanViewer from './LessonPlanViewer';
-import { LessonPlansIndex } from '../../api/lessonplans';
+import WorkbookViewer from './WorkbookViewer';
+import { WorkbooksIndex } from '../../api/workbooks';
 
-export default class SharedLessonPlans extends React.Component {
+export default class SharedWorkbooks extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      lessonplans: [],
-      lessonplan: null,
+      workbooks: [],
+      workbook: null,
       loading: true,
       _idToNameMappings: {},
     };
-    this.displayLessonPlans.bind(this);
+    this.displayWorkbooks.bind(this);
   }
 
   componentDidMount() {
-    this.lessonplansTracker = Tracker.autorun(() => {
-      const lessonplansHandle = Meteor.subscribe('lessonplans.public');
-      const loading = !lessonplansHandle.ready();
+    this.workbooksTracker = Tracker.autorun(() => {
+      const workbooksHandle = Meteor.subscribe('workbooks.public');
+      const loading = !workbooksHandle.ready();
 
       this.setState({
-        lessonplans: LessonPlansIndex.search('').fetch(),
-        selectedLessonPlan: null,
+        workbooks: WorkbooksIndex.search('').fetch(),
+        selectedWorkbook: null,
         loading,
       }, () => {
-        const { lessonplans } = this.state;
-        Meteor.call('getUsernames', lessonplans.map(lessonplan => lessonplan.userId), (err, users) => {
+        const { workbooks } = this.state;
+        Meteor.call('getUsernames', workbooks.map(workbook => workbook.userId), (err, users) => {
           const _idToNameMappings = {};
           users.map((user) => {
             _idToNameMappings[user.userId] = user.username;
@@ -46,39 +46,39 @@ export default class SharedLessonPlans extends React.Component {
   }
 
   componentWillUnmount() {
-    this.lessonplansTracker.stop();
+    this.workbooksTracker.stop();
   }
 
   findTime = time => moment(time);
 
   displayTime = (index) => {
-    const { lessonplans } = this.state;
-    if (lessonplans.length > 0) {
-      return this.findTime(lessonplans[index].createdAt).fromNow();
+    const { workbooks } = this.state;
+    if (workbooks.length > 0) {
+      return this.findTime(workbooks[index].createdAt).fromNow();
     }
   }
 
-  displayLessonPlans = () => {
-    const { lessonplans, _idToNameMappings } = this.state;
+  displayWorkbooks = () => {
+    const { workbooks, _idToNameMappings } = this.state;
 
-    return lessonplans.map((lessonplan, index) => (
+    return workbooks.map((workbook, index) => (
       <Card
         style={{ width: '100%', margin: 0 }}
-        key={lessonplan.createdAt}
+        key={workbook.createdAt}
         onClick={() => {
           this.setState({
-            selectedLessonPlan: lessonplan,
+            selectedWorkbook: workbook,
           });
         }}
       >
-        <Card.Content onClick={() => { this.setState({ lessonplan }); }}>
-          <Card.Header>{lessonplan.title}</Card.Header>
+        <Card.Content onClick={() => { this.setState({ workbook }); }}>
+          <Card.Header>{workbook.title}</Card.Header>
           <Card.Meta style={{
             marginLeft: '0.4rem', marginTop: '0.4rem', display: 'flex', flexDirection: 'row',
           }}
           >
             <div>
-              {_idToNameMappings[lessonplan.userId]}
+              {_idToNameMappings[workbook.userId]}
             </div>
             {' | '}
             <div style={{ marginLeft: '0.4rem' }}>
@@ -96,22 +96,22 @@ export default class SharedLessonPlans extends React.Component {
   search = (event, data) => {
     Tracker.autorun(() => {
       this.setState({
-        lessonplans: LessonPlansIndex.search(data.value).fetch(),
+        workbooks: WorkbooksIndex.search(data.value).fetch(),
       });
     });
   }
 
   getId = () => {
-    const { selectedLessonPlan } = this.state;
-    if (!selectedLessonPlan) { return; }
+    const { selectedWorkbook } = this.state;
+    if (!selectedWorkbook) { return; }
 
-    if (selectedLessonPlan.__originalId === undefined) { return selectedLessonPlan._id; }
-    return selectedLessonPlan.__originalId;
+    if (selectedWorkbook.__originalId === undefined) { return selectedWorkbook._id; }
+    return selectedWorkbook.__originalId;
   }
 
   render() {
     const {
-      loading, lessonplan, _idToNameMappings, selectedLessonPlan,
+      loading, workbook, _idToNameMappings, selectedWorkbook,
     } = this.state;
     return (
       <div>
@@ -120,7 +120,7 @@ export default class SharedLessonPlans extends React.Component {
           <Loader />
         </Dimmer>
         <Modal
-          open={!!lessonplan}
+          open={!!workbook}
           size="fullscreen"
           style={{ transform: 'scale(0.79, 0.79)', marginTop: '3rem' }}
         >
@@ -129,7 +129,7 @@ export default class SharedLessonPlans extends React.Component {
             <div style={{ float: 'right' }}>
 
 
-              <Link to={`/createlessonplan/${this.getId.bind(this)()}`}><Button>Open</Button></Link>
+              <Link to={`/createworkbook/${this.getId.bind(this)()}`}><Button>Open</Button></Link>
 
               {Meteor.userId() ? (
                 <Button onClick={() => {
@@ -137,11 +137,11 @@ export default class SharedLessonPlans extends React.Component {
 
                   if (!confirmation) { return; }
 
-                  Meteor.call('lessonplans.insert', lessonplan.title, (err, _id) => {
+                  Meteor.call('workbooks.insert', workbook.title, (err, _id) => {
                     if (!Meteor.userId()) { return; }
 
-                    Meteor.call('lessonplans.update', _id, lessonplan.slides);
-                    this.setState({ lessonplan: null });
+                    Meteor.call('workbooks.update', _id, workbook.slides);
+                    this.setState({ workbook: null });
                     confirm('Lesson has been succesfully forked');
                   });
                 }}
@@ -151,17 +151,17 @@ export default class SharedLessonPlans extends React.Component {
                 </Button>
               ) : null}
 
-              <Button onClick={() => { this.setState({ lessonplan: null }); }}>X</Button>
+              <Button onClick={() => { this.setState({ workbook: null }); }}>X</Button>
             </div>
           </Modal.Header>
           <Modal.Content>
-            <LessonPlanViewer _id={this.getId.bind(this)()} />
-            <h3>{`Author: ${selectedLessonPlan ? _idToNameMappings[selectedLessonPlan.userId] : null}`}</h3>
+            <WorkbookViewer _id={this.getId.bind(this)()} />
+            <h3>{`Author: ${selectedWorkbook ? _idToNameMappings[selectedWorkbook.userId] : null}`}</h3>
           </Modal.Content>
         </Modal>
         <Input ref={(e) => { this.searchTag = e; }} onChange={this.search} label="search" />
         <div style={{ width: '100%', height: '100%', marginTop: '1.2rem' }}>
-          {this.displayLessonPlans()}
+          {this.displayWorkbooks()}
         </div>
       </div>
     );

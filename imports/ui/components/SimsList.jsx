@@ -91,7 +91,7 @@ export default class SimsList extends React.Component {
             IsRnd is the prop that is passed to decide whether we need the resize
             and drag feature enabled.
             isPreview is a variable which specifies whether the iframe is just a preview
-            or is it the real simulation used in the lessonplan.
+            or is it the real simulation used in the workbook.
         */
 
         if (isRndRequired) {

@@ -24,7 +24,7 @@ export default class Signup extends React.Component {
   }
 
   componentDidMount() {
-    /* If the createlessonplan is opened without logging in and the user requires to sign up,
+    /* If the createworkbook is opened without logging in and the user requires to sign up,
             The slides are stored to meteor sessions with the title stateToSave.
             It is obtained from here.
 
@@ -88,12 +88,12 @@ export default class Signup extends React.Component {
 
             /*
                 The values in the states are used to create a
-                new lessonplan and the session variable
+                new workbook and the session variable
                 is set to null.
             */
 
-            Meteor.call('lessonplans.insert', title, (_err, _id) => {
-              Meteor.call('lessonplans.update', _id, slides);
+            Meteor.call('workbooks.insert', title, (_err, _id) => {
+              Meteor.call('workbooks.update', _id, slides);
 
               Session.set('stateToSave', null);
             });

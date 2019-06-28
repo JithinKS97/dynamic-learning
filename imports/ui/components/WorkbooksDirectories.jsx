@@ -22,29 +22,29 @@ import MdSettings from 'react-icons/lib/md/settings';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import TagsInput from 'react-tagsinput';
 import Classes from '../../api/classes';
-import { LessonPlans } from '../../api/lessonplans';
-import LessonPlanViewer from './LessonPlanViewer';
+import { Workbooks } from '../../api/workbooks';
+import WorkbookViewer from './WorkbookViewer';
 
 /*
-  This component displays the lessonplan files in nested tree structure.
-  You will be able to create directories and add lessonplans to it.
+  This component displays the workbook files in nested tree structure.
+  You will be able to create directories and add workbooks to it.
   Deletion of a directory will result in the deletion of all the directories in it
-  along with the lessonplans in all of the nested directories
+  along with the workbooks in all of the nested directories
   and the main directory.
 */
-class LessonPlansDirectories extends Component {
+class WorkbooksDirectories extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalOpen: false,
       modal2Open: false,
-      selectedLessonPlanId: null,
+      selectedWorkbookId: null,
       node: null,
       editable: false,
       title: null,
       isPublic: null,
       tags: [],
-      redirectToLessonPlan: false,
+      redirectToWorkbook: false,
       classes: [],
     };
   }
@@ -87,18 +87,18 @@ class LessonPlansDirectories extends Component {
     }
 
     this.handle2Close();
-    Meteor.call('lessonplans.folder.insert', this.folderName.value);
+    Meteor.call('workbooks.folder.insert', this.folderName.value);
     this.folderName.value = '';
   }
 
-  addNewLessonPlan = () => {
-    if (!this.lessonPlanName.value) {
+  addNewWorkbook = () => {
+    if (!this.workbookName.value) {
       return;
     }
 
     this.handleClose();
-    Meteor.call('lessonplans.insert', this.lessonPlanName.value);
-    this.lessonPlanName.value = '';
+    Meteor.call('workbooks.insert', this.workbookName.value);
+    this.workbookName.value = '';
   }
 
   openClassModal = (id, title) => {
@@ -110,7 +110,7 @@ class LessonPlansDirectories extends Component {
   }
 
   editTitle = () => {
-    const { editable, selectedLessonPlanId } = this.state;
+    const { editable, selectedWorkbookId } = this.state;
     if (!this.title && editable === true) {
       return;
     }
@@ -122,7 +122,7 @@ class LessonPlansDirectories extends Component {
         return;
       }
 
-      Meteor.call('lessonplans.updateTitle', selectedLessonPlanId, this.title.value);
+      Meteor.call('workbooks.updateTitle', selectedWorkbookId, this.title.value);
 
       this.setState({
         editable: false,
@@ -136,14 +136,14 @@ class LessonPlansDirectories extends Component {
   handleTagsInput = (tags) => {
     const { node: { _id } } = this.state;
     this.setState({ tags }, () => {
-      Meteor.call('lessonplans.tagsChange', _id, tags);
+      Meteor.call('workbooks.tagsChange', _id, tags);
     });
   }
 
   render() {
     const {
-      redirectToLessonPlan,
-      selectedLessonPlanId,
+      redirectToWorkbook,
+      selectedWorkbookId,
       editable,
       isPublic,
       modalOpen,
@@ -156,7 +156,7 @@ class LessonPlansDirectories extends Component {
       classes,
     } = this.state;
     // eslint-disable-next-line react/prop-types
-    const { lessonplansExists, treeData } = this.props;
+    const { workbooksExists, treeData } = this.props;
     const canDrop = ({ node: theNode, nextParent }) => {
       /* To prevent a file to be added as a child of a file
           and to prevent a directory to be added as a child of a file.
@@ -177,7 +177,7 @@ class LessonPlansDirectories extends Component {
       return true;
     };
 
-    const removeLessonPlansInside = (theNode) => {
+    const removeWorkbooksInside = (theNode) => {
       /* The deletion takes place recursively.
           If the node is a file, using the id in it, it is removed
           from the database.
@@ -185,7 +185,7 @@ class LessonPlansDirectories extends Component {
           we recursively move to the children nodes.
       */
       if (theNode.isFile) {
-        Meteor.call('lessonplans.remove', theNode._id);
+        Meteor.call('workbooks.remove', theNode._id);
 
         return;
       }
@@ -195,39 +195,39 @@ class LessonPlansDirectories extends Component {
       }
 
       theNode.children.forEach((child) => {
-        removeLessonPlansInside(child);
+        removeWorkbooksInside(child);
       });
     };
 
-    if (redirectToLessonPlan === true) {
-      return <Redirect to={`/createlessonplan/${selectedLessonPlanId}`} />;
+    if (redirectToWorkbook === true) {
+      return <Redirect to={`/createworkbook/${selectedWorkbookId}`} />;
     }
 
     return (
       <div>
-        <Dimmer inverted active={!lessonplansExists}>
+        <Dimmer inverted active={!workbooksExists}>
           <Loader />
         </Dimmer>
         <Modal
-          trigger={<Button onClick={this.handleOpen}>Create new lessonplan</Button>}
+          trigger={<Button onClick={this.handleOpen}>Create new workbook</Button>}
           open={modalOpen}
           onClose={this.handleClose}
           size="tiny"
         >
           <Modal.Header>
-            Lessonplan details
+            Workbook details
             <Button className="close-button" onClick={this.handleClose}>
               &times;
             </Button>
           </Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              <Form onSubmit={this.addNewLessonPlan}>
+              <Form onSubmit={this.addNewWorkbook}>
                 <Form.Field>
                   {/* eslint-disable-next-line */}
                   <label>Name</label>
                   {/* eslint-disable-next-line no-return-assign */}
-                  <input ref={e => this.lessonPlanName = e} placeholder="Name" />
+                  <input ref={e => this.workbookName = e} placeholder="Name" />
                 </Form.Field>
                 <Button type="submit">
                   Submit
@@ -238,7 +238,7 @@ class LessonPlansDirectories extends Component {
         </Modal>
         <Modal
           size="fullscreen"
-          open={!!selectedLessonPlanId}
+          open={!!selectedWorkbookId}
           style={{ transform: 'scale(0.73, 0.73)', marginTop: '5rem' }}
         >
           <Modal.Header>
@@ -247,7 +247,7 @@ class LessonPlansDirectories extends Component {
               className="close-button"
               style={{ marginLeft: '0.8rem' }}
               onClick={() => {
-                this.setState({ selectedLessonPlanId: null, editable: false });
+                this.setState({ selectedWorkbookId: null, editable: false });
               }}
             >
               &times;
@@ -255,7 +255,7 @@ class LessonPlansDirectories extends Component {
           </Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              <LessonPlanViewer _id={selectedLessonPlanId} />
+              <WorkbookViewer _id={selectedWorkbookId} />
             </Modal.Description>
             <Modal.Description
               style={{
@@ -286,7 +286,7 @@ class LessonPlansDirectories extends Component {
               <Button
                 style={{ marginLeft: '2rem' }}
                 onClick={
-                  () => this.openClassModal(selectedLessonPlanId, title)
+                  () => this.openClassModal(selectedWorkbookId, title)
                   }
               >
                 Add to class
@@ -298,7 +298,7 @@ class LessonPlansDirectories extends Component {
                 checked={isPublic}
                 ref={(e) => { this.checkbox = e; }}
                 onChange={() => {
-                  Meteor.call('lessonplans.visibilityChange', selectedLessonPlanId, !this.checkbox.state.checked);
+                  Meteor.call('workbooks.visibilityChange', selectedWorkbookId, !this.checkbox.state.checked);
                   this.setState({ isPublic: !this.checkbox.state.checked });
                 }}
               />
@@ -340,7 +340,7 @@ class LessonPlansDirectories extends Component {
         <div style={{ height: 400, padding: '1.6rem' }}>
           <SortableTree
             onVisibilityToggle={({ node: theNode, expanded }) => {
-              Meteor.call('lessonplans.folder.visibilityChange', theNode._id, expanded);
+              Meteor.call('workbooks.folder.visibilityChange', theNode._id, expanded);
             }}
             theme={FileExplorerTheme}
             canDrop={canDrop}
@@ -349,10 +349,10 @@ class LessonPlansDirectories extends Component {
             onChange={theTreeData => this.setState({ treeData: theTreeData })}
             onMoveNode={(args) => {
               if (args.nextParentNode) {
-                Meteor.call('lessonplans.directoryChange', args.node._id, args.nextParentNode._id);
-                Meteor.call('lessonplans.folder.visibilityChange', args.nextParentNode._id, true);
+                Meteor.call('workbooks.directoryChange', args.node._id, args.nextParentNode._id);
+                Meteor.call('workbooks.folder.visibilityChange', args.nextParentNode._id, true);
               } else {
-                Meteor.call('lessonplans.directoryChange', args.node._id, '0');
+                Meteor.call('workbooks.directoryChange', args.node._id, '0');
               }
             }}
             generateNodeProps={({ node: theNode }) => ({
@@ -360,10 +360,10 @@ class LessonPlansDirectories extends Component {
                 <button
                   onClick={() => {
                     this.setState({
-                      selectedLessonPlanId: theNode._id,
+                      selectedWorkbookId: theNode._id,
                     }, () => {
                       this.setState({
-                        redirectToLessonPlan: true,
+                        redirectToWorkbook: true,
                       });
                     });
                   }}
@@ -376,7 +376,7 @@ class LessonPlansDirectories extends Component {
                   onClick={() => {
                     this.setState({
                       node: theNode,
-                      selectedLessonPlanId: theNode._id,
+                      selectedWorkbookId: theNode._id,
                       title: theNode.title,
                       isPublic: theNode.isPublic,
                       tags: theNode.tags,
@@ -397,10 +397,10 @@ class LessonPlansDirectories extends Component {
                     }
 
                     if (!theNode.isFile) {
-                      removeLessonPlansInside(theNode);
+                      removeWorkbooksInside(theNode);
                     }
 
-                    Meteor.call('lessonplans.remove', theNode._id);
+                    Meteor.call('workbooks.remove', theNode._id);
                   }}
                 >
                   <FaTrash size={17} color="black" />
@@ -453,10 +453,10 @@ class LessonPlansDirectories extends Component {
 }
 
 export default withTracker(() => {
-  const lessonplansHandle = Meteor.subscribe('lessonplans');
-  const loading = !lessonplansHandle.ready();
-  const flatData = LessonPlans.find({ userId: Meteor.userId() }).fetch();
-  const lessonplansExists = !loading && !!flatData;
+  const workbooksHandle = Meteor.subscribe('workbooks');
+  const loading = !workbooksHandle.ready();
+  const flatData = Workbooks.find({ userId: Meteor.userId() }).fetch();
+  const workbooksExists = !loading && !!flatData;
 
   const getKey = node => node._id;
   const getParentKey = node => node.parent_id;
@@ -471,7 +471,7 @@ export default withTracker(() => {
 
 
   return {
-    lessonplansExists,
+    workbooksExists,
     treeData,
   };
-})(LessonPlansDirectories);
+})(WorkbooksDirectories);

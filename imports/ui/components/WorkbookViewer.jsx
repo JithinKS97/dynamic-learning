@@ -12,19 +12,19 @@ import 'semantic-ui-css/semantic.min.css';
 import SimsList from './SimsList';
 import ListWithoutDelete from './ListWithoutDelete';
 import DrawingBoardCmp from './DrawingBoardCmp';
-import { LessonPlans } from '../../api/lessonplans';
+import { Workbooks } from '../../api/workbooks';
 import TextBoxes from './TextBoxes';
 
 
 /**
- * This Component is intended for the creation of a lessonplan by the teachers. Each lessonplan
+ * This Component is intended for the creation of a workbook by the teachers. Each workbook
  * is composed of an array of slides. Each slide will contain a note and array of simulations.
  * The changes need to be saved explicitly by clicking the save button for updating the database.
  *
- * curSlide is for keeping track of the current slide. _id is the id of the lessonplan
+ * curSlide is for keeping track of the current slide. _id is the id of the workbook
  * document.
  */
-class LessonPlanViewer extends Component {
+class WorkbookViewer extends Component {
   constructor(props) {
     super(props);
     /**
@@ -34,7 +34,7 @@ class LessonPlanViewer extends Component {
     this.isInteractEnabled = true;
     this.undoArray = [];
     this.curPosition = [];
-    this.lessonplanExists = false;
+    this.workbookExists = false;
     this.pageCount = 0;
 
     this.state = {
@@ -68,10 +68,10 @@ class LessonPlanViewer extends Component {
   componentDidUpdate() {
     const { initialized } = this.state;
     // eslint-disable-next-line react/prop-types
-    const { lessonplanExists, lessonplan } = this.props;
-    if (!initialized && lessonplanExists) {
-      if (this.undoArray.length === 0 && lessonplan.slides.length !== 0) {
-        this.undoArray = lessonplan.slides.forEach((slide) => {
+    const { workbookExists, workbook } = this.props;
+    if (!initialized && workbookExists) {
+      if (this.undoArray.length === 0 && workbook.slides.length !== 0) {
+        this.undoArray = workbook.slides.forEach((slide) => {
           this.curPosition.push(0);
           return [slide.note];
         });
@@ -79,7 +79,7 @@ class LessonPlanViewer extends Component {
 
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        ...lessonplan,
+        ...workbook,
         initialized: true,
       }, () => {
         const { slides, curSlide } = this.state;
@@ -330,13 +330,13 @@ class LessonPlanViewer extends Component {
 }
 
 export default withTracker((props) => {
-  const lessonplansHandle = Meteor.subscribe('lessonplans');
-  const loading = !lessonplansHandle.ready();
-  const lessonplan = LessonPlans.findOne(props._id);
-  const lessonplanExists = !loading && !!lessonplan;
+  const workbooksHandle = Meteor.subscribe('workbooks');
+  const loading = !workbooksHandle.ready();
+  const workbook = Workbooks.findOne(props._id);
+  const workbookExists = !loading && !!workbook;
 
   return {
-    lessonplanExists,
-    lessonplan: lessonplanExists ? lessonplan : [],
+    workbookExists,
+    workbook: workbookExists ? workbook : [],
   };
-})(LessonPlanViewer);
+})(WorkbookViewer);
