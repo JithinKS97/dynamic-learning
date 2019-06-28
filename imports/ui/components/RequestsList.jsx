@@ -12,11 +12,15 @@ import { Requests } from '../../api/requests';
 
 const RequestsList = (props) => {
   const [requestId, changeRequestId] = useState('');
-  const [usernames, changeUsernames] = useState([]);
+  const [_idToNameMappings, changeIdToNameMappings] = useState({});
 
   useEffect(() => {
-    Meteor.call('getUsernames', props.requests.map(request => request.userId), (_err, unames) => {
-      changeUsernames(unames);
+    Meteor.call('getUsernames', props.requests.map(request => request.userId), (_err, users) => {
+      const tempMappings = {};
+      users.map((user) => {
+        tempMappings[user.userId] = user.username;
+      });
+      changeIdToNameMappings(tempMappings);
     });
   }, [props.requests]);
 
@@ -31,11 +35,6 @@ const RequestsList = (props) => {
     }
   };
 
-  const displayUsername = (index) => {
-    if (usernames.length > 0) {
-      if (usernames[index]) { return usernames[index].username; }
-    }
-  };
 
   const renderRequests = () => props.requests.map((request, index) => {
     if (request.requestTitle) {
@@ -55,7 +54,7 @@ const RequestsList = (props) => {
             }}
             >
               <div>
-                {displayUsername(index)}
+                {_idToNameMappings[request.userId]}
               </div>
               <div>
                   last activity

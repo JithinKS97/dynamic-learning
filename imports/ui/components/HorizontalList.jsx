@@ -13,6 +13,7 @@ export default class HorizontalList extends Component {
 
     return slides.map((slide, index) => (
       <Menu.Item
+        className="slidescontrols"
         // eslint-disable-next-line react/no-array-index-key
         key={index}
         style={{
@@ -22,12 +23,12 @@ export default class HorizontalList extends Component {
           justifyContent: userId === Meteor.userId() ? 'space-around' : 'center',
         }}
       >
-        <Button onClick={() => { changeSlide(index); }}>
+        <Button onClick={() => { changeSlide(index); }} >
           {index + 1}
         </Button>
         {userId === Meteor.userId()
           ? (
-            <Button onClick={() => { deleteSlide(index); }}>
+            <Button onClick={() => { deleteSlide(index); }} > 
                 X
             </Button>
           ) : null}

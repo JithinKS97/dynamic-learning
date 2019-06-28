@@ -21,22 +21,18 @@ const ListTile = (props) => {
   const [slideChangeDisable, changeSlideChangeDisable] = useState(false);
 
   const {
-    userId,
     changeTitleOfItem,
     title,
     deleteItem,
     index,
     handleClick,
     createdAt,
-    isMember,
     curSlide,
     username,
+    isOwner,
   } = props;
 
   const findTime = () => moment(createdAt);
-
-  const isOwner = Meteor.userId() === userId && !!isMember;
-
 
   return (
     <Card
@@ -122,21 +118,20 @@ const ListTile = (props) => {
 };
 
 ListTile.propTypes = {
-  userId: PropTypes.string,
   title: PropTypes.string.isRequired,
   changeTitleOfItem: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   deleteItem: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired,
-  createdAt: PropTypes.number.isRequired,
-  isMember: PropTypes.bool,
+  createdAt: PropTypes.number,
   curSlide: PropTypes.number.isRequired,
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
+  isOwner: PropTypes.bool.isRequired,
 };
 
 ListTile.defaultProps = {
-  isMember: false,
-  userId: '',
+  username: '',
+  createdAt: Date.now(),
 };
 
 const DetailedList = (props) => {
@@ -147,6 +142,8 @@ const DetailedList = (props) => {
     handleClick,
     curSlide,
     _idToNameMappings,
+    currentUserId,
+    isOwner,
   } = props;
   const renderSlides = () => items.map((item, index) => (
     <ListTile
@@ -162,6 +159,8 @@ const DetailedList = (props) => {
       isMember={props.isMember}
       curSlide={curSlide}
       username={_idToNameMappings[item.userId]}
+      currentUserId={currentUserId}
+      isOwner={isOwner}
     />
   ));
   return (<Menu vertical style={{ width: '100%' }}>{renderSlides()}</Menu>);
@@ -175,6 +174,8 @@ DetailedList.propTypes = {
   isMember: PropTypes.bool,
   curSlide: PropTypes.number.isRequired,
   _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
+  currentUserId: PropTypes.string.isRequired,
+  isOwner: PropTypes.bool.isRequired,
 };
 
 DetailedList.defaultProps = {

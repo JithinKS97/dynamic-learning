@@ -514,16 +514,18 @@ export class Request extends React.Component {
 
   setTitleAndDescription = () => {
     const {
-      editDescription, editTitle, requestTitle, description, _id,
+      editDescription, editTitle, requestTitle, description,
     } = this.state;
-    const { updateTitleInTheDatabase, isOwner, isAuthenticated } = this.props;
+    const {
+      updateTitleInTheDatabase, isOwner, isAuthenticated, changeOpenedTime,
+    } = this.props;
 
     if (!(isAuthenticated && isOwner)) return;
 
     // description and requestTitle is empty string when forum is opened
     // So openedTime should be reset
     if (!(description && requestTitle)) {
-      Meteor.call('requests.changeOpenedTime', _id);
+      changeOpenedTime();
     }
 
     if (!(editDescription && editTitle)) {
@@ -558,8 +560,8 @@ export class Request extends React.Component {
   };
 
   handleJoin = () => {
-    // Only autenticated people can join the discussion
-    const { isAuthenticated, currentUserId } = this.props;
+    // Only authenticated people can join the discussion
+    const { isAuthenticated } = this.props;
     if (!isAuthenticated) {
       alert('Login to participate in the discussion');
       return;
@@ -570,7 +572,6 @@ export class Request extends React.Component {
     Meteor.call(
       'requests.addPendingRequest',
       _id,
-      currentUserId,
       () => {
         alert('Your request has been send');
       },
@@ -578,12 +579,12 @@ export class Request extends React.Component {
   };
 
   handleLeave = () => {
-    const { _id } = this.state;
-    const { currentUserId } = this.props;
+    const { _id, members } = this.state;
+    const { currentUserId, isAuthenticated } = this.props;
+    if (!(isAuthenticated && members.includes(currentUserId))) { return; }
     Meteor.call(
       'requests.removeMember',
       _id,
-      currentUserId,
       () => {
         alert('You have left the forum');
       },
@@ -616,9 +617,13 @@ export class Request extends React.Component {
       _idToNameMappings,
     } = this.state;
     const {
-      requestExists, isOwner, isAuthenticated, updateToDatabase, isMember,
+      requestExists,
+      isOwner,
+      isAuthenticated,
+      updateToDatabase,
+      isMember,
+      currentUserId,
     } = this.props;
-
     if (redirectToLessonplan) { return <Redirect to={`/createlessonplan/${_id}`} />; }
     if (backPressed) {
       const { location: { state: { from } } } = this.props;
@@ -629,7 +634,6 @@ export class Request extends React.Component {
         return <Redirect to={`/createlessonplan/${_id}`} />;
       }
     }
-
     return (
       <div>
         <Menu style={{ margin: 0 }}>
@@ -780,6 +784,8 @@ export class Request extends React.Component {
                     changeTitleOfItem={this.changeTitleOfSlide}
                     isMember={isMember}
                     _idToNameMappings={_idToNameMappings}
+                    currentUserId={currentUserId}
+                    isOwner={isOwner}
                   />
                 ) : null}
               </Grid.Column>
@@ -800,6 +806,8 @@ export class Request extends React.Component {
                     deleteComment={this.deleteComment}
                     editComment={this.editComment}
                     editReplyComment={this.editReplyComment}
+                    currentUserId={currentUserId}
+                    isOwner={isOwner}
                   />
                 ) : (
                   <h2>Create a topic to start the discussion</h2>
@@ -814,6 +822,7 @@ export class Request extends React.Component {
                     curSlide={curSlide}
                     updateSlides={this.updateSlides}
                     isMember={isMember}
+                    currentUserId={currentUserId}
                     isAuthenticated={isAuthenticated}
                   />
                 ) : null}
@@ -1046,8 +1055,9 @@ Request.propTypes = {
   updateToDatabase: PropTypes.func,
   isOwner: PropTypes.bool,
   currentUserId: PropTypes.string,
-  location: PropTypes.objectOf(PropTypes.Object),
+  location: PropTypes.objectOf(PropTypes.string),
   isMember: PropTypes.bool,
+  changeOpenedTime: PropTypes.func,
 };
 
 Request.defaultProps = {
@@ -1060,6 +1070,7 @@ Request.defaultProps = {
   currentUserId: '',
   location: {},
   isMember: false,
+  changeOpenedTime: () => {},
 };
 
 const RequestContainer = withTracker(({ match }) => {
@@ -1099,6 +1110,7 @@ const RequestContainer = withTracker(({ match }) => {
     isOwner: request.userId === Meteor.userId(),
     updateToDatabase: (slides, operation, args) => { Meteor.call('requests.update', request._id, slides, operation, args); },
     currentUserId: Meteor.userId(),
+    changeOpenedTime: () => { Meteor.call('requests.changeOpenedTime', request._id); },
   };
 })(Request);
 

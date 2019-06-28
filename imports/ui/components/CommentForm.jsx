@@ -20,6 +20,7 @@ export default class CommentForm extends Component {
       updateSlides,
       isAuthenticated,
       isMember,
+      currentUserId,
     } = this.props;
 
     if (!(isAuthenticated && isMember)) return;
@@ -30,7 +31,7 @@ export default class CommentForm extends Component {
         slides[curSlide].comments.push({
           _id: generateRandomId(),
           comment,
-          userId: Meteor.userId(),
+          userId: currentUserId,
           createdAt: Date.now(),
           replies: [],
           edited: null,
@@ -78,4 +79,5 @@ CommentForm.propTypes = {
   updateSlides: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   isMember: PropTypes.bool.isRequired,
+  currentUserId: PropTypes.string.isRequired,
 };

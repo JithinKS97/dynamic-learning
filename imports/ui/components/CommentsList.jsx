@@ -33,7 +33,7 @@ export default class commentsList extends Component {
         return (
           <CommentBox
             ref={(el) => { this.commentRefs[index] = el; }}
-            key={comment.time}
+            key={comment.createdAt}
             index={index}
             username={_idToNameMappings[comment.userId]}
             comment={comment}
