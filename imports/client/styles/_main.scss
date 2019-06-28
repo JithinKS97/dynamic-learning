@@ -17,8 +17,137 @@
   height:'100%';
 }
 
-@media (min-width:800px) {
-  
+@media (max-width: 1400px) {
+  .slidescontrols {
+    font-size: 12px !important; 
+  }
+}
+
+@media (max-width: 1200px) {
+  iframe {
+    width: 450px; 
+    height: 300px; 
+  }
+
+  .lessonbutton, .sharelesson, .ui.checkbox {
+    font-size: 12px !important; 
+  }
+
+  .slidescontrols {
+    font-size: 11px !important; 
+  }
+}
+
+@media (max-width:960px) {
+  div.ui.vertical.menu {
+    width: 13rem;
+  }
+  iframe {
+    width: 360px; 
+    height: 240px; 
+  }
+  .lessonbutton, .sharelesson, .ui.checkbox {
+    font-size: 10px !important; 
+  }
+
+  .slidescontrols {
+    font-size: 8px !important; 
+  }
+}
+
+@media (max-width: 860px) {
+  div.ui.vertical.menu {
+    width: 10rem; 
+  }
+
+  iframe {
+    width: 330px; 
+    height: 220px; 
+  }
+
+  .lessonbutton, .sharelesson, .ui.checkbox {
+    font-size: 8px !important;
+  }
+
+  .slidescontrols {
+    font-size: 6px !important; 
+  }
+}
+
+@media (max-width: 760px) {
+
+  iframe {
+    width: 270px; 
+    height: 180px; 
+  }
+
+  .lessonbutton, .sharelesson, .ui.checkbox {
+    font-size: 7px !important;
+  }
+
+  .slidescontrols {
+    font-size: 5px !important; 
+  }
+}
+
+@media (max-width: 600px) {
+  div.ui.vertical.menu {
+    width: 8rem; 
+  }
+
+  iframe {
+    width: 210px; 
+    height: 140px; 
+    margin-left: -10px; 
+  }
+
+  .lessonbutton, .sharelesson, .ui.checkbox {
+    font-size: 6px !important;
+  }
+
+  .slidescontrols {
+    font-size: 5px !important; 
+  }
+}
+
+@media (max-width: 500px) {
+  iframe {
+    width: 165px; 
+    height: 110px; 
+    margin-left: -20px; 
+  }
+
+  .lessonbutton, .sharelesson, .ui.checkbox {
+    font-size: 5px !important;
+  }
+
+}
+
+
+@media (max-height: 650px) {
+  .vidsim {
+    margin-bottom: 40px !important; 
+  }
+  .forum {
+    margin-top: 70px !important; 
+  }
+}
+
+@media (max-height: 450px) {
+  .forum {
+    margin-top: 100px !important; 
+  }
+}
+
+@media (max-height: 300px) {
+
+  .vidsim {
+    margin-bottom: 60px !important; 
+  }
+
+  .forum {
+    margin-top: 130px !important; 
+  }
 }
 
 .upper-canvas {

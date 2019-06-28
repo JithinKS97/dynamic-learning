@@ -94,11 +94,13 @@ export default class Votes extends React.Component {
             <div style={{paddingBottom: '0.6rem'}}>
                 <Button 
                     onClick={() => this.upvote()} 
+                    className="lessonbutton"
                 >
                     <FaThumbsUp color={this.upvoted()} /> ({this.numupvotes()})
                 </Button>
                 <Button 
                     onClick={() => this.downvote()} 
+                    className="lessonbutton"
                 >
                     <FaThumbsDown color={this.downvoted()} /> ({this.numdownvotes()})
                 </Button>
