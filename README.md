@@ -44,7 +44,7 @@ https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals
 3) Clone the dynamic-learning-app repository
 4) Install the node dependencies by executing the command `meteor npm install --save` from the root directory
 5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
-6) Use the command `npm test` to run unit tests
+6) Use the command `npm run full-test` to run unit tests. The server side tests results will appear in the terminal and client side test results are shown in the browser
 
 ## Build using Meteor.js
 
