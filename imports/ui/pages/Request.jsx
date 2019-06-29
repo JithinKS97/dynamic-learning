@@ -1055,7 +1055,12 @@ Request.propTypes = {
   updateToDatabase: PropTypes.func,
   isOwner: PropTypes.bool,
   currentUserId: PropTypes.string,
-  location: PropTypes.objectOf(PropTypes.string),
+  location: PropTypes.shape({
+    hash: PropTypes.string,
+    key: PropTypes.string,
+    pathname: PropTypes.string,
+    search: PropTypes.string,
+  }),
   isMember: PropTypes.bool,
   changeOpenedTime: PropTypes.func,
 };

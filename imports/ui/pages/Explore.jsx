@@ -25,19 +25,25 @@ export default class Explore extends React.Component {
           <Grid.Row style={{ height: '100vh', scrolling: 'no' }}>
             <Grid.Column>
               <Header as="h3">
-                <FaBook /> Workbooks
+                <FaBook />
+                {' '}
+                Workbooks
               </Header>
               <SharedWorkbooks />
             </Grid.Column>
             <Grid.Column>
               <Header as="h3">
-                <FaPlayCircle /> Lessons
+                <FaPlayCircle />
+                {' '}
+                Lessons
               </Header>
               <SharedLessons />
             </Grid.Column>
             <Grid.Column>
               <Header as="h3">
-                <FaCode /> Help make simulations
+                <FaCode />
+                {' '}
+                Help make simulations
               </Header>
               <RequestsList />
             </Grid.Column>
