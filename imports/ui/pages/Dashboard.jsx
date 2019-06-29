@@ -12,7 +12,7 @@ import {
 import { Tracker } from 'meteor/tracker';
 import FaCode from 'react-icons/lib/fa/code';
 import TagsInput from 'react-tagsinput';
-import LessonPlansDirectories from '../components/LessonPlansDirectories';
+import WorkbooksDirectories from '../components/WorkbooksDirectories';
 import RequestsList from '../components/RequestsList';
 import SimsDirectories from '../components/SimsDirectories';
 import SharedLessons from '../components/SharedLessons';
@@ -20,7 +20,7 @@ import LessonsDirectories from '../components/LessonsDirectories';
 import SideBar from '../components/SideBar';
 import SimPreview from '../components/SimPreview';
 import { Sims } from '../../api/sims';
-import SharedLessonPlans from '../components/SharedLessonPlans';
+import SharedWorkbooks from '../components/SharedWorkbooks';
 import 'semantic-ui-css/semantic.min.css';
 import { generateSrc } from '../../functions/index.js';
 import Profile from '../components/Profile';
@@ -104,24 +104,24 @@ export default class Dashboard extends React.Component {
 
   renderOption = () => {
     /*  Panes is an array which holds the content to display under each tab.
-        The first one is the LessonPlan directories and the second one is shared lessonplans list.
+        The first one is the Workbook directories and the second one is shared workbooks list.
     */
 
     const panes = [
       {
-        menuItem: 'My lessonplans',
+        menuItem: 'My workbooks',
         render: () => (
           <Tab.Pane style={{ height: `${window.innerHeight - 150}px` }}>
             {' '}
-            <LessonPlansDirectories />
+            <WorkbooksDirectories />
           </Tab.Pane>
         ),
       },
       {
-        menuItem: 'Shared lessonplans',
+        menuItem: 'Shared workbooks',
         render: () => (
           <Tab.Pane style={{ height: `${window.innerHeight - 150}px` }}>
-            <SharedLessonPlans />
+            <SharedWorkbooks />
           </Tab.Pane>
         ),
       },
@@ -133,10 +133,10 @@ export default class Dashboard extends React.Component {
     /* The components are rendered depending upon the selection in the menu */
 
     switch (option) {
-      case 'lessonplans':
+      case 'workbooks':
         return (
           <div>
-            <Header>Manage Lessonplans</Header>
+            <Header>Manage Workbooks</Header>
             <Tab panes={panes} />
           </div>
         );

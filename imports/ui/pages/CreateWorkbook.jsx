@@ -29,11 +29,11 @@ import TextBoxes from '../components/TextBoxes';
 import AddSim from '../components/AddSim';
 import SlidesList from '../components/List';
 import SimsList from '../components/SimsList';
-import { LessonPlans } from '../../api/lessonplans';
+import { Workbooks } from '../../api/workbooks';
 import DrawingBoardCmp from '../components/DrawingBoardCmp';
 
 /* This Component is intended for the development of a
-    lessonplan by the teachers. Each lessonplan
+    workbook by the teachers. Each workbook
     is composed of a sequence of slides. Each slide contains
     a note (the drawing on the canvas which is
     is of type string) and array of simulations.
@@ -41,14 +41,14 @@ import DrawingBoardCmp from '../components/DrawingBoardCmp';
     the save button for updating the database.
 */
 
-export class CreateLessonPlan extends React.Component {
+export class CreateWorkbook extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      /* Title holds the title of the lessonplan. CurSlide holds
+      /* Title holds the title of the workbook. CurSlide holds
         the current slide on which we are in.
-        id holds the id of the current lessonplan. Initialzed is set
+        id holds the id of the current workbook. Initialzed is set
         to true once data is fetched from the database and is filled in the state.
         loginNotification becomes true when save button is pressed
         and the user is not logged in. Checked holds the interact checkbox value.
@@ -66,7 +66,7 @@ export class CreateLessonPlan extends React.Component {
       redirectToLogin: false,
       interactEnabled: false,
       redirectToDashboard: false,
-      forkedLessonPlanId: null,
+      forkedWorkbookId: null,
       author: '',
       copied: false,
       scaleX: 1,
@@ -103,14 +103,14 @@ export class CreateLessonPlan extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // eslint-disable-next-line react/prop-types
-    const { lessonplanExists, lessonplan } = nextProps;
+    const { workbookExists, workbook } = nextProps;
     const { initialized, userId } = this.state;
-    if (lessonplanExists === false) return;
+    if (workbookExists === false) return;
     if (initialized === true) return;
 
     this.setState(
       {
-        ...lessonplan,
+        ...workbook,
         initialized: true,
       },
       () => {
@@ -347,18 +347,18 @@ export class CreateLessonPlan extends React.Component {
 
     if (userId !== Meteor.userId()) {
       const confirmation = confirm(
-        'Are you sure you want to fork this lessonplan?',
+        'Are you sure you want to fork this workbook?',
       );
 
       if (!confirmation) return;
 
-      Meteor.call('lessonplans.insert', title, (err, id) => {
-        Meteor.call('lessonplans.update', id, slides);
+      Meteor.call('workbooks.insert', title, (err, id) => {
+        Meteor.call('workbooks.update', id, slides);
 
         this.setState(
           {
             redirectToDashboard: true,
-            forkedLessonPlanId: id,
+            forkedWorkbookId: id,
           },
           () => {
             confirm('Forked succesfully');
@@ -368,7 +368,7 @@ export class CreateLessonPlan extends React.Component {
     } else {
       const { _id } = this.state;
 
-      const lessonplan = LessonPlans.findOne({ _id });
+      const workbook = Workbooks.findOne({ _id });
 
       /* If the slides in the state has the same values as that of the slides
             in the database, we need not save, expect to deep include by chai checks this equality.
@@ -377,7 +377,7 @@ export class CreateLessonPlan extends React.Component {
         */
 
       try {
-        expect({ slides: lessonplan.slides }).to.deep.include({
+        expect({ slides: workbook.slides }).to.deep.include({
           slides,
         });
       } catch (error) {
@@ -386,7 +386,7 @@ export class CreateLessonPlan extends React.Component {
             saving: true,
           });
 
-          Meteor.call('lessonplans.update', _id, slides, () => {
+          Meteor.call('workbooks.update', _id, slides, () => {
             alert('Saved successfully');
             this.setState({
               saving: false,
@@ -787,25 +787,25 @@ export class CreateLessonPlan extends React.Component {
 
     const { _id } = this.state;
 
-    Meteor.call('lessonplans.description', _id, description, () => {
+    Meteor.call('workbooks.description', _id, description, () => {
       alert('Description addedd successfully');
     });
   };
 
   checkDescExist = () => {
     const { _id } = this.state;
-    const a = LessonPlans.find({
+    const a = Workbooks.find({
       _id,
       description: { $exists: true },
     }).fetch();
     if (a.length !== 0) return true;
 
-    Meteor.call('lessonplans.addDescriptionField', _id);
+    Meteor.call('workbooks.addDescriptionField', _id);
   };
 
   checkDescription = () => {
     const { _id } = this.state;
-    const res = LessonPlans.find({ _id }).fetch();
+    const res = Workbooks.find({ _id }).fetch();
     const desc = res[0].description;
     return Object.keys(desc).length === 0 && desc.constructor === Object;
   };
@@ -897,7 +897,7 @@ export class CreateLessonPlan extends React.Component {
     }
 
     if (redirectToDashboard) {
-      return <Redirect to="/dashboard/lessonplans" />;
+      return <Redirect to="/dashboard/workbooks" />;
     }
 
     return (
@@ -967,7 +967,7 @@ export class CreateLessonPlan extends React.Component {
                 curSlide={curSlide}
                 deleteSlide={this.deleteSlide}
                 setStateAfterRearranging={this.setStateAfterRearranging}
-                from="createLessonplan"
+                from="createWorkbook"
                 isPreview={false}
                 changeSlide={this.changeSlide}
               />
@@ -1066,12 +1066,12 @@ export class CreateLessonPlan extends React.Component {
                       className="lprightbutton"
                       color="blue"
                       onClick={() => {
-                        const lessonplan = LessonPlans.findOne({
+                        const workbook = Workbooks.findOne({
                           _id,
                         });
 
                         try {
-                          expect({ slides: lessonplan.slides }).to.deep.include(
+                          expect({ slides: workbook.slides }).to.deep.include(
                             { slides },
                           );
                         } catch (error) {
@@ -1112,7 +1112,7 @@ export class CreateLessonPlan extends React.Component {
                     if (confirmation === true) this.reset();
                   }}
                 >
-                  Reset lessonplan
+                  Reset workbook
                 </Menu.Item>
 
                 <Menu.Item 
@@ -1313,7 +1313,7 @@ export class CreateLessonPlan extends React.Component {
                           <Menu.Item
                             onClick={() => {
                               this.setState({ showDescription: true });
-                              const res = LessonPlans.find({
+                              const res = Workbooks.find({
                                 _id,
                               }).fetch();
                               this.setState({ description: res[0].description });
@@ -1457,7 +1457,7 @@ export class CreateLessonPlan extends React.Component {
                               if (!confirmation) return;
 
                               Meteor.call(
-                                'lessonplans.removeDescription',
+                                'workbooks.removeDescription',
                                 _id,
                                 () => {
                                   this.setState({ description: [] });
@@ -1531,7 +1531,7 @@ export class CreateLessonPlan extends React.Component {
         </Grid>
 
         <Modal size="tiny" open={!title}>
-          <Modal.Header>Enter the title for the lessonplan</Modal.Header>
+          <Modal.Header>Enter the title for the Workbook</Modal.Header>
 
           <Modal.Content>
             <Modal.Description>
@@ -1560,60 +1560,60 @@ export class CreateLessonPlan extends React.Component {
   }
 }
 
-const CreatelessonPlanContainer = withTracker(({ match }) => {
-  let lessonplansHandle;
+const CreateWorkbookContainer = withTracker(({ match }) => {
+  let workbooksHandle;
 
   /*
-        If the user is logged in, we fetch his lessonplans.
-        Otherwise, we fetch every public lessonplans.
+        If the user is logged in, we fetch his workbooks.
+        Otherwise, we fetch every public workbooks.
     */
 
   if (Meteor.userId()) {
-    lessonplansHandle = Meteor.subscribe('lessonplans');
+    workbooksHandle = Meteor.subscribe('workbooks');
   } else {
-    lessonplansHandle = Meteor.subscribe('lessonplans.public');
+    workbooksHandle = Meteor.subscribe('workbooks.public');
   }
 
   /*
-    loading becomes false when we get the lessonplans collection.
+    loading becomes false when we get the workbooks collection.
   */
 
-  const loading = !lessonplansHandle.ready();
+  const loading = !workbooksHandle.ready();
 
-  let lessonplan; let
-    lessonplanExists;
+  let workbook; let
+    workbookExists;
 
   if (match.params._id === undefined) {
     /*
-      If lessonplan creator is taken by creating a new lessonplan,
+      If workbook creator is taken by creating a new workbook,
       the id will be undefined, so an empty list of slides is created with title null.
     */
 
-    lessonplanExists = true;
+    workbookExists = true;
     const slides = [];
-    lessonplan = { slides, title: null };
+    workbook = { slides, title: null };
   } else {
     /*
-      If id is not null, we are trying to open an existing lessonplans,
+      If id is not null, we are trying to open an existing workbooks,
       so it is fetched from the database.
-      If the lessonplan exists for the id provided, loading is set to false.
+      If the workbook exists for the id provided, loading is set to false.
     */
 
-    lessonplan = LessonPlans.findOne(match.params._id);
+    workbook = Workbooks.findOne(match.params._id);
 
-    lessonplanExists = !loading && !!lessonplan;
+    workbookExists = !loading && !!workbook;
   }
 
   return {
     /*
-      LessonplanExists is returned for determining if the loading screen display.
-      If lessonplan exists, it is returned, otherwise an empty array is returned.
-      Go to the componentWillReceiveProps to see what we do with the returned lessonplan.
+      WorkbookExists is returned for determining if the loading screen display.
+      If workbook exists, it is returned, otherwise an empty array is returned.
+      Go to the componentWillReceiveProps to see what we do with the returned workbook.
     */
 
-    lessonplanExists,
-    lessonplan: lessonplanExists ? lessonplan : [],
+    workbookExists,
+    workbook: workbookExists ? workbook : [],
   };
-})(CreateLessonPlan);
+})(CreateWorkbook);
 
-export default CreatelessonPlanContainer;
+export default CreateWorkbookContainer;

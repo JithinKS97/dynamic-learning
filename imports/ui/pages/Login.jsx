@@ -20,7 +20,7 @@ export default class Login extends React.Component {
   }
 
   componentDidMount() {
-    /* If the createlessonplan is opened without logging in and the user requires to login,
+    /* If the createworkbook is opened without logging in and the user requires to login,
             The slides are stored to meteor sessions with the title stateToSave.
             It is obtained from here.
             If there is no value, returned, else the slides and the title is set to the state.
@@ -61,18 +61,18 @@ export default class Login extends React.Component {
           }
 
           /*
-            The values in the states are used to create a new lessonplan and the session variable
+            The values in the states are used to create a new workbook and the session variable
             is set to null.
         */
 
           if (userId === Meteor.userId()) {
-            Meteor.call('lessonplans.update', _id, slides);
+            Meteor.call('workbooks.update', _id, slides);
             return;
           }
 
           // eslint-disable-next-line no-shadow
-          Meteor.call('lessonplans.insert', title, (_err, _id) => {
-            Meteor.call('lessonplans.update', _id, slides);
+          Meteor.call('workbooks.insert', title, (_err, _id) => {
+            Meteor.call('workbooks.update', _id, slides);
             Session.set('stateToSave', null);
           });
         });

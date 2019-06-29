@@ -41,7 +41,7 @@ export default class SideBar extends React.Component {
         <ul>
 
           <Menu vertical style={{ marginTop: '0.8rem' }}>
-            <Link to="lessonplans"><Menu.Item link>Manage lessonplans</Menu.Item></Link>
+            <Link to="workbooks"><Menu.Item link>Manage workbooks</Menu.Item></Link>
             <Link to="lessons"><Menu.Item link>Manage lessons</Menu.Item></Link>
             <Link to="classes">
               {' '}

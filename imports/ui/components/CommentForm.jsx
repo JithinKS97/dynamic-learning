@@ -79,5 +79,9 @@ CommentForm.propTypes = {
   updateSlides: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   isMember: PropTypes.bool.isRequired,
-  currentUserId: PropTypes.string.isRequired,
+  currentUserId: PropTypes.string,
+};
+
+CommentForm.defaultProps = {
+  currentUserId: '',
 };
