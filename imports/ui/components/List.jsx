@@ -18,7 +18,7 @@ const SortableItem = SortableElement(({
     key={slideNo}
   >
     <div
-      className="ui button"
+      className="ui button lessonplanleftbutton slidenumber"
       style={{ width: '100%', textAlign: 'left', backgroundColor: index === props.curSlide ? 'lightGreen' : '#e0e1e2' }}
       onClick={() => { props.changeSlide(slideNo); }}
     >
@@ -27,7 +27,7 @@ const SortableItem = SortableElement(({
 
     {!props.isPreview ? (
       <div
-        className="ui button"
+        className="ui button lessonplanleftbutton"
         onClick={() => {
           const confirmation = confirm('Are you sure you want to delete?');
           if (confirmation === true) { props.deleteSlide(slideNo); }

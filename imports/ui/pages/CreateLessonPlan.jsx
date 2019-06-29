@@ -955,12 +955,13 @@ export class CreateLessonPlan extends React.Component {
             >
               {saving ? <p>Saving...</p> : null}
               <Button
+                className="createslide"
                 style={{ marginTop: '0.8rem' }}
                 onClick={this.addNewSlide}
               >
                 Create Slide
               </Button>
-              <h1>{curSlide + 1}</h1>
+              <h1 className="slidecounter">{curSlide + 1}</h1>
               <SlidesList
                 slides={slides}
                 curSlide={curSlide}
@@ -1034,9 +1035,10 @@ export class CreateLessonPlan extends React.Component {
                 updateSlides={this.updateSlides}
               />
 
-              <Menu color="blue" icon vertical>
+              <Menu color="blue" icon vertical className="lpright">
                 <Menu.Item>
                   <Button
+                    className="lprightbutton"
                     toggle
                     active={!interactEnabled}
                     onClick={this.interact}
@@ -1047,6 +1049,7 @@ export class CreateLessonPlan extends React.Component {
 
                 <Menu.Item>
                   <Button
+                    className="lprightbutton"
                     onClick={() => {
                       this.addSim.addSim();
                     }}
@@ -1060,6 +1063,7 @@ export class CreateLessonPlan extends React.Component {
                   <Menu.Item>
                     {' '}
                     <Button
+                      className="lprightbutton"
                       color="blue"
                       onClick={() => {
                         const lessonplan = LessonPlans.findOne({
@@ -1096,10 +1100,11 @@ export class CreateLessonPlan extends React.Component {
 
                 {!!Meteor.userId() && userId === Meteor.userId() ? (
                   <Link to={{ pathname: `/request/${_id}`, state: { from: 'createlessonplan' } }}>
-                    <Menu.Item link>Discussion forum</Menu.Item>
+                    <Menu.Item link className="lprightbutton">Discussion forum</Menu.Item>
                   </Link>
                 ) : null}
                 <Menu.Item
+                  className="lprightbutton"
                   onClick={() => {
                     const confirmation = confirm(
                       'Are you sure you want to reset all?',
@@ -1110,7 +1115,8 @@ export class CreateLessonPlan extends React.Component {
                   Reset lessonplan
                 </Menu.Item>
 
-                <Menu.Item>
+                <Menu.Item 
+                  className="lprightbutton">
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div>
                       <Button
@@ -1137,6 +1143,7 @@ export class CreateLessonPlan extends React.Component {
                 </Menu.Item>
 
                 <Menu.Item
+                  className="lprightbutton"
                   onClick={() => {
                     this.saveToDatabase();
                   }}
@@ -1147,6 +1154,7 @@ export class CreateLessonPlan extends React.Component {
                 </Menu.Item>
 
                 <Menu.Item
+                  className="lprightbutton"
                   // eslint-disable-next-line react/no-string-refs
                   ref="increaseCanvasButton"
                   onClick={() => {
@@ -1157,6 +1165,7 @@ export class CreateLessonPlan extends React.Component {
                 </Menu.Item>
 
                 <Menu.Item
+                  className="lprightbutton"
                   onClick={() => {
                     if (this.pageCount === 0 || this.checkCanvasSize()) {
                       alert('Canvas size cannot be decreased further!');
@@ -1171,6 +1180,7 @@ export class CreateLessonPlan extends React.Component {
 
                 {!Meteor.userId() ? (
                   <Menu.Item
+                    className="lprightbutton"
                     onClick={() => {
                       const confirmation = confirm(
                         'You will be redirected to login page. Changes will be saved for you.',
@@ -1192,6 +1202,7 @@ export class CreateLessonPlan extends React.Component {
                 ) : null}
 
                 <Menu.Item
+                  className="lprightbutton"
                   onClick={() => {
                     this.addTextBox();
                   }}
@@ -1211,6 +1222,7 @@ export class CreateLessonPlan extends React.Component {
                       open={addDescription}
                       trigger={(
                         <Menu.Item
+                          className="lprightbutton"
                           onClick={() => {
                             this.setState({ addDescription: true });
                           }}

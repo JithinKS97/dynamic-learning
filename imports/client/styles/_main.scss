@@ -17,12 +17,26 @@
   height:'100%';
 }
 
+// full width
 @media (max-width: 1400px) {
   .slidescontrols {
     font-size: 12px !important; 
   }
+
 }
 
+// 110% zoom
+@media (max-width: 1350px) {
+  .lpright {
+    width: 10rem !important; 
+  }
+
+  .lprightbutton {
+    font-size: 0.9rem !important; 
+  }
+}
+
+// 125% zoom
 @media (max-width: 1200px) {
   iframe {
     width: 450px; 
@@ -36,8 +50,30 @@
   .slidescontrols {
     font-size: 11px !important; 
   }
+
+  .lessonplanleftbutton {
+    font-size: 0.8rem !important; 
+  }
+
+  .createslide {
+    font-size: 0.8rem !important; 
+  }
+
+  .slidenumber {
+    margin-left: -3px !important; 
+  }
+
+  .lpright {
+    width: 8.5rem !important; 
+    font-size: 0.7rem !important; 
+  }
+
+  .lprightbutton {
+    font-size: 0.8rem !important; 
+  }
 }
 
+// 150% zoom
 @media (max-width:960px) {
   div.ui.vertical.menu {
     width: 13rem;
@@ -53,8 +89,38 @@
   .slidescontrols {
     font-size: 8px !important; 
   }
+
+  .lessonplanleftbutton {
+    font-size: 0.7rem !important; 
+  }
+
+  .createslide {
+    font-size: 0.7rem !important; 
+  }
+
+  .slidenumber {
+    margin-left: -8px !important; 
+  }
+
+  .slidecounter {
+    font-size: 1.5rem !important; 
+  }
+
+  .lpright {
+    width: 6.8rem !important; 
+    font-size: 0.6rem !important; 
+  }
+
+  div.ui.teal.attached.button {
+    font-size: 0.6rem !important; 
+  }
+
+  .lprightbutton {
+    font-size: 0.65rem !important; 
+  }
 }
 
+// 175% zoom
 @media (max-width: 860px) {
   div.ui.vertical.menu {
     width: 10rem; 
@@ -72,8 +138,35 @@
   .slidescontrols {
     font-size: 6px !important; 
   }
+
+  .lessonplanleftbutton {
+    font-size: 0.6rem !important; 
+  }
+
+  .createslide {
+    font-size: 0.6rem !important; 
+  }
+
+  .slidenumber {
+    margin-left: -11px !important; 
+  }
+
+  .slidecounter {
+    font-size: 1.3rem !important; 
+  }
+
+  .lpright {
+    width: 5.5rem !important; 
+    font-size: 0.5rem !important; 
+  }
+
+  .lprightbutton {
+    font-size: 0.55rem !important; 
+  }
+
 }
 
+// 200% zoom
 @media (max-width: 760px) {
 
   iframe {
@@ -88,8 +181,38 @@
   .slidescontrols {
     font-size: 5px !important; 
   }
+
+  .lessonplanleftbutton {
+    font-size: 0.5rem !important; 
+  }
+
+  .createslide {
+    font-size: 0.5rem !important; 
+  }
+
+  .slidenumber {
+    margin-left: -12px !important; 
+  }
+
+  .slidecounter {
+    font-size: 1.1rem !important;
+  }
+
+  .lpright {
+    width: 4.5rem !important; 
+    font-size: 0.4rem !important; 
+  }
+
+  div.ui.teal.attached.button {
+    font-size: 0.5rem !important; 
+  }
+
+  .lprightbutton {
+    font-size: 0.45rem !important; 
+  }
 }
 
+// 250% zoom
 @media (max-width: 600px) {
   div.ui.vertical.menu {
     width: 8rem; 
@@ -108,8 +231,38 @@
   .slidescontrols {
     font-size: 5px !important; 
   }
+
+  .lessonplanleftbutton {
+    font-size: 0.36rem !important; 
+  }
+
+  .createslide {
+    font-size: 0.36rem !important; 
+  }
+
+  .slidenumber {
+    margin-left: -12px !important; 
+  }
+
+  .slidecounter {
+    font-size: 0.9rem !important; 
+  }
+
+  .lpright {
+    width: 3.5rem !important; 
+    font-size: 0.3rem !important; 
+  }
+
+  div.ui.teal.attached.button {
+    font-size: 0.35rem !important; 
+  }
+
+  .lprightbutton {
+    font-size: 0.35rem !important; 
+  }
 }
 
+// 300% zoom 
 @media (max-width: 500px) {
   iframe {
     width: 165px; 
@@ -122,7 +275,6 @@
   }
 
 }
-
 
 @media (max-height: 650px) {
   .vidsim {
