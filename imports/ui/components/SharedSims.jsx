@@ -76,10 +76,10 @@ export default class SharedSims extends React.Component {
           >
             <div>
               {_idToNameMappings[sim.userId]}
+              {' | '}
             </div>
-            <div style={{ marginLeft: '0.4rem' }}>
+            <div>
                 added
-              {' '}
               {this.displayTime(index)}
             </div>
           </Card.Meta>

@@ -41,7 +41,7 @@ const RequestsList = (props) => {
     if (requests.length > 0) {
       return findTime(requests[index].createdAt).fromNow();
     }
-  }
+  };
 
   const renderRequests = () => props.requests.map((request, index) => {
     if (request.requestTitle) {
