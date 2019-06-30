@@ -239,7 +239,7 @@ class WorkbooksDirectories extends Component {
         <Modal
           size="fullscreen"
           open={!!selectedWorkbookId}
-          style={{ transform: 'scale(0.73, 0.73)', marginTop: '5rem' }}
+          style={{ transform: 'scale(0.7, 0.7)', marginTop: '5rem' }}
         >
           <Modal.Header>
             Preview
@@ -250,7 +250,7 @@ class WorkbooksDirectories extends Component {
                 this.setState({ selectedWorkbookId: null, editable: false });
               }}
             >
-              &times;
+              X
             </Button>
           </Modal.Header>
           <Modal.Content>
