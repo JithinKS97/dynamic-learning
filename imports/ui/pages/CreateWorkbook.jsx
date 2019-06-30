@@ -21,10 +21,8 @@ import 'semantic-ui-css/semantic.min.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
 import DOMPurify from 'dompurify';
-import FaTrash from 'react-icons/lib/fa/trash';
-import FaEdit from 'react-icons/lib/fa/edit';
-import MdUndo from 'react-icons/lib/md/undo';
-import MdRedo from 'react-icons/lib/md/redo';
+import { FaTrash, FaEdit } from 'react-icons/fa';
+import { MdUndo, MdRedo } from 'react-icons/md';
 import TextBoxes from '../components/TextBoxes';
 import AddSim from '../components/AddSim';
 import SlidesList from '../components/List';

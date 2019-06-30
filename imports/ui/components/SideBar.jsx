@@ -45,7 +45,7 @@ export default class SideBar extends React.Component {
             <Link to="lessons"><Menu.Item link>Manage lessons</Menu.Item></Link>
             <Link to="classes">
               {' '}
-              <Menu.Item link> Classes </Menu.Item>
+              <Menu.Item link>Classes</Menu.Item>
             </Link>
             <Link to="uploadsim"><Menu.Item link>Manage simulations</Menu.Item></Link>
             <Link to="requests"><Menu.Item link>Discussion forums</Menu.Item></Link>

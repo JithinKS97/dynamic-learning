@@ -7,8 +7,7 @@ import {
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import 'semantic-ui-css/semantic.min.css';
 import { Tracker } from 'meteor/tracker';
-import FaTrash from 'react-icons/lib/fa/trash';
-import FaEdit from 'react-icons/lib/fa/edit';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 import { Redirect } from 'react-router-dom';
 import { Lessons } from '../../api/lessons';
 

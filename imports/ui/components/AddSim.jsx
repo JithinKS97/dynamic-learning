@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FaCode from 'react-icons/lib/fa/code';
+import { FaCode } from 'react-icons/fa';
 import { Meteor } from 'meteor/meteor';
 import {
   Button,

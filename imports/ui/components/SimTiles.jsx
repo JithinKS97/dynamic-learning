@@ -1,10 +1,9 @@
-import FaPencil from 'react-icons/lib/fa/pencil';
+import { FaPencil, FaCode } from 'react-icons/fa';
 import React, { useState, Fragment } from 'react';
 import {
   Card, Button, Menu, Modal, Input,
 } from 'semantic-ui-react';
-import FaCode from 'react-icons/lib/fa/code';
-import MdSave from 'react-icons/lib/md/save';
+import { MdSave } from 'react-icons/md';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { generateSrc, isValidp5EmbedTag } from '../../functions/index.js';

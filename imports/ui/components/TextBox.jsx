@@ -1,9 +1,8 @@
 import React from 'react';
 import Rnd from 'react-rnd';
-import TiArrowMove from 'react-icons/lib/ti/arrow-move';
-import FaClose from 'react-icons/lib/fa/close';
-import MdNetworkCell from 'react-icons/lib/md/network-cell';
-import FaCopy from 'react-icons/lib/fa/copy';
+import { TiArrowMove } from 'react-icons/ti';
+import { FaTimes, FaCopy } from 'react-icons/fa';
+import { MdNetworkCell } from 'react-icons/md';
 import PropTypes from 'prop-types';
 
 export default class TextBox extends React.Component {
@@ -168,7 +167,7 @@ export default class TextBox extends React.Component {
                     marginLeft: '0.1rem',
                   }}
                 >
-                  <FaClose
+                  <FaTimes
                     className="sim-delete"
                     size="20"
                     onClick={() => {
@@ -182,7 +181,7 @@ export default class TextBox extends React.Component {
                     }}
                   >
                     X
-                  </FaClose>
+                  </FaTimes>
 
                   <TiArrowMove size="22" className="textbox-handle" />
 

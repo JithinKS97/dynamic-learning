@@ -10,8 +10,8 @@ import {
   Button,
   Input,
 } from 'semantic-ui-react';
-import FaPencil from 'react-icons/lib/fa/pencil';
-import MdSave from 'react-icons/lib/md/save';
+import { FaPencilAlt } from 'react-icons/fa';
+import { MdSave } from 'react-icons/md';
 import moment from 'moment';
 
 const ListTile = (props) => {
@@ -91,7 +91,7 @@ const ListTile = (props) => {
                   changeTempTitle(props.title);
                 }}
               >
-                <FaPencil />
+                <FaPencilAlt />
               </Button>
             )}
 

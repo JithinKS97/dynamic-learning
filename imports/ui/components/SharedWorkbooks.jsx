@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Modal, Button, Input, Dimmer, Loader, Card,
 } from 'semantic-ui-react';
-import FaCodeFork from 'react-icons/lib/fa/code-fork';
+import { FaCodeFork } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import WorkbookViewer from './WorkbookViewer';
