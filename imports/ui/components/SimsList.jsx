@@ -2,12 +2,14 @@ import React from 'react';
 import Rnd from 'react-rnd';
 import { Meteor } from 'meteor/meteor';
 import 'semantic-ui-css/semantic.min.css';
-import TiArrowMove from 'react-icons/lib/ti/arrow-move';
-import FaClose from 'react-icons/lib/fa/close';
-import FaCode from 'react-icons/lib/fa/code';
-import MdNetworkCell from 'react-icons/lib/md/network-cell';
+import { TiArrowMove } from 'react-icons/ti';
+import {
+  FaTimes,
+  FaCode,
+  FaCopy,
+} from 'react-icons/fa';
+import { MdNetworkCell } from 'react-icons/md';
 import { Button } from 'semantic-ui-react';
-import FaCopy from 'react-icons/lib/fa/copy';
 import { Session } from 'meteor/session';
 import PropTypes from 'prop-types';
 import SimContainer from './SimContainer';
@@ -177,7 +179,7 @@ export default class SimsList extends React.Component {
                     }}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <FaClose
+                      <FaTimes
                         className="sim-delete"
                         onClick={() => {
                           const confirmation = confirm(

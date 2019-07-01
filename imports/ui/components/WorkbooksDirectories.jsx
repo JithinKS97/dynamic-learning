@@ -16,9 +16,8 @@ import {
   Loader,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import FaTrash from 'react-icons/lib/fa/trash';
-import FaEdit from 'react-icons/lib/fa/edit';
-import MdSettings from 'react-icons/lib/md/settings';
+import { FaTrash, FaEdit } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import TagsInput from 'react-tagsinput';
 import Classes from '../../api/classes';

@@ -10,7 +10,7 @@ import {
   Header,
 } from 'semantic-ui-react';
 import { Tracker } from 'meteor/tracker';
-import FaCode from 'react-icons/lib/fa/code';
+import { FaCode } from 'react-icons/fa';
 import TagsInput from 'react-tagsinput';
 import WorkbooksDirectories from '../components/WorkbooksDirectories';
 import RequestsList from '../components/RequestsList';
@@ -152,7 +152,7 @@ export default class Dashboard extends React.Component {
       case 'uploadsim':
         return (
           <div>
-            <Header>Manage simulations</Header>
+            <Header>Manage Simulations</Header>
             <SimsDirectories
               height={window.innerHeight - 150}
               getNode={this.getNode}
@@ -177,14 +177,14 @@ export default class Dashboard extends React.Component {
       case 'profile':
         return (
           <div>
-            <Header> User Profile </Header>
+            <Header>User Profile</Header>
             <Profile />
           </div>
         );
       case 'classes':
         return (
           <div>
-            <Header> Classes </Header>
+            <Header>Classes</Header>
             <Classes />
           </div>
         );

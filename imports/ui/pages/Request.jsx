@@ -20,7 +20,7 @@ import {
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
-import FaPencil from 'react-icons/lib/fa/pencil';
+import { FaPencilAlt } from 'react-icons/fa';
 import DetailedList from '../components/DetailedList';
 import Upload from '../components/Upload';
 import { Requests } from '../../api/requests';
@@ -742,7 +742,7 @@ export class Request extends React.Component {
                         icon
                         style={{ marginLeft: '1.2rem' }}
                       >
-                        <FaPencil />
+                        <FaPencilAlt />
                       </Button>
                     ) : null}
                   </div>

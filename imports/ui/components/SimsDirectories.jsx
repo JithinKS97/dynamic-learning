@@ -2,8 +2,8 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import FaTrash from 'react-icons/lib/fa/trash';
-import MdSettings from 'react-icons/lib/md/settings';
+import { FaTrash } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
 import {
   Button, Modal, Form, Dimmer, Loader,
 } from 'semantic-ui-react';
@@ -179,6 +179,7 @@ class SimsDirectories extends React.Component {
                   style={{
                     display: node.isFile ? 'block' : 'none',
                     visibility: isPreview ? 'hidden' : 'visible',
+                    verticalAlign: 'middle',
                   }}
                   onClick={() => {
                     getNode(node);
@@ -189,6 +190,7 @@ class SimsDirectories extends React.Component {
 
                 <button
                   className="icon__button"
+                  style={{ verticalAlign: 'middle' }}
                   onClick={() => {
                     const input = confirm(
                       'Are you sure you want to perform this deletion?',

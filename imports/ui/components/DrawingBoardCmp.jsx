@@ -2,14 +2,18 @@
 import React, { Component } from 'react';
 import { Dropdown, Menu } from 'semantic-ui-react';
 import { fabric } from 'fabric';
-import FaPencil from 'react-icons/lib/fa/pencil';
-import FaSquareO from 'react-icons/lib/fa/square-o';
+import {
+  FaPencilAlt,
+  FaRegSquare,
+  FaRegCircle,
+} from 'react-icons/fa';
 import { SwatchesPicker } from 'react-color';
-import FaCircleO from 'react-icons/lib/fa/circle-o';
-import GoDash from 'react-icons/lib/go/dash';
-import MdPhotoSizeSelectSmall from 'react-icons/lib/md/photo-size-select-small';
-import MdFormatColorFill from 'react-icons/lib/md/format-color-fill';
-import MdClose from 'react-icons/lib/md/close';
+import { GoDash } from 'react-icons/go';
+import {
+  MdPhotoSizeSelectSmall,
+  MdFormatColorFill,
+  MdClose,
+} from 'react-icons/md';
 import PropTypes from 'prop-types';
 
 export default class DrawingBoardCmp extends Component {
@@ -86,18 +90,18 @@ export default class DrawingBoardCmp extends Component {
   getIcon() {
     const { option } = this.state;
     if (option === 'rect') {
-      return <FaSquareO />;
+      return <FaRegSquare />;
     }
 
     if (option === 'ellipse') {
-      return <FaCircleO />;
+      return <FaRegCircle />;
     }
 
     if (option === 'line') {
       return <GoDash />;
     }
 
-    return <FaSquareO />;
+    return <FaRegSquare />;
   }
 
   getImg() {
@@ -353,7 +357,7 @@ export default class DrawingBoardCmp extends Component {
             active={option === 'pencil'}
             onClick={() => { this.setOption('pencil'); }}
           >
-            <FaPencil />
+            <FaPencilAlt />
           </Menu.Item>
           <Dropdown pointing className="link item" text={size}>
             <Dropdown.Menu>
@@ -434,7 +438,7 @@ export default class DrawingBoardCmp extends Component {
                     justifyContent: 'space-between',
                   }}
                 >
-                  <FaPencil style={{ marginRight: '0.8rem' }} />
+                  <FaPencilAlt style={{ marginRight: '0.8rem' }} />
                   <div
                     style={{
                       width: '1.2rem',
@@ -477,13 +481,13 @@ export default class DrawingBoardCmp extends Component {
                 this.setOption('rect');
               }}
               >
-                <FaSquareO />
+                <FaRegSquare />
               </Dropdown.Item>
               <Dropdown.Item onClick={() => {
                 this.setOption('ellipse');
               }}
               >
-                <FaCircleO />
+                <FaRegCircle />
               </Dropdown.Item>
               <Dropdown.Item onClick={() => {
                 this.setOption('line');

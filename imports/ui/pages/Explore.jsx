@@ -1,9 +1,11 @@
 import React from 'react';
 import { Grid, Header, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import FaBook from 'react-icons/lib/fa/book';
-import FaPlayCircle from 'react-icons/lib/fa/play-circle';
-import FaCode from 'react-icons/lib/fa/code';
+import {
+  FaBook,
+  FaChalkboardTeacher,
+  FaCode,
+} from 'react-icons/fa';
 import SharedLessons from '../components/SharedLessons';
 import SharedWorkbooks from '../components/SharedWorkbooks';
 import RequestsList from '../components/RequestsList';
@@ -33,7 +35,7 @@ export default class Explore extends React.Component {
             </Grid.Column>
             <Grid.Column>
               <Header as="h3">
-                <FaPlayCircle />
+                <FaChalkboardTeacher />
                 {' '}
                 Lessons
               </Header>
