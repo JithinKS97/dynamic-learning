@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Modal, Button, Input, Dimmer, Loader, Card,
 } from 'semantic-ui-react';
-import { FaCodeFork } from 'react-icons/fa';
+import { GoRepoForked } from 'react-icons/go';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import WorkbookViewer from './WorkbookViewer';
@@ -146,7 +146,7 @@ export default class SharedWorkbooks extends React.Component {
                   });
                 }}
                 >
-                  <FaCodeFork />
+                  <GoRepoForked />
                 Fork
                 </Button>
               ) : null}
