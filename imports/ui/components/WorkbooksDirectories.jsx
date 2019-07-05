@@ -16,10 +16,11 @@ import {
   Loader,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import { FaTrash, FaEdit } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaPencilAlt } from 'react-icons/fa';
 import { MdSettings } from 'react-icons/md';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import TagsInput from 'react-tagsinput';
+
 import Classes from '../../api/classes';
 import { Workbooks } from '../../api/workbooks';
 import WorkbookViewer from './WorkbookViewer';
@@ -288,7 +289,13 @@ class WorkbooksDirectories extends Component {
                     // eslint-disable-next-line react/destructuring-assignment
                     value={this.state.tempTitle}
                     ref={(e) => { this.title = e; }}
-                    style={{ width: '24rem', padding: '0.8rem', marginTop: '0.8rem' }}
+                    style={{
+                      width: '24rem',
+                      padding: '0.6rem',
+                      marginTop: '0.8rem',
+                      fontSize: '1.8rem',
+                      border: '1px solid blue',
+                    }}
                     onChange={() => {
                       this.setState({
                         tempTitle: this.title.value,
@@ -300,10 +307,11 @@ class WorkbooksDirectories extends Component {
                 onClick={this.editTitle}
                 style={{ marginLeft: '2rem' }}
               >
-                {editable ? 'Submit' : 'Edit title'}
+                {editable ? 'Submit' : <FaPencilAlt /> }
 
               </Button>
               <Button
+                color="blue"
                 style={{ marginLeft: '2rem' }}
                 onClick={
                   () => this.openClassModal(selectedWorkbookId, title)
