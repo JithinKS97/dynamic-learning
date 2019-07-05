@@ -1113,8 +1113,9 @@ export class CreateWorkbook extends React.Component {
                   Reset workbook
                 </Menu.Item>
 
-                <Menu.Item 
-                  className="lprightbutton">
+                <Menu.Item
+                  className="lprightbutton"
+                >
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div>
                       <Button
