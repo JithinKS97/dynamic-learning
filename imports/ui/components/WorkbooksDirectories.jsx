@@ -45,6 +45,7 @@ class WorkbooksDirectories extends Component {
       tags: [],
       redirectToWorkbook: false,
       classes: [],
+      tempTitle: '',
     };
   }
 
@@ -109,10 +110,9 @@ class WorkbooksDirectories extends Component {
   }
 
   editTitle = () => {
-    const { editable, selectedWorkbookId } = this.state;
-    if (!this.title && editable === true) {
-      return;
-    }
+    const {
+      editable, selectedWorkbookId, node: { title }, tempTitle,
+    } = this.state;
 
     if (editable === true) {
       if (!this.title.value) {
@@ -121,14 +121,22 @@ class WorkbooksDirectories extends Component {
         return;
       }
 
-      Meteor.call('workbooks.updateTitle', selectedWorkbookId, this.title.value);
+      Meteor.call('workbooks.updateTitle', selectedWorkbookId, tempTitle || title);
 
       this.setState({
         editable: false,
-        title: this.title.value,
+        title: tempTitle || title,
+      }, () => {
+        // eslint-disable-next-line no-shadow
+        const { node, title } = this.state;
+        const tempNode = node;
+        tempNode.title = title;
+        this.setState({
+          node: tempNode,
+        });
       });
     } else {
-      this.setState({ editable: true });
+      this.setState({ editable: true, tempTitle: title });
     }
   }
 
@@ -277,11 +285,24 @@ class WorkbooksDirectories extends Component {
               {editable
                 ? (
                   <input
+                    // eslint-disable-next-line react/destructuring-assignment
+                    value={this.state.tempTitle}
                     ref={(e) => { this.title = e; }}
                     style={{ width: '24rem', padding: '0.8rem' }}
+                    onChange={() => {
+                      this.setState({
+                        tempTitle: this.title.value,
+                      });
+                    }}
                   />
                 ) : null}
-              <Button onClick={this.editTitle} style={{ marginLeft: '2rem' }}>{editable ? 'Submit' : 'Edit title'}</Button>
+              <Button
+                onClick={this.editTitle}
+                style={{ marginLeft: '2rem' }}
+              >
+                {editable ? 'Submit' : 'Edit title'}
+
+              </Button>
               <Button
                 style={{ marginLeft: '2rem' }}
                 onClick={
@@ -359,10 +380,12 @@ class WorkbooksDirectories extends Component {
                 <button
                   onClick={() => {
                     this.setState({
+
                       selectedWorkbookId: theNode._id,
                     }, () => {
                       this.setState({
                         redirectToWorkbook: true,
+                        tempTitle: theNode.title,
                       });
                     });
                   }}
