@@ -288,7 +288,7 @@ class WorkbooksDirectories extends Component {
                     // eslint-disable-next-line react/destructuring-assignment
                     value={this.state.tempTitle}
                     ref={(e) => { this.title = e; }}
-                    style={{ width: '24rem', padding: '0.8rem' }}
+                    style={{ width: '24rem', padding: '0.8rem', marginTop: '0.8rem' }}
                     onChange={() => {
                       this.setState({
                         tempTitle: this.title.value,
