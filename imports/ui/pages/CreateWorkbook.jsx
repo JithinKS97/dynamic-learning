@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-danger */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-control-regex */
@@ -895,6 +897,11 @@ export class CreateWorkbook extends React.Component {
     }
 
     if (redirectToDashboard) {
+      if (this.props.location.state) {
+        if (this.props.location.state.from === 'teacherclasses') {
+          return <Redirect to="/dashboard/classes" />;
+        }
+      }
       return <Redirect to="/dashboard/workbooks" />;
     }
 
