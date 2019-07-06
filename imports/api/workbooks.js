@@ -20,7 +20,6 @@ export const WorkbooksIndex = new Index({
         options,
         aggregation,
       );
-
       // modify the selector to only match documents
       selector.isPublic = true;
       selector.isFile = true;
