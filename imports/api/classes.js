@@ -33,8 +33,12 @@ Meteor.methods({
     Classes.update(
       { classcode },
       { $push: { roster: studentname } },
+      (err) => {
+        if (!err) {
+          Meteor.call('users.addClass', studentname, classcode);
+        }
+      },
     );
-    Meteor.call('users.addClass', studentname, classcode);
   },
 
   'classes.addlesson': function(classcode, lessonid) {
@@ -56,10 +60,13 @@ Meteor.methods({
     );
   },
   'classes.remove'(cl) {
-    Classes.remove({ classcode: cl.classcode });
-    Meteor.call('users.deleteClass', cl.instructor, cl.classcode);
-    cl.roster.map((r) => {
-      Meteor.call('users.deleteClass', r, cl.classcode);
+    Classes.remove({ classcode: cl.classcode }, (err) => {
+      if (!err) {
+        Meteor.call('users.deleteClass', cl.instructor, cl.classcode);
+        cl.roster.map((r) => {
+          Meteor.call('users.deleteClass', r, cl.classcode);
+        });
+      }
     });
   },
 });
