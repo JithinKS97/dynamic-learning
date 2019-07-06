@@ -63,8 +63,8 @@ export default class StudentClasses extends React.Component {
     const { classes, user } = this.state;
     const foundclass = Classes.findOne({ classcode: this.classcode.value.trim() });
     if (foundclass && !(classes.includes(foundclass.classcode))) {
-      this.addStudent(this.classcode.value, user);
-      classes.push(this.classcode.value);
+      this.addStudent(this.classcode.value.trim(), user);
+      classes.push(this.classcode.value.trim());
       this.classcode.value = '';
     }
   }
@@ -87,7 +87,7 @@ export default class StudentClasses extends React.Component {
     if (clickedclass) {
       const classObject = Classes.findOne({ classcode: clickedclass });
       if (classObject) {
-        return classObject.roster.map(
+        classObject.roster.map(
           student => classmates.push(student),
         );
       }
