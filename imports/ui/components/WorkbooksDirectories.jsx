@@ -14,6 +14,7 @@ import {
   Checkbox,
   Dimmer,
   Loader,
+  Card,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { FaTrash, FaEdit, FaPencilAlt } from 'react-icons/fa';
@@ -211,6 +212,17 @@ class WorkbooksDirectories extends Component {
       return <Redirect to={`/createworkbook/${selectedWorkbookId}`} />;
     }
 
+    const addOrRemove = (classcode, lessonplanId) => {
+      const classObject = Classes.findOne({ classcode });
+      if (classObject) {
+        if (classObject.lessons.includes(lessonplanId)) {
+          return 'Remove';
+        }
+
+        return 'Add';
+      }
+    };
+
     return (
       <div>
         <Dimmer inverted active={!workbooksExists}>
@@ -317,7 +329,7 @@ class WorkbooksDirectories extends Component {
                   () => this.openClassModal(selectedWorkbookId, title)
                   }
               >
-                Add to class
+                Manage classes
               </Button>
               <br />
               <Checkbox
@@ -457,22 +469,42 @@ class WorkbooksDirectories extends Component {
           <Modal.Content>
             <Modal.Description>
               {classes.map(c => (
-                <div>
-                  <Button
-                    style={{ marginBottom: '0.5rem' }}
-                    onClick={() => {
-                      Meteor.call('classes.addlesson', c, addToClassId);
-                      this.setState({ classmodal: false });
-                    }}
-                  >
-                    {
-                      Classes
-                        .findOne({ classcode: c })
-                        ? Classes.findOne({ classcode: c }).name
-                        : null
-                    }
-                  </Button>
-                </div>
+                <Card style={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+                >
+                  <Card.Content>
+                    <Card.Header>
+                      {
+                        Classes
+                          .findOne({ classcode: c })
+                          ? Classes.findOne({ classcode: c }).name
+                          : null
+                      }
+                    </Card.Header>
+                  </Card.Content>
+                  <Card.Content>
+                    <Button
+                      style={{ float: 'right' }}
+                      onClick={() => {
+                        if (addOrRemove(c, addToClassId) === 'Add') {
+                          Meteor.call('classes.addlesson', c, addToClassId, () => {
+                            alert('Added to class');
+                          });
+                        } else {
+                          Meteor.call('classes.removeLesson', c, addToClassId, () => {
+                            alert('Removed from class');
+                          });
+                        }
+                      }}
+                    >
+                      {addOrRemove(c, addToClassId)}
+                    </Button>
+                  </Card.Content>
+                </Card>
               ))}
             </Modal.Description>
           </Modal.Content>

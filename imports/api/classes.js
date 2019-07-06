@@ -45,6 +45,15 @@ Meteor.methods({
       { $push: { lessons: lessonid } },
     );
   },
+  'classes.removeLesson': function(classcode, lessonid) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+    Classes.update(
+      { classcode, lessons: { $in: [lessonid] } },
+      { $pull: { lessons: lessonid } },
+    );
+  },
   // 'classes.remove'() {
   //     return Classes.remove({});
   // }
