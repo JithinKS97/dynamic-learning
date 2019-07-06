@@ -226,12 +226,16 @@ class WorkbooksDirectories extends Component {
     };
 
     const shouldDisplayManageClass = () => {
-      if (Meteor.user()) {
-        if (Meteor.user().profile.accountType === 'Teacher') {
-          return true;
+      try {
+        if (Meteor.user()) {
+          if (Meteor.user().profile.accountType === 'Teacher') {
+            return true;
+          }
         }
+        return false;
+      } catch (e) {
+        return false;
       }
-      return false;
     };
 
     return (
