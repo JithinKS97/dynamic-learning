@@ -474,7 +474,7 @@ class WorkbooksDirectories extends Component {
           size="tiny"
         >
           <Modal.Header>
-            Add/remove workbook from class
+            Add workbook
             {' '}
             {title}
             {' '}
