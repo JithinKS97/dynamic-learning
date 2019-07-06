@@ -146,7 +146,7 @@ export default class StudentClasses extends React.Component {
           size="tiny"
         >
           <Modal.Header>
-            Other students in your class
+            Students in your class
             <Button className="close-button" onClick={() => this.handleClose()}>
               X
             </Button>
