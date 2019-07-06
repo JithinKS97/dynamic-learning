@@ -61,10 +61,11 @@ export default class StudentClasses extends React.Component {
 
   addClass = () => {
     const { classes, user } = this.state;
-    const foundclass = Classes.findOne({ classcode: this.classcode.value });
+    const foundclass = Classes.findOne({ classcode: this.classcode.value.trim() });
     if (foundclass && !(classes.includes(foundclass.classcode))) {
       this.addStudent(this.classcode.value, user);
       classes.push(this.classcode.value);
+      this.classcode.value = '';
     }
   }
 
@@ -84,9 +85,12 @@ export default class StudentClasses extends React.Component {
   classmatelist = (clickedclass) => {
     const classmates = [];
     if (clickedclass) {
-      Classes.findOne({ classcode: clickedclass }).roster.map(
-        student => classmates.push(student),
-      );
+      const classObject = Classes.findOne({ classcode: clickedclass });
+      if (classObject) {
+        return classObject.roster.map(
+          student => classmates.push(student),
+        );
+      }
     }
     return classmates;
   }
@@ -104,28 +108,37 @@ export default class StudentClasses extends React.Component {
         <div style={{ paddingTop: '1.2rem' }}>
           <b> Your current classes </b>
         </div>
-        {user !== '' && this.getClasses().map(cl => (
-          <div>
-            <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
-              {' '}
-              {`${cl.name}: ${cl.classcode}`}
-              {' '}
-            </div>
-            <div style={{ paddingLeft: '1rem' }}>
-              {Classes.findOne({ classcode: cl.classcode }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
-                <div>
+        {user !== '' && this.getClasses().map((cl) => {
+          if (cl) {
+            return (
+              <div>
+                <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
                   {' '}
-                  <Link to={`/createworkbook/${lesson}`}>
-                    {' '}
-                    {Meteor.user() && Workbooks.findOne({ _id: lesson }) && Workbooks.findOne({ _id: lesson }).title}
-                    {' '}
-                  </Link>
+                  {`${cl.name}: ${cl.classcode}`}
                   {' '}
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
+                <div style={{ paddingLeft: '1rem' }}>
+                  {Classes
+                    .findOne({ classcode: cl.classcode })
+                    .lessons && Classes
+                    .findOne({ classcode: cl.classcode }).lessons.map(lesson => (
+                      <div>
+                        {' '}
+                        <Link to={`/createworkbook/${lesson}`}>
+                          {' '}
+                          {Meteor.user() && Workbooks
+                            .findOne({ _id: lesson }) && Workbooks
+                            .findOne({ _id: lesson }).title}
+                          {' '}
+                        </Link>
+                        {' '}
+                      </div>
+                    ))}
+                </div>
+              </div>
+            );
+          }
+        })}
 
         <Modal
           open={modalOpen}

@@ -61,6 +61,7 @@ export default class TeacherClasses extends React.Component {
       const code = this.randomClassCode();
       classes.push(code);
       Meteor.call('classes.insert', code, this.classname.value, user);
+      this.classname.value = '';
     }
   }
 
@@ -93,9 +94,12 @@ export default class TeacherClasses extends React.Component {
   classmatelist = (clickedclass) => {
     const classmates = [];
     if (clickedclass) {
-      Classes.findOne({ classcode: clickedclass }).roster.map(
-        student => classmates.push(student),
-      );
+      const classObject = Classes.findOne({ classcode: clickedclass });
+      if (classObject) {
+        return classObject.roster.map(
+          student => classmates.push(student),
+        );
+      }
     }
     return classmates;
   }
@@ -113,28 +117,48 @@ export default class TeacherClasses extends React.Component {
         <div style={{ marginTop: '1.2rem' }}>
           <b> Your current classes </b>
         </div>
-        {user !== '' && this.getClasses().map(cl => (
-          <div>
-            <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
-              {' '}
-              {`${cl.name}: ${cl.classcode}`}
-              {' '}
-            </div>
-            <div style={{ paddingLeft: '1rem' }}>
-              {Classes.findOne({ classcode: cl.classcode }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
-                <div>
-                  {' '}
-                  <Link to={`/createworkbook/${lesson}`}>
+        {user !== '' && this.getClasses().map((cl) => {
+          if (cl) {
+            return (
+              <div>
+                <div style={{ display: 'flex', flexDirection: 'row', marginTop: '0.4rem' }}>
+                  <div onClick={() => this.handleOpen(cl.classcode)}>
                     {' '}
-                    {Meteor.user() && Workbooks.findOne({ _id: lesson }) && Workbooks.findOne({ _id: lesson }).title}
+                    {`${cl.name}: ${cl.classcode}`}
                     {' '}
-                  </Link>
-                  {' '}
+                  </div>
+                  <a
+                    onClick={() => {
+                      if (confirm('Are you sure you want to remove the class?')) {
+                        Meteor.call('classes.remove', cl);
+                      }
+                    }}
+                    style={{ marginLeft: '0.4rem', cursor: 'pointer' }}
+                  >
+                    X
+                  </a>
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
+                <div style={{ paddingLeft: '1rem' }}>
+                  {Classes.findOne({
+                    classcode: cl.classcode,
+                  }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
+                    <div>
+                      {' '}
+                      <Link to={`/createworkbook/${lesson}`}>
+                        {' '}
+                        {Meteor.user() && Workbooks
+                          .findOne({ _id: lesson }) && Workbooks
+                          .findOne({ _id: lesson }).title}
+                        {' '}
+                      </Link>
+                      {' '}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          }
+        })}
 
         <Modal
           open={modalOpen}

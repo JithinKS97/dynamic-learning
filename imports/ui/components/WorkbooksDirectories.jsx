@@ -14,6 +14,7 @@ import {
   Checkbox,
   Dimmer,
   Loader,
+  Card,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { FaTrash, FaEdit, FaPencilAlt } from 'react-icons/fa';
@@ -164,6 +165,7 @@ class WorkbooksDirectories extends Component {
       classes,
     } = this.state;
     // eslint-disable-next-line react/prop-types
+    console.log(classes);
     const { workbooksExists, treeData } = this.props;
     const canDrop = ({ node: theNode, nextParent }) => {
       /* To prevent a file to be added as a child of a file
@@ -210,6 +212,19 @@ class WorkbooksDirectories extends Component {
     if (redirectToWorkbook === true) {
       return <Redirect to={`/createworkbook/${selectedWorkbookId}`} />;
     }
+
+    // To check if workbook is already added to the class
+    // If yes, 'Remove' is returned, else 'Add' is returned
+    const addOrRemove = (classcode, workbookId) => {
+      const classObject = Classes.findOne({ classcode });
+      if (classObject) {
+        if (classObject.lessons.includes(workbookId)) {
+          return 'Remove';
+        }
+
+        return 'Add';
+      }
+    };
 
     return (
       <div>
@@ -317,7 +332,7 @@ class WorkbooksDirectories extends Component {
                   () => this.openClassModal(selectedWorkbookId, title)
                   }
               >
-                Add to class
+                Manage classes
               </Button>
               <br />
               <Checkbox
@@ -445,7 +460,7 @@ class WorkbooksDirectories extends Component {
           size="tiny"
         >
           <Modal.Header>
-            Select a class to add
+            Add/remove workbook from class
             {' '}
             {title}
             {' '}
@@ -457,22 +472,50 @@ class WorkbooksDirectories extends Component {
           <Modal.Content>
             <Modal.Description>
               {classes.map(c => (
-                <div>
-                  <Button
-                    style={{ marginBottom: '0.5rem' }}
-                    onClick={() => {
-                      Meteor.call('classes.addlesson', c, addToClassId);
-                      this.setState({ classmodal: false });
-                    }}
-                  >
-                    {
-                      Classes
-                        .findOne({ classcode: c })
-                        ? Classes.findOne({ classcode: c }).name
-                        : null
-                    }
-                  </Button>
-                </div>
+                <Card style={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  margin: 0,
+                }}
+                >
+                  <Card.Content>
+                    <Card.Header>
+                      {
+                        Classes
+                          .findOne({ classcode: c })
+                          ? Classes.findOne({ classcode: c }).name
+                          : null
+                      }
+                    </Card.Header>
+                  </Card.Content>
+                  <Card.Content>
+                    <Button
+                      ref={(e) => { this.addButton = e; }}
+                      style={{ float: 'right' }}
+                      onClick={() => {
+                        if (addOrRemove(c, addToClassId) === 'Add') {
+                          Meteor.call('classes.addlesson', c, addToClassId, (err) => {
+                            if (!err) {
+                              alert('Added to class');
+                              this.forceUpdate();
+                            }
+                          });
+                        } else {
+                          Meteor.call('classes.removeLesson', c, addToClassId, (err) => {
+                            if (!err) {
+                              alert('Removed from class');
+                              this.forceUpdate();
+                            }
+                          });
+                        }
+                      }}
+                    >
+                      {addOrRemove(c, addToClassId)}
+                    </Button>
+                  </Card.Content>
+                </Card>
               ))}
             </Modal.Description>
           </Modal.Content>
