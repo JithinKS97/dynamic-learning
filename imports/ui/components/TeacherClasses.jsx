@@ -94,9 +94,12 @@ export default class TeacherClasses extends React.Component {
   classmatelist = (clickedclass) => {
     const classmates = [];
     if (clickedclass) {
-      Classes.findOne({ classcode: clickedclass }).roster.map(
-        student => classmates.push(student),
-      );
+      const classObject = Classes.findOne({ classcode: clickedclass });
+      if (classObject) {
+        return classObject.roster.map(
+          student => classmates.push(student),
+        );
+      }
     }
     return classmates;
   }
