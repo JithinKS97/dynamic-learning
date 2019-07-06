@@ -165,7 +165,6 @@ class WorkbooksDirectories extends Component {
       classes,
     } = this.state;
     // eslint-disable-next-line react/prop-types
-    console.log(classes);
     const { workbooksExists, treeData } = this.props;
     const canDrop = ({ node: theNode, nextParent }) => {
       /* To prevent a file to be added as a child of a file
@@ -224,6 +223,15 @@ class WorkbooksDirectories extends Component {
 
         return 'Add';
       }
+    };
+
+    const shouldDisplayManageClass = () => {
+      if (Meteor.user()) {
+        if (Meteor.user().profile.accountType === 'Teacher') {
+          return true;
+        }
+      }
+      return false;
     };
 
     return (
@@ -325,15 +333,17 @@ class WorkbooksDirectories extends Component {
                 {editable ? 'Submit' : <FaPencilAlt /> }
 
               </Button>
-              <Button
-                color="blue"
-                style={{ marginLeft: '2rem' }}
-                onClick={
+              {shouldDisplayManageClass() ? (
+                <Button
+                  color="blue"
+                  style={{ marginLeft: '2rem' }}
+                  onClick={
                   () => this.openClassModal(selectedWorkbookId, title)
                   }
-              >
+                >
                 Manage classes
-              </Button>
+                </Button>
+              ) : null}
               <br />
               <Checkbox
                 style={{ margin: '0.8rem 0' }}
