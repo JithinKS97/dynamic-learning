@@ -476,6 +476,7 @@ class WorkbooksDirectories extends Component {
                   display: 'flex',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  margin: 0,
                 }}
                 >
                   <Card.Content>
@@ -490,15 +491,22 @@ class WorkbooksDirectories extends Component {
                   </Card.Content>
                   <Card.Content>
                     <Button
+                      ref={(e) => { this.addButton = e; }}
                       style={{ float: 'right' }}
                       onClick={() => {
                         if (addOrRemove(c, addToClassId) === 'Add') {
-                          Meteor.call('classes.addlesson', c, addToClassId, () => {
-                            alert('Added to class');
+                          Meteor.call('classes.addlesson', c, addToClassId, (err) => {
+                            if (!err) {
+                              alert('Added to class');
+                              this.forceUpdate();
+                            }
                           });
                         } else {
-                          Meteor.call('classes.removeLesson', c, addToClassId, () => {
-                            alert('Removed from class');
+                          Meteor.call('classes.removeLesson', c, addToClassId, (err) => {
+                            if (!err) {
+                              alert('Removed from class');
+                              this.forceUpdate();
+                            }
                           });
                         }
                       }}
