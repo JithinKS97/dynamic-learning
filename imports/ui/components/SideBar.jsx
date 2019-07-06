@@ -21,9 +21,8 @@ export default class SideBar extends React.Component {
       if (Meteor.user()) {
         this.setState({
           user: Meteor.user().username,
-        })
-        ; 
-}
+        });
+      }
       if (Meteor.user() && Meteor.user().services) {
         if (Meteor.user().services.github) {
           Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.github.username);
@@ -50,6 +49,7 @@ export default class SideBar extends React.Component {
             <Link to="uploadsim"><Menu.Item link>Manage simulations</Menu.Item></Link>
             <Link to="requests"><Menu.Item link>Discussion forums</Menu.Item></Link>
             <Link to="watchlesson"><Menu.Item link>Watch lesson</Menu.Item></Link>
+            <Link to="assessments"><Menu.Item link>Assessments</Menu.Item></Link>
           </Menu>
 
         </ul>

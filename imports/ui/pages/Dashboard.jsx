@@ -25,6 +25,8 @@ import 'semantic-ui-css/semantic.min.css';
 import { generateSrc } from '../../functions/index.js';
 import Profile from '../components/Profile';
 import Classes from '../components/Classes';
+import Assessments from '../components/Assessments';
+
 /*
     This is the Component which renders the dashboard of the application.
  */
@@ -144,7 +146,7 @@ export default class Dashboard extends React.Component {
       case 'requests':
         return (
           <div>
-            <Header style={{ marginLeft: '2.4rem' }}>Requests</Header>
+            <Header>Requests</Header>
             <RequestsList />
           </div>
         );
@@ -186,6 +188,13 @@ export default class Dashboard extends React.Component {
           <div>
             <Header>Classes</Header>
             <Classes />
+          </div>
+        );
+      case 'assessments':
+        return (
+          <div>
+            <Header> Assessments </Header>
+            <Assessments />
           </div>
         );
       default:

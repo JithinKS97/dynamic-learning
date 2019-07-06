@@ -17,7 +17,6 @@ import Request from '../ui/pages/Request';
 import SandBox from '../ui/pages/SandBox';
 import Dashboard from '../ui/pages/Dashboard';
 
-
 export const history = createBrowserHistory();
 const publicPages = ['/', '/signup', '/createworkbook', '/login', '/explore'];
 const authenticatedPages = [
@@ -28,7 +27,8 @@ const authenticatedPages = [
   '/dashboard/watchlesson',
   '/lesson',
   '/dashboard/profile',
-  '/dashboard/classes'
+  '/dashboard/classes',
+  '/dashboard/assessments',
 ];
 
 export const onAuthChange = (isAuthenticated) => {
