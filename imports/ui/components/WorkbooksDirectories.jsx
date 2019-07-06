@@ -212,10 +212,12 @@ class WorkbooksDirectories extends Component {
       return <Redirect to={`/createworkbook/${selectedWorkbookId}`} />;
     }
 
-    const addOrRemove = (classcode, lessonplanId) => {
+    // To check if workbook is already added to the class
+    // If yes, 'Remove' is returned, else 'Add' is returned
+    const addOrRemove = (classcode, workbookId) => {
       const classObject = Classes.findOne({ classcode });
       if (classObject) {
-        if (classObject.lessons.includes(lessonplanId)) {
+        if (classObject.lessons.includes(workbookId)) {
           return 'Remove';
         }
 
