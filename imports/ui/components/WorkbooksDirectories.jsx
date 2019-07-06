@@ -165,6 +165,7 @@ class WorkbooksDirectories extends Component {
       classes,
     } = this.state;
     // eslint-disable-next-line react/prop-types
+    console.log(classes);
     const { workbooksExists, treeData } = this.props;
     const canDrop = ({ node: theNode, nextParent }) => {
       /* To prevent a file to be added as a child of a file
@@ -459,7 +460,7 @@ class WorkbooksDirectories extends Component {
           size="tiny"
         >
           <Modal.Header>
-            Select a class to add
+            Add/remove workbook from class
             {' '}
             {title}
             {' '}

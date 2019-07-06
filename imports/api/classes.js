@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable meteor/audit-argument-checks */
 /* eslint-disable func-names */
@@ -22,7 +23,7 @@ Meteor.methods({
       roster: [],
       lessons: [],
     });
-    Meteor.call('addClass', instructor, classcode);
+    Meteor.call('users.addClass', instructor, classcode);
   },
 
   'classes.addstudent': function (classcode, studentname) {
@@ -54,10 +55,10 @@ Meteor.methods({
       { $pull: { lessons: lessonid } },
     );
   },
-  // 'classes.remove'() {
-  //     return Classes.remove({});
-  // }
-
+  'classes.remove'(cl) {
+    Classes.remove({ classcode: cl.classcode });
+    Meteor.call('users.deleteClass', cl.instructor, cl.classcode);
+  },
 });
 
 export default Classes;
