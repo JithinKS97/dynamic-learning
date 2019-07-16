@@ -151,7 +151,7 @@ export default class MultipleChoice extends React.Component {
                     size="20"
                     onClick={() => {
                       const confirmation = confirm(
-                        'Are you sure you want to delete the textbox?',
+                        'Are you sure you want to delete the question?',
                       );
 
                       if (!confirmation) return;
