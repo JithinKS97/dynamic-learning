@@ -24,6 +24,7 @@ import DOMPurify from 'dompurify';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { MdUndo, MdRedo } from 'react-icons/md';
 import TextBoxes from '../components/TextBoxes';
+import MCQs from '../components/MCQs'
 import AddSim from '../components/AddSim';
 import SlidesList from '../components/List';
 import SimsList from '../components/SimsList';
@@ -301,6 +302,7 @@ export class CreateWorkbook extends React.Component {
       iframes: [],
       pageCount: 0,
       textboxes: [],
+      questions: [],
     };
 
     slides.push(newSlide);
@@ -502,6 +504,15 @@ export class CreateWorkbook extends React.Component {
     this.updateSlides(updatedSlides);
   }
 
+  deleteQuestion = (index) => {
+    const { slides, curSlide } = this.state; 
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { questions } = updatedSlides[curSlide];
+    questions.splice(index, 1);
+    updatedSlides[curSlide].questions = questions;
+    this.updateSlides(updatedSlides);
+  }
+
   deleteTextBox = (index) => {
     const { slides } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
@@ -685,6 +696,26 @@ export class CreateWorkbook extends React.Component {
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     updatedSlides[curSlide].pageCount = this.pageCount;
+    this.updateSlides(updatedSlides);
+  }
+
+  addQuestion = () => {
+    const { curSlide, slides } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+
+    if (!updatedSlides[curSlide].questions) {
+      updatedSlides[curSlide.questions] = [];
+    }
+
+    const newQuestion = {
+      content: '',
+      a: '',
+      b: '',
+      c: '',
+      d: '',
+    }
+
+    updatedSlides[curSlide].questions.push(newQuestion);
     this.updateSlides(updatedSlides);
   }
 
@@ -999,6 +1030,14 @@ export class CreateWorkbook extends React.Component {
                   setCopiedState={this.setCopiedState}
                 />
 
+                <MCQs
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteQuestion={this.deleteQuestion}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                />
                 <SimsList
                   slides={slides}
                   curSlide={curSlide}
@@ -1208,7 +1247,15 @@ export class CreateWorkbook extends React.Component {
                 >
                   Add textbox
                 </Menu.Item>
-
+                
+                <Menu.Item
+                  className="lprightbutton"
+                  onClick={() => {
+                    this.addQuestion();
+                  }}
+                >
+                  Add Question
+                </Menu.Item>
                 {this.checkDescExist() ? (
                   !!Meteor.userId()
                   && userId === Meteor.userId()

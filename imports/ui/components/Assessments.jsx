@@ -53,9 +53,12 @@ export default class Assessments extends React.Component {
         <div style={{ textAlign: 'left' }}>
           {!creating && <Button onClick={() => this.makeTitle()}> Create new Assessment </Button>}
           {!creating && tests && tests.map(test => <div> {test.title} </div>)}
-          <Modal open={maketitle}>
+          <Modal open={maketitle} onClose={() => this.setState({ maketitle: false })}>
             <Modal.Header>
               Enter a title for your assessment.
+              <Button className="close-button" onClick={() => this.setState({ maketitle: false })}>
+                X
+              </Button>
             </Modal.Header>
             <Modal.Description style={{ padding: '0.8rem' }}>
               <input ref={e => this.title = e} style={{ marginTop: '1rem', marginBottom: '1rem' }} />
