@@ -6,6 +6,22 @@ import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
 
 export default class MultipleChoice extends React.Component {
+
+  handleCopy(slides, curSlide, index) {
+    const copiedText = $.extend(true, {}, slides[curSlide].textboxes[index]);
+
+    copiedText.x = 50;
+    copiedText.y = 50;
+
+    const { setCopiedState } = this.props;
+
+    setCopiedState(true);
+
+    alert('text copied');
+
+    Session.set('copiedObject', { type: 'text', copiedObject: copiedText });
+  }
+  
   render() {
     const {
       curSlide,
@@ -185,53 +201,45 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px' }}> A </div>
-            <div
-              style={{ gridColumnStart: 2 }}
-              contentEditable
-              ref={(e) => { updatedSlides[curSlide].questions[index].a = e ? e.value : ''; }}
-            >
-              Answer Choice A
-            </div>
+            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> A </div>
+            <textarea
+              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].a = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              value={updatedSlides[curSlide].questions[index].a ? updatedSlides[curSlide].questions[index].a : ''}
+            />
           </div>
           <br />
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px' }}> B </div>
-            <div
-              style={{ gridColumnStart: 2 }}
-              contentEditable
-              onChange={(e) => { updatedSlides[curSlide].questions[index].b = e.target.value; }}
-            >
-              Answer Choice B
-            </div>
+            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> B </div>
+            <textarea
+              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].b = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              value={updatedSlides[curSlide].questions[index].b ? updatedSlides[curSlide].questions[index].b : ''}
+            />
           </div>
           <br />
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px' }}> C </div>
-            <div
-              style={{ gridColumnStart: 2 }}
-              contentEditable
-              onChange={(e) => { updatedSlides[curSlide].questions[index].c = e.target.value; }}
-            >
-              Answer Choice C
-            </div>
+            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> C </div>
+            <textarea
+              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].c = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              value={updatedSlides[curSlide].questions[index].c ? updatedSlides[curSlide].questions[index].c : ''}
+            />
           </div>
           <br />
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px' }}> D </div>
-            <div
-              style={{ gridColumnStart: 2 }}
-              contentEditable
-              onChange={(e) => { updatedSlides[curSlide].questions[index].d = e.target.value; }}
-            >
-              Answer Choice D
-            </div>
+            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> D </div>
+            <textarea
+              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].d = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              value={updatedSlides[curSlide].questions[index].d ? updatedSlides[curSlide].questions[index].d : ''}
+            />
           </div>
         </div>
       </Rnd>
