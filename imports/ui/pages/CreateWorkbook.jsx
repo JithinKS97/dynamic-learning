@@ -713,7 +713,8 @@ export class CreateWorkbook extends React.Component {
       b: '',
       c: '',
       d: '',
-    }
+      responses: {},
+    };
 
     updatedSlides[curSlide].questions.push(newQuestion);
     this.updateSlides(updatedSlides);
@@ -1037,6 +1038,7 @@ export class CreateWorkbook extends React.Component {
                   deleteQuestion={this.deleteQuestion}
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
+                  userId={userId}
                 />
                 <SimsList
                   slides={slides}

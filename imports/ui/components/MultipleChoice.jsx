@@ -4,8 +4,37 @@ import Rnd from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
+import { Tracker } from 'meteor/tracker';
 
 export default class MultipleChoice extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      acolor: '',
+      bcolor: '',
+      ccolor: '',
+      dcolor: '',
+    };
+  }
+
+  componentDidMount() {
+    Tracker.autorun(() => {
+      const {
+        curSlide,
+        slides,
+        index,
+        userId
+      } = this.props;
+      const updatedSlides = JSON.parse(JSON.stringify(slides));
+      this.clicked = updatedSlides[curSlide].questions[index].responses[userId] || '';
+      this.setState({
+        acolor: this.clicked === 'a' ? 'red' : 'black',
+        bcolor: this.clicked === 'b' ? 'red' : 'black',
+        ccolor: this.clicked === 'c' ? 'red' : 'black',
+        dcolor: this.clicked === 'd' ? 'red' : 'black',
+      });
+    });
+  }
 
   handleCopy(slides, curSlide, index) {
     const copiedText = $.extend(true, {}, slides[curSlide].textboxes[index]);
@@ -21,7 +50,27 @@ export default class MultipleChoice extends React.Component {
 
     Session.set('copiedObject', { type: 'text', copiedObject: copiedText });
   }
-  
+
+  clickButton(option) {
+    const { 
+      userId,
+      slides,
+      curSlide,
+      updateSlides,
+      index
+    } = this.props;
+    const updatedSlides = JSON.parse(JSON.stringify(slides));
+    this.clicked = option;
+    this.setState({
+      acolor: this.clicked === 'a' ? 'red' : 'black',
+      bcolor: this.clicked === 'b' ? 'red' : 'black',
+      ccolor: this.clicked === 'c' ? 'red' : 'black',
+      dcolor: this.clicked === 'd' ? 'red' : 'black',
+    });
+    updatedSlides[curSlide].questions[index].responses[userId] = this.clicked;
+    updateSlides(updatedSlides);
+  }
+
   render() {
     const {
       curSlide,
@@ -30,6 +79,7 @@ export default class MultipleChoice extends React.Component {
       deleteQuestion,
       isPreview,
       slides,
+      userId,
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
 
@@ -201,10 +251,13 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> A </div>
+            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> A </div> }
+            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.acolor }} onClick={() => this.clickButton('a')}> A </div> }
             <textarea
-              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
-              onChange={(e) => { updatedSlides[curSlide].questions[index].a = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              style={{
+ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
+}}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].a = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].a ? updatedSlides[curSlide].questions[index].a : ''}
             />
           </div>
@@ -212,10 +265,13 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> B </div>
+            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> B </div> }
+            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.bcolor }} onClick={() => this.clickButton('b')}> B </div> }
             <textarea
-              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
-              onChange={(e) => { updatedSlides[curSlide].questions[index].b = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              style={{
+ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
+}}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].b = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].b ? updatedSlides[curSlide].questions[index].b : ''}
             />
           </div>
@@ -223,10 +279,13 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> C </div>
+            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> C </div>}
+            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.ccolor }} onClick={() => this.clickButton('c')}> C </div> }
             <textarea
-              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
-              onChange={(e) => { updatedSlides[curSlide].questions[index].c = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              style={{
+ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
+}}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].c = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].c ? updatedSlides[curSlide].questions[index].c : ''}
             />
           </div>
@@ -234,10 +293,13 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> D </div>
+            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> D </div>}
+            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.dcolor }} onClick={() => this.clickButton('d')}> D </div> }
             <textarea
-              style={{ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' }}
-              onChange={(e) => { updatedSlides[curSlide].questions[index].d = e ? e.target.value : ''; updateSlides(updatedSlides) }}
+              style={{
+ gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
+}}
+              onChange={(e) => { updatedSlides[curSlide].questions[index].d = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].d ? updatedSlides[curSlide].questions[index].d : ''}
             />
           </div>
