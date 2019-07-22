@@ -14,6 +14,7 @@ import ListWithoutDelete from './ListWithoutDelete';
 import DrawingBoardCmp from './DrawingBoardCmp';
 import { Workbooks } from '../../api/workbooks';
 import TextBoxes from './TextBoxes';
+import MCQs from './MCQs';
 
 
 /**
@@ -306,6 +307,13 @@ class WorkbookViewer extends Component {
                 <TextBoxes
                   isPreview
                   deleteTextBox={() => {}}
+                  slides={slides}
+                  curSlide={curSlide}
+                  saveChanges={this.saveChanges}
+                />
+                <MCQs 
+                  isPreview
+                  deleteQuestion={() => {}}
                   slides={slides}
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}

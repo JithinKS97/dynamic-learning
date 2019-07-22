@@ -5,6 +5,7 @@ import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
 import { Tracker } from 'meteor/tracker';
+import { Button, Modal } from 'semantic-ui-react';
 
 export default class MultipleChoice extends React.Component {
   constructor(props) {
@@ -23,7 +24,7 @@ export default class MultipleChoice extends React.Component {
         curSlide,
         slides,
         index,
-        userId
+        userId,
       } = this.props;
       const updatedSlides = JSON.parse(JSON.stringify(slides));
       this.clicked = updatedSlides[curSlide].questions[index].responses[userId] || '';
@@ -52,12 +53,12 @@ export default class MultipleChoice extends React.Component {
   }
 
   clickButton(option) {
-    const { 
+    const {
       userId,
       slides,
       curSlide,
       updateSlides,
-      index
+      index,
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
     this.clicked = option;
@@ -71,6 +72,24 @@ export default class MultipleChoice extends React.Component {
     updateSlides(updatedSlides);
   }
 
+  answers() {
+    const {
+      curSlide,
+      index,
+      slides
+    } = this.props;
+    const updatedSlides = JSON.parse(JSON.stringify(slides));
+    const { responses } = updatedSlides[curSlide].questions[index];
+    const keys = Object.keys(responses);
+    return keys.map(key => <div> {`${key}: ${responses[key]}`} </div>)
+  }
+
+  handleClose() {
+    this.setState({
+      modalOpen: false,
+    });
+  }
+
   render() {
     const {
       curSlide,
@@ -81,6 +100,9 @@ export default class MultipleChoice extends React.Component {
       slides,
       userId,
     } = this.props;
+    const {
+      modalOpen,
+    } = this.state;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
@@ -255,8 +277,8 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.acolor }} onClick={() => this.clickButton('a')}> A </div> }
             <textarea
               style={{
- gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
-}}
+                gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
+              }}
               onChange={(e) => { updatedSlides[curSlide].questions[index].a = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].a ? updatedSlides[curSlide].questions[index].a : ''}
             />
@@ -269,8 +291,8 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.bcolor }} onClick={() => this.clickButton('b')}> B </div> }
             <textarea
               style={{
- gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
-}}
+                gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
+              }}
               onChange={(e) => { updatedSlides[curSlide].questions[index].b = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].b ? updatedSlides[curSlide].questions[index].b : ''}
             />
@@ -283,8 +305,8 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.ccolor }} onClick={() => this.clickButton('c')}> C </div> }
             <textarea
               style={{
- gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
-}}
+                gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
+              }}
               onChange={(e) => { updatedSlides[curSlide].questions[index].c = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].c ? updatedSlides[curSlide].questions[index].c : ''}
             />
@@ -297,13 +319,34 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.dcolor }} onClick={() => this.clickButton('d')}> D </div> }
             <textarea
               style={{
- gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px' 
-}}
+                gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
+              }}
               onChange={(e) => { updatedSlides[curSlide].questions[index].d = e ? e.target.value : ''; updateSlides(updatedSlides); }}
               value={updatedSlides[curSlide].questions[index].d ? updatedSlides[curSlide].questions[index].d : ''}
             />
           </div>
+          { Meteor.userId() === userId && <Button style={{ marginTop: '15px' }} onClick={() => this.setState({ modalOpen: true })}> View Student Responses </Button> }
         </div>
+        <Modal
+          open={modalOpen}
+          onClose={() => this.handleClose()}
+          size="tiny"
+        >
+          <Modal.Header>
+            Answers to this question
+            <Button className="close-button" onClick={() => this.handleClose()}>
+              X
+            </Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Modal.Description>
+              { this.answers() }
+            </Modal.Description>
+
+          </Modal.Content>
+
+        </Modal>
       </Rnd>
     );
   }
