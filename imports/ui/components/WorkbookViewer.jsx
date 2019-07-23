@@ -7,6 +7,7 @@ import {
   Loader,
   Segment,
   Grid,
+  Button,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import SimsList from './SimsList';
@@ -311,7 +312,7 @@ class WorkbookViewer extends Component {
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}
                 />
-                <MCQs 
+                <MCQs
                   isPreview
                   deleteQuestion={() => {}}
                   slides={slides}
