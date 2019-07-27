@@ -37,6 +37,7 @@ class WorkbooksDirectories extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      folderNameModal: false,
       modalOpen: false,
       modal2Open: false,
       selectedWorkbookId: null,
@@ -48,6 +49,7 @@ class WorkbooksDirectories extends Component {
       redirectToWorkbook: false,
       classes: [],
       tempTitle: '',
+      selectedFolderId:'',
     };
   }
 
@@ -80,6 +82,8 @@ class WorkbooksDirectories extends Component {
   handle2Open = () => this.setState({ modal2Open: true });
 
   handle2Close = () => this.setState({ modal2Open: false });
+
+  folderNameModalClose = () => this.setState({ folderNameModal: false });
 
   addNewFolder = (e) => {
     e.preventDefault();
@@ -392,8 +396,44 @@ class WorkbooksDirectories extends Component {
                 </Button>
               </Form>
             </Modal.Description>
-          </Modal.Content>
+          </Modal.Content> 
         </Modal>
+
+
+        <Modal open={this.state.folderNameModal}
+        onClose={this.folderNameModalClose}
+        size="tiny">
+          
+           <Modal.Header>
+             Folder Details
+            <Button className="close-button" onClick={this.folderNameModalClose}>
+              &times;
+            </Button>
+          </Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+            <Form onSubmit={this.addNewWorkbook}>
+                <Form.Field>
+                  {/* eslint-disable-next-line */}
+                  <label>Name</label>
+                  {/* eslint-disable-next-line no-return-assign */}
+                  <input ref={e => this.folderRenameInput = e} placeholder="Name" />
+                </Form.Field>
+            
+                <Button onClick={() => {
+              Meteor.call('workbooks.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value)
+              this.setState({
+                folderNameModal: false
+              })
+            }}>Rename</Button>
+              </Form>
+            
+            
+            </Modal.Description>
+        
+            </Modal.Content>
+        </Modal>
+
         <div style={{ height: 400, padding: '1.6rem' }}>
           <SortableTree
             onVisibilityToggle={({ node: theNode, expanded }) => {
@@ -433,15 +473,25 @@ class WorkbooksDirectories extends Component {
                 </button>,
                 <button
                   onClick={() => {
-                    this.setState({
-                      node: theNode,
-                      selectedWorkbookId: theNode._id,
-                      title: theNode.title,
-                      isPublic: theNode.isPublic,
-                      tags: theNode.tags,
-                    });
+                    if(theNode.isFile) {
+                      this.setState({
+                        node: theNode,
+                        selectedWorkbookId: theNode._id,
+                        title: theNode.title,
+                        isPublic: theNode.isPublic,
+                        tags: theNode.tags,
+                      });
+                    } else {
+                      //console.log("He")
+                      this.setState({
+                        folderNameModal:true,
+                        selectedFolderId: theNode._id,
+                        //selectedWorkbookId: theNode._id
+                      })
+                    }
+       
                   }}
-                  style={{ display: theNode.isFile ? 'block' : 'none' }}
+   
                   className="icon__button"
                 >
                   <MdSettings size={17} color="black" />
