@@ -9,6 +9,8 @@ import 'semantic-ui-css/semantic.min.css';
 
 import { Session } from 'meteor/session';
 
+document.title = "Dynamic Learning";
+
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
