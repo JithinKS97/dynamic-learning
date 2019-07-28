@@ -110,6 +110,24 @@ class WorkbookViewer extends Component {
     });
   };
 
+  updateSlides = (updatedSlides) => {
+
+    this.setState(
+      {
+        slides: updatedSlides,
+      },
+      () => {
+        /**
+           * shouldNotLoad is true only when a sim is individually updated and saved
+           * Here, we need not load data to all the sims
+           * So if shouldNotLoad is true, we return without calling loadDatatoSketches
+           */
+
+        this.simsList.loadDataToSketches();
+      },
+    );
+  }
+
   setSizeOfPage = (pageCount) => {
     /**
      * This function sets the size of the canvas. By default the size of the page is
@@ -312,13 +330,14 @@ class WorkbookViewer extends Component {
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}
                 />
-                <MCQs
+                {/* <MCQs
                   isPreview
                   deleteQuestion={() => {}}
+                  updateSlides={this.updateSlides}
                   slides={slides}
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}
-                />
+                /> */}
                 <SimsList
                   navVisibility={false}
                   isRndRequired

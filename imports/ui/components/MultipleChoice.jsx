@@ -81,7 +81,7 @@ export default class MultipleChoice extends React.Component {
     const updatedSlides = JSON.parse(JSON.stringify(slides));
     const { responses } = updatedSlides[curSlide].questions[index];
     const keys = Object.keys(responses);
-    return keys.map(key => <div> {`${key}: ${responses[key]}`} </div>)
+    return keys.map(key => <div> {`${key}: ${responses[key]}`} </div>);
   }
 
   handleClose() {
@@ -276,6 +276,7 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> A </div> }
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.acolor }} onClick={() => this.clickButton('a')}> A </div> }
             <textarea
+              readOnly={Meteor.userId() !== userId}
               style={{
                 gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
               }}
@@ -290,6 +291,7 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> B </div> }
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.bcolor }} onClick={() => this.clickButton('b')}> B </div> }
             <textarea
+              readOnly={Meteor.userId() !== userId}
               style={{
                 gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
               }}
@@ -304,6 +306,7 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> C </div>}
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.ccolor }} onClick={() => this.clickButton('c')}> C </div> }
             <textarea
+              readOnly={Meteor.userId() !== userId}
               style={{
                 gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
               }}
@@ -318,6 +321,7 @@ export default class MultipleChoice extends React.Component {
             { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> D </div>}
             { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.dcolor }} onClick={() => this.clickButton('d')}> D </div> }
             <textarea
+              readOnly={Meteor.userId() !== userId}
               style={{
                 gridColumnStart: 2, backgroundColor: 'black', border: '1px solid #404040', color: 'white', resize: 'none', width: '345px',
               }}
