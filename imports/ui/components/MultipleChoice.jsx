@@ -176,6 +176,7 @@ export default class MultipleChoice extends React.Component {
                 ? updatedSlides[curSlide].questions[index].content
                 : ''
             }
+            readOnly={Meteor.userId() !== userId}
             onChange={(e) => {
               updatedSlides[curSlide].questions[index].content = e.target.value;
 

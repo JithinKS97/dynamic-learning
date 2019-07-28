@@ -12,6 +12,7 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 import SimsList from './SimsList';
 import ListWithoutDelete from './ListWithoutDelete';
+import List from './List';
 import DrawingBoardCmp from './DrawingBoardCmp';
 import { Workbooks } from '../../api/workbooks';
 import TextBoxes from './TextBoxes';
@@ -217,7 +218,7 @@ class WorkbookViewer extends Component {
     const { slides, curSlide } = this.state;
     if (theSlides === undefined) {
       this.setState({
-        theCurSlide,
+        curSlide: theCurSlide,
       }, () => {
         this.pageCount = slides[curSlide].pageCount || 0;
         this.setSizeOfPage(this.pageCount);
@@ -225,14 +226,14 @@ class WorkbookViewer extends Component {
       });
     } else if (theCurSlide === undefined) {
       this.setState({
-        theSlides,
+        slides: theSlides,
       }, () => {
         this.simsList.loadDataToSketches();
       });
     } else {
       this.setState({
-        theSlides,
-        theCurSlide,
+        slides: theSlides,
+        curSlide: theCurSlide,
       }, () => {
         this.setSizeOfPage(this.pageCount);
         this.simsList.loadDataToSketches();
@@ -330,14 +331,14 @@ class WorkbookViewer extends Component {
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}
                 />
-                {/* <MCQs
+                <MCQs
                   isPreview
                   deleteQuestion={() => {}}
                   updateSlides={this.updateSlides}
                   slides={slides}
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}
-                /> */}
+                />
                 <SimsList
                   navVisibility={false}
                   isRndRequired
