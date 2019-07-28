@@ -24,7 +24,7 @@ import DOMPurify from 'dompurify';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { MdUndo, MdRedo } from 'react-icons/md';
 import TextBoxes from '../components/TextBoxes';
-import MCQs from '../components/MCQs'
+import MCQs from '../components/MCQs';
 import AddSim from '../components/AddSim';
 import SlidesList from '../components/List';
 import SimsList from '../components/SimsList';
@@ -505,7 +505,7 @@ export class CreateWorkbook extends React.Component {
   }
 
   deleteQuestion = (index) => {
-    const { slides, curSlide } = this.state; 
+    const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     const { questions } = updatedSlides[curSlide];
     questions.splice(index, 1);
@@ -984,6 +984,41 @@ export class CreateWorkbook extends React.Component {
               width={2}
             >
               {saving ? <p>Saving...</p> : null}
+              {Meteor.userId() ? (
+                <Button
+                  className="lprightbutton"
+                  color="blue"
+                  onClick={() => {
+                    const workbook = Workbooks.findOne({
+                      _id,
+                    });
+
+                    try {
+                      expect({ slides: workbook.slides }).to.deep.include(
+                        { slides },
+                      );
+                    } catch (error) {
+                      if (slides[0].note.length === 0 && slides.length === 1) {
+                        this.setState({
+                          redirectToDashboard: true,
+                        });
+                        return;
+                      }
+                      if (error) {
+                        if (!confirm(
+                          'Are you sure you want to leave. Any unsaved changes will be lost!',
+                        )) { return; }
+                      }
+                    }
+
+                    this.setState({
+                      redirectToDashboard: true,
+                    });
+                  }}
+                >
+                  Dashboard
+                </Button>
+              ) : null}
               <Button
                 className="createslide"
                 style={{ marginTop: '0.8rem' }}
@@ -1098,45 +1133,6 @@ export class CreateWorkbook extends React.Component {
                   </Button>
                 </Menu.Item>
 
-                {Meteor.userId() ? (
-                  <Menu.Item>
-                    {' '}
-                    <Button
-                      className="lprightbutton"
-                      color="blue"
-                      onClick={() => {
-                        const workbook = Workbooks.findOne({
-                          _id,
-                        });
-
-                        try {
-                          expect({ slides: workbook.slides }).to.deep.include(
-                            { slides },
-                          );
-                        } catch (error) {
-                          if (slides[0].note.length === 0 && slides.length === 1) {
-                            this.setState({
-                              redirectToDashboard: true,
-                            });
-                            return;
-                          }
-                          if (error) {
-                            if (!confirm(
-                              'Are you sure you want to leave. Any unsaved changes will be lost!',
-                            )) { return; }
-                          }
-                        }
-
-                        this.setState({
-                          redirectToDashboard: true,
-                        });
-                      }}
-                    >
-                      Dashboard
-                    </Button>
-                  </Menu.Item>
-                ) : null}
-
                 {!!Meteor.userId() && userId === Meteor.userId() ? (
                   <Link to={{ pathname: `/request/${_id}`, state: { from: 'createlessonplan' } }}>
                     <Menu.Item link className="lprightbutton">Discussion forum</Menu.Item>
@@ -1249,7 +1245,7 @@ export class CreateWorkbook extends React.Component {
                 >
                   Add textbox
                 </Menu.Item>
-                
+
                 <Menu.Item
                   className="lprightbutton"
                   onClick={() => {

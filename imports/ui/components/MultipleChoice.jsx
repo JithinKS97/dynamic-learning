@@ -16,6 +16,7 @@ export default class MultipleChoice extends React.Component {
       ccolor: '',
       dcolor: '',
     };
+    this.clicked = '';
   }
 
   componentDidMount() {
@@ -36,6 +37,31 @@ export default class MultipleChoice extends React.Component {
       });
     });
   }
+
+  componentDidUpdate() {
+    const {
+      curSlide,
+      slides,
+      index,
+      userId,
+    } = this.props;
+    const updatedSlides = JSON.parse(JSON.stringify(slides));
+    this.clicked = updatedSlides[curSlide].questions[index].responses[userId] || '';
+    const atemp = this.clicked === 'a' ? 'red' : 'black';
+    const btemp = this.clicked === 'b' ? 'red' : 'black';
+    const ctemp = this.clicked === 'c' ? 'red' : 'black';
+    const dtemp = this.clicked === 'd' ? 'red' : 'black';
+    if (this.state.acolor !== atemp || this.state.bcolor !== btemp || this.state.ccolor !== ctemp ||
+      this.state.dcolor !== dtemp) {
+      this.setState({
+        acolor: this.clicked === 'a' ? 'red' : 'black',
+        bcolor: this.clicked === 'b' ? 'red' : 'black',
+        ccolor: this.clicked === 'c' ? 'red' : 'black',
+        dcolor: this.clicked === 'd' ? 'red' : 'black',
+      });
+    }
+  }
+
 
   handleCopy(slides, curSlide, index) {
     const copiedText = $.extend(true, {}, slides[curSlide].textboxes[index]);
