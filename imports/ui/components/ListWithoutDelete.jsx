@@ -3,10 +3,7 @@ import { Menu, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const List = (props) => {
-  const submit = () => {
-
-    console.log("Hi");
-  }
+  const { save } = props;
 
   const renderSlides = () => {
     /* This component is intended for rendering slides list */
@@ -42,7 +39,7 @@ const List = (props) => {
       <Menu vertical icon>
         {renderSlides()}
       </Menu>
-      {/* <Button onClick={() => this.submit()}> Submit Answers </Button> */}
+      <Button onClick={() => save()}> Submit Answers </Button>
     </div>
   );
 };

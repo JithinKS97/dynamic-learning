@@ -28,7 +28,7 @@ export default class MultipleChoice extends React.Component {
         userId,
       } = this.props;
       const updatedSlides = JSON.parse(JSON.stringify(slides));
-      this.clicked = updatedSlides[curSlide].questions[index].responses[userId] || '';
+      this.clicked = updatedSlides[curSlide].questions[index].responses[Meteor.userId()] || '';
       this.setState({
         acolor: this.clicked === 'a' ? 'red' : 'black',
         bcolor: this.clicked === 'b' ? 'red' : 'black',
@@ -46,7 +46,7 @@ export default class MultipleChoice extends React.Component {
       userId,
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
-    this.clicked = updatedSlides[curSlide].questions[index].responses[userId] || '';
+    this.clicked = updatedSlides[curSlide].questions[index].responses[Meteor.userId()] || '';
     const atemp = this.clicked === 'a' ? 'red' : 'black';
     const btemp = this.clicked === 'b' ? 'red' : 'black';
     const ctemp = this.clicked === 'c' ? 'red' : 'black';
@@ -94,7 +94,7 @@ export default class MultipleChoice extends React.Component {
       ccolor: this.clicked === 'c' ? 'red' : 'black',
       dcolor: this.clicked === 'd' ? 'red' : 'black',
     });
-    updatedSlides[curSlide].questions[index].responses[userId] = this.clicked;
+    updatedSlides[curSlide].questions[index].responses[Meteor.userId()] = this.clicked;
     updateSlides(updatedSlides);
   }
 
@@ -107,7 +107,7 @@ export default class MultipleChoice extends React.Component {
     const updatedSlides = JSON.parse(JSON.stringify(slides));
     const { responses } = updatedSlides[curSlide].questions[index];
     const keys = Object.keys(responses);
-    return keys.map(key => <div> {`${key}: ${responses[key]}`} </div>);
+    return keys.map(key => <div> {`${Meteor.users.findOne({_id: key}) && Meteor.users.findOne({_id: key}).username}: ${responses[key]}`} </div>);
   }
 
   handleClose() {

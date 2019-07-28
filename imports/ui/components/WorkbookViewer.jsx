@@ -105,6 +105,72 @@ class WorkbookViewer extends Component {
     window.removeEventListener('keydown', this.handleKeyDown, false);
   }
 
+  saveToDatabase = () => {
+    /* This function is intended for saving the slides to the database.
+            If not logged in, user is asked to login first.
+        */
+
+    if (!Meteor.userId()) {
+      this.setState({ loginNotification: true });
+      return;
+    }
+
+    if (this.addSim && this.addSim.state.isOpen) return;
+
+    const { userId, title, slides } = this.state;
+
+    if (userId !== Meteor.userId()) {
+      const confirmation = confirm(
+        'Are you sure you want to fork this workbook?',
+      );
+
+      if (!confirmation) return;
+
+      Meteor.call('workbooks.insert', title, (err, id) => {
+        Meteor.call('workbooks.update', id, slides);
+
+        this.setState(
+          {
+            redirectToDashboard: true,
+            forkedWorkbookId: id,
+          },
+          () => {
+            confirm('Forked succesfully');
+          },
+        );
+      });
+    } else {
+      const { _id } = this.state;
+
+      const workbook = Workbooks.findOne({ _id });
+
+      /* If the slides in the state has the same values as that of the slides
+            in the database, we need not save, expect to deep include by chai checks this equality.
+            If they are not same, an error is thrown. When we catch the error, we can see that the
+            data are different and we initiate the save.
+        */
+
+      try {
+        expect({ slides: workbook.slides }).to.deep.include({
+          slides,
+        });
+      } catch (error) {
+        if (error) {
+          this.setState({
+            saving: true,
+          });
+
+          Meteor.call('workbooks.update', _id, slides, () => {
+            alert('Saved successfully');
+            this.setState({
+              saving: false,
+            });
+          });
+        }
+      }
+    }
+  }
+
   handleWindowResize = () => {
     this.setState({
       scaleX: (document.getElementsByClassName('fourteen wide column')[0].offsetWidth / 1366),
@@ -302,6 +368,7 @@ class WorkbookViewer extends Component {
             <Grid.Column style={{ textAlign: 'center' }} width={2}>
               <h1 style={{ marginTop: '1.6rem' }}>{curSlide + 1}</h1>
               <ListWithoutDelete
+                save={this.saveToDatabase}
                 showTitle={false}
                 {...this.state}
                 delete={this.deleteSlide}
