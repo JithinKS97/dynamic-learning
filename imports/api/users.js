@@ -72,6 +72,10 @@ Meteor.methods({
 });
 
 if (Meteor.isServer) {
+  console.log(process.env.githubclient);
+  console.log(process.env.githubsecret);
+  console.log(process.env.googleclient);
+  console.log(process.env.googlesecret);
   Accounts.validateNewUser(validateNewUser);
   Meteor.publish('getAccounts', () => Meteor.users.find());
   ServiceConfiguration.configurations.upsert({
