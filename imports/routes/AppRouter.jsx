@@ -16,7 +16,7 @@ import NotFound from '../ui/pages/NotFound';
 import Request from '../ui/pages/Request';
 import SandBox from '../ui/pages/SandBox';
 import Dashboard from '../ui/pages/Dashboard';
-
+import About from '../ui/pages/About'; 
 
 export const history = createBrowserHistory();
 const publicPages = ['/', '/signup', '/createworkbook', '/login', '/explore'];
@@ -28,7 +28,8 @@ const authenticatedPages = [
   '/dashboard/watchlesson',
   '/lesson',
   '/dashboard/profile',
-  '/dashboard/classes'
+  '/dashboard/classes',
+  '/dashboard/assessments',
 ];
 
 export const onAuthChange = (isAuthenticated) => {
@@ -47,6 +48,7 @@ export const AppRouter = (
     <div>
       <Switch>
         <PublicRoute exact path="/" component={LoadScreen} />
+        <PublicRoute exact path="/about" component={About} />
         <PublicRoute exact path="/explore" component={Explore} />
         <PublicRoute exact path="/login" component={Login} />
         <PublicRoute path="/createworkbook/:_id" component={CreateWorkbookContainer} />

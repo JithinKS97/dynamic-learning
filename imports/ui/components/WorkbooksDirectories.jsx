@@ -221,7 +221,7 @@ class WorkbooksDirectories extends Component {
     const addOrRemove = (classcode, workbookId) => {
       const classObject = Classes.findOne({ classcode });
       if (classObject) {
-        if (classObject.lessons.includes(workbookId)) {
+        if (classObject.lessons && classObject.lessons.includes(workbookId)) {
           return 'Remove';
         }
 

@@ -1,8 +1,10 @@
 import React from 'react';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const List = (props) => {
+  const { save } = props;
+
   const renderSlides = () => {
     /* This component is intended for rendering slides list */
     const { slides } = props;
@@ -33,11 +35,15 @@ const List = (props) => {
   };
 
   return (
-    <Menu vertical icon>
-      {renderSlides()}
-    </Menu>
+    <div> 
+      <Menu vertical icon>
+        {renderSlides()}
+      </Menu>
+      <Button onClick={() => save()}> Submit Answers </Button>
+    </div>
   );
 };
+
 
 List.propTypes = {
   saveChanges: PropTypes.func.isRequired,

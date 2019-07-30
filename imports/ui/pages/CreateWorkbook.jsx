@@ -26,6 +26,8 @@ import DOMPurify from 'dompurify';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { MdUndo, MdRedo } from 'react-icons/md';
 import TextBoxes from '../components/TextBoxes';
+import MCQs from '../components/MCQs';
+import ShortResponses from '../components/ShortResponses';
 import AddSim from '../components/AddSim';
 import SlidesList from '../components/List';
 import SimsList from '../components/SimsList';
@@ -303,6 +305,8 @@ export class CreateWorkbook extends React.Component {
       iframes: [],
       pageCount: 0,
       textboxes: [],
+      questions: [],
+      shortresponse: [],
     };
 
     slides.push(newSlide);
@@ -504,6 +508,24 @@ export class CreateWorkbook extends React.Component {
     this.updateSlides(updatedSlides);
   }
 
+  deleteQuestion = (index) => {
+    const { slides, curSlide } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { questions } = updatedSlides[curSlide];
+    questions.splice(index, 1);
+    updatedSlides[curSlide].questions = questions;
+    this.updateSlides(updatedSlides);
+  }
+
+  deleteShortResponse = (index) => {
+    const { slides, curSlide } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { shortresponse } = updatedSlides[curSlide];
+    shortresponse.splice(index, 1);
+    updatedSlides[curSlide].shortresponse = shortresponse;
+    this.updateSlides(updatedSlides);
+  }
+
   deleteTextBox = (index) => {
     const { slides } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
@@ -688,6 +710,50 @@ export class CreateWorkbook extends React.Component {
     const updatedSlides = Object.values($.extend(true, {}, slides));
     updatedSlides[curSlide].pageCount = this.pageCount;
     this.updateSlides(updatedSlides);
+  }
+
+  addShortResponse = () => {
+    const { curSlide, slides } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+
+    if (!updatedSlides[curSlide].shortresponse) {
+      updatedSlides[curSlide].shortresponse = [];
+    }
+
+    const newQuestion = {
+      content: '',
+      responses: {},
+    };
+
+    updatedSlides[curSlide].shortresponse.push(newQuestion);
+    this.updateSlides(updatedSlides);
+    this.setState({ question: false });
+  }
+
+  addMCQ = () => {
+    const { curSlide, slides } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+
+    if (!updatedSlides[curSlide].questions) {
+      updatedSlides[curSlide].questions = [];
+    }
+
+    const newQuestion = {
+      content: '',
+      a: '',
+      b: '',
+      c: '',
+      d: '',
+      responses: {},
+    };
+
+    updatedSlides[curSlide].questions.push(newQuestion);
+    this.updateSlides(updatedSlides);
+    this.setState({ question: false });
+  }
+
+  addQuestion = () => {
+    this.setState({ question: true });
   }
 
   addTextBox = () => {
@@ -959,6 +1025,41 @@ export class CreateWorkbook extends React.Component {
               width={2}
             >
               {saving ? <p>Saving...</p> : null}
+              {Meteor.userId() ? (
+                <Button
+                  className="lprightbutton"
+                  color="blue"
+                  onClick={() => {
+                    const workbook = Workbooks.findOne({
+                      _id,
+                    });
+
+                    try {
+                      expect({ slides: workbook.slides }).to.deep.include(
+                        { slides },
+                      );
+                    } catch (error) {
+                      if (slides[0].note.length === 0 && slides.length === 1) {
+                        this.setState({
+                          redirectToDashboard: true,
+                        });
+                        return;
+                      }
+                      if (error) {
+                        if (!confirm(
+                          'Are you sure you want to leave. Any unsaved changes will be lost!',
+                        )) { return; }
+                      }
+                    }
+
+                    this.setState({
+                      redirectToDashboard: true,
+                    });
+                  }}
+                >
+                  Dashboard
+                </Button>
+              ) : null}
               <Button
                 className="createslide"
                 style={{ marginTop: '0.8rem' }}
@@ -1006,6 +1107,24 @@ export class CreateWorkbook extends React.Component {
                   setCopiedState={this.setCopiedState}
                 />
 
+                <MCQs
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteQuestion={this.deleteQuestion}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  userId={userId}
+                />
+                <ShortResponses 
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteShortResponse={this.deleteShortResponse}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  userId={userId}
+                /> 
                 <SimsList
                   slides={slides}
                   curSlide={curSlide}
@@ -1063,45 +1182,6 @@ export class CreateWorkbook extends React.Component {
                     Add simulation
                   </Button>
                 </Menu.Item>
-
-                {Meteor.userId() ? (
-                  <Menu.Item>
-                    {' '}
-                    <Button
-                      className="lprightbutton"
-                      color="blue"
-                      onClick={() => {
-                        const workbook = Workbooks.findOne({
-                          _id,
-                        });
-
-                        try {
-                          expect({ slides: workbook.slides }).to.deep.include(
-                            { slides },
-                          );
-                        } catch (error) {
-                          if (slides[0].note.length === 0 && slides.length === 1) {
-                            this.setState({
-                              redirectToDashboard: true,
-                            });
-                            return;
-                          }
-                          if (error) {
-                            if (!confirm(
-                              'Are you sure you want to leave. Any unsaved changes will be lost!',
-                            )) { return; }
-                          }
-                        }
-
-                        this.setState({
-                          redirectToDashboard: true,
-                        });
-                      }}
-                    >
-                      Dashboard
-                    </Button>
-                  </Menu.Item>
-                ) : null}
 
                 {!!Meteor.userId() && userId === Meteor.userId() ? (
                   <Link to={{ pathname: `/request/${_id}`, state: { from: 'createlessonplan' } }}>
@@ -1216,6 +1296,14 @@ export class CreateWorkbook extends React.Component {
                   Add textbox
                 </Menu.Item>
 
+                <Menu.Item
+                  className="lprightbutton"
+                  onClick={() => {
+                    this.addQuestion();
+                  }}
+                >
+                  Add question
+                </Menu.Item>
                 {this.checkDescExist() ? (
                   !!Meteor.userId()
                   && userId === Meteor.userId()
@@ -1536,6 +1624,21 @@ export class CreateWorkbook extends React.Component {
           </Grid.Row>
         </Grid>
 
+        <Modal size="tiny" open={this.state.question} onClose={() => this.setState({ question: false })}>
+          <Modal.Header>
+            Choose a question type.
+            <Button className="close-button" onClick={() => this.setState({ question: false })}>
+              &times;
+            </Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Modal.Description>
+              <Button onClick={() => this.addMCQ()}> Multiple Choice </Button>
+              <Button onClick={() => this.addShortResponse()}> Short Response </Button>
+            </Modal.Description>
+          </Modal.Content>
+        </Modal>
         <Modal size="tiny" open={!title}>
           <Modal.Header>Enter the title for the Workbook</Modal.Header>
 
