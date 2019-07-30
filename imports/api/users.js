@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable meteor/audit-argument-checks */
 /* eslint-disable import/prefer-default-export */
@@ -46,11 +47,19 @@ Meteor.methods({
     }));
   },
   updateSchool(username, school) {
+    console.log(process.env.githubclient);
     Meteor.users.update({ username }, { $set: { school } });
   },
 
-  addClass(username, classcode) {
+  'users.addClass'(username, classcode) {
     Meteor.users.update({ username }, { $push: { classes: classcode } });
+  },
+  'users.deleteClass'(username, classcode) {
+    Meteor.users
+      .update(
+        { username, classes: { $in: [classcode] } },
+        { $pull: { classes: classcode } },
+      );
   },
   deleteAllClasses(username) {
     Meteor.users.update({ username }, { $set: { classes: [] } });
@@ -64,6 +73,7 @@ Meteor.methods({
 });
 
 if (Meteor.isServer) {
+  
   Accounts.validateNewUser(validateNewUser);
   Meteor.publish('getAccounts', () => Meteor.users.find());
   ServiceConfiguration.configurations.upsert({

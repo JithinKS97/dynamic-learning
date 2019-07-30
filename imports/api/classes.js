@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable meteor/audit-argument-checks */
 /* eslint-disable func-names */
@@ -22,7 +23,7 @@ Meteor.methods({
       roster: [],
       lessons: [],
     });
-    Meteor.call('addClass', instructor, classcode);
+    Meteor.call('users.addClass', instructor, classcode);
   },
 
   'classes.addstudent': function (classcode, studentname) {
@@ -32,8 +33,12 @@ Meteor.methods({
     Classes.update(
       { classcode },
       { $push: { roster: studentname } },
+      (err) => {
+        if (!err) {
+          Meteor.call('users.addClass', studentname, classcode);
+        }
+      },
     );
-    Meteor.call('addClass', studentname, classcode);
   },
 
   'classes.addlesson': function(classcode, lessonid) {
@@ -45,10 +50,25 @@ Meteor.methods({
       { $push: { lessons: lessonid } },
     );
   },
-  // 'classes.remove'() {
-  //     return Classes.remove({});
-  // }
-
+  'classes.removeLesson': function(classcode, lessonid) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+    Classes.update(
+      { classcode, lessons: { $in: [lessonid] } },
+      { $pull: { lessons: lessonid } },
+    );
+  },
+  'classes.remove'(cl) {
+    Classes.remove({ classcode: cl.classcode }, (err) => {
+      if (!err) {
+        Meteor.call('users.deleteClass', cl.instructor, cl.classcode);
+        cl.roster.map((r) => {
+          Meteor.call('users.deleteClass', r, cl.classcode);
+        });
+      }
+    });
+  },
 });
 
 export default Classes;

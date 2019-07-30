@@ -20,7 +20,6 @@ export const WorkbooksIndex = new Index({
         options,
         aggregation,
       );
-
       // modify the selector to only match documents
       selector.isPublic = true;
       selector.isFile = true;
@@ -98,6 +97,10 @@ Meteor.methods({
     check(tags, Array);
 
     Workbooks.update({ _id }, { $set: { tags } });
+  },
+  'workbooks.folder.nameUpdate'(_id, tags) {
+      
+    Workbooks.update({ _id }, { $set: { title:tags } });
   },
 
   'workbooks.folder.insert'(title) { // eslint-disable-line object-shorthand
