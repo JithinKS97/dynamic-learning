@@ -1,4 +1,4 @@
-import { FaPencil, FaCode } from 'react-icons/fa';
+import { FaPen, FaCode } from 'react-icons/fa';
 import React, { useState, Fragment } from 'react';
 import {
   Card, Button, Menu, Modal, Input,
@@ -152,7 +152,7 @@ const SimTile = (props) => {
                     }}
                     style={{ float: 'right', flex: 1 }}
                   >
-                    {titleEditable ? <MdSave /> : <FaPencil icon />}
+                    {titleEditable ? <MdSave /> : <FaPen icon />}
                   </Button>
                 ) : null}
               </Card.Content>
@@ -203,7 +203,7 @@ const SimTile = (props) => {
                     }}
                     style={{ flex: 1 }}
                   >
-                    {tagEditable ? <MdSave icon /> : <FaPencil icon />}
+                    {tagEditable ? <MdSave icon /> : <FaPen icon />}
                   </Button>
                 ) : null}
               </Card.Content>
@@ -220,6 +220,8 @@ SimTile.propTypes = {
     userId: PropTypes.string,
     project_id: PropTypes.string,
     username: PropTypes.string,
+    title: PropTypes.string,
+    createdAt: PropTypes.number,
   }),
   slides: PropTypes.arrayOf(PropTypes.object),
   curSlide: PropTypes.number,

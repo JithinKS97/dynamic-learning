@@ -1116,7 +1116,7 @@ export class CreateWorkbook extends React.Component {
                   setCopiedState={this.setCopiedState}
                   userId={userId}
                 />
-                <ShortResponses 
+                <ShortResponses
                   slides={slides}
                   curSlide={curSlide}
                   updateSlides={this.updateSlides}
@@ -1124,7 +1124,7 @@ export class CreateWorkbook extends React.Component {
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
                   userId={userId}
-                /> 
+                />
                 <SimsList
                   slides={slides}
                   curSlide={curSlide}
