@@ -17,7 +17,7 @@ import DrawingBoardCmp from './DrawingBoardCmp';
 import { Workbooks } from '../../api/workbooks';
 import TextBoxes from './TextBoxes';
 import MCQs from './MCQs';
-
+import ShortResponses from './ShortResponses';
 
 /**
  * This Component is intended for the creation of a workbook by the teachers. Each workbook
@@ -394,6 +394,14 @@ class WorkbookViewer extends Component {
                 <TextBoxes
                   isPreview
                   deleteTextBox={() => {}}
+                  slides={slides}
+                  curSlide={curSlide}
+                  saveChanges={this.saveChanges}
+                />
+                <ShortResponses
+                  isPreview
+                  deleteShortResponse={() => {}}
+                  updateSlides={this.updateSlides}
                   slides={slides}
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}
