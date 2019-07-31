@@ -423,9 +423,10 @@ class WorkbooksDirectories extends Component {
                    style={{
                     width: '20rem',
                     padding: '0.4rem',
-                    marginTop: '0.8rem',
+                    marginTop: '1rem',                    
+                    marginBottom: '2rem',
                     fontSize: '1.2rem',
-                    border: '1px solid blue',
+                    
                   }}
                   onChange={() => {
                     this.setState({
