@@ -135,7 +135,7 @@ Icons have been used from the site `http://react-icons.github.io`
 
 For feature enhancements, bug reports and contributions
 
-You can email me to jithunni.ks@gmail.com or you can create an issue in the repo.
+You can email me to jithinks112@gmail.com or you can create an issue in the repo.
 
 ## Acknowledgement 
 
