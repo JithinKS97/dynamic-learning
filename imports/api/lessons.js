@@ -151,6 +151,26 @@ Meteor.methods({
           throw new Meteor.Error('not-authorized');
         }
         break;
+      case 'editReply':
+        // same as editComment function
+        lesson = Lessons.findOne({ _id });
+        if (
+          lesson
+            .slides[args.curSlide]
+            .comments
+            .filter(comment => comment._id === args.commentId)[0]
+            .replies
+            .filter(reply => reply._id === args.replyId)[0]
+            .userId === this.userId
+        ) {
+          Lessons.update(
+            { _id, members: { $in: [this.userId] } },
+            { $set: { slides, updatedAt: moment().valueOf() } },
+          );
+        } else {
+          throw new Meteor.Error('not-authorized');
+        }
+        break;
       default:
     }
   },

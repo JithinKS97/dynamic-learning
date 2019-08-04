@@ -121,6 +121,52 @@ class Lesson extends React.Component {
     this.updateSlides(slides, 'editComment', { _id: deletedCommentId, curSlide });
   }
 
+  deleteReplyComment = (index, subIndex) => {
+    const { curSlide } = this.state;
+    const { slides } = this.props.lesson;
+
+    const deletedReplyId = slides[curSlide]
+      .comments[index]
+      .replies.splice(subIndex, 1)[0]
+      ._id;
+
+    this.updateSlides(slides, 'editReply', {
+      curSlide,
+      commentId: slides[curSlide].comments[index]._id,
+      replyId: deletedReplyId,
+    });
+  }
+
+  editReplyComment = (index, subIndex, editedComment) => {
+    const { curSlide } = this.state;
+    const { slides } = this.props.lesson;
+
+    slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
+    slides[curSlide].comments[index].replies[subIndex].lastEditedTime = Date.now();
+
+    this.updateSlides(slides, 'editReply', {
+      curSlide,
+      commentId: slides[curSlide].comments[index]._id,
+      replyId: slides[curSlide].comments[index].replies[subIndex]._id,
+    });
+  };
+
+  deleteReplyComment = (index, subIndex) => {
+    const { curSlide } = this.state;
+    const { slides } = this.props.lesson;
+
+    const deletedReplyId = slides[curSlide]
+      .comments[index]
+      .replies.splice(subIndex, 1)[0]
+      ._id;
+
+    this.updateSlides(slides, 'editReply', {
+      curSlide,
+      commentId: slides[curSlide].comments[index]._id,
+      replyId: deletedReplyId,
+    });
+  }
+
   deleteSlide = (index) => {
     /* This function decides what to do when the X button is pressed in the
       slide element. If there is only one element. it is not deleted,
@@ -325,6 +371,8 @@ class Lesson extends React.Component {
             currentUserId={Meteor.userId()}
             editComment={this.editComment}
             deleteComment={this.deleteComment}
+            editReplyComment={this.editReplyComment}
+            deleteReplyComment={this.deleteReplyComment}
           />
           <CommentForm
             indexOfComment={-1}
