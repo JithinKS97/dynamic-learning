@@ -58,6 +58,19 @@ of these React components. These main React page components can be found in 'cli
 The routes of each of the pages can be found in the 'clients/routes' directory. Detailed documentation for each
 of the components are provided in the components' js files.
 
+## Errors Encountered during Installation (For Wondows)
+
+### 1) choco does not exist
+This is usually because choco might not have been installed using admin access
+
+### 2) meteor does not exist
+This can be due to two main reasons.
+ i)  This might be due to not installing using admin access
+ ii) There are cases where meteor starts working only after closing and reopening the terminal used to install it.
+
+- These were some of the errors I have come across. If you find more, post it and we will solve it.
+
+
 ### 1) Workbook creator
 
 ##### Component - CreateWorkbook
