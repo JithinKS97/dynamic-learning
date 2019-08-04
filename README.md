@@ -46,12 +46,12 @@ https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals
 5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
 6) Use the command `npm run full-test` to run unit tests. The server side tests results will appear in the terminal and client side test results are shown in the browser
 
-## Errors Encountered during Installation (For Windows)
+### Some common errors encountered during Installation (For Windows)
 
-### 1) choco does not exist
+#### 1) choco does not exist
 This is usually because choco might not have been installed using admin access
 
-### 2) meteor does not exist
+#### 2) meteor does not exist
 This can be due to two main reasons.
  i)  This might be due to not installing using admin access
  ii) There are cases where meteor starts working only after closing and reopening the terminal used to install it.
