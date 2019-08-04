@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
@@ -466,12 +465,13 @@ export class Request extends React.Component {
   }
 
   editComment = (editedComment, index, _id) => {
+    // Comment is edited here
+    const { isAuthenticated, currentUserId } = this.props;
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
-
+    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index].userId)) { return; }
     updatedSlides[curSlide].comments[index].comment = editedComment;
     updatedSlides[curSlide].comments[index].lastEditedTime = Date.now();
-
     this.updateSlides(updatedSlides, 'editComment', { _id, curSlide });
   };
 

@@ -102,6 +102,25 @@ class Lesson extends React.Component {
     }
   }
 
+  editComment = (editedComment, index, _id) => {
+    const { curSlide } = this.state;
+    const { slides } = this.props.lesson;
+
+    slides[curSlide].comments[index].comment = editedComment;
+    slides[curSlide].comments[index].lastEditedTime = Date.now();
+
+    this.updateSlides(slides, 'editComment', { _id, curSlide });
+  };
+
+  deleteComment = (index) => {
+    const { curSlide } = this.state;
+    const { slides } = this.props.lesson;
+
+    const deletedCommentId = slides[curSlide].comments.splice(index, 1)[0]._id;
+
+    this.updateSlides(slides, 'editComment', { _id: deletedCommentId, curSlide });
+  }
+
   deleteSlide = (index) => {
     /* This function decides what to do when the X button is pressed in the
       slide element. If there is only one element. it is not deleted,
@@ -165,160 +184,162 @@ class Lesson extends React.Component {
     this.save(lesson._id, slides);
   }
 
-    deleteSim = (index) => {
-      /**
-       * Deletes a particular sim in the slide
-       * It accepts the index of the sim to be deleted
-       * Takes a slide and delets slides[curSlide].iframes[index]
-       */
-      const { lesson } = this.props;
-      const { curSlide } = this.state;
+  deleteSim = (index) => {
+    /**
+     * Deletes a particular sim in the slide
+     * It accepts the index of the sim to be deleted
+     * Takes a slide and delets slides[curSlide].iframes[index]
+     */
+    const { lesson } = this.props;
+    const { curSlide } = this.state;
 
-      if (lesson.userId !== Meteor.userId()) { return; }
+    if (lesson.userId !== Meteor.userId()) { return; }
 
-      const { slides } = lesson;
-      const { iframes } = slides[curSlide];
-      iframes.splice(index, 1);
-      slides[curSlide].iframes = iframes;
-      this.save(lesson._id, slides);
-    }
+    const { slides } = lesson;
+    const { iframes } = slides[curSlide];
+    iframes.splice(index, 1);
+    slides[curSlide].iframes = iframes;
+    this.save(lesson._id, slides);
+  }
 
-    render() {
-      const { lessonExists, lesson } = this.props;
-      const { curSlide } = this.state;
-      return (
-        <div>
-          <Dimmer inverted active={!lessonExists}>
-            <Loader />
-          </Dimmer>
+  render() {
+    const { lessonExists, lesson } = this.props;
+    const { curSlide } = this.state;
+    return (
+      <div>
+        <Dimmer inverted active={!lessonExists}>
+          <Loader />
+        </Dimmer>
 
-          <Grid divided="vertically" style={{ height: '100vh', boxSizing: 'border-box' }}>
-            <Grid.Row divided style={{ height: '80vh' }} className="vidsim">
-              <Grid.Column style={{ padding: '2.4rem', width: '50vw' }}>
+        <Grid divided="vertically" style={{ height: '100vh', boxSizing: 'border-box' }}>
+          <Grid.Row divided style={{ height: '80vh' }} className="vidsim">
+            <Grid.Column style={{ padding: '2.4rem', width: '50vw' }}>
 
-                <Link to="/dashboard/lessons"><Button style={{ marginBottom: '0.8rem' }} className="lessonbutton">Back to dashboard</Button></Link>
+              <Link to="/dashboard/lessons"><Button style={{ marginBottom: '0.8rem' }} className="lessonbutton">Back to dashboard</Button></Link>
 
-                {/** Share check box should be visible only to the owner of the lesson */}
+              {/** Share check box should be visible only to the owner of the lesson */}
 
-                {lesson.userId === Meteor.userId() ? (
-                  <Checkbox
-                    className="sharelesson"
-                    checked={lesson.shared}
-                    ref={(e) => { this.checkbox = e; }}
-                    onChange={() => {
-                      Meteor.call('lessons.shareLesson', lesson._id, !this.checkbox.state.checked);
-                    }}
-                    style={{ paddingLeft: '1.6rem' }}
-                    label="share the lesson"
-                  />
-                ) : null}
-
-                <Votes lessonid={lesson._id} />
-
-                <VideoContainer
-                  userId={lesson.userId}
-                  addVideo={this.addVideo}
-                  url={
-                      lesson.slides[curSlide]
-                        ? lesson.slides[curSlide].url
-                        : null
-                  }
+              {lesson.userId === Meteor.userId() ? (
+                <Checkbox
+                  className="sharelesson"
+                  checked={lesson.shared}
+                  ref={(e) => { this.checkbox = e; }}
+                  onChange={() => {
+                    Meteor.call('lessons.shareLesson', lesson._id, !this.checkbox.state.checked);
+                  }}
+                  style={{ paddingLeft: '1.6rem' }}
+                  label="share the lesson"
                 />
+              ) : null}
 
-              </Grid.Column>
-              <Grid.Column style={{
-                padding: '2.4rem',
-                width: '50vw',
-                height: '100%',
-                textAlign: 'center',
-                overflow: 'auto',
-              }}
-              >
+              <Votes lessonid={lesson._id} />
 
-                <Button
-                  style={{ marginBottom: '0.8rem', visibility: lesson.userId === Meteor.userId() ? 'visible' : 'hidden' }}
-                  onClick={() => { this.addSim.addSim(); }}
-                  className="lessonbutton"
-                >
-                  Add Sim
+              <VideoContainer
+                userId={lesson.userId}
+                addVideo={this.addVideo}
+                url={
+                    lesson.slides[curSlide]
+                      ? lesson.slides[curSlide].url
+                      : null
+                }
+              />
 
-                </Button>
-                {/**
-                  AddSim component adds a sim to the lesson. See the function addToLesson function
-                  inside the AddSim component to know how the sim gets added.
-              */}
-
-                <AddSim
-                  updateSlides={this.updateSlides}
-                  slides={lesson.slides}
-                  curSlide={curSlide}
-                  isPreview
-                  ref={(e) => { this.addSim = e; }}
-                />
-
-                {/**
-                  SimsList renders the list of sims added
-              */}
-
-                <SimsList
-                  save={this.save}
-                  userId={lesson.userId}
-                  isRndRequired={false}
-                  deleteSim={this.deleteSim}
-                  {...lesson}
-                  curSlide={curSlide}
-                />
-
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row style={{
-              height: '20vh', padding: '1.6rem', display: 'flex', alignItems: 'center',
+            </Grid.Column>
+            <Grid.Column style={{
+              padding: '2.4rem',
+              width: '50vw',
+              height: '100%',
+              textAlign: 'center',
+              overflow: 'auto',
             }}
             >
-              <h1 style={{ padding: '1.6rem', border: 'auto auto' }}>{curSlide + 1}</h1>
-              <HorizontalList
-                userId={lesson.userId}
-                deleteSlide={this.deleteSlide}
-                changeSlide={this.changeSlide}
-                slides={lesson.slides}
-              />
-              {lesson.userId === Meteor.userId() ? (
-                <Button
-                  onClick={this.addNewSlide}
-                  style={{ marginLeft: '1.6rem' }}
-                >
-                  +
-                </Button>
-              ) : null}
-            </Grid.Row>
-          </Grid>
-          {/* <LessonComment
-            lessonid={lesson._id}
-          /> */}
-          <div style={{ margin: '2.4rem' }} className="forum">
-            <CommentsList
-              _idToNameMappings={this.state._idToNameMappings}
-              slides={this.props.lesson.slides}
-              curSlide={this.state.curSlide || 0}
-              isMember
-              isAuthenticated
-              updateSlides={this.updateSlides}
-              currentUserId={Meteor.userId()}
-            />
-            <CommentForm
-              indexOfComment={-1}
-              slides={this.props.lesson.slides}
-              curSlide={0}
-              updateSlides={this.updateSlides}
-              isMember
-              isAuthenticated
-              currentUserId={Meteor.userId()}
-            />
-          </div>
-        </div>
 
-      );
-    }
+              <Button
+                style={{ marginBottom: '0.8rem', visibility: lesson.userId === Meteor.userId() ? 'visible' : 'hidden' }}
+                onClick={() => { this.addSim.addSim(); }}
+                className="lessonbutton"
+              >
+                Add Sim
+
+              </Button>
+              {/**
+                AddSim component adds a sim to the lesson. See the function addToLesson function
+                inside the AddSim component to know how the sim gets added.
+            */}
+
+              <AddSim
+                updateSlides={this.updateSlides}
+                slides={lesson.slides}
+                curSlide={curSlide}
+                isPreview
+                ref={(e) => { this.addSim = e; }}
+              />
+
+              {/**
+                SimsList renders the list of sims added
+            */}
+
+              <SimsList
+                save={this.save}
+                userId={lesson.userId}
+                isRndRequired={false}
+                deleteSim={this.deleteSim}
+                {...lesson}
+                curSlide={curSlide}
+              />
+
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row style={{
+            height: '20vh', padding: '1.6rem', display: 'flex', alignItems: 'center',
+          }}
+          >
+            <h1 style={{ padding: '1.6rem', border: 'auto auto' }}>{curSlide + 1}</h1>
+            <HorizontalList
+              userId={lesson.userId}
+              deleteSlide={this.deleteSlide}
+              changeSlide={this.changeSlide}
+              slides={lesson.slides}
+            />
+            {lesson.userId === Meteor.userId() ? (
+              <Button
+                onClick={this.addNewSlide}
+                style={{ marginLeft: '1.6rem' }}
+              >
+                +
+              </Button>
+            ) : null}
+          </Grid.Row>
+        </Grid>
+        {/* <LessonComment
+          lessonid={lesson._id}
+        /> */}
+        <div style={{ margin: '2.4rem' }} className="forum">
+          <CommentsList
+            _idToNameMappings={this.state._idToNameMappings}
+            slides={this.props.lesson.slides}
+            curSlide={this.state.curSlide || 0}
+            isMember
+            isAuthenticated
+            updateSlides={this.updateSlides}
+            currentUserId={Meteor.userId()}
+            editComment={this.editComment}
+            deleteComment={this.deleteComment}
+          />
+          <CommentForm
+            indexOfComment={-1}
+            slides={this.props.lesson.slides}
+            curSlide={0}
+            updateSlides={this.updateSlides}
+            isMember
+            isAuthenticated
+            currentUserId={Meteor.userId()}
+          />
+        </div>
+      </div>
+
+    );
+  }
 }
 
 Lesson.propTypes = {
