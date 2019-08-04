@@ -191,7 +191,7 @@ class Lesson extends React.Component {
       }
       if (curSlide === slides.length) { curSlide = slides.length - 1; }
       this.changeSlide(curSlide);
-      this.updateSlides(slides);
+      this.updateSlides(slides, 'ownerOp');
     } else {
       this.reset();
     }
@@ -227,7 +227,7 @@ class Lesson extends React.Component {
 
     const { slides } = lesson;
     slides[curSlide].url = url;
-    this.save(lesson._id, slides);
+    this.updateSlides(slides, 'ownerOp');
   }
 
   deleteSim = (index) => {
@@ -245,7 +245,7 @@ class Lesson extends React.Component {
     const { iframes } = slides[curSlide];
     iframes.splice(index, 1);
     slides[curSlide].iframes = iframes;
-    this.save(lesson._id, slides);
+    this.updateSlides(slides, 'ownerOp');
   }
 
   render() {
