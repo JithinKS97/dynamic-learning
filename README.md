@@ -60,10 +60,10 @@ of the components are provided in the components' js files.
 
 ## Errors Encountered during Installation (For Wondows)
 
-# 1) choco does not exist
+### 1) choco does not exist
 This is usually because choco might not have been installed using admin access
 
-# 2) meteor does not exist
+### 2) meteor does not exist
 This can be due to two main reasons.
  i)  This might be due to not installing using admin access
  ii) There are cases where meteor starts working only after closing and reopening the terminal used to install it.
