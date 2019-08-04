@@ -68,8 +68,12 @@ export default class commentsList extends Component {
   }
 }
 
+commentsList.defaultProps = {
+  slides: [{ comments: [] }],
+};
+
 commentsList.propTypes = {
-  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
+  slides: PropTypes.arrayOf(PropTypes.object),
   curSlide: PropTypes.number.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   _idToNameMappings: PropTypes.objectOf(PropTypes.string).isRequired,
