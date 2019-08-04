@@ -42,6 +42,7 @@ Meteor.methods({
     const newSlide = {
       url: null,
       iframes: [],
+      comments: [],
     };
 
     const slides = [];
@@ -59,6 +60,7 @@ Meteor.methods({
       createdAt: Date.now(),
       upvotes: [], // will contain IDs of users who upvoted
       downvotes: [],
+      members: [this.userId],
     });
   },
 
@@ -76,6 +78,13 @@ Meteor.methods({
       children: [],
       updatedAt: moment().valueOf(),
     });
+  },
+
+  'lessons.addMember'(_id) {
+    Lessons.update(
+      { _id, members: { $nin: [this.userId] } },
+      { $push: { members: this.userId } },
+    );
   },
 
   'lessons.directoryChange'(_id, parent_id) { // eslint-disable-line camelcase
@@ -102,15 +111,26 @@ Meteor.methods({
     Lessons.remove({ _id });
   },
 
-  'lessons.update'(_id, slides) {
+  'lessons.update'(_id, slides, operation, args) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Lessons.update(
-      { _id, userId: this.userId },
-      { $set: { slides, updatedAt: moment().valueOf() } },
-    );
+    switch (operation) {
+      case 'memberOp':
+        Lessons.update(
+          { _id },
+          { $set: { slides, updatedAt: moment().valueOf() } },
+        );
+        break;
+      case 'ownerOp':
+        Lessons.update(
+          { _id, userId: this.userId },
+          { $set: { slides, updatedAt: moment().valueOf() } },
+        );
+        break;
+      default:
+    }
   },
 
   'lessons.upvote'(lessonid, userid) {

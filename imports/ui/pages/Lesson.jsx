@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import {
@@ -27,7 +29,24 @@ class Lesson extends React.Component {
        */
 
       curSlide: 0,
+      _idToNameMappings: {},
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.lesson.members) {
+      if (this.props.lesson) {
+        Meteor.call('getUsernames', nextProps.lesson.members, (_err, memberNameUserIds) => {
+          const _idToNameMappings = {};
+          memberNameUserIds.map((member) => {
+            _idToNameMappings[member.userId] = member.username;
+          });
+          this.setState({
+            _idToNameMappings,
+          });
+        });
+      }
+    }
   }
 
   addNewSlide = () => {
@@ -56,29 +75,14 @@ class Lesson extends React.Component {
     const newSlide = {
       url: null,
       iframes: [],
+      comments: [],
     };
 
     slides.push(newSlide);
 
-    /**
-     * Save saves the current state of slides to database
-     */
-
-    const { lesson } = this.props;
-
-    this.save(lesson._id, slides);
+    this.updateSlides(slides, 'ownerOp');
   }
 
-  save = (_id, slides) => {
-    if (!Meteor.userId()) { return; }
-
-    /**
-     * Look at imports/api/lessons to to see the Meteor method 'lessons.update'
-     * which is called from here
-     */
-
-    Meteor.call('lessons.update', _id, slides);
-  }
 
   changeSlide = (toSlideNo) => {
     this.setState({
@@ -86,9 +90,16 @@ class Lesson extends React.Component {
     });
   }
 
-  updateSlides = (updatedSlides) => {
-    const { lesson } = this.props;
-    this.save(lesson._id, updatedSlides);
+  updateSlides = (updatedSlides, operation, args) => {
+    if (!Meteor.userId()) { return; }
+
+    const { lesson: { _id } } = this.props;
+
+    Meteor.call('lessons.update', _id, updatedSlides, operation, args);
+
+    if (!this.props.lesson.members.includes(Meteor.userId())) {
+      Meteor.call('lessons.addMember', _id);
+    }
   }
 
   deleteSlide = (index) => {
@@ -286,20 +297,22 @@ class Lesson extends React.Component {
           /> */}
           <div style={{ margin: '2.4rem' }} className="forum">
             <CommentsList
-              _idToNameMappings={{}}
-              slides={[{ comments: [{ comment: 'Comment', replies: [{ comment: 'Reply' }] }] }]}
-              curSlide={0}
+              _idToNameMappings={this.state._idToNameMappings}
+              slides={this.props.lesson.slides}
+              curSlide={this.state.curSlide || 0}
               isMember
               isAuthenticated
-              updateSlides={() => {}}
+              updateSlides={this.updateSlides}
+              currentUserId={Meteor.userId()}
             />
             <CommentForm
               indexOfComment={-1}
-              slides={[{ comments: [] }]}
+              slides={this.props.lesson.slides}
               curSlide={0}
-              updateSlides={() => {}}
+              updateSlides={this.updateSlides}
               isMember
               isAuthenticated
+              currentUserId={Meteor.userId()}
             />
           </div>
         </div>
@@ -321,6 +334,7 @@ Lesson.propTypes = {
   }).isRequired,
   lessonExists: PropTypes.bool.isRequired,
 };
+
 
 const CreateLessonContainer = withTracker(({ match }) => {
   Meteor.subscribe('lessons.public');
