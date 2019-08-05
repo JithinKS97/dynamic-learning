@@ -1,5 +1,5 @@
 import React from 'react';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { Meteor } from 'meteor/meteor';
 import 'semantic-ui-css/semantic.min.css';
 import { TiArrowMove } from 'react-icons/ti';
@@ -69,6 +69,7 @@ export default class SimsList extends React.Component {
       updateSlides,
       deleteSim,
       userId,
+      scale,
     } = this.props;
 
     // eslint-disable-next-line react/destructuring-assignment
@@ -101,9 +102,10 @@ export default class SimsList extends React.Component {
             // eslint-disable-next-line react/no-array-index-key
             <div key={index} className="sim-floating">
               <Rnd
+                scale={scale}
                 bounds=".canvas-container"
-                dragHandleClassName=".sim-handle"
-                resizeHandleClasses=".sim-resize"
+                dragHandleClassName="sim-handle"
+                resizeHandleClasses="sim-resize"
                 size={{
                   width: isPreview ? iframe.w : iframe.w + 40,
                   height: iframe.h,
@@ -297,6 +299,7 @@ SimsList.propTypes = {
   deleteSim: PropTypes.func,
   userId: PropTypes.string,
   updateSlides: PropTypes.func,
+  scale: PropTypes.number,
 };
 
 SimsList.defaultProps = {
@@ -308,4 +311,5 @@ SimsList.defaultProps = {
   deleteSim: () => null,
   userId: '',
   updateSlides: () => null,
+  scale: 1,
 };

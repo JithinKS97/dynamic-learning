@@ -1,6 +1,6 @@
 import React from 'react';
 import MathQuill, { addStyles as addMathquillStyles } from 'react-mathquill';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';

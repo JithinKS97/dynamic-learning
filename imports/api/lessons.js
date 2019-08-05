@@ -42,6 +42,7 @@ Meteor.methods({
     const newSlide = {
       url: null,
       iframes: [],
+      comments: [],
     };
 
     const slides = [];
@@ -59,6 +60,7 @@ Meteor.methods({
       createdAt: Date.now(),
       upvotes: [], // will contain IDs of users who upvoted
       downvotes: [],
+      members: [this.userId],
     });
   },
 
@@ -76,6 +78,13 @@ Meteor.methods({
       children: [],
       updatedAt: moment().valueOf(),
     });
+  },
+
+  'lessons.addMember'(_id) {
+    Lessons.update(
+      { _id, members: { $nin: [this.userId] } },
+      { $push: { members: this.userId } },
+    );
   },
 
   'lessons.directoryChange'(_id, parent_id) { // eslint-disable-line camelcase
@@ -102,15 +111,68 @@ Meteor.methods({
     Lessons.remove({ _id });
   },
 
-  'lessons.update'(_id, slides) {
+  'lessons.update'(_id, slides, operation, args) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
-    Lessons.update(
-      { _id, userId: this.userId },
-      { $set: { slides, updatedAt: moment().valueOf() } },
-    );
+    let lesson;
+    switch (operation) {
+      case 'memberOp':
+        Lessons.update(
+          { _id },
+          { $set: { slides, updatedAt: moment().valueOf() } },
+        );
+        break;
+      case 'ownerOp':
+        Lessons.update(
+          { _id, userId: this.userId },
+          { $set: { slides, updatedAt: moment().valueOf() } },
+        );
+        break;
+      case 'editComment':
+        lesson = Lessons.findOne({ _id });
+        // Only owner of the comment allowed to perform this
+        // args._id is the ID of the comment to be edited
+        // comment.userId === this.userId
+        if (
+          lesson
+            .slides[args.curSlide]
+            .comments
+          // The comment is found out by matching ids
+            .filter(comment => comment._id === args._id)[0]
+          // ownership of comment is checked
+            .userId === this.userId
+        ) {
+          Lessons.update(
+            { _id },
+            { $set: { slides, updatedAt: moment().valueOf() } },
+          );
+        } else {
+          throw new Meteor.Error('not-authorized');
+        }
+        break;
+      case 'editReply':
+        // same as editComment function
+        lesson = Lessons.findOne({ _id });
+        if (
+          lesson
+            .slides[args.curSlide]
+            .comments
+            .filter(comment => comment._id === args.commentId)[0]
+            .replies
+            .filter(reply => reply._id === args.replyId)[0]
+            .userId === this.userId
+        ) {
+          Lessons.update(
+            { _id, members: { $in: [this.userId] } },
+            { $set: { slides, updatedAt: moment().valueOf() } },
+          );
+        } else {
+          throw new Meteor.Error('not-authorized');
+        }
+        break;
+      default:
+    }
   },
 
   'lessons.upvote'(lessonid, userid) {

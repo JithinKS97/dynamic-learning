@@ -25,7 +25,7 @@ export default class About extends React.Component {
         <br />
         <h4 style={{ marginTop: '0rem' }}> Workbooks </h4>
         <div style={{ width: '60%' }}>
-            Workbooks are a system in which slideshows can be created with embedded simulations made
+            Workbooks is a system in which slides can be created with embedded simulations made
             with p5.js. There is an interactive canvas which can be drawn on. The canvas can also include
             textboxes and descriptions of other content which it contains. From the workbook area, teachers
             can also create requests for simulations which developers can then take on.
@@ -36,8 +36,7 @@ export default class About extends React.Component {
             In a similar fashion to workbooks, lessons are a set of slides that can be used by teachers
             in the classroom. Lessons, as opposed to workbooks, use the idea of pairing videos with
             simulations. The lefthand side contains a YouTube video and the right side contains a
-            simulation related to the topic of the slide. Students have the ability to comment and
-            upvote or downvote simulations.
+            simulation related to the topic of the slide.
         </div>
         <br />
         <h4 style={{ marginTop: '0rem' }}> Classes </h4>

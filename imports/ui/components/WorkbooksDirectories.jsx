@@ -49,6 +49,7 @@ class WorkbooksDirectories extends Component {
       redirectToWorkbook: false,
       classes: [],
       tempTitle: '',
+      tempFolderTitle: '',
       selectedFolderId:'',
     };
   }
@@ -412,21 +413,39 @@ class WorkbooksDirectories extends Component {
           </Modal.Header>
           <Modal.Content>
             <Modal.Description>
-            <Form onSubmit={this.addNewWorkbook}>
-                <Form.Field>
+            
                   {/* eslint-disable-next-line */}
                   <label>Name</label>
+                  <br></br>
                   {/* eslint-disable-next-line no-return-assign */}
-                  <input ref={e => this.folderRenameInput = e} placeholder="Name" />
-                </Form.Field>
-            
+                  <input value = {this.state.tempFolderTitle}
+                   ref={e => this.folderRenameInput = e}
+                   style={{
+                    width: '20rem',
+                    padding: '0.4rem',
+                    marginTop: '1rem',                    
+                    marginBottom: '2rem',
+                    fontSize: '1.2rem',
+                    
+                  }}
+                  onChange={() => {
+                    this.setState({
+                     
+                      tempFolderTitle: this.folderRenameInput.value,
+                    });
+                  }}
+                   placeholder="Name" />
+                   <br></br>
+                
+                
                 <Button onClick={() => {
               Meteor.call('workbooks.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value)
               this.setState({
-                folderNameModal: false
+                folderNameModal: false,
+               // folderRenameInput:this.folderRenameInput
               })
             }}>Rename</Button>
-              </Form>
+          
             
             
             </Modal.Description>
@@ -482,10 +501,10 @@ class WorkbooksDirectories extends Component {
                         tags: theNode.tags,
                       });
                     } else {
-                      //console.log("He")
                       this.setState({
                         folderNameModal:true,
                         selectedFolderId: theNode._id,
+                        tempFolderTitle: theNode.title,
                         //selectedWorkbookId: theNode._id
                       })
                     }

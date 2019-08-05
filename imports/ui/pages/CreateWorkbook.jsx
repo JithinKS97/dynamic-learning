@@ -164,6 +164,7 @@ export class CreateWorkbook extends React.Component {
         / 1366,
     });
     this.handleScroll();
+    this.forceUpdate();
   };
 
   handleKeyDown = (e) => {
@@ -1105,6 +1106,7 @@ export class CreateWorkbook extends React.Component {
                   deleteTextBox={this.deleteTextBox}
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
+                  scale={scaleX}
                 />
 
                 <MCQs
@@ -1115,6 +1117,7 @@ export class CreateWorkbook extends React.Component {
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
                   userId={userId}
+                  scale={scaleX}
                 />
                 <ShortResponses
                   slides={slides}
@@ -1124,7 +1127,8 @@ export class CreateWorkbook extends React.Component {
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
                   userId={userId}
-                /> 
+                  scale={scaleX}
+                />
                 <SimsList
                   slides={slides}
                   curSlide={curSlide}
@@ -1138,6 +1142,7 @@ export class CreateWorkbook extends React.Component {
                   ref={(e) => { this.simsList = e; }}
                   save={this.saveToDatabase}
                   interact={this.interact}
+                  scale={scaleX}
                 />
 
                 <DrawingBoardCmp

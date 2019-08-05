@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-indent */
 /* eslint-disable react/prefer-stateless-function */
+/* eslint-disable*/
 import React from 'react';
 import {
   Button,
