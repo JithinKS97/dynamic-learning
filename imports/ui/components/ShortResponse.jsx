@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
@@ -35,11 +36,13 @@ export default class ShortResponse extends React.Component {
       isPreview,
       slides,
       userId,
+      scale,
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
       <Rnd
+        scale={scale}
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
@@ -50,7 +53,7 @@ export default class ShortResponse extends React.Component {
             ? updatedSlides[curSlide].shortresponse[index].h
             : 200,
         }}
-        dragHandleClassName=".textbox-handle"
+        dragHandleClassName="textbox-handle"
         position={{
           x: updatedSlides[curSlide].shortresponse[index].x
             ? updatedSlides[curSlide].shortresponse[index].x

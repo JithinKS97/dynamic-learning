@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
@@ -125,6 +126,7 @@ export default class MultipleChoice extends React.Component {
       isPreview,
       slides,
       userId,
+      scale,
     } = this.props;
     const {
       modalOpen,
@@ -133,6 +135,7 @@ export default class MultipleChoice extends React.Component {
 
     return (
       <Rnd
+        scale={scale}
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
@@ -143,7 +146,7 @@ export default class MultipleChoice extends React.Component {
             ? updatedSlides[curSlide].questions[index].h
             : 200,
         }}
-        dragHandleClassName=".textbox-handle"
+        dragHandleClassName="textbox-handle"
         position={{
           x: updatedSlides[curSlide].questions[index].x
             ? updatedSlides[curSlide].questions[index].x

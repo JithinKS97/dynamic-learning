@@ -1,5 +1,5 @@
 import React from 'react';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
@@ -35,11 +35,13 @@ export default class TextBox extends React.Component {
       deleteTextBox,
       isPreview,
       slides,
+      scale,
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
       <Rnd
+        scale={scale}
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
@@ -50,7 +52,7 @@ export default class TextBox extends React.Component {
             ? updatedSlides[curSlide].textboxes[index].h
             : 200,
         }}
-        dragHandleClassName=".textbox-handle"
+        dragHandleClassName="textbox-handle"
         position={{
           x: updatedSlides[curSlide].textboxes[index].x
             ? updatedSlides[curSlide].textboxes[index].x
@@ -215,6 +217,7 @@ TextBox.propTypes = {
   curSlide: PropTypes.number,
   setCopiedState: PropTypes.func,
   updateSlides: PropTypes.func,
+  scale: PropTypes.number,
 };
 
 TextBox.defaultProps = {
@@ -225,4 +228,5 @@ TextBox.defaultProps = {
   curSlide: 0,
   setCopiedState: () => null,
   updateSlides: () => null,
+  scale: 1,
 };
