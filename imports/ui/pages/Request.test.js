@@ -49,37 +49,6 @@ if (Meteor.isClient) {
         RequestWrapper = wrapper.find(Request);
         RequestInstance = RequestWrapper.instance();
       });
-      it('should set the title and description of the Requests forum', () => {
-        RequestInstance.setState({ editTitle: 'test-title', editDescription: 'test-description' });
-        RequestInstance.setTitleAndDescription();
-        RequestInstance.isMember = true;
-        expect(RequestInstance.state.requestTitle).to.equal('test-title');
-        expect(RequestInstance.state.description).to.equal('test-description');
-        expect(wrapper.find('.requestTitle').text()).to.equal('test-title');
-        expect(wrapper.find('.requestDescription').text()).to.equal('test-description');
-        wrapper.unmount();
-      });
-      it('should edit the title and description if authenticated and is owner', () => {
-        wrapper = mount(
-          <Router history={createMemoryHistory()}>
-            <Route path="/" render={() => <Request isAuthenticated isOwner />} />
-          </Router>,
-          { attachTo: window.domNode },
-        );
-        RequestWrapper = wrapper.find(Request);
-        RequestInstance = RequestWrapper.instance();
-
-        RequestWrapper.setState({
-          editDescription: 'sample-description',
-          editTitle: 'sample-title',
-        });
-
-        RequestInstance.setTitleAndDescription();
-
-        expect(RequestInstance.state.requestTitle).to.equal('sample-title');
-        expect(RequestInstance.state.description).to.equal('sample-description');
-        wrapper.unmount();
-      });
     });
   });
 }

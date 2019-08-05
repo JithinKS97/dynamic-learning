@@ -387,6 +387,7 @@ export class Request extends React.Component {
       .comments[index]
       .replies.splice(subIndex, 1)[0]
       ._id;
+
     updateToDatabase(slides, 'editReply', {
       curSlide,
       commentId: slides[curSlide].comments[index]._id,
@@ -401,6 +402,7 @@ export class Request extends React.Component {
 
     slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
     slides[curSlide].comments[index].replies[subIndex].lastEditedTime = Date.now();
+
     updateToDatabase(slides, 'editReply', {
       curSlide,
       commentId: slides[curSlide].comments[index]._id,
