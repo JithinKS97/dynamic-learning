@@ -311,7 +311,7 @@ export class Request extends React.Component {
   }
 
   deleteSlide = (index) => {
-    const { request: { slides } } = this.props;
+    const { request: { slides }, updateToDatabase } = this.props;
 
     if (slides.length !== 1) {
       slides.splice(index, 1);
@@ -323,7 +323,7 @@ export class Request extends React.Component {
       // If curSlide is the last slide and last slide is the one to get deleted
       // curSlide should be decremented
       this.changeSlide(curSlide);
-      this.updateSlides(slides, 'modifySlidesList');
+      updateToDatabase(slides, 'modifySlidesList');
     } else this.reset();
   };
 
