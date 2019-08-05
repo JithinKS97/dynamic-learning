@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import React, { Component } from 'react';
 import { Comment, Header } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
@@ -26,7 +27,13 @@ export default class commentsList extends Component {
   showComments() {
     const { slides, curSlide, _idToNameMappings } = this.props;
     if (slides.length > 0) {
-      const { comments } = slides[curSlide];
+      let comments;
+
+      if (slides[curSlide]) {
+        comments = slides[curSlide].comments;
+      } else {
+        return null;
+      }
 
       return comments.map((comment, index) => {
         const { replies } = comment;

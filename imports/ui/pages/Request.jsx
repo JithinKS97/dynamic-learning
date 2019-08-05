@@ -82,7 +82,6 @@ export class Request extends React.Component {
 
     this.state = {
       show: false,
-      slides: [],
       curSlide: 0,
 
       requestTitle: '',
@@ -133,7 +132,13 @@ export class Request extends React.Component {
 
     this.setState(
       {
-        ...request,
+        _id: request._id,
+        requestTitle: request.requestTitle,
+        createdAt: request.createdAt,
+        description: request.description,
+        members: request.members,
+        pendingRequests: request.pendingRequests,
+        allMembers: request.allMembers,
         show,
 
         // The input fields in the title, description modal box set to the existing title
@@ -275,29 +280,23 @@ export class Request extends React.Component {
     // isAuthenticated is true if the user is authenticated
     // updateDatabase is a function used to update the slides to the database
     const {
-      isOwner, isAuthenticated, updateToDatabase, currentUserId,
+      updateToDatabase, currentUserId,
     } = this.props;
-
-    if (!(isOwner && isAuthenticated)) return;
 
     // If title is empty string, no slide is created
     if (!title) return;
 
-    const { slides, show } = this.state;
+    const { show } = this.state;
 
-    // Don't mutate the state variables directly, updatedSlides is created and changes done on it
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { request: { slides } } = this.props;
 
-    const curSlide = slides.length;
+    // Don't mutate the state variables directly, slides is created and changes done on it
 
     if (show === false) {
-      updatedSlides[0].title = title;
-      updatedSlides[0].userId = currentUserId;
-      updatedSlides[0].createdAt = Date.now();
-      this.setState({ slides: updatedSlides, show: true }, () => {
-        // Only owner of the forum can 'modifySlidesList'
-        updateToDatabase(updatedSlides, 'modifySlidesList');
-      });
+      slides[0].title = title;
+      slides[0].userId = currentUserId;
+      slides[0].createdAt = Date.now();
+      updateToDatabase(slides, 'modifySlidesList');
     } else {
       const slide = {
         title,
@@ -306,38 +305,25 @@ export class Request extends React.Component {
         userId: currentUserId,
         createdAt: Date.now(),
       };
-      updatedSlides.push(slide);
-      this.setState(
-        {
-          slides: updatedSlides,
-          curSlide,
-        },
-        () => {
-          updateToDatabase(updatedSlides, 'modifySlidesList');
-        },
-      );
+      slides.push(slide);
+      updateToDatabase(slides, 'modifySlidesList');
     }
   }
 
   deleteSlide = (index) => {
-    const { slides } = this.state;
-    const { isOwner, isAuthenticated } = this.props;
-    // Don't mutate state variables directly, so a copy is created and changes made in it
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { request: { slides } } = this.props;
 
-    if (!(isAuthenticated && isOwner)) return;
-
-    if (updatedSlides.length !== 1) {
-      updatedSlides.splice(index, 1);
+    if (slides.length !== 1) {
+      slides.splice(index, 1);
       let { curSlide } = this.state;
       if (index === 0) {
         curSlide = 0;
       }
-      if (curSlide === updatedSlides.length) curSlide = updatedSlides.length - 1;
+      if (curSlide === slides.length) curSlide = slides.length - 1;
       // If curSlide is the last slide and last slide is the one to get deleted
       // curSlide should be decremented
       this.changeSlide(curSlide);
-      this.updateSlides(updatedSlides, 'modifySlidesList');
+      this.updateSlides(slides, 'modifySlidesList');
     } else this.reset();
   };
 
@@ -372,21 +358,6 @@ export class Request extends React.Component {
     );
   }
 
-  updateSlides = (updatedSlides, operation, args) => {
-    // Updates the slides in the state
-    // operation is used to authenticate different operations in the server side
-    const { updateToDatabase } = this.props;
-    this.setState(
-      {
-        slides: updatedSlides,
-      },
-      () => {
-        const { slides } = this.state;
-        updateToDatabase(slides, operation, args);
-      },
-    );
-  }
-
   changeSlide = (toSlideNo) => {
     // Changes the current slide
     this.setState(
@@ -403,14 +374,11 @@ export class Request extends React.Component {
     // pushSim adds a sim to the simulations array of the current slide
     // Only members of the forum are allowed to do this
     const {
-      updateToDatabase, isAuthenticated, currentUserId, isMember,
+      updateToDatabase, currentUserId,
     } = this.props;
 
-    if (!(isAuthenticated && isMember)) return;
-
-    const { slides, curSlide } = this.state;
-
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { curSlide } = this.state;
+    const { request: { slides } } = this.props;
 
     const objectToPush = {
       userId: currentUserId,
@@ -424,13 +392,10 @@ export class Request extends React.Component {
       createdAt: Date.now(),
     };
 
-    updatedSlides[curSlide].iframes.push(objectToPush);
+    slides[curSlide].iframes.push(objectToPush);
 
-    this.setState({
-      slides: updatedSlides,
-    });
     // The memberOp argument ensures that the only members are allowed to do this update
-    updateToDatabase(updatedSlides, 'memberOp');
+    updateToDatabase(slides, 'memberOp');
   }
 
   deleteSim = (index) => {
@@ -439,76 +404,63 @@ export class Request extends React.Component {
       return;
     }
 
-    const { slides, curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { curSlide } = this.state;
+    const { request: { slides }, updateToDatabase } = this.props;
+
     const { iframes } = slides[curSlide];
     iframes.splice(index, 1);
-    updatedSlides[curSlide].iframes = iframes;
-    this.updateSlides(updatedSlides, 'editSim', { index, curSlide });
+    slides[curSlide].iframes = iframes;
+    updateToDatabase(slides, 'editSim', { index, curSlide });
   };
 
   deleteComment = (index) => {
     // The index of the comment is passed to delete it
-    const { isAuthenticated, currentUserId } = this.props;
-    const { slides, curSlide } = this.state;
-    // Don't mutate state variables directly
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    if (
-      !(isAuthenticated && currentUserId
-        === slides[curSlide].comments[index].userId)
-    ) { return; }
-    const deletedCommentId = updatedSlides[curSlide].comments.splice(index, 1)[0]._id;
+    const { curSlide } = this.state;
+    const { request: { slides }, updateToDatabase } = this.props;
+
+    const deletedCommentId = slides[curSlide].comments.splice(index, 1)[0]._id;
     // Each comment has an Id associated with it
     // In the server side, it is ensured that only the owner of the comment
     // is allowed to delete it
-    this.updateSlides(updatedSlides, 'editComment', { _id: deletedCommentId, curSlide });
+    updateToDatabase(slides, 'editComment', { _id: deletedCommentId, curSlide });
   }
 
   editComment = (editedComment, index, _id) => {
-    // Comment is edited here
-    const { isAuthenticated, currentUserId } = this.props;
-    const { slides, curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index].userId)) { return; }
-    updatedSlides[curSlide].comments[index].comment = editedComment;
-    updatedSlides[curSlide].comments[index].lastEditedTime = Date.now();
-    this.updateSlides(updatedSlides, 'editComment', { _id, curSlide });
+    const { curSlide } = this.state;
+    const { request: { slides }, updateToDatabase } = this.props;
+    slides[curSlide].comments[index].comment = editedComment;
+    slides[curSlide].comments[index].lastEditedTime = Date.now();
+    updateToDatabase(slides, 'editComment', { _id, curSlide });
   };
 
   deleteReplyComment = (index, subIndex) => {
     // Reply to the comment is deleted
     // Reply comment is identified by the subIndex
-    const { slides, curSlide } = this.state;
-    const { isAuthenticated, currentUserId } = this.props;
-    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index]
-      .replies[subIndex].userId)
-    ) { return; }
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    const deletedReplyId = updatedSlides[curSlide]
+    const { curSlide } = this.state;
+    const { request: { slides }, updateToDatabase } = this.props;
+
+    const deletedReplyId = slides[curSlide]
       .comments[index]
       .replies.splice(subIndex, 1)[0]
       ._id;
-    this.updateSlides(updatedSlides, 'editReply', {
+    updateToDatabase(slides, 'editReply', {
       curSlide,
-      commentId: updatedSlides[curSlide].comments[index]._id,
+      commentId: slides[curSlide].comments[index]._id,
       replyId: deletedReplyId,
     });
   }
 
   editReplyComment = (index, subIndex, editedComment) => {
     // Reply comment is edited here
-    const { slides, curSlide } = this.state;
-    const { isAuthenticated, currentUserId } = this.props;
-    if (!(isAuthenticated && currentUserId === slides[curSlide].comments[index]
-      .replies[subIndex].userId)
-    ) { return; }
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    updatedSlides[curSlide].comments[index].replies[subIndex].comment = editedComment;
-    updatedSlides[curSlide].comments[index].replies[subIndex].lastEditedTime = Date.now();
-    this.updateSlides(updatedSlides, 'editReply', {
+    const { curSlide } = this.state;
+    const { request: { slides }, updateToDatabase } = this.props;
+
+    slides[curSlide].comments[index].replies[subIndex].comment = editedComment;
+    slides[curSlide].comments[index].replies[subIndex].lastEditedTime = Date.now();
+    updateToDatabase(slides, 'editReply', {
       curSlide,
-      commentId: updatedSlides[curSlide].comments[index]._id,
-      replyId: updatedSlides[curSlide].comments[index].replies[subIndex]._id,
+      commentId: slides[curSlide].comments[index]._id,
+      replyId: slides[curSlide].comments[index].replies[subIndex]._id,
     });
   };
 
@@ -547,14 +499,13 @@ export class Request extends React.Component {
 
   changeTitleOfSlide = (newTitle, index) => {
     if (!newTitle) return false;
-    const { isOwner, isAuthenticated } = this.props;
+    const { isOwner, isAuthenticated, updateToDatabase } = this.props;
     if (!(isOwner && isAuthenticated)) { return; }
     const { slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
 
-    updatedSlides[index].title = newTitle;
+    slides[index].title = newTitle;
 
-    this.updateSlides(updatedSlides, 'modifySlidesList');
+    updateToDatabase(slides, 'modifySlidesList');
 
     return true;
   };
@@ -599,7 +550,6 @@ export class Request extends React.Component {
       createdAt,
       description,
       show,
-      slides,
       requestTitle,
       curSlide,
       showMembershipRequests,
@@ -623,7 +573,9 @@ export class Request extends React.Component {
       updateToDatabase,
       isMember,
       currentUserId,
+      request: { slides },
     } = this.props;
+
     if (redirectToWorkbook) { return <Redirect to={`/createworkbook/${_id}`} />; }
     if (backPressed) {
       const { location: { state: { from } } } = this.props;
@@ -801,7 +753,7 @@ export class Request extends React.Component {
                     ref={(el) => { this.commentsList = el; }}
                     slides={slides}
                     curSlide={curSlide}
-                    updateSlides={this.updateSlides}
+                    updateSlides={updateToDatabase}
                     deleteReplyComment={this.deleteReplyComment}
                     deleteComment={this.deleteComment}
                     editComment={this.editComment}
@@ -820,7 +772,7 @@ export class Request extends React.Component {
                     indexOfComment={-1}
                     slides={slides}
                     curSlide={curSlide}
-                    updateSlides={this.updateSlides}
+                    updateSlides={updateToDatabase}
                     isMember={isMember}
                     currentUserId={currentUserId}
                     isAuthenticated={isAuthenticated}
