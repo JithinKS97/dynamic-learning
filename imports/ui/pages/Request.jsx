@@ -38,9 +38,6 @@ export class Request extends React.Component {
       show: false,
       curSlide: 0,
 
-      requestTitle: '',
-      description: '',
-
       editTitle: '',
       editDescription: '',
 
@@ -86,11 +83,6 @@ export class Request extends React.Component {
 
     this.setState(
       {
-        _id: request._id,
-        requestTitle: request.requestTitle,
-        createdAt: request.createdAt,
-        description: request.description,
-        members: request.members,
         show,
 
         // The input fields in the title, description modal box set to the existing title
@@ -101,7 +93,7 @@ export class Request extends React.Component {
       () => {
         // If title and description has not been yet set, the title, description modal
         // box is open
-        const { requestTitle, description } = this.state;
+        const { request: { requestTitle, description } } = this.props;
         if (!(requestTitle && description)) {
           this.setState({
             showEditDescription: true,
@@ -146,6 +138,7 @@ export class Request extends React.Component {
     // _idToNameMappings helps to instantly get the username with their userId.
     // _idToNameMappings[userId] returns username.
     const { request: { allMembers } } = this.props;
+
     if (allMembers) {
       Meteor.call('getUsernames', members, (_err, memberNameUserIds) => {
         const _idToNameMappings = {};
@@ -301,7 +294,6 @@ export class Request extends React.Component {
     this.setState(
       {
         curSlide: 0,
-        slides,
         show: false,
       },
       () => {
@@ -437,8 +429,6 @@ export class Request extends React.Component {
 
     this.setState(
       {
-        requestTitle: editTitle,
-        description: editDescription,
         showEditDescription: false,
       },
       () => {
@@ -466,7 +456,7 @@ export class Request extends React.Component {
       return;
     }
 
-    const { _id } = this.state;
+    const { request: { _id } } = this.props;
 
     Meteor.call(
       'requests.addPendingRequest',
@@ -478,7 +468,7 @@ export class Request extends React.Component {
   };
 
   handleLeave = () => {
-    const { _id, members } = this.state;
+    const { request: { _id, members } } = this.props;
     const { currentUserId, isAuthenticated } = this.props;
     if (!(isAuthenticated && members.includes(currentUserId))) { return; }
     Meteor.call(
@@ -493,12 +483,8 @@ export class Request extends React.Component {
   render = () => {
     const {
       redirectToWorkbook,
-      _id,
       pendingMembers,
-      createdAt,
-      description,
       show,
-      requestTitle,
       curSlide,
       showMembershipRequests,
       topicTitleModalOpen,
@@ -521,11 +507,14 @@ export class Request extends React.Component {
       updateToDatabase,
       isMember,
       currentUserId,
-      request: { slides },
+      request: {
+        slides, requestTitle, description, _id, createdAt,
+      },
     } = this.props;
 
     if (redirectToWorkbook) { return <Redirect to={`/createworkbook/${_id}`} />; }
     if (backPressed) {
+      // eslint-disable-next-line react/prop-types
       const { location: { state: { from } } } = this.props;
       if (from === 'dashboard') {
         return <Redirect to="/dashboard/requests" />;
@@ -949,6 +938,7 @@ Request.propTypes = {
     description: PropTypes.string,
     members: PropTypes.array,
     pendingRequests: PropTypes.array,
+    allMembers: PropTypes.array,
   }),
   updateTitleInTheDatabase: PropTypes.func,
   isAuthenticated: PropTypes.bool,
