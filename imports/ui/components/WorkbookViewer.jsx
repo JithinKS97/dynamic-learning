@@ -139,7 +139,6 @@ class WorkbookViewer extends Component {
         this.setState({
           saving: true,
         });
-        console.log(slides);
         Meteor.call('workbooks.update', _id, slides, () => {
           alert('Saved successfully');
           this.setState({
