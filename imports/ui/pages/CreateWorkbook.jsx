@@ -1116,7 +1116,7 @@ export class CreateWorkbook extends React.Component {
                   setCopiedState={this.setCopiedState}
                   userId={userId}
                 />
-                <ShortResponses 
+                <ShortResponses
                   slides={slides}
                   curSlide={curSlide}
                   updateSlides={this.updateSlides}
