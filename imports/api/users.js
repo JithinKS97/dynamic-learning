@@ -47,7 +47,6 @@ Meteor.methods({
     }));
   },
   updateSchool(username, school) {
-    console.log(process.env.githubclient);
     Meteor.users.update({ username }, { $set: { school } });
   },
 
