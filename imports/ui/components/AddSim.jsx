@@ -73,7 +73,7 @@ export default class AddSim extends Component {
       };
       allSlides[curSlide].iframes.push(sim);
       const { updateSlides } = this.props;
-      updateSlides(allSlides);
+      updateSlides(allSlides, 'ownerOp');
       this.setState({
         isOpen: false,
         node: null,

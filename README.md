@@ -5,7 +5,7 @@
 
 ## Overview of the app
 
-Dynamic Learning is an online platform where teachers and creative coders collaborate to create and share STEM lessons which make use of interactive visualisations created in p5.js.
+Dynamic Learning is an online platform where teachers and creative programmers collaborate to create and share STEM lessons which make use of interactive visualisations created in p5.js.
 
 The project was started as a part of GSoC 2018. The main objective in GSoC 2018 was to lay down a basic structure of the app which will act as a foundation for future developments and will provide an idea about the app to the teacher community and future contributors.
 
@@ -41,10 +41,22 @@ https://github.com/JithinKS97/dynamic-learning/tree/master/GSoC%20proposals
 
 1) Install Meteor.js - https://www.meteor.com/
 2) Install git
-3) Clone the dynamic-learning-app repository
+3) Clone the dynamic-learning repository
 4) Install the node dependencies by executing the command `meteor npm install --save` from the root directory
 5) Start the app with the command `meteor` and the app will start running in localhost:3000 (By default)
 6) Use the command `npm run full-test` to run unit tests. The server side tests results will appear in the terminal and client side test results are shown in the browser
+
+### Some common errors encountered during Installation (For Windows)
+
+#### 1) choco does not exist
+This is usually because choco might not have been installed using admin access
+
+#### 2) meteor does not exist
+This can be due to two main reasons.
+ i)  This might be due to not installing using admin access
+ ii) There are cases where meteor starts working only after closing and reopening the terminal used to install it.
+
+These are some of the common problems faced. If you find any other, please go ahead and open an issue.
 
 ## Build using Meteor.js
 
@@ -57,18 +69,6 @@ of these React components. These main React page components can be found in 'cli
 
 The routes of each of the pages can be found in the 'clients/routes' directory. Detailed documentation for each
 of the components are provided in the components' js files.
-
-## Errors Encountered during Installation (For Wondows)
-
-### 1) choco does not exist
-This is usually because choco might not have been installed using admin access
-
-### 2) meteor does not exist
-This can be due to two main reasons.
- i)  This might be due to not installing using admin access
- ii) There are cases where meteor starts working only after closing and reopening the terminal used to install it.
-
-- These were some of the errors I have come across. If you find more, post it and we will solve it.
 
 
 ### 1) Workbook creator
@@ -148,7 +148,7 @@ Icons have been used from the site `http://react-icons.github.io`
 
 For feature enhancements, bug reports and contributions
 
-You can email me to jithunni.ks@gmail.com or you can create an issue in the repo.
+You can email me to jithinks112@gmail.com or you can create an issue in the repo.
 
 ## Acknowledgement 
 
