@@ -29,56 +29,10 @@ import CommentsList from '../components/CommentsList';
 import SimTiles from '../components/SimTiles';
 import 'semantic-ui-css/semantic.min.css';
 
-/**
- * This component renders the Discussion forum page.
- * The forum is opened by the owner of a workbook.
- * Teachers, programmers and students discuss in this page about the lesson
- * and making new simulations.
- * The forum is made up of sequence of slides.
- * Each slide contains a discussion thread and sequence of simulations.
- */
 
 export class Request extends React.Component {
   constructor(props) {
     super(props);
-
-    /**
-     * Explanation about the state variables used -
-     *
-     * show - If there are no topics, certain elements need to be hidden. show is used for this.
-     *
-     * slides - slides is an array and each slide holds comments (Array) and simulations (Array).
-     *
-     * curSlide - Holds the current slide no.
-     *
-     * requestTitle and description - carries the title and description at the top of the page.
-     *
-     * editTitle and editDescription - carries the values in the input components
-     * (input and text area) in the modal box that appears when edit (Pencil) button is pressed.
-     *
-     * topicTitleModalOpen - shows the modal box that lets to enter the title of the new thread
-     * created when Create new topic button is pressed.
-     *
-     * topicTitle - holds the name of the title of the new thread.
-     *
-     * showEditDescription - shows up the modal box that lets edit the title and description of
-     * the workbook
-     *
-     * redirectToWorkbook - when true, redirects to the corresponding workbook of the forum.
-     *
-     * showMembershipRequests - Opens up the modal box that shows the pending membership requests.
-     *
-     * pendingMembers - an array of userIds of requesters.
-     *
-     * membersName - names of the members of the forums.
-     *
-     * showMembers - opens up the modal box that shows members of the forum.
-     *
-     * backPressed - to redirect to the previous page.
-     *
-     * _idToNameMappings = stores a mapping from userIds to usernames of
-     * all the members (even that left)
-    */
 
     this.state = {
       show: false,
@@ -137,8 +91,6 @@ export class Request extends React.Component {
         createdAt: request.createdAt,
         description: request.description,
         members: request.members,
-        pendingRequests: request.pendingRequests,
-        allMembers: request.allMembers,
         show,
 
         // The input fields in the title, description modal box set to the existing title
@@ -166,7 +118,7 @@ export class Request extends React.Component {
     // joining the forum, but not accepted yet.
     // getUsernames fetches usernames of these users.
     // It returns array of objects. Each object is of the form { username, userId }
-    const { pendingRequests } = this.state;
+    const { request: { pendingRequests } } = this.props;
     if (pendingRequests) {
       Meteor.call(
         'getUsernames',
@@ -182,7 +134,7 @@ export class Request extends React.Component {
 
   generateMembersList = () => {
     // members contain userIds of members of the discussion forum.
-    const { members } = this.state;
+    const { request: { members } } = this.props;
     if (members) {
       Meteor.call('getUsernames', members, (_err, memberNameUserIds) => {
         this.setState({
@@ -193,7 +145,7 @@ export class Request extends React.Component {
     // allMembers contain userIds of all the present members and also members who left the forum
     // _idToNameMappings helps to instantly get the username with their userId.
     // _idToNameMappings[userId] returns username.
-    const { allMembers } = this.state;
+    const { request: { allMembers } } = this.props;
     if (allMembers) {
       Meteor.call('getUsernames', members, (_err, memberNameUserIds) => {
         const _idToNameMappings = {};
@@ -469,10 +421,8 @@ export class Request extends React.Component {
       editDescription, editTitle, requestTitle, description,
     } = this.state;
     const {
-      updateTitleInTheDatabase, isOwner, isAuthenticated, changeOpenedTime,
+      updateTitleInTheDatabase, changeOpenedTime,
     } = this.props;
-
-    if (!(isAuthenticated && isOwner)) return;
 
     // description and requestTitle is empty string when forum is opened
     // So openedTime should be reset
@@ -499,9 +449,7 @@ export class Request extends React.Component {
 
   changeTitleOfSlide = (newTitle, index) => {
     if (!newTitle) return false;
-    const { isOwner, isAuthenticated, updateToDatabase } = this.props;
-    if (!(isOwner && isAuthenticated)) { return; }
-    const { slides } = this.state;
+    const { updateToDatabase, request: { slides } } = this.props;
 
     slides[index].title = newTitle;
 
