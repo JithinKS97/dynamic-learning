@@ -164,6 +164,7 @@ export class CreateWorkbook extends React.Component {
         / 1366,
     });
     this.handleScroll();
+    this.forceUpdate();
   };
 
   handleKeyDown = (e) => {
