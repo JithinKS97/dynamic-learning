@@ -4,12 +4,29 @@ import { Rnd } from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
+import { Modal, Button } from 'semantic-ui-react';
 
 export default class ShortResponse extends React.Component {
   constructor(props) {
     super(props);
     this.handleCopy = this.handleCopy.bind(this);
     this.keyStrokes = 0;
+  }
+
+  answers = () => {
+    const {
+      curSlide,
+      index,
+      slides,
+    } = this.props;
+    const updatedSlides = JSON.parse(JSON.stringify(slides));
+    const { responses } = updatedSlides[curSlide].shortresponse[index];
+    const keys = Object.keys(responses);
+    return keys.map(key => <div> {`${Meteor.users.findOne({_id: key}) && Meteor.users.findOne({_id: key}).username}: ${responses[key]}`} </div>);
+  }
+
+  handleClose = () => {
+    this.setState({ modalOpen: false });
   }
 
   handleCopy(slides, curSlide, index) {
@@ -38,6 +55,9 @@ export default class ShortResponse extends React.Component {
       userId,
       scale,
     } = this.props;
+    const {
+      modalOpen,
+    } = this.state || false;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
@@ -225,7 +245,28 @@ export default class ShortResponse extends React.Component {
               updateSlides(updatedSlides);
             }}
           />
+          { Meteor.userId() === userId && <Button style={{ marginTop: '15px' }} onClick={() => this.setState({ modalOpen: true })}> View Student Responses </Button> }
         </div>
+        <Modal
+          open={modalOpen}
+          onClose={() => this.handleClose()}
+          size="tiny"
+        >
+          <Modal.Header>
+            Answers to this question
+            <Button className="close-button" onClick={() => this.handleClose()}>
+              X
+            </Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Modal.Description>
+              { this.answers() }
+            </Modal.Description>
+
+          </Modal.Content>
+
+        </Modal>
       </Rnd>
     );
   }
