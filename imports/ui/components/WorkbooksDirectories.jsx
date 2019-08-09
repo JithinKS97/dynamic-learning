@@ -14,13 +14,14 @@ import {
   Checkbox,
   Dimmer,
   Loader,
+  Card,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import FaTrash from 'react-icons/lib/fa/trash';
-import FaEdit from 'react-icons/lib/fa/edit';
-import MdSettings from 'react-icons/lib/md/settings';
+import { FaTrash, FaEdit, FaPencilAlt } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import TagsInput from 'react-tagsinput';
+
 import Classes from '../../api/classes';
 import { Workbooks } from '../../api/workbooks';
 import WorkbookViewer from './WorkbookViewer';
@@ -36,6 +37,7 @@ class WorkbooksDirectories extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      folderNameModal: false,
       modalOpen: false,
       modal2Open: false,
       selectedWorkbookId: null,
@@ -46,6 +48,9 @@ class WorkbooksDirectories extends Component {
       tags: [],
       redirectToWorkbook: false,
       classes: [],
+      tempTitle: '',
+      tempFolderTitle: '',
+      selectedFolderId:'',
     };
   }
 
@@ -79,6 +84,8 @@ class WorkbooksDirectories extends Component {
 
   handle2Close = () => this.setState({ modal2Open: false });
 
+  folderNameModalClose = () => this.setState({ folderNameModal: false });
+
   addNewFolder = (e) => {
     e.preventDefault();
     // New directory is created here.
@@ -110,10 +117,9 @@ class WorkbooksDirectories extends Component {
   }
 
   editTitle = () => {
-    const { editable, selectedWorkbookId } = this.state;
-    if (!this.title && editable === true) {
-      return;
-    }
+    const {
+      editable, selectedWorkbookId, node: { title }, tempTitle,
+    } = this.state;
 
     if (editable === true) {
       if (!this.title.value) {
@@ -122,14 +128,22 @@ class WorkbooksDirectories extends Component {
         return;
       }
 
-      Meteor.call('workbooks.updateTitle', selectedWorkbookId, this.title.value);
+      Meteor.call('workbooks.updateTitle', selectedWorkbookId, tempTitle || title);
 
       this.setState({
         editable: false,
-        title: this.title.value,
+        title: tempTitle || title,
+      }, () => {
+        // eslint-disable-next-line no-shadow
+        const { node, title } = this.state;
+        const tempNode = node;
+        tempNode.title = title;
+        this.setState({
+          node: tempNode,
+        });
       });
     } else {
-      this.setState({ editable: true });
+      this.setState({ editable: true, tempTitle: title });
     }
   }
 
@@ -203,6 +217,32 @@ class WorkbooksDirectories extends Component {
       return <Redirect to={`/createworkbook/${selectedWorkbookId}`} />;
     }
 
+    // To check if workbook is already added to the class
+    // If yes, 'Remove' is returned, else 'Add' is returned
+    const addOrRemove = (classcode, workbookId) => {
+      const classObject = Classes.findOne({ classcode });
+      if (classObject) {
+        if (classObject.lessons && classObject.lessons.includes(workbookId)) {
+          return 'Remove';
+        }
+
+        return 'Add';
+      }
+    };
+
+    const shouldDisplayManageClass = () => {
+      try {
+        if (Meteor.user()) {
+          if (Meteor.user().profile.accountType === 'Teacher') {
+            return true;
+          }
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    };
+
     return (
       <div>
         <Dimmer inverted active={!workbooksExists}>
@@ -239,7 +279,7 @@ class WorkbooksDirectories extends Component {
         <Modal
           size="fullscreen"
           open={!!selectedWorkbookId}
-          style={{ transform: 'scale(0.73, 0.73)', marginTop: '5rem' }}
+          style={{ transform: 'scale(0.7, 0.7)', marginTop: '5rem' }}
         >
           <Modal.Header>
             Preview
@@ -250,7 +290,7 @@ class WorkbooksDirectories extends Component {
                 this.setState({ selectedWorkbookId: null, editable: false });
               }}
             >
-              &times;
+              X
             </Button>
           </Modal.Header>
           <Modal.Content>
@@ -278,19 +318,41 @@ class WorkbooksDirectories extends Component {
               {editable
                 ? (
                   <input
+                    // eslint-disable-next-line react/destructuring-assignment
+                    value={this.state.tempTitle}
                     ref={(e) => { this.title = e; }}
-                    style={{ width: '24rem', padding: '0.8rem' }}
+                    style={{
+                      width: '24rem',
+                      padding: '0.6rem',
+                      marginTop: '0.8rem',
+                      fontSize: '1.8rem',
+                      border: '1px solid blue',
+                    }}
+                    onChange={() => {
+                      this.setState({
+                        tempTitle: this.title.value,
+                      });
+                    }}
                   />
                 ) : null}
-              <Button onClick={this.editTitle} style={{ marginLeft: '2rem' }}>{editable ? 'Submit' : 'Edit title'}</Button>
               <Button
+                onClick={this.editTitle}
                 style={{ marginLeft: '2rem' }}
-                onClick={
+              >
+                {editable ? 'Submit' : <FaPencilAlt /> }
+
+              </Button>
+              {shouldDisplayManageClass() ? (
+                <Button
+                  color="blue"
+                  style={{ marginLeft: '2rem' }}
+                  onClick={
                   () => this.openClassModal(selectedWorkbookId, title)
                   }
-              >
-                Add to class
-              </Button>
+                >
+                Manage classes
+                </Button>
+              ) : null}
               <br />
               <Checkbox
                 style={{ margin: '0.8rem 0' }}
@@ -335,8 +397,62 @@ class WorkbooksDirectories extends Component {
                 </Button>
               </Form>
             </Modal.Description>
-          </Modal.Content>
+          </Modal.Content> 
         </Modal>
+
+
+        <Modal open={this.state.folderNameModal}
+        onClose={this.folderNameModalClose}
+        size="tiny">
+          
+           <Modal.Header>
+             Folder Details
+            <Button className="close-button" onClick={this.folderNameModalClose}>
+              &times;
+            </Button>
+          </Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+            
+                  {/* eslint-disable-next-line */}
+                  <label>Name</label>
+                  <br></br>
+                  {/* eslint-disable-next-line no-return-assign */}
+                  <input value = {this.state.tempFolderTitle}
+                   ref={e => this.folderRenameInput = e}
+                   style={{
+                    width: '20rem',
+                    padding: '0.4rem',
+                    marginTop: '1rem',                    
+                    marginBottom: '2rem',
+                    fontSize: '1.2rem',
+                    
+                  }}
+                  onChange={() => {
+                    this.setState({
+                     
+                      tempFolderTitle: this.folderRenameInput.value,
+                    });
+                  }}
+                   placeholder="Name" />
+                   <br></br>
+                
+                
+                <Button onClick={() => {
+              Meteor.call('workbooks.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value)
+              this.setState({
+                folderNameModal: false,
+               // folderRenameInput:this.folderRenameInput
+              })
+            }}>Rename</Button>
+          
+            
+            
+            </Modal.Description>
+        
+            </Modal.Content>
+        </Modal>
+
         <div style={{ height: 400, padding: '1.6rem' }}>
           <SortableTree
             onVisibilityToggle={({ node: theNode, expanded }) => {
@@ -360,10 +476,12 @@ class WorkbooksDirectories extends Component {
                 <button
                   onClick={() => {
                     this.setState({
+
                       selectedWorkbookId: theNode._id,
                     }, () => {
                       this.setState({
                         redirectToWorkbook: true,
+                        tempTitle: theNode.title,
                       });
                     });
                   }}
@@ -374,15 +492,25 @@ class WorkbooksDirectories extends Component {
                 </button>,
                 <button
                   onClick={() => {
-                    this.setState({
-                      node: theNode,
-                      selectedWorkbookId: theNode._id,
-                      title: theNode.title,
-                      isPublic: theNode.isPublic,
-                      tags: theNode.tags,
-                    });
+                    if(theNode.isFile) {
+                      this.setState({
+                        node: theNode,
+                        selectedWorkbookId: theNode._id,
+                        title: theNode.title,
+                        isPublic: theNode.isPublic,
+                        tags: theNode.tags,
+                      });
+                    } else {
+                      this.setState({
+                        folderNameModal:true,
+                        selectedFolderId: theNode._id,
+                        tempFolderTitle: theNode.title,
+                        //selectedWorkbookId: theNode._id
+                      })
+                    }
+       
                   }}
-                  style={{ display: theNode.isFile ? 'block' : 'none' }}
+   
                   className="icon__button"
                 >
                   <MdSettings size={17} color="black" />
@@ -415,7 +543,7 @@ class WorkbooksDirectories extends Component {
           size="tiny"
         >
           <Modal.Header>
-            Select a class to add
+            Add workbook
             {' '}
             {title}
             {' '}
@@ -427,22 +555,50 @@ class WorkbooksDirectories extends Component {
           <Modal.Content>
             <Modal.Description>
               {classes.map(c => (
-                <div>
-                  <Button
-                    style={{ marginBottom: '0.5rem' }}
-                    onClick={() => {
-                      Meteor.call('classes.addlesson', c, addToClassId);
-                      this.setState({ classmodal: false });
-                    }}
-                  >
-                    {
-                      Classes
-                        .findOne({ classcode: c })
-                        ? Classes.findOne({ classcode: c }).name
-                        : null
-                    }
-                  </Button>
-                </div>
+                <Card style={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  margin: 0,
+                }}
+                >
+                  <Card.Content>
+                    <Card.Header>
+                      {
+                        Classes
+                          .findOne({ classcode: c })
+                          ? Classes.findOne({ classcode: c }).name
+                          : null
+                      }
+                    </Card.Header>
+                  </Card.Content>
+                  <Card.Content>
+                    <Button
+                      ref={(e) => { this.addButton = e; }}
+                      style={{ float: 'right' }}
+                      onClick={() => {
+                        if (addOrRemove(c, addToClassId) === 'Add') {
+                          Meteor.call('classes.addlesson', c, addToClassId, (err) => {
+                            if (!err) {
+                              alert('Added to class');
+                              this.forceUpdate();
+                            }
+                          });
+                        } else {
+                          Meteor.call('classes.removeLesson', c, addToClassId, (err) => {
+                            if (!err) {
+                              alert('Removed from class');
+                              this.forceUpdate();
+                            }
+                          });
+                        }
+                      }}
+                    >
+                      {addOrRemove(c, addToClassId)}
+                    </Button>
+                  </Card.Content>
+                </Card>
               ))}
             </Modal.Description>
           </Modal.Content>

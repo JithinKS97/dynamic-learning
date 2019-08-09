@@ -21,8 +21,9 @@ export default class LoadScreen extends React.Component {
             A platform where teachers and creative coders can collaborate to
             create STEM lessons taught with the help of interactive simulations and animations.
           </p>
+          <Link style={{ marginRight: '2.4rem' }} className="btn" to="/about">About</Link>
           <Link className="btn" to="/explore">Explore</Link>
-          <Link style={{ marginLeft: '2.4rem' }} className="btn" to="/login">Login</Link>
+          <Link style={{ marginLeft: '2.4rem' }} className="btn" to="/login">Log in</Link>
         </div>
       </header>
     );

@@ -1,15 +1,32 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Rnd } from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
 import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
-import PropTypes from 'prop-types';
+import { Modal, Button } from 'semantic-ui-react';
 
-export default class TextBox extends React.Component {
+export default class ShortResponse extends React.Component {
   constructor(props) {
     super(props);
     this.handleCopy = this.handleCopy.bind(this);
     this.keyStrokes = 0;
+  }
+
+  answers = () => {
+    const {
+      curSlide,
+      index,
+      slides,
+    } = this.props;
+    const updatedSlides = JSON.parse(JSON.stringify(slides));
+    const { responses } = updatedSlides[curSlide].shortresponse[index];
+    const keys = Object.keys(responses);
+    return keys.map(key => <div> {`${Meteor.users.findOne({_id: key}) && Meteor.users.findOne({_id: key}).username}: ${responses[key]}`} </div>);
+  }
+
+  handleClose = () => {
+    this.setState({ modalOpen: false });
   }
 
   handleCopy(slides, curSlide, index) {
@@ -32,11 +49,15 @@ export default class TextBox extends React.Component {
       curSlide,
       index,
       updateSlides,
-      deleteTextBox,
+      deleteShortResponse,
       isPreview,
       slides,
+      userId,
       scale,
     } = this.props;
+    const {
+      modalOpen,
+    } = this.state || false;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
@@ -45,25 +66,25 @@ export default class TextBox extends React.Component {
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
-          width: updatedSlides[curSlide].textboxes[index].w
-            ? updatedSlides[curSlide].textboxes[index].w
+          width: updatedSlides[curSlide].shortresponse[index].w
+            ? updatedSlides[curSlide].shortresponse[index].w
             : 400,
-          height: updatedSlides[curSlide].textboxes[index].h
-            ? updatedSlides[curSlide].textboxes[index].h
+          height: updatedSlides[curSlide].shortresponse[index].h
+            ? updatedSlides[curSlide].shortresponse[index].h
             : 200,
         }}
         dragHandleClassName="textbox-handle"
         position={{
-          x: updatedSlides[curSlide].textboxes[index].x
-            ? updatedSlides[curSlide].textboxes[index].x
+          x: updatedSlides[curSlide].shortresponse[index].x
+            ? updatedSlides[curSlide].shortresponse[index].x
             : 100,
-          y: updatedSlides[curSlide].textboxes[index].y
-            ? updatedSlides[curSlide].textboxes[index].y
+          y: updatedSlides[curSlide].shortresponse[index].y
+            ? updatedSlides[curSlide].shortresponse[index].y
             : 100,
         }}
         onResize={(_e, _direction, ref) => {
-          updatedSlides[curSlide].textboxes[index].w = ref.offsetWidth;
-          updatedSlides[curSlide].textboxes[index].h = ref.offsetHeight;
+          updatedSlides[curSlide].shortresponse[index].w = ref.offsetWidth;
+          updatedSlides[curSlide].shortresponse[index].h = ref.offsetHeight;
           updateSlides(updatedSlides);
         }}
         enableResizing={{
@@ -77,8 +98,8 @@ export default class TextBox extends React.Component {
           topRight: false,
         }}
         onDragStop={(_e, d) => {
-          updatedSlides[curSlide].textboxes[index].x = d.lastX;
-          updatedSlides[curSlide].textboxes[index].y = d.lastY;
+          updatedSlides[curSlide].shortresponse[index].x = d.lastX;
+          updatedSlides[curSlide].shortresponse[index].y = d.lastY;
           updateSlides(updatedSlides);
         }}
       >
@@ -99,20 +120,21 @@ export default class TextBox extends React.Component {
               color: 'white',
               fontSize: '20px',
               border: '1px solid #404040',
-              width: updatedSlides[curSlide].textboxes[index].w
-                ? `${updatedSlides[curSlide].textboxes[index].w}px`
+              width: updatedSlides[curSlide].shortresponse[index].w
+                ? `${updatedSlides[curSlide].shortresponse[index].w}px`
                 : '400px',
-              height: updatedSlides[curSlide].textboxes[index].h
-                ? `${updatedSlides[curSlide].textboxes[index].h}px`
+              height: updatedSlides[curSlide].shortresponse[index].h
+                ? `${updatedSlides[curSlide].shortresponse[index].h}px`
                 : '200px',
             }}
             value={
-              updatedSlides[curSlide].textboxes[index].value
-                ? updatedSlides[curSlide].textboxes[index].value
+              updatedSlides[curSlide].shortresponse[index].content
+                ? updatedSlides[curSlide].shortresponse[index].content
                 : ''
             }
+            readOnly={Meteor.userId() !== userId}
             onChange={(e) => {
-              updatedSlides[curSlide].textboxes[index].value = e.target.value;
+              updatedSlides[curSlide].shortresponse[index].content = e.target.value;
 
               /**
                * The below code ensures that slides are pushed to the undo stack only when there is
@@ -142,8 +164,8 @@ export default class TextBox extends React.Component {
               updateSlides(updatedSlides, undefined, true);
             }}
             onDrag={() => {
-              updatedSlides[curSlide].textboxes[index].w = this.textarea.offsetWidth;
-              updatedSlides[curSlide].textboxes[index].h = this.textarea.offsetHeight;
+              updatedSlides[curSlide].shortresponse[index].w = this.textarea.offsetWidth;
+              updatedSlides[curSlide].shortresponse[index].h = this.textarea.offsetHeight;
 
               updateSlides(updatedSlides);
             }}
@@ -179,7 +201,7 @@ export default class TextBox extends React.Component {
 
                       if (!confirmation) return;
 
-                      deleteTextBox(index);
+                      deleteShortResponse(index);
                     }}
                   >
                     X
@@ -204,29 +226,48 @@ export default class TextBox extends React.Component {
             </div>
           )}
         </div>
+        <div>
+          <textarea
+            value={updatedSlides[curSlide].shortresponse[index].responses[Meteor.userId()]
+              ? updatedSlides[curSlide].shortresponse[index].responses[Meteor.userId()] : ''}
+            style={{
+              resize: 'none',
+              backgroundColor: 'rgba(0,0,0,0)',
+              color: 'white',
+              fontSize: '20px',
+              border: '1px solid #404040',
+              width: updatedSlides[curSlide].shortresponse[index].w
+                ? `${updatedSlides[curSlide].shortresponse[index].w * 0.92}px`
+                : '370px',
+            }}
+            onChange={(e) => {
+              updatedSlides[curSlide].shortresponse[index].responses[Meteor.userId()] = e ? e.target.value : '';
+              updateSlides(updatedSlides);
+            }}
+          />
+          { Meteor.userId() === userId && <Button style={{ marginTop: '15px' }} onClick={() => this.setState({ modalOpen: true })}> View Student Responses </Button> }
+        </div>
+        <Modal
+          open={modalOpen}
+          onClose={() => this.handleClose()}
+          size="tiny"
+        >
+          <Modal.Header>
+            Answers to this question
+            <Button className="close-button" onClick={() => this.handleClose()}>
+              X
+            </Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Modal.Description>
+              { this.answers() }
+            </Modal.Description>
+
+          </Modal.Content>
+
+        </Modal>
       </Rnd>
     );
   }
 }
-
-TextBox.propTypes = {
-  index: PropTypes.number,
-  deleteTextBox: PropTypes.func,
-  isPreview: PropTypes.bool,
-  slides: PropTypes.arrayOf(PropTypes.object),
-  curSlide: PropTypes.number,
-  setCopiedState: PropTypes.func,
-  updateSlides: PropTypes.func,
-  scale: PropTypes.number,
-};
-
-TextBox.defaultProps = {
-  index: 0,
-  deleteTextBox: () => null,
-  isPreview: true,
-  slides: [{}],
-  curSlide: 0,
-  setCopiedState: () => null,
-  updateSlides: () => null,
-  scale: 1,
-};

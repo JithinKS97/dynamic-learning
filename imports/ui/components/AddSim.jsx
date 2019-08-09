@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FaCode from 'react-icons/lib/fa/code';
+import { FaCode } from 'react-icons/fa';
 import { Meteor } from 'meteor/meteor';
 import {
   Button,
@@ -73,7 +73,7 @@ export default class AddSim extends Component {
       };
       allSlides[curSlide].iframes.push(sim);
       const { updateSlides } = this.props;
-      updateSlides(allSlides);
+      updateSlides(allSlides, 'ownerOp');
       this.setState({
         isOpen: false,
         node: null,

@@ -10,7 +10,7 @@ import {
   Header,
 } from 'semantic-ui-react';
 import { Tracker } from 'meteor/tracker';
-import FaCode from 'react-icons/lib/fa/code';
+import { FaCode } from 'react-icons/fa';
 import TagsInput from 'react-tagsinput';
 import WorkbooksDirectories from '../components/WorkbooksDirectories';
 import RequestsList from '../components/RequestsList';
@@ -25,6 +25,8 @@ import 'semantic-ui-css/semantic.min.css';
 import { generateSrc } from '../../functions/index.js';
 import Profile from '../components/Profile';
 import Classes from '../components/Classes';
+import Assessments from '../components/Assessments';
+
 /*
     This is the Component which renders the dashboard of the application.
  */
@@ -144,7 +146,7 @@ export default class Dashboard extends React.Component {
       case 'requests':
         return (
           <div>
-            <Header style={{ marginLeft: '2.4rem' }}>Requests</Header>
+            <Header>Requests</Header>
             <RequestsList />
           </div>
         );
@@ -152,7 +154,7 @@ export default class Dashboard extends React.Component {
       case 'uploadsim':
         return (
           <div>
-            <Header>Manage simulations</Header>
+            <Header>Manage Simulations</Header>
             <SimsDirectories
               height={window.innerHeight - 150}
               getNode={this.getNode}
@@ -177,15 +179,22 @@ export default class Dashboard extends React.Component {
       case 'profile':
         return (
           <div>
-            <Header> User Profile </Header>
+            <Header>User Profile</Header>
             <Profile />
           </div>
         );
       case 'classes':
         return (
           <div>
-            <Header> Classes </Header>
+            <Header>Classes</Header>
             <Classes />
+          </div>
+        );
+      case 'assessments':
+        return (
+          <div>
+            <Header> Assessments </Header>
+            <Assessments />
           </div>
         );
       default:

@@ -7,8 +7,7 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
 import { Lessons } from '../../api/lessons';
-import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'; 
-import FaThumbsDown from 'react-icons/lib/fa/thumbs-down'
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 
 export default class Votes extends React.Component {
 

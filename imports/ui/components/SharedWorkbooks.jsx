@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Modal, Button, Input, Dimmer, Loader, Card,
 } from 'semantic-ui-react';
-import FaCodeFork from 'react-icons/lib/fa/code-fork';
+import { GoRepoForked } from 'react-icons/go';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import WorkbookViewer from './WorkbookViewer';
@@ -122,7 +122,7 @@ export default class SharedWorkbooks extends React.Component {
         <Modal
           open={!!workbook}
           size="fullscreen"
-          style={{ transform: 'scale(0.79, 0.79)', marginTop: '3rem' }}
+          style={{ transform: 'scale(0.7, 0.7)', marginTop: '3rem' }}
         >
           <Modal.Header style={{ transformOrigin: 'left' }}>
             Preview
@@ -146,7 +146,7 @@ export default class SharedWorkbooks extends React.Component {
                   });
                 }}
                 >
-                  <FaCodeFork />
+                  <GoRepoForked />
                 Fork
                 </Button>
               ) : null}

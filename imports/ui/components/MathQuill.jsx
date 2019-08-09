@@ -1,9 +1,9 @@
 import React from 'react';
 import MathQuill, { addStyles as addMathquillStyles } from 'react-mathquill';
-import Rnd from 'react-rnd';
-import TiArrowMove from 'react-icons/lib/ti/arrow-move';
-import FaClose from 'react-icons/lib/fa/close';
-import MdNetworkCell from 'react-icons/lib/md/network-cell';
+import { Rnd } from 'react-rnd';
+import { TiArrowMove } from 'react-icons/ti';
+import { FaTimes } from 'react-icons/fa';
+import { MdNetworkCell } from 'react-icons/md';
 import PropTypes from 'prop-types';
 
 // inserts the required css to the <head> block.
@@ -63,7 +63,7 @@ export default class App extends React.Component {
           >
 
             <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '0.1rem' }}>
-              <FaClose
+              <FaTimes
                 className="sim-delete"
                 size="20"
                 onClick={() => {
@@ -73,7 +73,7 @@ export default class App extends React.Component {
                 }}
               >
                 X
-              </FaClose>
+              </FaTimes>
 
               <TiArrowMove size="22" className="textbox-handle" />
 

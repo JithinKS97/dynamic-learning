@@ -35,6 +35,13 @@ const RequestsList = (props) => {
     }
   };
 
+  const displayCreatedTime = (index) => {
+    const { requests } = props;
+
+    if (requests.length > 0) {
+      return findTime(requests[index].createdAt).fromNow();
+    }
+  };
 
   const renderRequests = () => props.requests.map((request, index) => {
     if (request.requestTitle) {
@@ -57,9 +64,20 @@ const RequestsList = (props) => {
                 {_idToNameMappings[request.userId]}
               </div>
               <div>
-                  last activity
+                |
+              </div>
+              <div>
+                last activity
                 {' '}
                 {displayTime(index)}
+              </div>
+              <div>
+                |
+              </div>
+              <div>
+                created
+                {' '}
+                {displayCreatedTime(index)}
               </div>
             </Card.Meta>
           </Card.Content>

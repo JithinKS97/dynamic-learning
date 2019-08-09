@@ -109,7 +109,7 @@ export default class Signup extends React.Component {
       <div className="boxed-view">
         <Card>
           <Card.Content>
-            <Card.Header>Signup</Card.Header>
+            <Card.Header>Sign Up</Card.Header>
           </Card.Content>
 
           <Card.Content>
@@ -137,14 +137,14 @@ export default class Signup extends React.Component {
                 />
               </Form.Field>
               <Form.Field>
-                <label> Account Type </label>
+                <label>Account Type</label>
                 <Form.Select
                   onChange={(_e, { value }) => { this.accountType = value; }}
                   options={vals}
                   placeholder="Account Type"
                 />
               </Form.Field>
-              <Button>Create Account</Button>
+              <Button>Sign up</Button>
             </Form>
           </Card.Content>
 

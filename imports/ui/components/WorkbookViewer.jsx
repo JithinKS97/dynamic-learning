@@ -7,14 +7,17 @@ import {
   Loader,
   Segment,
   Grid,
+  Button,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import SimsList from './SimsList';
 import ListWithoutDelete from './ListWithoutDelete';
+import List from './List';
 import DrawingBoardCmp from './DrawingBoardCmp';
 import { Workbooks } from '../../api/workbooks';
 import TextBoxes from './TextBoxes';
-
+import MCQs from './MCQs';
+import ShortResponses from './ShortResponses';
 
 /**
  * This Component is intended for the creation of a workbook by the teachers. Each workbook
@@ -102,11 +105,72 @@ class WorkbookViewer extends Component {
     window.removeEventListener('keydown', this.handleKeyDown, false);
   }
 
+  saveToDatabase = () => {
+    /* This function is intended for saving the slides to the database.
+            If not logged in, user is asked to login first.
+        */
+
+    if (!Meteor.userId()) {
+      this.setState({ loginNotification: true });
+      return;
+    }
+
+    if (this.addSim && this.addSim.state.isOpen) return;
+
+    const { userId, title, slides } = this.state;
+
+
+    const { _id } = this.state;
+
+    const workbook = Workbooks.findOne({ _id });
+
+    /* If the slides in the state has the same values as that of the slides
+            in the database, we need not save, expect to deep include by chai checks this equality.
+            If they are not same, an error is thrown. When we catch the error, we can see that the
+            data are different and we initiate the save.
+        */
+
+    try {
+      expect({ slides: workbook.slides }).to.deep.include({
+        slides,
+      });
+    } catch (error) {
+      if (error) {
+        this.setState({
+          saving: true,
+        });
+        Meteor.call('workbooks.update', _id, slides, () => {
+          alert('Saved successfully');
+          this.setState({
+            saving: false,
+          });
+        });
+      }
+    }
+  }
+
   handleWindowResize = () => {
     this.setState({
       scaleX: (document.getElementsByClassName('fourteen wide column')[0].offsetWidth / 1366),
     });
   };
+
+  updateSlides = (updatedSlides) => {
+    this.setState(
+      {
+        slides: updatedSlides,
+      },
+      () => {
+        /**
+           * shouldNotLoad is true only when a sim is individually updated and saved
+           * Here, we need not load data to all the sims
+           * So if shouldNotLoad is true, we return without calling loadDatatoSketches
+           */
+
+        this.simsList.loadDataToSketches();
+      },
+    );
+  }
 
   setSizeOfPage = (pageCount) => {
     /**
@@ -197,7 +261,7 @@ class WorkbookViewer extends Component {
     const { slides, curSlide } = this.state;
     if (theSlides === undefined) {
       this.setState({
-        theCurSlide,
+        curSlide: theCurSlide,
       }, () => {
         this.pageCount = slides[curSlide].pageCount || 0;
         this.setSizeOfPage(this.pageCount);
@@ -205,14 +269,14 @@ class WorkbookViewer extends Component {
       });
     } else if (theCurSlide === undefined) {
       this.setState({
-        theSlides,
+        slides: theSlides,
       }, () => {
         this.simsList.loadDataToSketches();
       });
     } else {
       this.setState({
-        theSlides,
-        theCurSlide,
+        slides: theSlides,
+        curSlide: theCurSlide,
       }, () => {
         this.setSizeOfPage(this.pageCount);
         this.simsList.loadDataToSketches();
@@ -281,6 +345,7 @@ class WorkbookViewer extends Component {
             <Grid.Column style={{ textAlign: 'center' }} width={2}>
               <h1 style={{ marginTop: '1.6rem' }}>{curSlide + 1}</h1>
               <ListWithoutDelete
+                save={this.saveToDatabase}
                 showTitle={false}
                 {...this.state}
                 delete={this.deleteSlide}
@@ -306,6 +371,22 @@ class WorkbookViewer extends Component {
                 <TextBoxes
                   isPreview
                   deleteTextBox={() => {}}
+                  slides={slides}
+                  curSlide={curSlide}
+                  saveChanges={this.saveChanges}
+                />
+                <ShortResponses
+                  isPreview
+                  deleteShortResponse={() => {}}
+                  updateSlides={this.updateSlides}
+                  slides={slides}
+                  curSlide={curSlide}
+                  saveChanges={this.saveChanges}
+                />
+                <MCQs
+                  isPreview
+                  deleteQuestion={() => {}}
+                  updateSlides={this.updateSlides}
                   slides={slides}
                   curSlide={curSlide}
                   saveChanges={this.saveChanges}

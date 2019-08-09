@@ -1,13 +1,15 @@
 import React from 'react';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { Meteor } from 'meteor/meteor';
 import 'semantic-ui-css/semantic.min.css';
-import TiArrowMove from 'react-icons/lib/ti/arrow-move';
-import FaClose from 'react-icons/lib/fa/close';
-import FaCode from 'react-icons/lib/fa/code';
-import MdNetworkCell from 'react-icons/lib/md/network-cell';
+import { TiArrowMove } from 'react-icons/ti';
+import {
+  FaTimes,
+  FaCode,
+  FaCopy,
+} from 'react-icons/fa';
+import { MdNetworkCell } from 'react-icons/md';
 import { Button } from 'semantic-ui-react';
-import FaCopy from 'react-icons/lib/fa/copy';
 import { Session } from 'meteor/session';
 import PropTypes from 'prop-types';
 import SimContainer from './SimContainer';
@@ -67,6 +69,7 @@ export default class SimsList extends React.Component {
       updateSlides,
       deleteSim,
       userId,
+      scale,
     } = this.props;
 
     // eslint-disable-next-line react/destructuring-assignment
@@ -99,9 +102,10 @@ export default class SimsList extends React.Component {
             // eslint-disable-next-line react/no-array-index-key
             <div key={index} className="sim-floating">
               <Rnd
+                scale={scale}
                 bounds=".canvas-container"
-                dragHandleClassName=".sim-handle"
-                resizeHandleClasses=".sim-resize"
+                dragHandleClassName="sim-handle"
+                resizeHandleClasses="sim-resize"
                 size={{
                   width: isPreview ? iframe.w : iframe.w + 40,
                   height: iframe.h,
@@ -177,7 +181,7 @@ export default class SimsList extends React.Component {
                     }}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <FaClose
+                      <FaTimes
                         className="sim-delete"
                         onClick={() => {
                           const confirmation = confirm(
@@ -295,6 +299,7 @@ SimsList.propTypes = {
   deleteSim: PropTypes.func,
   userId: PropTypes.string,
   updateSlides: PropTypes.func,
+  scale: PropTypes.number,
 };
 
 SimsList.defaultProps = {
@@ -306,4 +311,5 @@ SimsList.defaultProps = {
   deleteSim: () => null,
   userId: '',
   updateSlides: () => null,
+  scale: 1,
 };

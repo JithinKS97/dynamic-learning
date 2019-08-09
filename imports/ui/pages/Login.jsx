@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 
 import { Button, Form, Card } from 'semantic-ui-react';
-import FaGithub from 'react-icons/lib/fa/github';
-import FaGoogle from 'react-icons/lib/fa/google';
+import { FaGithub, FaGoogle } from 'react-icons/fa';
 import 'semantic-ui-css/semantic.min.css';
 
 import { Session } from 'meteor/session';
+
+document.title = "Dynamic Learning";
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -112,11 +113,10 @@ export default class Login extends React.Component {
         <Card>
 
           <Card.Content>
-            <Card.Header>Login</Card.Header>
+            <Card.Header>Log In</Card.Header>
           </Card.Content>
 
           <Card.Content>
-
             {error ? <p>{error}</p> : undefined}
             <Form noValidate onSubmit={this.onSubmit}>
               <Form.Field>
@@ -134,9 +134,7 @@ export default class Login extends React.Component {
             </Form>
           </Card.Content>
 
-          <Card.Content style={{ textAlign: 'center' }}>
-                        OR
-          </Card.Content>
+          <Card.Content style={{ textAlign: 'center' }}>Or</Card.Content>
 
           <Card.Content style={{ textAlign: 'center' }}>
             <Button
@@ -144,16 +142,30 @@ export default class Login extends React.Component {
               onClick={() => this.ghAuth()}
               style={{ width: '100%' }}
             >
-              <FaGithub size={22} style={{ marginRight: '8px', marginLeft: '-8px', marginBottom: '3px' }} />
-                            Log in with GitHub
+              <FaGithub
+                size={32}
+                style={{
+                  marginRight: '8px',
+                  marginLeft: '-8px',
+                  verticalAlign: 'middle',
+                }}
+              />
+              Log in with GitHub
             </Button>
             <Button
               type="submit"
               style={{ marginTop: '0.6rem', width: '100%' }}
               onClick={() => this.googleAuth()}
             >
-              <FaGoogle size={21} style={{ marginRight: '8px', marginLeft: '-8px', marginBottom: '3px' }} />
-                            Log in with Google
+              <FaGoogle
+                size={32}
+                style={{
+                  marginRight: '8px',
+                  marginLeft: '-8px',
+                  verticalAlign: 'middle',
+                }}
+              />
+              Log in with Google
             </Button>
           </Card.Content>
 

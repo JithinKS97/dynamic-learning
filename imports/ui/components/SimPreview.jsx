@@ -1,5 +1,5 @@
 import React from 'react';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
