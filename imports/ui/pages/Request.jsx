@@ -154,7 +154,8 @@ export class Request extends React.Component {
     // Generates a list of cards from the pendingMembers
     // The card contains an accept button when pressed adds the
     // user as the member of the discussion forum by invoking 'requests.addMember'
-    const { pendingMembers, _id } = this.state;
+    const { pendingMembers } = this.state;
+    const { request: { _id } } = this.props;
     return pendingMembers
       .filter(item => item)
       .map(member => (
@@ -176,14 +177,9 @@ export class Request extends React.Component {
                   'requests.addMember',
                   _id,
                   member.userId,
-                  () => {
-                    // regenerates the pennding members list which updates the list.
-                    this.generatePendingUsersNamesList();
-                  },
-                  () => {
-                    alert('successfully added !!!');
-                  },
                 );
+                this.generatePendingMembersList();
+                alert('successfully added !!!');
               }}
             >
                 Accept
