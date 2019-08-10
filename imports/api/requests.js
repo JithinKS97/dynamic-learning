@@ -127,24 +127,23 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
     // userId: this.userId ensures that only owner of the forum can accept members
 
     // members: { $nin: [memberId] } ensures that userId of a
     // user is added only once into the members list.
     Requests.update(
-      { _id, userId: this.userId, members: { $nin: [memberId] } },
+      { _id, members: { $nin: [memberId] } },
       { $push: { members: memberId } },
     );
     // Removes the userId from the pendingRequests list when they are added to the members list.
     Requests.update(
-      { _id, userId: this.userId, members: { $in: [memberId] } },
+      { _id, members: { $in: [memberId] } },
       { $pull: { pendingRequests: memberId } },
     );
     // allMembers contain userIds of all the members,
     // even those that have been left.
     Requests.update(
-      { _id, userId: this.userId, allMembers: { $nin: [memberId] } },
+      { _id, allMembers: { $nin: [memberId] } },
       { $push: { allMembers: memberId } },
     );
   },
