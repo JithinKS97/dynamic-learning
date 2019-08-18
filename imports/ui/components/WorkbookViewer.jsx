@@ -119,54 +119,32 @@ class WorkbookViewer extends Component {
 
     const { userId, title, slides } = this.state;
 
-    if (userId !== Meteor.userId()) {
-      const confirmation = confirm(
-        'Are you sure you want to fork this workbook?',
-      );
 
-      if (!confirmation) return;
+    const { _id } = this.state;
 
-      Meteor.call('workbooks.insert', title, (err, id) => {
-        Meteor.call('workbooks.update', id, slides);
+    const workbook = Workbooks.findOne({ _id });
 
-        this.setState(
-          {
-            redirectToDashboard: true,
-            forkedWorkbookId: id,
-          },
-          () => {
-            confirm('Forked succesfully');
-          },
-        );
-      });
-    } else {
-      const { _id } = this.state;
-
-      const workbook = Workbooks.findOne({ _id });
-
-      /* If the slides in the state has the same values as that of the slides
+    /* If the slides in the state has the same values as that of the slides
             in the database, we need not save, expect to deep include by chai checks this equality.
             If they are not same, an error is thrown. When we catch the error, we can see that the
             data are different and we initiate the save.
         */
 
-      try {
-        expect({ slides: workbook.slides }).to.deep.include({
-          slides,
+    try {
+      expect({ slides: workbook.slides }).to.deep.include({
+        slides,
+      });
+    } catch (error) {
+      if (error) {
+        this.setState({
+          saving: true,
         });
-      } catch (error) {
-        if (error) {
+        Meteor.call('workbooks.update', _id, slides, () => {
+          alert('Saved successfully');
           this.setState({
-            saving: true,
+            saving: false,
           });
-
-          Meteor.call('workbooks.update', _id, slides, () => {
-            alert('Saved successfully');
-            this.setState({
-              saving: false,
-            });
-          });
-        }
+        });
       }
     }
   }
@@ -178,7 +156,6 @@ class WorkbookViewer extends Component {
   };
 
   updateSlides = (updatedSlides) => {
-
     this.setState(
       {
         slides: updatedSlides,

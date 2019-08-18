@@ -166,7 +166,7 @@ Meteor.methods({
     check(_id, String);
     check(slides, Array);
     Workbooks.update(
-      { _id, userId: this.userId },
+      { _id },
       { $set: { slides, updatedAt: moment().valueOf() } },
     );
   },
