@@ -97,119 +97,121 @@ const SimTile = (props) => {
             </Button>
           </div>
         </Modal.Header>
-        <Modal.Content>
-          <SimPreview
-            userId={selectedSim ? selectedSim.userId : null}
-            index={index}
-            slides={slides}
-            save={update}
-            curSlide={curSlide}
-            w={selectedSim ? selectedSim.w : 640}
-            h={selectedSim ? selectedSim.h : 360}
-            src={
-              selectedSim
-                ? generateSrc(selectedSim.username, selectedSim.project_id)
-                : null
-            }
-          />
-          {selectedSim ? (
-            <Card style={{ width: '100%' }}>
-              <Card.Content
-                style={{ display: 'flex', flexDirection: 'row', width: '100%' }}
-              >
-                {!titleEditable ? (
-                  <h5 style={{ flex: 14 }}>{selectedSim.title}</h5>
-                ) : null}
-                {titleEditable ? (
-                  <Input
-                    onChange={(_e, d) => {
-                      changeTempTitle(d.value);
-                    }}
-                    value={tempTitle}
-                    style={{
-                      flex: 14,
-                      marginRight: '1.2rem',
-                    }}
-                  />
-                ) : null}
-                {isOwner ? (
-                  <Button
-                    icon
-                    onClick={() => {
-                      if (titleEditable === false) {
-                        changeTitleEditable(true);
-                        changeTempTitle(selectedSim.title);
-                      } else {
-                        changeTitleEditable(false);
-                        const tempSim = selectedSim;
-                        if (tempTitle) {
-                          tempSim.title = tempTitle;
-                          setSelectedSim(tempSim);
-                          slides[curSlide].iframes[index] = tempSim;
-                          update(slides, 'editSim', { curSlide, index });
-                        }
-                      }
-                    }}
-                    style={{ float: 'right', flex: 1 }}
-                  >
-                    {titleEditable ? <MdSave /> : <FaPen icon />}
-                  </Button>
-                ) : null}
-              </Card.Content>
-              <Card.Content
-                style={{ display: 'flex', flexDirection: 'row', width: '100%' }}
-              >
-                {!tagEditable ? (
-                  <h5 style={{ flex: 14 }}>
-                    {`<iframe src="${generateSrc(
-                      selectedSim.username,
-                      selectedSim.project_id,
-                    )}"></iframe>`}
-
-                  </h5>
-                ) : null}
-                {tagEditable ? (
-                  <Input
-                    onChange={(e, d) => {
-                      changeTempTag(d.value);
-                    }}
-                    value={tempTag}
-                    style={{ flex: 14, marginRight: '1.2rem' }}
-                  />
-                ) : null}
-                {isOwner ? (
-                  <Button
-                    icon
-                    onClick={() => {
-                      if (tagEditable === false) {
-                        changeTagEditable(true);
-                        changeTempTag(
-                          `<iframe src="${generateSrc(
-                            selectedSim.username,
-                            selectedSim.project_id,
-                          )}"></iframe>`,
-                        );
-                      } else {
-                        changeTagEditable(false);
-                        if (isValidp5EmbedTag(tempTag)) {
+        <Modal.Description>
+          <Modal.Content style={{ margin: '2rem' }}>
+            <SimPreview
+              userId={selectedSim ? selectedSim.userId : null}
+              index={index}
+              slides={slides}
+              save={update}
+              curSlide={curSlide}
+              w={selectedSim ? selectedSim.w : 640}
+              h={selectedSim ? selectedSim.h : 360}
+              src={
+                selectedSim
+                  ? generateSrc(selectedSim.username, selectedSim.project_id)
+                  : null
+              }
+            />
+            {selectedSim ? (
+              <Card style={{ width: '100%' }}>
+                <Card.Content
+                  style={{ display: 'flex', flexDirection: 'row', width: '100%' }}
+                >
+                  {!titleEditable ? (
+                    <h5 style={{ flex: 14 }}>{selectedSim.title}</h5>
+                  ) : null}
+                  {titleEditable ? (
+                    <Input
+                      onChange={(_e, d) => {
+                        changeTempTitle(d.value);
+                      }}
+                      value={tempTitle}
+                      style={{
+                        flex: 14,
+                        marginRight: '1.2rem',
+                      }}
+                    />
+                  ) : null}
+                  {isOwner ? (
+                    <Button
+                      icon
+                      onClick={() => {
+                        if (titleEditable === false) {
+                          changeTitleEditable(true);
+                          changeTempTitle(selectedSim.title);
+                        } else {
+                          changeTitleEditable(false);
                           const tempSim = selectedSim;
-                          [, tempSim.username] = tempTag.match('org/(.*)/embed');
-                          [, tempSim.project_id] = tempTag.match('embed/(.*)"');
-                          setSelectedSim(tempSim);
-                          slides[curSlide].iframes[index] = tempSim;
-                          update(slides, 'editSim', { curSlide, index });
+                          if (tempTitle) {
+                            tempSim.title = tempTitle;
+                            setSelectedSim(tempSim);
+                            slides[curSlide].iframes[index] = tempSim;
+                            update(slides, 'editSim', { curSlide, index });
+                          }
                         }
-                      }
-                    }}
-                    style={{ flex: 1 }}
-                  >
-                    {tagEditable ? <MdSave icon /> : <FaPen icon />}
-                  </Button>
-                ) : null}
-              </Card.Content>
-            </Card>
-          ) : null}
-        </Modal.Content>
+                      }}
+                      style={{ float: 'right', flex: 1 }}
+                    >
+                      {titleEditable ? <MdSave /> : <FaPen icon />}
+                    </Button>
+                  ) : null}
+                </Card.Content>
+                <Card.Content
+                  style={{ display: 'flex', flexDirection: 'row', width: '100%' }}
+                >
+                  {!tagEditable ? (
+                    <h5 style={{ flex: 14 }}>
+                      {`<iframe src="${generateSrc(
+                        selectedSim.username,
+                        selectedSim.project_id,
+                      )}"></iframe>`}
+
+                    </h5>
+                  ) : null}
+                  {tagEditable ? (
+                    <Input
+                      onChange={(e, d) => {
+                        changeTempTag(d.value);
+                      }}
+                      value={tempTag}
+                      style={{ flex: 14, marginRight: '1.2rem' }}
+                    />
+                  ) : null}
+                  {isOwner ? (
+                    <Button
+                      icon
+                      onClick={() => {
+                        if (tagEditable === false) {
+                          changeTagEditable(true);
+                          changeTempTag(
+                            `<iframe src="${generateSrc(
+                              selectedSim.username,
+                              selectedSim.project_id,
+                            )}"></iframe>`,
+                          );
+                        } else {
+                          changeTagEditable(false);
+                          if (isValidp5EmbedTag(tempTag)) {
+                            const tempSim = selectedSim;
+                            [, tempSim.username] = tempTag.match('org/(.*)/embed');
+                            [, tempSim.project_id] = tempTag.match('embed/(.*)"');
+                            setSelectedSim(tempSim);
+                            slides[curSlide].iframes[index] = tempSim;
+                            update(slides, 'editSim', { curSlide, index });
+                          }
+                        }
+                      }}
+                      style={{ flex: 1 }}
+                    >
+                      {tagEditable ? <MdSave icon /> : <FaPen icon />}
+                    </Button>
+                  ) : null}
+                </Card.Content>
+              </Card>
+            ) : null}
+          </Modal.Content>
+        </Modal.Description>
       </Modal>
     </div>
   );
