@@ -3,11 +3,11 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-control-regex */
-import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { Meteor } from 'meteor/meteor';
-import { Session } from 'meteor/session';
-import { withTracker } from 'meteor/react-meteor-data';
+import React from "react";
+import { Link, Redirect } from "react-router-dom";
+import { Meteor } from "meteor/meteor";
+import { Session } from "meteor/session";
+import { withTracker } from "meteor/react-meteor-data";
 import {
   Menu,
   Button,
@@ -17,22 +17,22 @@ import {
   Modal,
   Form,
   Grid,
-  List,
-} from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
+  List
+} from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { expect } from 'chai';
-import DOMPurify from 'dompurify';
-import { FaTrash, FaEdit } from 'react-icons/fa';
-import { MdUndo, MdRedo } from 'react-icons/md';
-import TextBoxes from '../components/TextBoxes';
-import MCQs from '../components/MCQs';
-import ShortResponses from '../components/ShortResponses';
-import AddSim from '../components/AddSim';
-import SlidesList from '../components/List';
-import SimsList from '../components/SimsList';
-import { Workbooks } from '../../api/workbooks';
-import DrawingBoardCmp from '../components/DrawingBoardCmp';
+import { expect } from "chai";
+import DOMPurify from "dompurify";
+import { FaTrash, FaEdit } from "react-icons/fa";
+import { MdUndo, MdRedo } from "react-icons/md";
+import TextBoxes from "../components/TextBoxes";
+import MCQs from "../components/MCQs";
+import ShortResponses from "../components/ShortResponses";
+import AddSim from "../components/AddSim";
+import SlidesList from "../components/List";
+import SimsList from "../components/SimsList";
+import { Workbooks } from "../../api/workbooks";
+import DrawingBoardCmp from "../components/DrawingBoardCmp";
 
 /* This Component is intended for the development of a
     workbook by the teachers. Each workbook
@@ -62,24 +62,24 @@ export class CreateWorkbook extends React.Component {
       title: true,
       curSlide: 0,
       slides: [],
-      _id: '',
+      _id: "",
       initialized: false,
       loginNotification: false,
       redirectToLogin: false,
       interactEnabled: false,
       redirectToDashboard: false,
       forkedWorkbookId: null,
-      author: '',
+      author: "",
       copied: false,
       scaleX: 1,
       description: [],
       showDescription: false,
       addDescription: false,
-      saving: false,
+      saving: false
     };
 
     /* PageCount holds the the value associated with the extra length of the canvas
-        PushSlide is for creation of new slide, save to save the slides to the db,
+        pushSlide is for creation of new slide, save to save the slides to the db,
         handleKeyDown for dealing with shortcuts (See the definitions below)
     */
 
@@ -98,7 +98,7 @@ export class CreateWorkbook extends React.Component {
 
     window.onresize = this.handleWindowResize;
 
-    window.addEventListener('keydown', this.handleKeyDown, false);
+    window.addEventListener("keydown", this.handleKeyDown, false);
     this.handleWindowResize();
     $(window).scroll(this.handleScroll);
   }
@@ -106,68 +106,47 @@ export class CreateWorkbook extends React.Component {
   componentWillReceiveProps(nextProps) {
     // eslint-disable-next-line react/prop-types
     const { workbookExists, workbook } = nextProps;
-    const { initialized, userId } = this.state;
+    const { initialized } = this.state;
     if (workbookExists === false) return;
     if (initialized === true) return;
 
     this.setState(
       {
         ...workbook,
-        initialized: true,
+        initialized: true
       },
       () => {
-        Meteor.call('getUsername', userId, (err, name) => {
-          this.setState({
-            author: name,
-          });
-        });
+        const { slides } = this.state;
 
-        const { slides, curSlide } = this.state;
+        this.interact();
 
         if (slides.length === 0) {
-          this.pushSlide();
-
-          this.setSizeOfPage(0);
-          this.db.reset();
-
-          this.updateSlides(slides);
-          this.interact();
+          this.addNewSlide();
         } else {
-          this.pageCount = slides[curSlide].pageCount || 0;
-
-          /* The size of the page is set first, then we completely reset the canvas
-              And the notes are drawn back to the canvas
-          */
-
-          this.setSizeOfPage(this.pageCount);
-          this.db.reset();
-          this.db.setImg(slides[curSlide].note);
-          this.updateSlides(slides);
-          this.interact();
+          this.changeSlide(0);
         }
-      },
+      }
     );
   }
 
-
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown, false);
-    window.removeEventListener('scroll', this.handleScroll, false);
-    window.removeEventListener('resize', this.handleWindowResize, false);
-    window.removeEventListener('keydown', this.handleKeyDown, false);
+    window.removeEventListener("keydown", this.handleKeyDown, false);
+    window.removeEventListener("scroll", this.handleScroll, false);
+    window.removeEventListener("resize", this.handleWindowResize, false);
+    window.removeEventListener("keydown", this.handleKeyDown, false);
   }
 
   handleWindowResize = () => {
     this.setState({
       scaleX:
-        document.getElementsByClassName('twelve wide column')[0].offsetWidth
-        / 1366,
+        document.getElementsByClassName("twelve wide column")[0].offsetWidth /
+        1366
     });
     this.handleScroll();
     this.forceUpdate();
   };
 
-  handleKeyDown = (e) => {
+  handleKeyDown = e => {
     /*
             This function handles the shortcut key functionalities.
          */
@@ -214,7 +193,7 @@ export class CreateWorkbook extends React.Component {
     const updatedSlides = Object.values($.extend(true, {}, slides));
     updatedSlides[curSlide].note = this.db.getImg();
     this.setState({
-      slides: updatedSlides,
+      slides: updatedSlides
     });
   };
 
@@ -227,10 +206,10 @@ export class CreateWorkbook extends React.Component {
      */
     const { scaleX } = this.state;
     const scrollTop = $(window).scrollTop();
-    $('.drawingBoardControls')[0].style.top = `${scrollTop / scaleX}px`;
+    $(".drawingBoardControls")[0].style.top = `${scrollTop / scaleX}px`;
   };
 
-  setSizeOfPage = (pageCount) => {
+  setSizeOfPage = pageCount => {
     /*
       This function sets the size of the canvas. By default the size of the page is
       900px. The user can add extra poges. With each addition the size of the page
@@ -239,13 +218,13 @@ export class CreateWorkbook extends React.Component {
       incremented
     */
 
-    $('.canvas-container')[0].style.height = `${900 + pageCount * 300}px`;
-    $('.upper-canvas')[0].style.height = $('.canvas-container')[0].style.height;
-    $('.lower-canvas')[0].style.height = $('.canvas-container')[0].style.height;
-    $('.upper-canvas')[0].height = 900 + pageCount * 300;
-    $('.lower-canvas')[0].height = 900 + pageCount * 300;
-    this.db.b.setHeight($('.upper-canvas')[0].height);
-  }
+    $(".canvas-container")[0].style.height = `${900 + pageCount * 300}px`;
+    $(".upper-canvas")[0].style.height = $(".canvas-container")[0].style.height;
+    $(".lower-canvas")[0].style.height = $(".canvas-container")[0].style.height;
+    $(".upper-canvas")[0].height = 900 + pageCount * 300;
+    $(".lower-canvas")[0].height = 900 + pageCount * 300;
+    this.db.b.setHeight($(".upper-canvas")[0].height);
+  };
 
   onChange = () => {
     /*
@@ -260,39 +239,28 @@ export class CreateWorkbook extends React.Component {
     updatedSlides[curSlide].note = note;
     updatedSlides[curSlide].pageCount = this.pageCount;
     this.updateSlides(updatedSlides);
-  }
+  };
 
   addNewSlide = () => {
-    /*
-        Used for creating a new slide
-    */
-
     let { curSlide } = this.state;
     const { slides } = this.state;
+
     this.pushSlide();
     curSlide = slides.length - 1;
-    this.setState(
-      {
-        curSlide,
-      },
-      () => {
-        this.pageCount = 0;
-        this.setSizeOfPage(0);
-        this.db.reset();
-      },
-    );
-  }
+
+    this.changeSlide(curSlide);
+  };
 
   setStateAfterRearranging = (slides, newIndex) => {
     this.setState(
       {
-        slides,
+        slides
       },
       () => {
         this.changeSlide(newIndex);
-      },
+      }
     );
-  }
+  };
 
   pushSlide = () => {
     /* To create a new slide, first the structure of slide is defined and
@@ -307,15 +275,13 @@ export class CreateWorkbook extends React.Component {
       pageCount: 0,
       textboxes: [],
       questions: [],
-      shortresponse: [],
+      shortresponse: []
     };
 
     slides.push(newSlide);
 
-    this.setState({
-      slides,
-    });
-  }
+    this.updateSlides(slides);
+  };
 
   reset = () => {
     /* The current slide is made 0 and slides set to empty array.
@@ -326,15 +292,15 @@ export class CreateWorkbook extends React.Component {
     this.setState(
       {
         curSlide: 0,
-        slides: [],
+        slides: []
       },
       () => {
-        this.pushSlide();
+        this.addNewSlide();
         this.setSizeOfPage(0);
         this.db.reset();
-      },
+      }
     );
-  }
+  };
 
   saveToDatabase = () => {
     /* This function is intended for saving the slides to the database.
@@ -352,22 +318,22 @@ export class CreateWorkbook extends React.Component {
 
     if (userId !== Meteor.userId()) {
       const confirmation = confirm(
-        'Are you sure you want to fork this workbook?',
+        "Are you sure you want to fork this workbook?"
       );
 
       if (!confirmation) return;
 
-      Meteor.call('workbooks.insert', title, (err, id) => {
-        Meteor.call('workbooks.update', id, slides);
+      Meteor.call("workbooks.insert", title, (err, id) => {
+        Meteor.call("workbooks.update", id, slides);
 
         this.setState(
           {
             redirectToDashboard: true,
-            forkedWorkbookId: id,
+            forkedWorkbookId: id
           },
           () => {
-            confirm('Forked succesfully');
-          },
+            confirm("Forked succesfully");
+          }
         );
       });
     } else {
@@ -383,26 +349,26 @@ export class CreateWorkbook extends React.Component {
 
       try {
         expect({ slides: workbook.slides }).to.deep.include({
-          slides,
+          slides
         });
       } catch (error) {
         if (error) {
           this.setState({
-            saving: true,
+            saving: true
           });
 
-          Meteor.call('workbooks.update', _id, slides, () => {
-            alert('Saved successfully');
+          Meteor.call("workbooks.update", _id, slides, () => {
+            alert("Saved successfully");
             this.setState({
-              saving: false,
+              saving: false
             });
           });
         }
       }
     }
-  }
+  };
 
-  pushToUndoStacks = (oldSlide) => {
+  pushToUndoStacks = oldSlide => {
     /**
      * oldSlide is the object that get pushed to the undoStack
      */
@@ -415,9 +381,7 @@ export class CreateWorkbook extends React.Component {
 
     try {
       expect(oldSlide).to.deep.include(
-        this.undoStacks[curSlide][
-          this.undoStacks[curSlide].length - 1
-        ],
+        this.undoStacks[curSlide][this.undoStacks[curSlide].length - 1]
       );
     } catch (error) {
       if (error) {
@@ -426,23 +390,25 @@ export class CreateWorkbook extends React.Component {
     }
   };
 
-  changeSlide = (toSlideNo) => {
+  changeSlide = toSlideNo => {
+    // When slide no is changed,
+    // curSlide is updated first
+    // Then,
+
     const { slides } = this.state;
     this.setState(
       {
-        curSlide: toSlideNo,
+        curSlide: toSlideNo
       },
       () => {
-        // eslint-disable-next-line no-shadow
-        const { curSlide } = this.state;
-        this.pageCount = slides[curSlide].pageCount || 0;
+        this.pageCount = slides[toSlideNo].pageCount || 0;
         this.setSizeOfPage(this.pageCount);
         this.db.reset();
-        this.db.setImg(slides[curSlide].note);
+        this.db.setImg(slides[toSlideNo].note);
         this.simsList.loadDataToSketches();
-      },
+      }
     );
-  }
+  };
 
   updateSlides = (updatedSlides, shouldNotLoad, shouldNotPushToUndoStack) => {
     const { slides, curSlide } = this.state;
@@ -451,28 +417,17 @@ export class CreateWorkbook extends React.Component {
 
     this.setState(
       {
-        slides: updatedSlides,
+        slides: updatedSlides
       },
       () => {
-        /**
-           * shouldNotLoad is true only when a sim is individually updated and saved
-           * Here, we need not load data to all the sims
-           * So if shouldNotLoad is true, we return without calling loadDatatoSketches
-           */
-
         if (shouldNotLoad) return;
 
         this.simsList.loadDataToSketches();
-      },
+      }
     );
-  }
+  };
 
-  deleteSlide = (index) => {
-    /* This function decides what to do when the X button is pressed in the
-           slide element. If there is only one element. it is not deleted,
-           it is just reset. Otherwise, the slide is deleted and the current slide is set.
-        */
-
+  deleteSlide = index => {
     const { slides } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
 
@@ -485,7 +440,8 @@ export class CreateWorkbook extends React.Component {
       if (index === 0) {
         curSlide = 0;
       }
-      if (curSlide === updatedSlides.length) curSlide = updatedSlides.length - 1;
+      if (curSlide === updatedSlides.length)
+        curSlide = updatedSlides.length - 1;
 
       this.changeSlide(curSlide);
       this.updateSlides(updatedSlides);
@@ -493,13 +449,9 @@ export class CreateWorkbook extends React.Component {
       this.undoStacks = [];
       this.reset();
     }
-  }
+  };
 
-  deleteSim = (index) => {
-    /* This function decides what to do when cross button in the simulation is pressed.
-        The simulation is deleted from the iframes array of the
-        current slide and the changes are saved.
-    */
+  deleteSim = index => {
     const { slides } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
@@ -507,27 +459,27 @@ export class CreateWorkbook extends React.Component {
     iframes.splice(index, 1);
     updatedSlides[curSlide].iframes = iframes;
     this.updateSlides(updatedSlides);
-  }
+  };
 
-  deleteQuestion = (index) => {
+  deleteQuestion = index => {
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     const { questions } = updatedSlides[curSlide];
     questions.splice(index, 1);
     updatedSlides[curSlide].questions = questions;
     this.updateSlides(updatedSlides);
-  }
+  };
 
-  deleteShortResponse = (index) => {
+  deleteShortResponse = index => {
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     const { shortresponse } = updatedSlides[curSlide];
     shortresponse.splice(index, 1);
     updatedSlides[curSlide].shortresponse = shortresponse;
     this.updateSlides(updatedSlides);
-  }
+  };
 
-  deleteTextBox = (index) => {
+  deleteTextBox = index => {
     const { slides } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
@@ -550,39 +502,27 @@ export class CreateWorkbook extends React.Component {
     if (this.addSim.state.isOpen) return;
 
     if (!interactEnabled) {
-      $('.upper-canvas')[0].style['pointer-events'] = 'none';
-      $('.lower-canvas')[0].style['pointer-events'] = 'none';
+      $(".upper-canvas")[0].style["pointer-events"] = "none";
+      $(".lower-canvas")[0].style["pointer-events"] = "none";
     } else {
-      $('.upper-canvas')[0].style['pointer-events'] = 'unset';
-      $('.lower-canvas')[0].style['pointer-events'] = 'unset';
+      $(".upper-canvas")[0].style["pointer-events"] = "unset";
+      $(".lower-canvas")[0].style["pointer-events"] = "unset";
     }
 
     this.setState(state => ({
-      interactEnabled: !state.interactEnabled,
+      interactEnabled: !state.interactEnabled
     }));
-  }
+  };
 
   checkCanvasSize = () => {
-    /*
-        This function ensures that the the size of the Canvas is not reduced to a value less
-        than the bottom most point of the last sim/textbox
-
-        initially maxHeight is set to the lowest possible value = -Infinity
-        Then we iterate through each object i.e textboxes and sims
-
-        The y coordinate of bottom of lowest element is found out
-
-        If y > height of canvas after reduction, 1 is returned
-    */
-
     let maxHeight = -Infinity;
 
-    let j = $('textarea').length;
+    let j = $("textarea").length;
     let textarea;
 
     while (j > 0) {
       j -= 1;
-      textarea = $('textarea')
+      textarea = $("textarea")
         .eq(j)
         .parents()
         .eq(1);
@@ -591,12 +531,12 @@ export class CreateWorkbook extends React.Component {
       }
     }
 
-    let i = $('iframe').length;
+    let i = $("iframe").length;
     let iframe;
 
     while (i > 0) {
       i -= 1;
-      iframe = $('iframe')
+      iframe = $("iframe")
         .eq(i - 1)
         .parents()
         .eq(3);
@@ -606,18 +546,12 @@ export class CreateWorkbook extends React.Component {
     }
 
     const { scaleX } = this.state;
-    if (($('.canvas-cont').height() - 300) * scaleX < maxHeight) return 1;
+    if (($(".canvas-cont").height() - 300) * scaleX < maxHeight) return 1;
 
     return 0;
-  }
+  };
 
   undo = () => {
-    /**
-     * The function is triggered when undo button is pressed or shortcut ctrl+z is pressed
-     * From the undoStacks, from the curSlide, slide object is popped and slide is restored
-     * When this is done, redoStacks is pushed with current state
-     */
-
     const { curSlide, slides } = this.state;
 
     const slide = this.undoStacks[curSlide].pop();
@@ -627,39 +561,30 @@ export class CreateWorkbook extends React.Component {
     }
 
     if (slide) {
-      this.redoStacks[curSlide].push(
-        slides[curSlide],
-      );
+      this.redoStacks[curSlide].push(slides[curSlide]);
       this.restoreStateBack(slide);
     }
   };
 
   redo = () => {
-    /**
-     * When redo is called, the slide in the top of redo stack is popped.
-     * It is then pushed to the undostack.
-     * Then the popped slide is set.
-     */
     const { curSlide, slides } = this.state;
 
     const slide = this.redoStacks[curSlide].pop();
 
     if (slide) {
-      this.undoStacks[curSlide].push(
-        slides[curSlide],
-      );
+      this.undoStacks[curSlide].push(slides[curSlide]);
       this.restoreStateBack(slide);
     }
   };
 
-  restoreStateBack = (slide) => {
+  restoreStateBack = slide => {
     const { slides, curSlide } = this.state;
-    const _slides = Object.values($.extend(true, {}, slides));
-    _slides[curSlide] = slide;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    updatedSlides[curSlide] = slide;
 
     this.setState(
       {
-        slides: _slides,
+        slides: updatedSlides
       },
       () => {
         // eslint-disable-next-line no-shadow
@@ -681,15 +606,15 @@ export class CreateWorkbook extends React.Component {
         if (!slides[curSlide].note) {
           this.db.reset();
         }
-      },
+      }
     );
   };
 
   headToRequestPage = () => {
     this.setState({ redirectToRequest: true });
-  }
+  };
 
-  changePageCount = (option) => {
+  changePageCount = option => {
     /*
             The function is used for increasing or decreasing the size of the page.
             Option will receive either 1 or -1, 1 means to increase the size, -1 means to decrease
@@ -700,18 +625,24 @@ export class CreateWorkbook extends React.Component {
 
     const temp = this.db.getImg();
     this.pageCount += option;
-    $('.upper-canvas')[0].style.height = `${($('.upper-canvas')[0].height + option * 300).toString()}px`;
-    $('.lower-canvas')[0].style.height = `${($('.lower-canvas')[0].height + option * 300).toString()}px`;
-    $('.upper-canvas')[0].height += option * 300;
-    $('.lower-canvas')[0].height += option * 300;
-    $('.canvas-container')[0].style.height = $('.lower-canvas')[0].style.height;
-    this.db.b.setHeight($('.upper-canvas')[0].height);
+    $(".upper-canvas")[0].style.height = `${(
+      $(".upper-canvas")[0].height +
+      option * 300
+    ).toString()}px`;
+    $(".lower-canvas")[0].style.height = `${(
+      $(".lower-canvas")[0].height +
+      option * 300
+    ).toString()}px`;
+    $(".upper-canvas")[0].height += option * 300;
+    $(".lower-canvas")[0].height += option * 300;
+    $(".canvas-container")[0].style.height = $(".lower-canvas")[0].style.height;
+    this.db.b.setHeight($(".upper-canvas")[0].height);
     this.db.setImg(temp);
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
     updatedSlides[curSlide].pageCount = this.pageCount;
     this.updateSlides(updatedSlides);
-  }
+  };
 
   addShortResponse = () => {
     const { curSlide, slides } = this.state;
@@ -722,14 +653,14 @@ export class CreateWorkbook extends React.Component {
     }
 
     const newQuestion = {
-      content: '',
-      responses: {},
+      content: "",
+      responses: {}
     };
 
     updatedSlides[curSlide].shortresponse.push(newQuestion);
     this.updateSlides(updatedSlides);
     this.setState({ question: false });
-  }
+  };
 
   addMCQ = () => {
     const { curSlide, slides } = this.state;
@@ -740,22 +671,22 @@ export class CreateWorkbook extends React.Component {
     }
 
     const newQuestion = {
-      content: '',
-      a: '',
-      b: '',
-      c: '',
-      d: '',
-      responses: {},
+      content: "",
+      a: "",
+      b: "",
+      c: "",
+      d: "",
+      responses: {}
     };
 
     updatedSlides[curSlide].questions.push(newQuestion);
     this.updateSlides(updatedSlides);
     this.setState({ question: false });
-  }
+  };
 
   addQuestion = () => {
     this.setState({ question: true });
-  }
+  };
 
   addTextBox = () => {
     const { curSlide, slides } = this.state;
@@ -766,7 +697,7 @@ export class CreateWorkbook extends React.Component {
     }
 
     const newTextBox = {
-      value: 'new text box',
+      value: "new text box"
     };
 
     updatedSlides[curSlide].textboxes.push(newTextBox);
@@ -774,10 +705,10 @@ export class CreateWorkbook extends React.Component {
     this.updateSlides(updatedSlides);
   };
 
-  setCopiedState = (set) => {
+  setCopiedState = set => {
     if (set) this.setState({ copied: true });
     else this.setState({ copied: false });
-  }
+  };
 
   addDescription = () => {
     this.setState({ showDescription: false });
@@ -791,52 +722,52 @@ export class CreateWorkbook extends React.Component {
     let assessments;
     let standards;
 
-    if (this.subject.value === '') {
+    if (this.subject.value === "") {
       subject = this.subject.placeholder;
     } else {
       subject = this.subject.value;
     }
 
-    if (this.topic.value === '') {
+    if (this.topic.value === "") {
       topic = this.topic.placeholder;
     } else {
       topic = this.topic.value;
     }
 
-    if (this.learningObjectives.value === '') {
+    if (this.learningObjectives.value === "") {
       learningObjectives = this.learningObjectives.placeholder;
     } else {
       learningObjectives = DOMPurify.sanitize(
         this.learningObjectives.value.replace(
-          new RegExp('\r?\n', 'g'),
-          '<br />',
-        ),
+          new RegExp("\r?\n", "g"),
+          "<br />"
+        )
       );
     }
 
-    if (this.inClassActivities.value === '') {
+    if (this.inClassActivities.value === "") {
       inClassActivities = this.inClassActivities.placeholder;
     } else {
       inClassActivities = DOMPurify.sanitize(
-        this.inClassActivities.value.replace(new RegExp('\r?\n', 'g'), '<br />'),
+        this.inClassActivities.value.replace(new RegExp("\r?\n", "g"), "<br />")
       );
     }
 
-    if (this.resources.value === '') {
+    if (this.resources.value === "") {
       resources = this.resources.placeholder;
     } else {
       resources = DOMPurify.sanitize(
-        this.resources.value.replace(new RegExp('\r?\n', 'g'), '<br />'),
+        this.resources.value.replace(new RegExp("\r?\n", "g"), "<br />")
       );
     }
 
-    if (this.assessments.value === '') {
+    if (this.assessments.value === "") {
       assessments = this.assessments.placeholder;
     } else {
       assessments = this.assessments.value;
     }
 
-    if (this.standards.value === '') {
+    if (this.standards.value === "") {
       standards = this.standards.placeholder;
     } else {
       standards = this.standards.value;
@@ -849,13 +780,13 @@ export class CreateWorkbook extends React.Component {
       inClassActivities,
       resources,
       assessments,
-      standards,
+      standards
     };
 
     const { _id } = this.state;
 
-    Meteor.call('workbooks.description', _id, description, () => {
-      alert('Description addedd successfully');
+    Meteor.call("workbooks.description", _id, description, () => {
+      alert("Description addedd successfully");
     });
   };
 
@@ -863,11 +794,11 @@ export class CreateWorkbook extends React.Component {
     const { _id } = this.state;
     const a = Workbooks.find({
       _id,
-      description: { $exists: true },
+      description: { $exists: true }
     }).fetch();
     if (a.length !== 0) return true;
 
-    Meteor.call('workbooks.addDescriptionField', _id);
+    Meteor.call("workbooks.addDescriptionField", _id);
   };
 
   checkDescription = () => {
@@ -880,8 +811,8 @@ export class CreateWorkbook extends React.Component {
   renderDescription = () => {
     const { description } = this.state;
     if (
-      Object.keys(description).length === 0
-      && description.constructor === Object
+      Object.keys(description).length === 0 &&
+      description.constructor === Object
     ) {
       return <p>No description to show</p>;
     }
@@ -899,7 +830,7 @@ export class CreateWorkbook extends React.Component {
           <List.Header>Learning Objectives</List.Header>
           <div
             dangerouslySetInnerHTML={{
-              __html: description.learningObjectives,
+              __html: description.learningObjectives
             }}
           />
         </List.Item>
@@ -907,7 +838,7 @@ export class CreateWorkbook extends React.Component {
           <List.Header>In-Class Activites</List.Header>
           <div
             dangerouslySetInnerHTML={{
-              __html: description.inClassActivities,
+              __html: description.inClassActivities
             }}
           />
         </List.Item>
@@ -915,7 +846,7 @@ export class CreateWorkbook extends React.Component {
           <List.Header>Resources</List.Header>
           <div
             dangerouslySetInnerHTML={{
-              __html: description.resources,
+              __html: description.resources
             }}
           />
         </List.Item>
@@ -939,50 +870,589 @@ export class CreateWorkbook extends React.Component {
     return 900;
   };
 
-  render() {
-    const {
+  renderRightMenu = () => {
+
+    const { 
       showDescription,
       addDescription,
-      redirectToLogin,
-      redirectToDashboard,
-      initialized,
-      loginNotification,
-      scaleX,
+      copied,
+      description,
+      curSlide,
+      slides ,
+      interactEnabled,
+      userId,
+      _id
+    } = this.state;
+
+    return (
+      <>
+        <AddSim
+          ref={e => {
+            this.addSim = e;
+          }}
+          curSlide={curSlide}
+          slides={slides}
+          updateSlides={this.updateSlides}
+        />
+
+        <Menu color="blue" icon vertical className="lpright">
+          <Menu.Item>
+            <Button
+              className="lprightbutton"
+              toggle
+              active={!interactEnabled}
+              onClick={this.interact}
+            >
+              {interactEnabled ? "Draw" : "Interact"}
+            </Button>
+          </Menu.Item>
+
+          <Menu.Item>
+            <Button
+              className="lprightbutton"
+              onClick={() => {
+                this.addSim.addSim();
+              }}
+              color="black"
+            >
+              Add simulation
+            </Button>
+          </Menu.Item>
+
+          {!!Meteor.userId() && userId === Meteor.userId() ? (
+            <Link
+              to={{
+                pathname: `/request/${_id}`,
+                state: { from: "createlessonplan" }
+              }}
+            >
+              <Menu.Item link className="lprightbutton">
+                Discussion forum
+              </Menu.Item>
+            </Link>
+          ) : null}
+          <Menu.Item
+            className="lprightbutton"
+            onClick={() => {
+              const confirmation = confirm(
+                "Are you sure you want to reset all?"
+              );
+              if (confirmation === true) this.reset();
+            }}
+          >
+            Reset workbook
+          </Menu.Item>
+
+          <Menu.Item className="lprightbutton">
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div>
+                <Button
+                  color="teal"
+                  onClick={() => {
+                    this.undo();
+                  }}
+                  attached="left"
+                >
+                  <MdUndo />
+                </Button>
+                <Button
+                  color="teal"
+                  onClick={() => {
+                    this.redo();
+                  }}
+                  attached="right"
+                >
+                  <MdRedo />
+                </Button>
+              </div>
+              <p style={{ marginTop: "1rem" }}>Undo/redo</p>
+            </div>
+          </Menu.Item>
+
+          <Menu.Item
+            className="lprightbutton"
+            onClick={() => {
+              this.saveToDatabase();
+            }}
+          >
+            {Meteor.userId() === userId || !Meteor.userId()
+              ? "Save"
+              : "Fork and Save"}
+          </Menu.Item>
+
+          <Menu.Item
+            className="lprightbutton"
+            // eslint-disable-next-line react/no-string-refs
+            ref="increaseCanvasButton"
+            onClick={() => {
+              this.changePageCount(1);
+            }}
+          >
+            Increase Canvas size
+          </Menu.Item>
+
+          <Menu.Item
+            className="lprightbutton"
+            onClick={() => {
+              if (this.pageCount === 0 || this.checkCanvasSize()) {
+                alert("Canvas size cannot be decreased further!");
+                return;
+              }
+
+              this.changePageCount(-1);
+            }}
+          >
+            Decrease Canvas size
+          </Menu.Item>
+
+          {!Meteor.userId() ? (
+            <Menu.Item
+              className="lprightbutton"
+              onClick={() => {
+                const confirmation = confirm(
+                  "You will be redirected to login page. Changes will be saved for you."
+                );
+                if (!confirmation) return;
+
+                Session.set("stateToSave", this.state);
+
+                this.setState({ redirectToLogin: true });
+              }}
+            >
+              Login
+            </Menu.Item>
+          ) : null}
+          {!Meteor.userId() ? (
+            <Link to="/explore">
+              <Menu.Item link>Back</Menu.Item>
+            </Link>
+          ) : null}
+
+          <Menu.Item
+            className="lprightbutton"
+            onClick={() => {
+              this.addTextBox();
+            }}
+          >
+            Add textbox
+          </Menu.Item>
+
+          <Menu.Item
+            className="lprightbutton"
+            onClick={() => {
+              this.addQuestion();
+            }}
+          >
+            Add question
+          </Menu.Item>
+          {this.checkDescExist() ? (
+            !!Meteor.userId() &&
+            userId === Meteor.userId() &&
+            this.checkDescription() ? (
+              <Modal
+                size="small"
+                onClose={() => {
+                  this.setState({ addDescription: false });
+                }}
+                open={addDescription}
+                trigger={
+                  <Menu.Item
+                    className="lprightbutton"
+                    onClick={() => {
+                      this.setState({ addDescription: true });
+                    }}
+                  >
+                    Add description
+                  </Menu.Item>
+                }
+              >
+                <Modal.Header>
+                  Lesson Description
+                  <Button
+                    className="close-button"
+                    onClick={() => {
+                      this.setState({ addDescription: false });
+                    }}
+                  >
+                    X
+                  </Button>
+                </Modal.Header>
+
+                <Modal.Content>
+                  <Modal.Description>
+                    <Form onSubmit={this.addDescription}>
+                      <Form.Field required>
+                        <label>Subject</label>
+                        <input
+                          ref={e => {
+                            this.subject = e;
+                          }}
+                          required
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <label>Topic</label>
+                        <input
+                          ref={e => {
+                            this.topic = e;
+                          }}
+                          placeholder="-"
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <label>Learning Objective(s)</label>
+                        <textArea
+                          rows={1}
+                          ref={e => {
+                            this.learningObjectives = e;
+                          }}
+                          placeholder="-"
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <label>In-Class Activities</label>
+                        <textArea
+                          rows={1}
+                          ref={e => {
+                            this.inClassActivities = e;
+                          }}
+                          placeholder="-"
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <label>References/Resources</label>
+                        <textArea
+                          rows={1}
+                          ref={e => {
+                            this.resources = e;
+                          }}
+                          placeholder="-"
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <label>Assessments</label>
+                        <input
+                          ref={e => {
+                            this.assessments = e;
+                          }}
+                          placeholder="-"
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <label>Standards</label>
+                        <input
+                          ref={e => {
+                            this.standards = e;
+                          }}
+                          placeholder="-"
+                        />
+                      </Form.Field>
+                      <Form.Field>
+                        <Button type="submit">Submit</Button>
+                      </Form.Field>
+                    </Form>
+                  </Modal.Description>
+                </Modal.Content>
+              </Modal>
+            ) : (
+              <Modal
+                size="small"
+                onClose={() => {
+                  this.setState({ showDescription: false });
+                }}
+                open={showDescription}
+                trigger={
+                  <Menu.Item
+                    onClick={() => {
+                      this.setState({ showDescription: true });
+                      const res = Workbooks.find({
+                        _id
+                      }).fetch();
+                      this.setState({ description: res[0].description });
+                    }}
+                  >
+                    View description
+                  </Menu.Item>
+                }
+              >
+                <Modal.Header>
+                  Lesson Description
+                  <Button
+                    className="close-button"
+                    onClick={() => {
+                      this.setState({ showDescription: false });
+                    }}
+                  >
+                    X
+                  </Button>
+                  {!!Meteor.userId() && userId === Meteor.userId() ? (
+                    <Modal
+                      size="small"
+                      onClose={() => {
+                        this.setState({ addDescription: false });
+                      }}
+                      open={addDescription}
+                      trigger={
+                        <FaEdit
+                          style={{
+                            cursor: "pointer",
+                            marginLeft: "15px"
+                          }}
+                          size={17}
+                          color="black"
+                          onClick={() => {
+                            this.setState({ addDescription: true });
+                          }}
+                        />
+                      }
+                    >
+                      <Modal.Header>
+                        Lesson Description
+                        <Button
+                          className="close-button"
+                          onClick={() => {
+                            this.setState({ addDescription: false });
+                          }}
+                        >
+                          X
+                        </Button>
+                      </Modal.Header>
+
+                      <Modal.Content>
+                        <Modal.Description>
+                          <Form onSubmit={this.addDescription}>
+                            <Form.Field>
+                              <label>Subject</label>
+                              <input
+                                ref={e => {
+                                  this.subject = e;
+                                }}
+                                placeholder={description.subject}
+                              />
+                            </Form.Field>
+                            <Form.Field>
+                              <label>Topic</label>
+                              <input
+                                ref={e => {
+                                  this.topic = e;
+                                }}
+                                placeholder={description.topic}
+                              />
+                            </Form.Field>
+                            <Form.Field>
+                              <label>Learning Objective(s)</label>
+                              <textArea
+                                rows={1}
+                                ref={e => {
+                                  this.learningObjectives = e;
+                                }}
+                                placeholder={description.learningObjectives}
+                              />
+                            </Form.Field>
+                            <Form.Field>
+                              <label>In-Class Activities</label>
+                              <textArea
+                                rows={1}
+                                ref={e => {
+                                  this.inClassActivities = e;
+                                }}
+                                placeholder={description.inClassActivities}
+                              />
+                            </Form.Field>
+                            <Form.Field>
+                              <label>References/Resources</label>
+                              <textArea
+                                rows={1}
+                                ref={e => {
+                                  this.resources = e;
+                                }}
+                                placeholder={description.resources}
+                              />
+                            </Form.Field>
+                            <Form.Field>
+                              <label>Assessments</label>
+                              <input
+                                ref={e => {
+                                  this.assessments = e;
+                                }}
+                                placeholder={description.assessments}
+                              />
+                            </Form.Field>
+                            <Form.Field>
+                              <label>Standards</label>
+                              <input
+                                ref={e => {
+                                  this.standards = e;
+                                }}
+                                placeholder={description.standards}
+                              />
+                            </Form.Field>
+                            <Form.Field>
+                              <Button type="submit">Update</Button>
+                            </Form.Field>
+                          </Form>
+                        </Modal.Description>
+                      </Modal.Content>
+                    </Modal>
+                  ) : null}
+                  {!!Meteor.userId() && userId === Meteor.userId() ? (
+                    <FaTrash
+                      style={{ cursor: "pointer", marginLeft: "15px" }}
+                      size={17}
+                      color="black"
+                      onClick={() => {
+                        const confirmation = confirm(
+                          "Are you sure you want to perform this deletion?"
+                        );
+
+                        if (!confirmation) return;
+
+                        Meteor.call("workbooks.removeDescription", _id, () => {
+                          this.setState({ description: [] });
+                        });
+                      }}
+                    />
+                  ) : null}
+                </Modal.Header>
+
+                <Modal.Content>
+                  <Modal.Description>
+                    {this.renderDescription()}
+                  </Modal.Description>
+                </Modal.Content>
+              </Modal>
+            )
+          ) : null}
+
+          <a
+            target="_blank"
+            href="https://github.com/JithinKS97/dynamic-learning"
+          >
+            <Menu.Item link>Contribute</Menu.Item>
+          </a>
+
+          {copied ? (
+            <Menu.Item>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Button
+                  onClick={() => {
+                    if (Session.get("copiedObject")) {
+                      const object = Session.get("copiedObject");
+
+                      const updatedSlides = Object.values(
+                        $.extend(true, {}, slides)
+                      );
+
+                      if (object.type === "sim") {
+                        updatedSlides[curSlide].iframes.push(
+                          object.copiedObject
+                        );
+                      } else if (object.type === "text") {
+                        updatedSlides[curSlide].textboxes.push(
+                          object.copiedObject
+                        );
+                      }
+
+                      this.updateSlides(updatedSlides);
+                    }
+                  }}
+                  color="blue"
+                >
+                  Paste
+                </Button>
+                <Button
+                  onClick={() => {
+                    this.setCopiedState(false);
+                    Session.set("copiedObject", null);
+                  }}
+                  color="red"
+                >
+                  X
+                </Button>
+              </div>
+            </Menu.Item>
+          ) : null}
+        </Menu>
+      </>
+    );
+  };
+
+  renderLeftMenuHeader = () => {
+
+    const {
       saving,
       slides,
       curSlide,
-      interactEnabled,
       _id,
-      userId,
-      title,
-      copied,
-      description,
     } = this.state;
 
-    if (redirectToLogin) {
-      return <Redirect to="/login" />;
-    }
+    return (
+      <>
+      {saving ? <p>Saving...</p> : null}
+        {Meteor.userId() ? (
+          <Button
+            className="lprightbutton"
+            color="blue"
+            onClick={() => {
+              const workbook = Workbooks.findOne({
+                _id
+              });
 
-    if (redirectToDashboard) {
-      if (this.props.location.state) {
-        if (this.props.location.state.from === 'teacherclasses') {
-          return <Redirect to="/dashboard/classes" />;
-        }
-      }
-      return <Redirect to="/dashboard/workbooks" />;
-    }
+              try {
+                expect({ slides: workbook.slides }).to.deep.include({
+                  slides
+                });
+              } catch (error) {
+                if (slides[0].note.length === 0 && slides.length === 1) {
+                  this.setState({
+                    redirectToDashboard: true
+                  });
+                  return;
+                }
+                if (error) {
+                  if (
+                    !confirm(
+                      "Are you sure you want to leave. Any unsaved changes will be lost!"
+                    )
+                  ) {
+                    return;
+                  }
+                }
+              }
+
+              this.setState({
+                redirectToDashboard: true
+              });
+            }}
+          >
+            Dashboard
+          </Button>
+        ) : null}
+        <Button
+          className="createslide"
+          style={{ marginTop: "0.8rem" }}
+          onClick={this.addNewSlide}
+        >
+          Create Slide
+        </Button>
+        <h1 className="slidecounter">{curSlide + 1}</h1>
+      </>
+    )
+  }
+
+  renderLoginNotificationModal = () => {
+
+    const {
+
+      loginNotification,
+    } = this.state;
 
     return (
-      <Segment style={{ padding: 0, margin: 0 }}>
-        <Dimmer active={!initialized}>
-          <Loader />
-        </Dimmer>
-
-        <Modal size="tiny" open={loginNotification}>
+      <Modal size="tiny" open={loginNotification}>
           <Modal.Header>
             You need to login to save changes
             <Button
-              style={{ float: 'right' }}
+              style={{ float: "right" }}
               onClick={() => {
                 this.setState({ loginNotification: false });
               }}
@@ -991,84 +1461,146 @@ export class CreateWorkbook extends React.Component {
             </Button>
           </Modal.Header>
           <Modal.Content>
-            <Modal.Description style={{ textAlign: 'center' }}>
+            <Modal.Description style={{ textAlign: "center" }}>
               <Button
                 onClick={() => {
-                  Session.set('stateToSave', this.state);
+                  Session.set("stateToSave", this.state);
 
                   this.setState({ redirectToLogin: true });
                 }}
-                style={{ marginTop: '1.6rem' }}
+                style={{ marginTop: "1.6rem" }}
               >
                 Login
               </Button>
             </Modal.Description>
           </Modal.Content>
         </Modal>
+    )
+  }
 
+  renderWorkBookTitleModal = () => {
+
+    const {
+      title,
+    } = this.state;
+
+    return (
+      <Modal size="tiny" open={!title}>
+        <Modal.Header>Enter the title for the Workbook</Modal.Header>
+
+        <Modal.Content>
+          <Modal.Description>
+            <Form
+              onSubmit={() => {
+                if (!this.title.value) return;
+
+                this.setState({
+                  title: this.title.value
+                });
+              }}
+            >
+              <Form.Field>
+                <label>Title</label>
+                <input
+                  ref={e => {
+                    this.title = e;
+                  }}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Button type="submit">Submit</Button>
+              </Form.Field>
+            </Form>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    )
+  }
+
+  renderResponseModal = () => {
+
+    return (
+      <Modal
+        size="tiny"
+        open={this.state.question}
+        onClose={() => this.setState({ question: false })}
+      >
+        <Modal.Header>
+          Choose a question type.
+          <Button
+            className="close-button"
+            onClick={() => this.setState({ question: false })}
+          >
+            &times;
+          </Button>
+        </Modal.Header>
+
+        <Modal.Content>
+          <Modal.Description>
+            <Button onClick={() => this.addMCQ()}> Multiple Choice </Button>
+            <Button onClick={() => this.addShortResponse()}>
+              {" "}
+              Short Response{" "}
+            </Button>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    )
+  }
+
+  render() {
+    const {
+      redirectToLogin,
+      redirectToDashboard,
+      initialized,
+      scaleX,
+      slides,
+      curSlide,
+      interactEnabled,
+      userId,
+    } = this.state;
+
+    if (redirectToLogin) {
+      return <Redirect to="/login" />;
+    }
+
+    if (redirectToDashboard) {
+      if (this.props.location.state) {
+        if (this.props.location.state.from === "teacherclasses") {
+          return <Redirect to="/dashboard/classes" />;
+        }
+      }
+      return <Redirect to="/dashboard/workbooks" />;
+    }
+
+    return (
+      <>
+      {this.renderLoginNotificationModal()}
+      {this.renderWorkBookTitleModal()}
+      {this.renderResponseModal()}
+      <Segment style={{ padding: 0, margin: 0 }}>
+        <Dimmer active={!initialized}>
+          <Loader />
+        </Dimmer>
         <Grid
           style={{
-            height:
-              `${this.calcHeightOfCanvasContainer() * scaleX}px`,
+            height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
             padding: 0,
-            margin: 0,
+            margin: 0
           }}
           columns={3}
           divided
         >
-          <Grid.Row style={{ overflow: 'hidden' }}>
+          <Grid.Row style={{ overflow: "hidden" }}>
             <Grid.Column
               style={{
-                position: 'fixed',
-                textAlign: 'center',
-                overflow: 'auto',
+                position: "fixed",
+                textAlign: "center",
+                overflow: "auto"
               }}
               width={2}
             >
-              {saving ? <p>Saving...</p> : null}
-              {Meteor.userId() ? (
-                <Button
-                  className="lprightbutton"
-                  color="blue"
-                  onClick={() => {
-                    const workbook = Workbooks.findOne({
-                      _id,
-                    });
-
-                    try {
-                      expect({ slides: workbook.slides }).to.deep.include(
-                        { slides },
-                      );
-                    } catch (error) {
-                      if (slides[0].note.length === 0 && slides.length === 1) {
-                        this.setState({
-                          redirectToDashboard: true,
-                        });
-                        return;
-                      }
-                      if (error) {
-                        if (!confirm(
-                          'Are you sure you want to leave. Any unsaved changes will be lost!',
-                        )) { return; }
-                      }
-                    }
-
-                    this.setState({
-                      redirectToDashboard: true,
-                    });
-                  }}
-                >
-                  Dashboard
-                </Button>
-              ) : null}
-              <Button
-                className="createslide"
-                style={{ marginTop: '0.8rem' }}
-                onClick={this.addNewSlide}
-              >
-                Create Slide
-              </Button>
-              <h1 className="slidecounter">{curSlide + 1}</h1>
+              {this.renderLeftMenuHeader()}
               <SlidesList
                 slides={slides}
                 curSlide={curSlide}
@@ -1081,22 +1613,21 @@ export class CreateWorkbook extends React.Component {
             </Grid.Column>
             <Grid.Column
               style={{
-                margin: '0 auto',
+                margin: "0 auto",
                 padding: 0,
-                overflowX: 'hidden',
-                overflowY: 'hidden',
-                height:
-                  `${this.calcHeightOfCanvasContainer() * scaleX}px`,
+                overflowX: "hidden",
+                overflowY: "hidden",
+                height: `${this.calcHeightOfCanvasContainer() * scaleX}px`
               }}
               width={12}
             >
               <div
                 className="canvas-cont"
                 style={{
-                  backgroundColor: 'black',
-                  width: '1366px',
+                  backgroundColor: "black",
+                  width: "1366px",
                   transform: `scale(${scaleX},${scaleX})`,
-                  transformOrigin: 'top left',
+                  transformOrigin: "top left"
                 }}
               >
                 <TextBoxes
@@ -1139,7 +1670,9 @@ export class CreateWorkbook extends React.Component {
                   isRndRequired
                   undo={this.undo}
                   redo={this.redo}
-                  ref={(e) => { this.simsList = e; }}
+                  ref={e => {
+                    this.simsList = e;
+                  }}
                   save={this.saveToDatabase}
                   interact={this.interact}
                   scale={scaleX}
@@ -1149,527 +1682,26 @@ export class CreateWorkbook extends React.Component {
                   interactEnabled={interactEnabled}
                   interact={this.interact}
                   toolbarVisible
-                  ref={(e) => { this.drawingBoard = e; }}
+                  ref={e => {
+                    this.drawingBoard = e;
+                  }}
                   onChange={this.onChange}
                   saveAfterReset={this.saveAfterReset}
                 />
               </div>
             </Grid.Column>
 
-            <Grid.Column width={2} style={{ position: 'fixed', right: 0 }}>
-              <AddSim
-                ref={(e) => { this.addSim = e; }}
-                curSlide={curSlide}
-                slides={slides}
-                updateSlides={this.updateSlides}
-              />
-
-              <Menu color="blue" icon vertical className="lpright">
-                <Menu.Item>
-                  <Button
-                    className="lprightbutton"
-                    toggle
-                    active={!interactEnabled}
-                    onClick={this.interact}
-                  >
-                    {interactEnabled ? 'Draw' : 'Interact'}
-                  </Button>
-                </Menu.Item>
-
-                <Menu.Item>
-                  <Button
-                    className="lprightbutton"
-                    onClick={() => {
-                      this.addSim.addSim();
-                    }}
-                    color="black"
-                  >
-                    Add simulation
-                  </Button>
-                </Menu.Item>
-
-                {!!Meteor.userId() && userId === Meteor.userId() ? (
-                  <Link to={{ pathname: `/request/${_id}`, state: { from: 'createlessonplan' } }}>
-                    <Menu.Item link className="lprightbutton">Discussion forum</Menu.Item>
-                  </Link>
-                ) : null}
-                <Menu.Item
-                  className="lprightbutton"
-                  onClick={() => {
-                    const confirmation = confirm(
-                      'Are you sure you want to reset all?',
-                    );
-                    if (confirmation === true) this.reset();
-                  }}
-                >
-                  Reset workbook
-                </Menu.Item>
-
-                <Menu.Item
-                  className="lprightbutton"
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div>
-                      <Button
-                        color="teal"
-                        onClick={() => {
-                          this.undo();
-                        }}
-                        attached="left"
-                      >
-                        <MdUndo />
-                      </Button>
-                      <Button
-                        color="teal"
-                        onClick={() => {
-                          this.redo();
-                        }}
-                        attached="right"
-                      >
-                        <MdRedo />
-                      </Button>
-                    </div>
-                    <p style={{ marginTop: '1rem' }}>Undo/redo</p>
-                  </div>
-                </Menu.Item>
-
-                <Menu.Item
-                  className="lprightbutton"
-                  onClick={() => {
-                    this.saveToDatabase();
-                  }}
-                >
-                  {Meteor.userId() === userId || !Meteor.userId()
-                    ? 'Save'
-                    : 'Fork and Save'}
-                </Menu.Item>
-
-                <Menu.Item
-                  className="lprightbutton"
-                  // eslint-disable-next-line react/no-string-refs
-                  ref="increaseCanvasButton"
-                  onClick={() => {
-                    this.changePageCount(1);
-                  }}
-                >
-                  Increase Canvas size
-                </Menu.Item>
-
-                <Menu.Item
-                  className="lprightbutton"
-                  onClick={() => {
-                    if (this.pageCount === 0 || this.checkCanvasSize()) {
-                      alert('Canvas size cannot be decreased further!');
-                      return;
-                    }
-
-                    this.changePageCount(-1);
-                  }}
-                >
-                  Decrease Canvas size
-                </Menu.Item>
-
-                {!Meteor.userId() ? (
-                  <Menu.Item
-                    className="lprightbutton"
-                    onClick={() => {
-                      const confirmation = confirm(
-                        'You will be redirected to login page. Changes will be saved for you.',
-                      );
-                      if (!confirmation) return;
-
-                      Session.set('stateToSave', this.state);
-
-                      this.setState({ redirectToLogin: true });
-                    }}
-                  >
-                    Login
-                  </Menu.Item>
-                ) : null}
-                {!Meteor.userId() ? (
-                  <Link to="/explore">
-                    <Menu.Item link>Back</Menu.Item>
-                  </Link>
-                ) : null}
-
-                <Menu.Item
-                  className="lprightbutton"
-                  onClick={() => {
-                    this.addTextBox();
-                  }}
-                >
-                  Add textbox
-                </Menu.Item>
-
-                <Menu.Item
-                  className="lprightbutton"
-                  onClick={() => {
-                    this.addQuestion();
-                  }}
-                >
-                  Add question
-                </Menu.Item>
-                {this.checkDescExist() ? (
-                  !!Meteor.userId()
-                  && userId === Meteor.userId()
-                  && this.checkDescription() ? (
-                    <Modal
-                      size="small"
-                      onClose={() => {
-                        this.setState({ addDescription: false });
-                      }}
-                      open={addDescription}
-                      trigger={(
-                        <Menu.Item
-                          className="lprightbutton"
-                          onClick={() => {
-                            this.setState({ addDescription: true });
-                          }}
-                        >
-                          Add description
-                        </Menu.Item>
-                      )}
-                    >
-                      <Modal.Header>
-                        Lesson Description
-                        <Button
-                          className="close-button"
-                          onClick={() => {
-                            this.setState({ addDescription: false });
-                          }}
-                        >
-                          X
-                        </Button>
-                      </Modal.Header>
-
-                      <Modal.Content>
-                        <Modal.Description>
-                          <Form onSubmit={this.addDescription}>
-                            <Form.Field required>
-                              <label>Subject</label>
-                              <input ref={(e) => { this.subject = e; }} required />
-                            </Form.Field>
-                            <Form.Field>
-                              <label>Topic</label>
-                              <input
-                                ref={(e) => { this.topic = e; }}
-                                placeholder="-"
-                              />
-                            </Form.Field>
-                            <Form.Field>
-                              <label>Learning Objective(s)</label>
-                              <textArea
-                                rows={1}
-                                ref={(e) => { this.learningObjectives = e; }}
-                                placeholder="-"
-                              />
-                            </Form.Field>
-                            <Form.Field>
-                              <label>In-Class Activities</label>
-                              <textArea
-                                rows={1}
-                                ref={(e) => { this.inClassActivities = e; }}
-                                placeholder="-"
-                              />
-                            </Form.Field>
-                            <Form.Field>
-                              <label>References/Resources</label>
-                              <textArea
-                                rows={1}
-                                ref={(e) => { this.resources = e; }}
-                                placeholder="-"
-                              />
-                            </Form.Field>
-                            <Form.Field>
-                              <label>Assessments</label>
-                              <input
-                                ref={(e) => { this.assessments = e; }}
-                                placeholder="-"
-                              />
-                            </Form.Field>
-                            <Form.Field>
-                              <label>Standards</label>
-                              <input
-                                ref={(e) => { this.standards = e; }}
-                                placeholder="-"
-                              />
-                            </Form.Field>
-                            <Form.Field>
-                              <Button type="submit">Submit</Button>
-                            </Form.Field>
-                          </Form>
-                        </Modal.Description>
-                      </Modal.Content>
-                    </Modal>
-                    ) : (
-                      <Modal
-                        size="small"
-                        onClose={() => {
-                          this.setState({ showDescription: false });
-                        }}
-                        open={showDescription}
-                        trigger={(
-                          <Menu.Item
-                            onClick={() => {
-                              this.setState({ showDescription: true });
-                              const res = Workbooks.find({
-                                _id,
-                              }).fetch();
-                              this.setState({ description: res[0].description });
-                            }}
-                          >
-                          View description
-                          </Menu.Item>
-                        )}
-                      >
-                        <Modal.Header>
-                        Lesson Description
-                          <Button
-                            className="close-button"
-                            onClick={() => {
-                              this.setState({ showDescription: false });
-                            }}
-                          >
-                          X
-                          </Button>
-                          {!!Meteor.userId()
-                        && userId === Meteor.userId() ? (
-                          <Modal
-                            size="small"
-                            onClose={() => {
-                              this.setState({ addDescription: false });
-                            }}
-                            open={addDescription}
-                            trigger={(
-                              <FaEdit
-                                style={{
-                                  cursor: 'pointer',
-                                  marginLeft: '15px',
-                                }}
-                                size={17}
-                                color="black"
-                                onClick={() => {
-                                  this.setState({ addDescription: true });
-                                }}
-                              />
-                            )}
-                          >
-                            <Modal.Header>
-                              Lesson Description
-                              <Button
-                                className="close-button"
-                                onClick={() => {
-                                  this.setState({ addDescription: false });
-                                }}
-                              >
-                                X
-                              </Button>
-                            </Modal.Header>
-
-                            <Modal.Content>
-                              <Modal.Description>
-                                <Form onSubmit={this.addDescription}>
-                                  <Form.Field>
-                                    <label>Subject</label>
-                                    <input
-                                      ref={(e) => { this.subject = e; }}
-                                      placeholder={
-                                        description.subject
-                                      }
-                                    />
-                                  </Form.Field>
-                                  <Form.Field>
-                                    <label>Topic</label>
-                                    <input
-                                      ref={(e) => { this.topic = e; }}
-                                      placeholder={description.topic}
-                                    />
-                                  </Form.Field>
-                                  <Form.Field>
-                                    <label>Learning Objective(s)</label>
-                                    <textArea
-                                      rows={1}
-                                      ref={(e) => { this.learningObjectives = e; }}
-                                      placeholder={
-                                        description
-                                          .learningObjectives
-                                      }
-                                    />
-                                  </Form.Field>
-                                  <Form.Field>
-                                    <label>In-Class Activities</label>
-                                    <textArea
-                                      rows={1}
-                                      ref={(e) => { this.inClassActivities = e; }}
-                                      placeholder={
-                                        description.inClassActivities
-                                      }
-                                    />
-                                  </Form.Field>
-                                  <Form.Field>
-                                    <label>References/Resources</label>
-                                    <textArea
-                                      rows={1}
-                                      ref={(e) => { this.resources = e; }}
-                                      placeholder={
-                                        description.resources
-                                      }
-                                    />
-                                  </Form.Field>
-                                  <Form.Field>
-                                    <label>Assessments</label>
-                                    <input
-                                      ref={(e) => { this.assessments = e; }}
-                                      placeholder={
-                                        description.assessments
-                                      }
-                                    />
-                                  </Form.Field>
-                                  <Form.Field>
-                                    <label>Standards</label>
-                                    <input
-                                      ref={(e) => { this.standards = e; }}
-                                      placeholder={
-                                        description.standards
-                                      }
-                                    />
-                                  </Form.Field>
-                                  <Form.Field>
-                                    <Button type="submit">Update</Button>
-                                  </Form.Field>
-                                </Form>
-                              </Modal.Description>
-                            </Modal.Content>
-                          </Modal>
-                            ) : null}
-                          {!!Meteor.userId()
-                        && userId === Meteor.userId() ? (
-                          <FaTrash
-                            style={{ cursor: 'pointer', marginLeft: '15px' }}
-                            size={17}
-                            color="black"
-                            onClick={() => {
-                              const confirmation = confirm(
-                                'Are you sure you want to perform this deletion?',
-                              );
-
-                              if (!confirmation) return;
-
-                              Meteor.call(
-                                'workbooks.removeDescription',
-                                _id,
-                                () => {
-                                  this.setState({ description: [] });
-                                },
-                              );
-                            }}
-                          />
-                            ) : null}
-                        </Modal.Header>
-
-                        <Modal.Content>
-                          <Modal.Description>
-                            {this.renderDescription()}
-                          </Modal.Description>
-                        </Modal.Content>
-                      </Modal>
-                    )
-                ) : null}
-
-                <a
-                  target="_blank"
-                  href="https://github.com/JithinKS97/dynamic-learning"
-                >
-                  <Menu.Item link>Contribute</Menu.Item>
-                </a>
-
-                {copied ? (
-                  <Menu.Item>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                      <Button
-                        onClick={() => {
-                          if (Session.get('copiedObject')) {
-                            const object = Session.get('copiedObject');
-
-                            const updatedSlides = Object.values(
-                              $.extend(true, {}, slides),
-                            );
-
-                            if (object.type === 'sim') {
-                              updatedSlides[curSlide].iframes.push(
-                                object.copiedObject,
-                              );
-                            } else if (object.type === 'text') {
-                              updatedSlides[curSlide].textboxes.push(
-                                object.copiedObject,
-                              );
-                            }
-
-                            this.updateSlides(updatedSlides);
-                          }
-                        }}
-                        color="blue"
-                      >
-                        Paste
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          this.setCopiedState(false);
-                          Session.set('copiedObject', null);
-                        }}
-                        color="red"
-                      >
-                        X
-                      </Button>
-                    </div>
-                  </Menu.Item>
-                ) : null}
-              </Menu>
+            <Grid.Column
+              width={2}
+              style={{ position: "fixed", right: 0 }}
+            >
+              {this.renderRightMenu()}
             </Grid.Column>
+
           </Grid.Row>
-        </Grid>
-
-        <Modal size="tiny" open={this.state.question} onClose={() => this.setState({ question: false })}>
-          <Modal.Header>
-            Choose a question type.
-            <Button className="close-button" onClick={() => this.setState({ question: false })}>
-              &times;
-            </Button>
-          </Modal.Header>
-
-          <Modal.Content>
-            <Modal.Description>
-              <Button onClick={() => this.addMCQ()}> Multiple Choice </Button>
-              <Button onClick={() => this.addShortResponse()}> Short Response </Button>
-            </Modal.Description>
-          </Modal.Content>
-        </Modal>
-        <Modal size="tiny" open={!title}>
-          <Modal.Header>Enter the title for the Workbook</Modal.Header>
-
-          <Modal.Content>
-            <Modal.Description>
-              <Form
-                onSubmit={() => {
-                  if (!this.title.value) return;
-
-                  this.setState({
-                    title: this.title.value,
-                  });
-                }}
-              >
-                <Form.Field>
-                  <label>Title</label>
-                  <input ref={(e) => { this.title = e; }} />
-                </Form.Field>
-                <Form.Field>
-                  <Button type="submit">Submit</Button>
-                </Form.Field>
-              </Form>
-            </Modal.Description>
-          </Modal.Content>
-        </Modal>
+        </Grid>      
       </Segment>
+      </>
     );
   }
 }
@@ -1683,9 +1715,9 @@ const CreateWorkbookContainer = withTracker(({ match }) => {
     */
 
   if (Meteor.userId()) {
-    workbooksHandle = Meteor.subscribe('workbooks');
+    workbooksHandle = Meteor.subscribe("workbooks");
   } else {
-    workbooksHandle = Meteor.subscribe('workbooks.public');
+    workbooksHandle = Meteor.subscribe("workbooks.public");
   }
 
   /*
@@ -1694,8 +1726,8 @@ const CreateWorkbookContainer = withTracker(({ match }) => {
 
   const loading = !workbooksHandle.ready();
 
-  let workbook; let
-    workbookExists;
+  let workbook;
+  let workbookExists;
 
   if (match.params._id === undefined) {
     /*
@@ -1726,7 +1758,7 @@ const CreateWorkbookContainer = withTracker(({ match }) => {
     */
 
     workbookExists,
-    workbook: workbookExists ? workbook : [],
+    workbook: workbookExists ? workbook : []
   };
 })(CreateWorkbook);
 
