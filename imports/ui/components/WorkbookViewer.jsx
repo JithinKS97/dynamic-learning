@@ -672,7 +672,6 @@ export class WorkbookViewer extends React.Component {
         </Dimmer>
         <Grid
           style={{
-            height: '100vh',
             padding: 0,
             margin: 0,
           }}
@@ -683,7 +682,7 @@ export class WorkbookViewer extends React.Component {
             <Grid.Column
               style={{
                 textAlign: "center",
-                
+                height:'100vh',
               }}
               width={2}
             >
@@ -701,8 +700,9 @@ export class WorkbookViewer extends React.Component {
             <Grid.Column
               style={{
                 backgroundColor:'black',
-                overflowY: "auto",
-                overflowX: 'hidden'
+                height:'100vh',
+                overflowY:'auto',
+                overflowX:'hidden'
               }}
               width={14}
             >
