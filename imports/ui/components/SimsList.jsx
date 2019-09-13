@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { Rnd } from 'react-rnd';
 import { Meteor } from 'meteor/meteor';
@@ -99,7 +100,7 @@ export default class SimsList extends React.Component {
 
         if (isRndRequired) {
           return (
-            // eslint-disable-next-line react/no-array-index-key
+           
             <div key={index} className="sim-floating">
               <Rnd
                 scale={scale * this.props.additionalScale || 1}
