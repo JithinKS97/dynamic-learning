@@ -723,6 +723,7 @@ export class WorkbookViewer extends React.Component {
                   isPreview={false}
                   setCopiedState={this.setCopiedState}
                   scale={scaleX}
+                  additionScale={0.7}
                 />
 
                 <MCQs
@@ -734,6 +735,7 @@ export class WorkbookViewer extends React.Component {
                   setCopiedState={this.setCopiedState}
                   userId={userId}
                   scale={scaleX}
+                  additionScale={0.7}
                 />
                 <ShortResponses
                   slides={slides}
@@ -744,6 +746,7 @@ export class WorkbookViewer extends React.Component {
                   setCopiedState={this.setCopiedState}
                   userId={userId}
                   scale={scaleX}
+                  additionScale={0.7}
                 />
                 <SimsList
                   slides={slides}
@@ -761,6 +764,7 @@ export class WorkbookViewer extends React.Component {
                   save={this.saveToDatabase}
                   interact={this.interact}
                   scale={scaleX}
+                  additionScale={0.7}
                 />
 
                 <DrawingBoardCmp

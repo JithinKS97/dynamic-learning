@@ -102,7 +102,7 @@ export default class SimsList extends React.Component {
             // eslint-disable-next-line react/no-array-index-key
             <div key={index} className="sim-floating">
               <Rnd
-                scale={scale * 0.7}
+                scale={scale * this.props.additionalScale || 1}
                 bounds=".canvas-container"
                 dragHandleClassName="sim-handle"
                 resizeHandleClasses="sim-resize"

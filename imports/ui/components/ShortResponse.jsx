@@ -62,7 +62,7 @@ export default class ShortResponse extends React.Component {
 
     return (
       <Rnd
-        scale={scale}
+        scale={scale * this.props.additionalScale || 1}
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
