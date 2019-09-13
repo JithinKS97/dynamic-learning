@@ -1,8 +1,4 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/no-danger */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable no-control-regex */
+/* eslint-disable */
 import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Meteor } from "meteor/meteor";

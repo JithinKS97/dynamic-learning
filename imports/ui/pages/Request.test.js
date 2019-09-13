@@ -3,7 +3,7 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { mount, configure } from 'enzyme';
-import { expect } from 'chai';
+// import { expect } from 'chai';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 

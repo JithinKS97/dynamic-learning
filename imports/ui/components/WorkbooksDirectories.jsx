@@ -1,4 +1,4 @@
-/* eslint-disable react/button-has-type */
+/* eslint-disable */
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import { Meteor } from 'meteor/meteor';
@@ -279,7 +279,7 @@ class WorkbooksDirectories extends Component {
         <Modal
           size="fullscreen"
           open={!!selectedWorkbookId}
-          style={{ transform: 'scale(0.7, 0.7)', marginTop: '5rem' }}
+          style={{ marginTop: '5rem', transform:'scale(0.7)' }}
         >
           <Modal.Header>
             Preview

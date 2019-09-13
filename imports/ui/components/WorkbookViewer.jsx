@@ -1,414 +1,787 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import { Meteor } from 'meteor/meteor';
-import { withTracker } from 'meteor/react-meteor-data';
+/* eslint-disable */
+import React from "react";
+import { Redirect } from "react-router-dom";
+import { Meteor } from "meteor/meteor";
+import { Session } from "meteor/session";
+import { withTracker } from "meteor/react-meteor-data";
 import {
+  Button,
   Dimmer,
   Loader,
   Segment,
+  Modal,
+  Form,
   Grid,
-  Button,
-} from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
-import SimsList from './SimsList';
-import ListWithoutDelete from './ListWithoutDelete';
-import List from './List';
-import DrawingBoardCmp from './DrawingBoardCmp';
-import { Workbooks } from '../../api/workbooks';
-import TextBoxes from './TextBoxes';
-import MCQs from './MCQs';
-import ShortResponses from './ShortResponses';
+  List
+} from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css";
+import { expect } from "chai";
+import DOMPurify from "dompurify";
+import TextBoxes from "../components/TextBoxes";
+import MCQs from "../components/MCQs";
+import ShortResponses from "../components/ShortResponses";
+import SlidesList from "../components/ListWithoutDelete";
+import SimsList from "../components/SimsList";
+import { Workbooks } from "../../api/workbooks";
+import DrawingBoardCmp from "../components/DrawingBoardCmp";
 
-/**
- * This Component is intended for the creation of a workbook by the teachers. Each workbook
- * is composed of an array of slides. Each slide will contain a note and array of simulations.
- * The changes need to be saved explicitly by clicking the save button for updating the database.
- *
- * curSlide is for keeping track of the current slide. _id is the id of the workbook
- * document.
- */
-class WorkbookViewer extends Component {
+export class WorkbookViewer extends React.Component {
   constructor(props) {
     super(props);
-    /**
-     * When isInteractEnabled is true, the pointer events of the canvas are de activated
-     * so that we can interact with the simulations.
-     */
-    this.isInteractEnabled = true;
-    this.undoArray = [];
-    this.curPosition = [];
-    this.workbookExists = false;
-    this.pageCount = 0;
 
     this.state = {
-      title: null,
+
+      title: true,
       curSlide: 0,
       slides: [],
-      _id: '',
+      _id: "",
       initialized: false,
-      createAccount: false,
+      loginNotification: false,
       redirectToLogin: false,
+      interactEnabled: false,
+      redirectToDashboard: false,
+      forkedWorkbookId: null,
+      author: "",
+      copied: false,
       scaleX: 1,
+      description: [],
+      showDescription: false,
+      addDescription: false,
+      saving: false
     };
-  }
 
+    this.pageCount = 0;
+
+    this.undoStacks = [];
+    this.redoStacks = [];
+
+    this.savingChanges = false;
+
+    this.copiedObject = {};
+  }
 
   componentDidMount() {
-    window.onresize = this.handleWindowResize;
     this.db = this.drawingBoard;
-    this.undoArray = [];
-    this.curPosition = [];
-    /**
-     * board:reset and board:stopDrawing are events associated with the drawing
-     * board. They are triggered whenever the we press the reset button or stop
-     * the drawing. Whenever these events are triggered, the changed method is
-     * called. See the definition below.
-     */
-    $('.canvas-container')[0].style['pointer-events'] = 'none';
+
+    window.onresize = this.handleWindowResize;
+
+    window.addEventListener("keydown", this.handleKeyDown, false);
     this.handleWindowResize();
+    $(window).scroll(this.handleScroll);
   }
 
-  componentDidUpdate() {
-    const { initialized } = this.state;
-    // eslint-disable-next-line react/prop-types
-    const { workbookExists, workbook } = this.props;
-    if (!initialized && workbookExists) {
-      if (this.undoArray.length === 0 && workbook.slides.length !== 0) {
-        this.undoArray = workbook.slides.forEach((slide) => {
-          this.curPosition.push(0);
-          return [slide.note];
-        });
-      }
+  componentWillReceiveProps(nextProps) {
 
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({
+    const { workbookExists, workbook } = nextProps;
+    const { initialized } = this.state;
+    if (workbookExists === false) return;
+    if (initialized === true) return;
+
+    this.setState(
+      {
         ...workbook,
-        initialized: true,
-      }, () => {
-        const { slides, curSlide } = this.state;
+        initialized: true
+      },
+      () => {
+        const { slides } = this.state;
+
+        this.interact();
+
         if (slides.length === 0) {
-          this.pushSlide(slides);
-          this.setSizeOfPage(0);
-          this.db.reset();
-          this.db.setImg(slides[curSlide].note);
+          this.addNewSlide();
         } else {
-          this.pageCount = slides[curSlide].pageCount || 0;
-          this.setSizeOfPage(this.pageCount);
-          this.db.reset();
-          this.db.setImg(slides[curSlide].note);
+          this.changeSlide(0);
         }
-      });
-    }
+      }
+    );
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown, false);
-  }
-
-  saveToDatabase = () => {
-    /* This function is intended for saving the slides to the database.
-            If not logged in, user is asked to login first.
-        */
-
-    if (!Meteor.userId()) {
-      this.setState({ loginNotification: true });
-      return;
-    }
-
-    if (this.addSim && this.addSim.state.isOpen) return;
-
-    const { userId, title, slides } = this.state;
-
-
-    const { _id } = this.state;
-
-    const workbook = Workbooks.findOne({ _id });
-
-    /* If the slides in the state has the same values as that of the slides
-            in the database, we need not save, expect to deep include by chai checks this equality.
-            If they are not same, an error is thrown. When we catch the error, we can see that the
-            data are different and we initiate the save.
-        */
-
-    try {
-      expect({ slides: workbook.slides }).to.deep.include({
-        slides,
-      });
-    } catch (error) {
-      if (error) {
-        this.setState({
-          saving: true,
-        });
-        Meteor.call('workbooks.update', _id, slides, () => {
-          alert('Saved successfully');
-          this.setState({
-            saving: false,
-          });
-        });
-      }
-    }
+    window.removeEventListener("keydown", this.handleKeyDown, false);
+    window.removeEventListener("scroll", this.handleScroll, false);
+    window.removeEventListener("resize", this.handleWindowResize, false);
+    window.removeEventListener("keydown", this.handleKeyDown, false);
   }
 
   handleWindowResize = () => {
     this.setState({
-      scaleX: (document.getElementsByClassName('fourteen wide column')[0].offsetWidth / 1366),
+      scaleX:
+        document.getElementsByClassName("fourteen wide column")[0].offsetWidth /
+        1366
     });
+    this.handleScroll();
+    this.forceUpdate();
   };
 
-  updateSlides = (updatedSlides) => {
-    this.setState(
-      {
-        slides: updatedSlides,
-      },
-      () => {
-        /**
-           * shouldNotLoad is true only when a sim is individually updated and saved
-           * Here, we need not load data to all the sims
-           * So if shouldNotLoad is true, we return without calling loadDatatoSketches
-           */
 
-        this.simsList.loadDataToSketches();
-      },
-    );
-  }
+  handleKeyDown = e => {
+    /*
+            This function handles the shortcut key functionalities.
+         */
 
-  setSizeOfPage = (pageCount) => {
-    /**
-     * This function sets the size of the canvas. By default the size of the page is
-     * 900px. The user can add extra poges. With each addition the size of the page
-     * increases by 300px.
-     * First the size of the container is incremented, then the canvas's size is
-     * incremented
-     */
-    $('.canvas-container')[0].style.height = `${(900 + pageCount * 300)}px`;
-    $('.upper-canvas')[0].style.height = $('.canvas-container')[0].style.height;
-    $('.lower-canvas')[0].style.height = $('.canvas-container')[0].style.height;
-    $('.upper-canvas')[0].height = 900 + pageCount * 300;
-    $('.lower-canvas')[0].height = 900 + pageCount * 300;
-  };
-
-  handleKeyDown = (e) => {
-    // This function handles the shortcut key functionalities.
     if (e.keyCode >= 37 && e.keyCode <= 40) {
       e.preventDefault();
     }
-  }
 
-  calcHeightOfCanvasContainer = () => {
-    const { slides, curSlide } = this.state;
-    if (slides.length > 0) {
-      return 900 + slides[curSlide].pageCount * 300;
+    if (e.keyCode === 67 && e.ctrlKey) {
+      this.copiedObject = this.db.copy();
     }
 
-    return 900;
+    if (e.keyCode === 86 && e.ctrlKey) {
+      if (this.copiedObject) {
+        this.db.paste(this.copiedObject);
+        this.copiedObject = null;
+        this.onChange();
+      }
+    }
+
+    if (e.keyCode === 46) {
+      this.db.b.remove(...this.db.b.getActiveObjects());
+      this.db.b.discardActiveObject().renderAll();
+      this.onChange();
+    }
+
+    if (e.keyCode === 90 && e.ctrlKey) this.undo();
+
+    if (e.keyCode === 89 && e.ctrlKey) this.redo();
+
+    if (e.keyCode === 83 && e.ctrlKey) {
+      e.preventDefault();
+      this.saveToDatabase();
+    }
+
+    if (e.keyCode === 68 && e.ctrlKey) {
+      e.preventDefault();
+      this.interact();
+    }
   };
 
-  next = () => {
-    /**
-     * If the current slide is the last slide, we cannot move forward.
-     *
-     * If the current slide is not the last slide, current slide no. is incremented and
-     * and the notes of that particular slide is set to the board.
-     */
+
+  handleScroll = () => {
+    if (Meteor.isTest) return;
+    const { scaleX } = this.state;
+    const scrollTop = $(window).scrollTop();
+    $(".drawingBoardControls")[0].style.top = `${scrollTop / scaleX}px`;
+  };
+
+  setSizeOfPage = pageCount => {
+
+    $(".canvas-container")[0].style.height = `${900 + pageCount * 300}px`;
+    $(".upper-canvas")[0].style.height = $(".canvas-container")[0].style.height;
+    $(".lower-canvas")[0].style.height = $(".canvas-container")[0].style.height;
+    $(".upper-canvas")[0].height = 900 + pageCount * 300;
+    $(".lower-canvas")[0].height = 900 + pageCount * 300;
+    this.db.b.setHeight($(".upper-canvas")[0].height);
+  };
+
+  onChange = () => {
+
     const { slides } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const { curSlide } = this.state;
+    const note = this.db.getImg();
+    updatedSlides[curSlide].note = note;
+    updatedSlides[curSlide].pageCount = this.pageCount;
+    this.updateSlides(updatedSlides);
+  };
+
+  addNewSlide = () => {
     let { curSlide } = this.state;
-    if (curSlide === slides.length - 1) {
-      return;
-    }
-
-    curSlide += 1;
-    this.saveChanges(slides, curSlide);
-  }
-
-
-  previous = () => {
-    /**
-     * If the current slide is not the beggining slide,
-     * the current slide no. is decremented and the notes of that particular
-     * slide is set to the board.
-     */
     const { slides } = this.state;
-    let { curSlide } = this.state;
-    if (curSlide !== 0) {
-      curSlide -= 1;
-      this.saveChanges(slides, curSlide);
-    }
-  }
 
-  pushSlide = (slides) => {
-    /**
-     * To create a new slide, first the structure of slide is defined and
-     * then pushed to the slides array. This is to avoid the undefined error
-     * when somewhere else we access slide.note, slide.iframes.
-     */
+    this.pushSlide();
+    curSlide = slides.length - 1;
+
+    this.changeSlide(curSlide);
+  };
+
+  setStateAfterRearranging = (slides, newIndex) => {
+    this.setState(
+      {
+        slides
+      },
+      () => {
+        this.changeSlide(newIndex);
+      }
+    );
+  };
+
+  pushSlide = () => {
+
+    const { slides } = this.state;
+
     const newSlide = {
-      note: '',
+      note: [],
       iframes: [],
+      pageCount: 0,
+      textboxes: [],
+      questions: [],
+      shortresponse: []
     };
+
     slides.push(newSlide);
-    this.setState({ slides });
-  }
 
+    this.updateSlides(slides);
+  };
 
-  saveChanges = (theSlides, theCurSlide) => {
-    /**
-     * This function is used in multiple places to save the changes (not in the databse, but
-     * in the react state).
-     *
-     * Depending upon the change made, the changes are saved looking upon arguments given when the
-     * function was called.
-     */
+  reset = () => {
+
+    this.setState(
+      {
+        curSlide: 0,
+        slides: []
+      },
+      () => {
+        this.addNewSlide();
+        this.setSizeOfPage(0);
+        this.db.reset();
+      }
+    );
+  };
+
+  pushToUndoStacks = oldSlide => {
+
+    if (this.shouldNotUndo) return;
+
+    const { curSlide } = this.state;
+
+    this.undoStacks[curSlide] = this.undoStacks[curSlide] || [];
+
+    try {
+      expect(oldSlide).to.deep.include(
+        this.undoStacks[curSlide][this.undoStacks[curSlide].length - 1]
+      );
+    } catch (error) {
+      if (error) {
+        this.undoStacks[curSlide].push(oldSlide);
+      }
+    }
+  };
+
+  changeSlide = toSlideNo => {
+
+    const { slides } = this.state;
+    this.setState(
+      {
+        curSlide: toSlideNo
+      },
+      () => {
+        this.pageCount = slides[toSlideNo].pageCount || 0;
+        this.setSizeOfPage(this.pageCount);
+        this.db.reset();
+        this.db.setImg(slides[toSlideNo].note);
+        this.simsList.loadDataToSketches();
+      }
+    );
+  };
+
+  updateSlides = (updatedSlides, shouldNotLoad, shouldNotPushToUndoStack) => {
     const { slides, curSlide } = this.state;
-    if (theSlides === undefined) {
-      this.setState({
-        curSlide: theCurSlide,
-      }, () => {
+    const slide = slides[curSlide];
+    if (!shouldNotPushToUndoStack) this.pushToUndoStacks(slide);
+
+    this.setState(
+      {
+        slides: updatedSlides
+      },
+      () => {
+        if (shouldNotLoad) return;
+
+        this.simsList.loadDataToSketches();
+      }
+    );
+  };
+
+  interact = () => {
+    const { interactEnabled } = this.state;
+
+    if (!interactEnabled) {
+      $(".upper-canvas")[0].style["pointer-events"] = "none";
+      $(".lower-canvas")[0].style["pointer-events"] = "none";
+    } else {
+      $(".upper-canvas")[0].style["pointer-events"] = "unset";
+      $(".lower-canvas")[0].style["pointer-events"] = "unset";
+    }
+
+    this.setState(state => ({
+      interactEnabled: !state.interactEnabled
+    }));
+  };
+
+  checkCanvasSize = () => {
+    let maxHeight = -Infinity;
+
+    let j = $("textarea").length;
+    let textarea;
+
+    while (j > 0) {
+      j -= 1;
+      textarea = $("textarea")
+        .eq(j)
+        .parents()
+        .eq(1);
+      if (textarea.position().top + textarea.height() > maxHeight) {
+        maxHeight = textarea.position().top + textarea.height();
+      }
+    }
+
+    let i = $("iframe").length;
+    let iframe;
+
+    while (i > 0) {
+      i -= 1;
+      iframe = $("iframe")
+        .eq(i - 1)
+        .parents()
+        .eq(3);
+      if (iframe.position().top + iframe.height() > maxHeight) {
+        maxHeight = iframe.position().top + iframe.height();
+      }
+    }
+
+    const { scaleX } = this.state;
+    if (($(".canvas-cont").height() - 300) * scaleX < maxHeight) return 1;
+
+    return 0;
+  };
+
+  undo = () => {
+    const { curSlide, slides } = this.state;
+
+    const slide = this.undoStacks[curSlide].pop();
+
+    if (!this.redoStacks[curSlide]) {
+      this.redoStacks[curSlide] = [];
+    }
+
+    if (slide) {
+      this.redoStacks[curSlide].push(slides[curSlide]);
+      this.restoreStateBack(slide);
+    }
+  };
+
+  redo = () => {
+    const { curSlide, slides } = this.state;
+
+    const slide = this.redoStacks[curSlide].pop();
+
+    if (slide) {
+      this.undoStacks[curSlide].push(slides[curSlide]);
+      this.restoreStateBack(slide);
+    }
+  };
+
+  restoreStateBack = slide => {
+    const { slides, curSlide } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    updatedSlides[curSlide] = slide;
+
+    this.setState(
+      {
+        slides: updatedSlides
+      },
+      () => {
+
+        const { curSlide, slides } = this.state;
         this.pageCount = slides[curSlide].pageCount || 0;
         this.setSizeOfPage(this.pageCount);
         this.simsList.loadDataToSketches();
-      });
-    } else if (theCurSlide === undefined) {
-      this.setState({
-        slides: theSlides,
-      }, () => {
-        this.simsList.loadDataToSketches();
-      });
-    } else {
-      this.setState({
-        slides: theSlides,
-        curSlide: theCurSlide,
-      }, () => {
-        this.setSizeOfPage(this.pageCount);
-        this.simsList.loadDataToSketches();
-      });
-    }
-  }
+        this.db.reset();
+        this.db.setImg(slides[curSlide].note);
 
-  deleteSlide = (index) => {
-    /*
-     * This function decides what to do when the X button is pressed in the
-     * slide element. If there is only one element. it is not deleted,
-     * it is just reset. Otherwise, the slide is deleted and the current slide is set.
-     */
-    const { slides } = this.state;
-    if (slides.length !== 1) {
-      slides.splice(index, 1);
-      let { curSlide } = this.state;
-      this.undoArray.splice(index, 1);
-      this.curPosition.splice(index, 1);
-      if (index === 0) {
-        curSlide = 0;
+        if (!slides[curSlide].note) {
+          this.db.reset();
+        }
       }
-      if (curSlide === slides.length) {
-        curSlide = slides.length - 1;
-      }
+    );
+  };
 
-      this.saveChanges(slides, curSlide);
-    } else {
-      this.undoArray = [];
-      this.curPosition = [];
-      this.reset();
-    }
-  }
+  headToRequestPage = () => {
+    this.setState({ redirectToRequest: true });
+  };
 
-  deleteSim = (index) => {
-    /*
-     * This function decides what to do when cross button is pressed in the
-     * simulation. The simulation is deleted from the iframes array of the
-     * current slide and the changes are saved.
-     */
+  changePageCount = option => {
+
+    const temp = this.db.getImg();
+    this.pageCount += option;
+    $(".upper-canvas")[0].style.height = `${(
+      $(".upper-canvas")[0].height +
+      option * 300
+    ).toString()}px`;
+    $(".lower-canvas")[0].style.height = `${(
+      $(".lower-canvas")[0].height +
+      option * 300
+    ).toString()}px`;
+    $(".upper-canvas")[0].height += option * 300;
+    $(".lower-canvas")[0].height += option * 300;
+    $(".canvas-container")[0].style.height = $(".lower-canvas")[0].style.height;
+    this.db.b.setHeight($(".upper-canvas")[0].height);
+    this.db.setImg(temp);
     const { slides, curSlide } = this.state;
-    const { iframes } = slides[curSlide];
-    iframes.splice(index, 1);
-    slides[curSlide].iframes = iframes;
-    this.saveChanges(slides);
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+    updatedSlides[curSlide].pageCount = this.pageCount;
+    this.updateSlides(updatedSlides);
+  };
+
+  addShortResponse = () => {
+    const { curSlide, slides } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+
+    if (!updatedSlides[curSlide].shortresponse) {
+      updatedSlides[curSlide].shortresponse = [];
+    }
+
+    const newQuestion = {
+      content: "",
+      responses: {}
+    };
+
+    updatedSlides[curSlide].shortresponse.push(newQuestion);
+    this.updateSlides(updatedSlides);
+    this.setState({ question: false });
+  };
+
+  addMCQ = () => {
+    const { curSlide, slides } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+
+    if (!updatedSlides[curSlide].questions) {
+      updatedSlides[curSlide].questions = [];
+    }
+
+    const newQuestion = {
+      content: "",
+      a: "",
+      b: "",
+      c: "",
+      d: "",
+      responses: {}
+    };
+
+    updatedSlides[curSlide].questions.push(newQuestion);
+    this.updateSlides(updatedSlides);
+    this.setState({ question: false });
+  };
+
+  addQuestion = () => {
+    this.setState({ question: true });
+  };
+
+  addTextBox = () => {
+    const { curSlide, slides } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
+
+    if (!updatedSlides[curSlide].textboxes) {
+      updatedSlides[curSlide].textboxes = [];
+    }
+
+    const newTextBox = {
+      value: "new text box"
+    };
+
+    updatedSlides[curSlide].textboxes.push(newTextBox);
+
+    this.updateSlides(updatedSlides);
+  };
+
+  setCopiedState = set => {
+    if (set) this.setState({ copied: true });
+    else this.setState({ copied: false });
+  };
+
+  addDescription = () => {
+    this.setState({ showDescription: false });
+    this.setState({ addDescription: false });
+
+    let subject;
+    let topic;
+    let learningObjectives;
+    let inClassActivities;
+    let resources;
+    let assessments;
+    let standards;
+
+    if (this.subject.value === "") {
+      subject = this.subject.placeholder;
+    } else {
+      subject = this.subject.value;
+    }
+
+    if (this.topic.value === "") {
+      topic = this.topic.placeholder;
+    } else {
+      topic = this.topic.value;
+    }
+
+    if (this.learningObjectives.value === "") {
+      learningObjectives = this.learningObjectives.placeholder;
+    } else {
+      learningObjectives = DOMPurify.sanitize(
+        this.learningObjectives.value.replace(
+          new RegExp("\r?\n", "g"),
+          "<br />"
+        )
+      );
+    }
+
+    if (this.inClassActivities.value === "") {
+      inClassActivities = this.inClassActivities.placeholder;
+    } else {
+      inClassActivities = DOMPurify.sanitize(
+        this.inClassActivities.value.replace(new RegExp("\r?\n", "g"), "<br />")
+      );
+    }
+
+    if (this.resources.value === "") {
+      resources = this.resources.placeholder;
+    } else {
+      resources = DOMPurify.sanitize(
+        this.resources.value.replace(new RegExp("\r?\n", "g"), "<br />")
+      );
+    }
+
+    if (this.assessments.value === "") {
+      assessments = this.assessments.placeholder;
+    } else {
+      assessments = this.assessments.value;
+    }
+
+    if (this.standards.value === "") {
+      standards = this.standards.placeholder;
+    } else {
+      standards = this.standards.value;
+    }
+
+    const description = {
+      subject,
+      topic,
+      learningObjectives,
+      inClassActivities,
+      resources,
+      assessments,
+      standards
+    };
+
+    const { _id } = this.state;
+
+    Meteor.call("workbooks.description", _id, description, () => {
+      alert("Description addedd successfully");
+    });
+  };
+
+  checkDescExist = () => {
+    const { _id } = this.state;
+    const a = Workbooks.find({
+      _id,
+      description: { $exists: true }
+    }).fetch();
+    if (a.length !== 0) return true;
+
+    Meteor.call("workbooks.addDescriptionField", _id);
+  };
+
+  checkDescription = () => {
+    const { _id } = this.state;
+    const res = Workbooks.find({ _id }).fetch();
+    const desc = res[0].description;
+    return Object.keys(desc).length === 0 && desc.constructor === Object;
+  };
+
+  renderDescription = () => {
+    const { description } = this.state;
+    if (
+      Object.keys(description).length === 0 &&
+      description.constructor === Object
+    ) {
+      return <p>No description to show</p>;
+    }
+    return (
+      <List divided relaxed>
+        <List.Item>
+          <List.Header>Subject</List.Header>
+          {description.subject}
+        </List.Item>
+        <List.Item>
+          <List.Header>Topic</List.Header>
+          {description.topic}
+        </List.Item>
+        <List.Item>
+          <List.Header>Learning Objectives</List.Header>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: description.learningObjectives
+            }}
+          />
+        </List.Item>
+        <List.Item>
+          <List.Header>In-Class Activites</List.Header>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: description.inClassActivities
+            }}
+          />
+        </List.Item>
+        <List.Item>
+          <List.Header>Resources</List.Header>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: description.resources
+            }}
+          />
+        </List.Item>
+        <List.Item>
+          <List.Header>Assessments</List.Header>
+          {description.assessments}
+        </List.Item>
+        <List.Item>
+          <List.Header>Standards</List.Header>
+          {description.standards}
+        </List.Item>
+      </List>
+    );
+  };
+
+  renderLeftMenuHeader = () => {
+
+    const {
+      curSlide,
+    } = this.state;
+
+    return (
+      <>        
+        <h1 className="slidecounter">{curSlide + 1}</h1>
+      </>
+    )
   }
 
   render() {
     const {
-      redirectToLogin,
       initialized,
+      scaleX,
       slides,
       curSlide,
+      interactEnabled,
+      userId,
     } = this.state;
-    if (redirectToLogin) {
-      return <Redirect to="/" />;
-    }
 
     return (
-      <Segment style={{ padding: '0 0.8rem', margin: 0 }}>
+      <>
+      <Segment style={{ padding: 0, margin: 0 }}>
         <Dimmer active={!initialized}>
           <Loader />
         </Dimmer>
-        <Grid columns={3} divided>
+        <Grid
+          style={{
+            height: '960px',
+            padding: 0,
+            margin: 0,
+          }}
+          columns={2}
+          divided
+        >
           <Grid.Row>
-            <Grid.Column style={{ textAlign: 'center' }} width={2}>
-              <h1 style={{ marginTop: '1.6rem' }}>{curSlide + 1}</h1>
-              <ListWithoutDelete
-                save={this.saveToDatabase}
-                showTitle={false}
-                {...this.state}
-                delete={this.deleteSlide}
-                saveChanges={this.saveChanges}
+            <Grid.Column
+              style={{
+                textAlign: "center",
+                
+              }}
+              width={2}
+            >
+              {this.renderLeftMenuHeader()}
+              <SlidesList
+                slides={slides}
+                curSlide={curSlide}
+                deleteSlide={this.deleteSlide}
+                setStateAfterRearranging={this.setStateAfterRearranging}
+                from="createWorkbook"
+                isPreview={false}
+                changeSlide={this.changeSlide}
               />
             </Grid.Column>
             <Grid.Column
               style={{
-                height: '100vh',
-                padding: 0,
-                overflowY: 'auto',
-                overflowX: 'auto',
-                margin: 0,
+                backgroundColor:'black',
+                overflowY: "auto",
+                overflowX: 'hidden'
               }}
               width={14}
             >
-              <div style={{
-                backgroundColor: 'black',
-                paddingLeft: '4.8rem',
-                margin: '0px',
-              }}
+              <div
+                className="canvas-cont"
+                style={{
+                  backgroundColor: "black",
+                  width: "1366px",
+                  transform: `scale(${scaleX},${scaleX})`,
+                  transformOrigin: "top left",
+                }}
               >
                 <TextBoxes
-                  isPreview
-                  deleteTextBox={() => {}}
                   slides={slides}
                   curSlide={curSlide}
-                  saveChanges={this.saveChanges}
+                  updateSlides={this.updateSlides}
+                  deleteTextBox={this.deleteTextBox}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  scale={scaleX}
+                />
+
+                <MCQs
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteQuestion={this.deleteQuestion}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  userId={userId}
+                  scale={scaleX}
                 />
                 <ShortResponses
-                  isPreview
-                  deleteShortResponse={() => {}}
-                  updateSlides={this.updateSlides}
                   slides={slides}
                   curSlide={curSlide}
-                  saveChanges={this.saveChanges}
-                />
-                <MCQs
-                  isPreview
-                  deleteQuestion={() => {}}
                   updateSlides={this.updateSlides}
-                  slides={slides}
-                  curSlide={curSlide}
-                  saveChanges={this.saveChanges}
+                  deleteShortResponse={this.deleteShortResponse}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  userId={userId}
+                  scale={scaleX}
                 />
                 <SimsList
-                  navVisibility={false}
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteSim={this.deleteSim}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
                   isRndRequired
-                  isPreview
-                  saveChanges={this.saveChanges}
-                  delete={this.deleteSim}
-                  {...this.state}
-                  ref={(e) => { this.simsList = e; }}
+                  undo={this.undo}
+                  redo={this.redo}
+                  ref={e => {
+                    this.simsList = e;
+                  }}
+                  save={this.saveToDatabase}
+                  interact={this.interact}
+                  scale={scaleX}
                 />
-                <DrawingBoardCmp toolbarVisible={false} ref={(e) => { this.drawingBoard = e; }} />
+
+                <DrawingBoardCmp
+                  interactEnabled={interactEnabled}
+                  interact={this.interact}
+                  ref={e => {
+                    this.drawingBoard = e;
+                  }}
+                  onChange={this.onChange}
+                 
+                />
               </div>
             </Grid.Column>
           </Grid.Row>
-        </Grid>
+        </Grid>      
       </Segment>
+      </>
     );
   }
 }
+
 
 export default withTracker((props) => {
   const workbooksHandle = Meteor.subscribe('workbooks');
