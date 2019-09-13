@@ -279,7 +279,7 @@ class WorkbooksDirectories extends Component {
         <Modal
           size="fullscreen"
           open={!!selectedWorkbookId}
-          style={{ transform:'scale(0.7)' }}
+          style={{ marginTop: '10vh', transform:'scale(0.7)' }}
         >
           <Modal.Header>
             Preview

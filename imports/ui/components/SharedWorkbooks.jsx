@@ -123,7 +123,7 @@ export default class SharedWorkbooks extends React.Component {
         <Modal
           open={!!workbook}
           size="fullscreen"
-          style={{ transform: 'scale(0.7, 0.7)' }}
+          style={{ transform: 'scale(0.7, 0.7)', marginTop: '10vh' }}
         >
           <Modal.Header style={{ transformOrigin: 'left' }}>
             Preview
