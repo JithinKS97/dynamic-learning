@@ -672,7 +672,7 @@ export class WorkbookViewer extends React.Component {
         </Dimmer>
         <Grid
           style={{
-            height: '960px',
+            height: '100vh',
             padding: 0,
             margin: 0,
           }}
