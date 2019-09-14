@@ -171,7 +171,9 @@ export default class SimsList extends React.Component {
                       }}
                       className="link-to-code"
                       target="_blank"
-                      href={iframe.linkToCode}
+                      href={`https://editor.p5js.org/${
+                        iframe.username
+                      }/sketches/${iframe.project_id}`}
                     >
                       <FaCode size="22" />
                     </a>

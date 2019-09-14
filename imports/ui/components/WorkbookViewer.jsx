@@ -700,7 +700,7 @@ export class WorkbookViewer extends React.Component {
                 deleteSlide={this.deleteSlide}
                 setStateAfterRearranging={this.setStateAfterRearranging}
                 from="createWorkbook"
-                isPreview={false}
+                isPreview
                 changeSlide={this.changeSlide}
               />
               </div>
@@ -728,7 +728,7 @@ export class WorkbookViewer extends React.Component {
                   curSlide={curSlide}
                   updateSlides={this.updateSlides}
                   deleteTextBox={this.deleteTextBox}
-                  isPreview={false}
+                  isPreview
                   setCopiedState={this.setCopiedState}
                   scale={scaleX}
                   additionalScale={0.7}
@@ -739,7 +739,7 @@ export class WorkbookViewer extends React.Component {
                   curSlide={curSlide}
                   updateSlides={this.updateSlides}
                   deleteQuestion={this.deleteQuestion}
-                  isPreview={false}
+                  isPreview
                   setCopiedState={this.setCopiedState}
                   userId={userId}
                   scale={scaleX}
@@ -750,7 +750,7 @@ export class WorkbookViewer extends React.Component {
                   curSlide={curSlide}
                   updateSlides={this.updateSlides}
                   deleteShortResponse={this.deleteShortResponse}
-                  isPreview={false}
+                  isPreview
                   setCopiedState={this.setCopiedState}
                   userId={userId}
                   scale={scaleX}
@@ -761,7 +761,7 @@ export class WorkbookViewer extends React.Component {
                   curSlide={curSlide}
                   updateSlides={this.updateSlides}
                   deleteSim={this.deleteSim}
-                  isPreview={false}
+                  isPreview
                   setCopiedState={this.setCopiedState}
                   isRndRequired
                   undo={this.undo}
