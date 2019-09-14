@@ -1383,7 +1383,7 @@ export class CreateWorkbook extends React.Component {
     } = this.state;
 
     return (
-      <>
+      <div className='workbook-left-menu-header'>
       {saving ? <p>Saving...</p> : null}
         {Meteor.userId() ? (
           <Button
@@ -1432,7 +1432,7 @@ export class CreateWorkbook extends React.Component {
           Create Slide
         </Button>
         <h1 className="slidecounter">{curSlide + 1}</h1>
-      </>
+      </div>
     )
   }
 
@@ -1596,21 +1596,21 @@ export class CreateWorkbook extends React.Component {
               width={2}
             >
               {this.renderLeftMenuHeader()}
-              <div
+              <div 
                 style={{
-                  overflowY: "auto",
-                  height: `${(this.calcHeightOfCanvasContainer() - 168) * scaleX}px`
+                  height: `${this.calcHeightOfCanvasContainer() * scaleX - $('.workbook-left-menu-header').height() - 20}px`,
+                  overflowY:'auto'
                 }}
               >
-                <SlidesList
-                  slides={slides}
-                  curSlide={curSlide}
-                  deleteSlide={this.deleteSlide}
-                  setStateAfterRearranging={this.setStateAfterRearranging}
-                  from="createWorkbook"
-                  isPreview={false}
-                  changeSlide={this.changeSlide}
-                />
+              <SlidesList
+                slides={slides}
+                curSlide={curSlide}
+                deleteSlide={this.deleteSlide}
+                setStateAfterRearranging={this.setStateAfterRearranging}
+                from="createWorkbook"
+                isPreview={false}
+                changeSlide={this.changeSlide}
+              />
               </div>
             </Grid.Column>
             <Grid.Column

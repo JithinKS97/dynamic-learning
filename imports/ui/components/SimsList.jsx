@@ -71,6 +71,7 @@ export default class SimsList extends React.Component {
       deleteSim,
       userId,
       scale,
+      additionalScale
     } = this.props;
 
     // eslint-disable-next-line react/destructuring-assignment
@@ -99,11 +100,12 @@ export default class SimsList extends React.Component {
         */
 
         if (isRndRequired) {
+
           return (
            
             <div key={index} className="sim-floating">
               <Rnd
-                scale={scale * this.props.additionalScale || 1}
+                scale={additionalScale?additionalScale*scale:scale}
                 bounds=".canvas-container"
                 dragHandleClassName="sim-handle"
                 resizeHandleClasses="sim-resize"

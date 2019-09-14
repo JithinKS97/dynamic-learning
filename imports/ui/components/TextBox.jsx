@@ -36,12 +36,14 @@ export default class TextBox extends React.Component {
       isPreview,
       slides,
       scale,
+      // eslint-disable-next-line react/prop-types
+      additionalScale,
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
       <Rnd
-        scale={scale * this.props.additionalScale || 1}
+        scale={additionalScale ? additionalScale * scale : scale}
         className="textbox-floating"
         bounds=".canvas-container"
         size={{

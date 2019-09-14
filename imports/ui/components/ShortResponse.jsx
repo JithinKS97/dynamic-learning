@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable*/
 import React from 'react';
 import { Rnd } from 'react-rnd';
 import { TiArrowMove } from 'react-icons/ti';
@@ -54,6 +54,7 @@ export default class ShortResponse extends React.Component {
       slides,
       userId,
       scale,
+      additionalScale,
     } = this.props;
     const {
       modalOpen,
@@ -62,7 +63,7 @@ export default class ShortResponse extends React.Component {
 
     return (
       <Rnd
-        scale={scale * this.props.additionalScale || 1}
+        scale={additionalScale ? additionalScale * scale : scale}
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
