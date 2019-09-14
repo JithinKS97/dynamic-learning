@@ -648,9 +648,9 @@ export class WorkbookViewer extends React.Component {
     } = this.state;
 
     return (
-      <>        
+      <div className = 'workbook-viewer-left-menu-header'>        
         <h1 className="slidecounter">{curSlide + 1}</h1>
-      </>
+      </div>
     )
   }
 
@@ -686,7 +686,14 @@ export class WorkbookViewer extends React.Component {
               }}
               width={2}
             >
+             
               {this.renderLeftMenuHeader()}
+              <div 
+                style={{
+                  overflowY:'auto',
+                  height:`90vh`
+                }}
+              >
               <SlidesList
                 slides={slides}
                 curSlide={curSlide}
@@ -696,6 +703,7 @@ export class WorkbookViewer extends React.Component {
                 isPreview={false}
                 changeSlide={this.changeSlide}
               />
+              </div>
             </Grid.Column>
             <Grid.Column
               style={{
