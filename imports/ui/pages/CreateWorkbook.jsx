@@ -1592,20 +1592,26 @@ export class CreateWorkbook extends React.Component {
               style={{
                 position: "fixed",
                 textAlign: "center",
-                overflow: "auto"
               }}
               width={2}
             >
               {this.renderLeftMenuHeader()}
-              <SlidesList
-                slides={slides}
-                curSlide={curSlide}
-                deleteSlide={this.deleteSlide}
-                setStateAfterRearranging={this.setStateAfterRearranging}
-                from="createWorkbook"
-                isPreview={false}
-                changeSlide={this.changeSlide}
-              />
+              <div
+                style={{
+                  overflowY: "auto",
+                  height: `${(this.calcHeightOfCanvasContainer() - 168) * scaleX}px`
+                }}
+              >
+                <SlidesList
+                  slides={slides}
+                  curSlide={curSlide}
+                  deleteSlide={this.deleteSlide}
+                  setStateAfterRearranging={this.setStateAfterRearranging}
+                  from="createWorkbook"
+                  isPreview={false}
+                  changeSlide={this.changeSlide}
+                />
+              </div>
             </Grid.Column>
             <Grid.Column
               style={{
@@ -1705,20 +1711,11 @@ export class CreateWorkbook extends React.Component {
 const CreateWorkbookContainer = withTracker(({ match }) => {
   let workbooksHandle;
 
-  /*
-        If the user is logged in, we fetch his workbooks.
-        Otherwise, we fetch every public workbooks.
-    */
-
   if (Meteor.userId()) {
     workbooksHandle = Meteor.subscribe("workbooks");
   } else {
     workbooksHandle = Meteor.subscribe("workbooks.public");
   }
-
-  /*
-    loading becomes false when we get the workbooks collection.
-  */
 
   const loading = !workbooksHandle.ready();
 
@@ -1726,20 +1723,11 @@ const CreateWorkbookContainer = withTracker(({ match }) => {
   let workbookExists;
 
   if (match.params._id === undefined) {
-    /*
-      If workbook creator is taken by creating a new workbook,
-      the id will be undefined, so an empty list of slides is created with title null.
-    */
 
     workbookExists = true;
     const slides = [];
     workbook = { slides, title: null };
   } else {
-    /*
-      If id is not null, we are trying to open an existing workbooks,
-      so it is fetched from the database.
-      If the workbook exists for the id provided, loading is set to false.
-    */
 
     workbook = Workbooks.findOne(match.params._id);
 
@@ -1747,11 +1735,6 @@ const CreateWorkbookContainer = withTracker(({ match }) => {
   }
 
   return {
-    /*
-      WorkbookExists is returned for determining if the loading screen display.
-      If workbook exists, it is returned, otherwise an empty array is returned.
-      Go to the componentWillReceiveProps to see what we do with the returned workbook.
-    */
 
     workbookExists,
     workbook: workbookExists ? workbook : []

@@ -52,23 +52,13 @@ const List = (props) => {
     props.setStateAfterRearranging(arrayMove(slidesCopy, oldIndex, newIndex), newIndex);
   };
   const renderSlides = () => {
-    /* This component is intended for rendering slides list */
-
     const { slides } = props;
     if (slides.length !== 0) {
       const slideslist = slides.map((slide, index) => (
+
         // eslint-disable-next-line react/no-array-index-key
         <SortableItem key={index} index={index} slideNo={index} slide={slide} props={props} />
       ));
-      /*
-        There first button is intended for displaying the contents
-          withrespect to the current slide.
-
-          The second button is intended for the deletion of the slide.
-
-          Both these operations are not performed here. But the functions
-          that execute the operations are passed.
-      */
       return slideslist;
     }
     return null;
