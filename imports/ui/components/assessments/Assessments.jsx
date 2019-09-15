@@ -9,7 +9,7 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import Tests from '../../api/assessments';
+import Tests from '../../../api/assessments';
 import AssessmentsCreator from './AssessmentsCreator';
 
 // import MathQuill, { addStyles as addMathquillStyles } from 'react-mathquill';

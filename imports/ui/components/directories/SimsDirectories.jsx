@@ -11,8 +11,8 @@ import 'semantic-ui-css/semantic.min.css';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import { Sims } from '../../api/sims';
-import Upload from './Upload';
+import { Sims } from '../../../api/sims';
+import Upload from '../Upload';
 
 class SimsDirectories extends React.Component {
   constructor(props) {

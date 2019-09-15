@@ -6,11 +6,10 @@ import {
   Button, Form, Modal,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import Classes from '../../api/classes';
-import { Workbooks } from '../../api/workbooks';
+import Classes from '../../../api/classes';
+import { Workbooks } from '../../../api/workbooks';
 
-
-export default class TeacherClasses extends React.Component {
+export default class StudentClasses extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,28 +42,6 @@ export default class TeacherClasses extends React.Component {
     });
   }
 
-
-  randomClassCode = () => (
-    Math.random()
-      .toString(36)
-      .substring(2, 5) + Math.random()
-      .toString(36)
-      .substring(2, 5)
-  )
-
-  // this function can ONLY be called by a teacher, will allow a new class to be created
-
-  createClass = () => {
-    const { classes, user } = this.state;
-
-    if (this.classname.value && this.classname.value !== '') {
-      const code = this.randomClassCode();
-      classes.push(code);
-      Meteor.call('classes.insert', code, this.classname.value, user);
-      this.classname.value = '';
-    }
-  }
-
   getClasses = () => {
     const { user } = this.state;
     const _user = Meteor.users.find({ username: user }).fetch()[0];
@@ -76,6 +53,20 @@ export default class TeacherClasses extends React.Component {
       });
     }
     return clnames;
+  }
+
+  addStudent = (classcode, student) => {
+    Meteor.call('classes.addstudent', classcode, student);
+  }
+
+  addClass = () => {
+    const { classes, user } = this.state;
+    const foundclass = Classes.findOne({ classcode: this.classcode.value.trim() });
+    if (foundclass && !(classes.includes(foundclass.classcode))) {
+      this.addStudent(this.classcode.value.trim(), user);
+      classes.push(this.classcode.value.trim());
+      this.classcode.value = '';
+    }
   }
 
   handleClose = () => {
@@ -108,52 +99,41 @@ export default class TeacherClasses extends React.Component {
     const { user, modalOpen, clickedclass } = this.state;
     return (
       <div>
-        <Form style={{ marginTop: '1.2rem', width: '25%' }} noValidate onSubmit={() => this.createClass()}>
+        <Form style={{ marginTop: '1.2rem', width: '25%' }} noValidate onSubmit={() => this.addClass()}>
           <Form.Field>
-            <input ref={(e) => { this.classname = e; }} placeholder="Name of new class" />
+            <input ref={(e) => { this.classcode = e; }} placeholder="Class code" />
           </Form.Field>
           <Button type="submit"> Add new class </Button>
         </Form>
-        <div style={{ marginTop: '1.2rem' }}>
+        <div style={{ paddingTop: '1.2rem' }}>
           <b> Your current classes </b>
         </div>
         {user !== '' && this.getClasses().map((cl) => {
           if (cl) {
             return (
               <div>
-                <div style={{ display: 'flex', flexDirection: 'row', marginTop: '0.4rem' }}>
-                  <div onClick={() => this.handleOpen(cl.classcode)}>
-                    {' '}
-                    {`${cl.name}: ${cl.classcode}`}
-                    {' '}
-                  </div>
-                  <a
-                    onClick={() => {
-                      if (confirm('Are you sure you want to remove the class?')) {
-                        Meteor.call('classes.remove', cl);
-                      }
-                    }}
-                    style={{ marginLeft: '0.4rem', cursor: 'pointer' }}
-                  >
-                    X
-                  </a>
+                <div onClick={() => this.handleOpen(cl.classcode)} style={{ marginTop: '0.4rem' }}>
+                  {' '}
+                  {`${cl.name}: ${cl.classcode}`}
+                  {' '}
                 </div>
                 <div style={{ paddingLeft: '1rem' }}>
-                  {Classes.findOne({
-                    classcode: cl.classcode,
-                  }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
-                    <div>
-                      {' '}
-                      <Link to={{ pathname: `/createworkbook/${lesson}`, state: { from: 'teacherclasses' } }}>
+                  {Classes
+                    .findOne({ classcode: cl.classcode })
+                    .lessons && Classes
+                    .findOne({ classcode: cl.classcode }).lessons.map(lesson => (
+                      <div>
                         {' '}
-                        {Meteor.user() && Workbooks
-                          .findOne({ _id: lesson }) && Workbooks
-                          .findOne({ _id: lesson }).title}
+                        <Link to={`/createworkbook/${lesson}`}>
+                          {' '}
+                          {Meteor.user() && Workbooks
+                            .findOne({ _id: lesson }) && Workbooks
+                            .findOne({ _id: lesson }).title}
+                          {' '}
+                        </Link>
                         {' '}
-                      </Link>
-                      {' '}
-                    </div>
-                  ))}
+                      </div>
+                    ))}
                 </div>
               </div>
             );

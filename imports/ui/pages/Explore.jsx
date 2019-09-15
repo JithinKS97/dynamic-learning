@@ -6,9 +6,9 @@ import {
   FaChalkboardTeacher,
   FaCode,
 } from 'react-icons/fa';
-import SharedLessons from '../components/SharedLessons';
-import SharedWorkbooks from '../components/SharedWorkbooks';
-import RequestsList from '../components/RequestsList';
+import SharedLessons from '../components/sharingList/SharedLessons';
+import SharedWorkbooks from '../components/sharingList/SharedWorkbooks';
+import RequestsList from '../components/sharingList/RequestsList';
 
 export default class Explore extends React.Component {
   constructor(props) {

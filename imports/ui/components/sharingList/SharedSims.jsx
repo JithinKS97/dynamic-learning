@@ -4,7 +4,7 @@ import {
 } from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { SimsIndex } from '../../api/sims';
+import { SimsIndex } from '../../../api/sims';
 
 export default class SharedSims extends React.Component {
   constructor(props) {

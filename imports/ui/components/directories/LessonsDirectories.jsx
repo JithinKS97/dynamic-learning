@@ -9,7 +9,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { Tracker } from 'meteor/tracker';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { Redirect } from 'react-router-dom';
-import { Lessons } from '../../api/lessons';
+import { Lessons } from '../../../api/lessons';
 
 export default class Tree extends Component {
   constructor(props) {

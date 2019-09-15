@@ -8,9 +8,9 @@ import {
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Lessons } from '../../api/lessons';
-import HorizontalList from '../components/HorizontalList';
+import HorizontalList from '../components/lesson/HorizontalList';
 import 'semantic-ui-css/semantic.min.css';
-import VideoContainer from '../components/VideoContainer';
+import VideoContainer from '../components/lesson/VideoContainer';
 import SimsList from '../components/SimsList';
 import AddSim from '../components/AddSim';
 // import LessonComment from '../components/LessonComment';

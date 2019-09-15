@@ -8,7 +8,7 @@ import {
 } from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Requests } from '../../api/requests';
+import { Requests } from '../../../api/requests';
 
 const RequestsList = (props) => {
   const [requestId, changeRequestId] = useState('');

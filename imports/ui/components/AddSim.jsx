@@ -9,9 +9,9 @@ import {
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
-import SimsDirectories from './SimsDirectories';
+import SimsDirectories from './directories/SimsDirectories';
 import SimPreview from './SimPreview';
-import SharedSims from './SharedSims';
+import SharedSims from './sharingList/SharedSims';
 import { generateSrc } from '../../functions';
 /*
     This component is for the addition of simulations to the workbook.

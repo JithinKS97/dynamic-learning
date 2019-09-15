@@ -4,7 +4,7 @@ import {
   List, Input, Dimmer, Loader,
 } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
-import { LessonsIndex } from '../../api/lessons';
+import { LessonsIndex } from '../../../api/lessons';
 
 export default class SharedLessons extends React.Component {
   constructor(props) {

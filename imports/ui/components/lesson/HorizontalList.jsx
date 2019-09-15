@@ -23,12 +23,12 @@ export default class HorizontalList extends Component {
           justifyContent: userId === Meteor.userId() ? 'space-around' : 'center',
         }}
       >
-        <Button onClick={() => { changeSlide(index); }} >
+        <Button onClick={() => { changeSlide(index); }}>
           {index + 1}
         </Button>
         {userId === Meteor.userId()
           ? (
-            <Button onClick={() => { deleteSlide(index); }} > 
+            <Button onClick={() => { deleteSlide(index); }}>
                 X
             </Button>
           ) : null}

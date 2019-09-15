@@ -22,9 +22,9 @@ import { MdSettings } from 'react-icons/md';
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import TagsInput from 'react-tagsinput';
 
-import Classes from '../../api/classes';
-import { Workbooks } from '../../api/workbooks';
-import WorkbookViewer from './workbook/WorkbookViewer';
+import Classes from '../../../api/classes';
+import { Workbooks } from '../../../api/workbooks';
+import WorkbookViewer from '../workbook/WorkbookViewer';
 
 /*
   This component displays the workbook files in nested tree structure.

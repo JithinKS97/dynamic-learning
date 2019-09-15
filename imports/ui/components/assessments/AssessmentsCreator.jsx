@@ -1,18 +1,15 @@
+/*eslint-disable*/
 import React from 'react';
 import {
   Button,
-  Modal,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import Tests from '../../api/assessments';
-import Questions from '../../api/questions';
+import Tests from '../../../api/assessments';
+import Questions from '../../../api/questions';
 
 export default class AssessmentsCreator extends React.Component {
-  constructor() {
-    super();
-  }
 
   componentDidMount() {
     Meteor.subscribe('assessments');

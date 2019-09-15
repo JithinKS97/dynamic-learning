@@ -12,20 +12,20 @@ import {
 import { Tracker } from 'meteor/tracker';
 import { FaCode } from 'react-icons/fa';
 import TagsInput from 'react-tagsinput';
-import WorkbooksDirectories from '../components/WorkbooksDirectories';
-import RequestsList from '../components/RequestsList';
-import SimsDirectories from '../components/SimsDirectories';
-import SharedLessons from '../components/SharedLessons';
-import LessonsDirectories from '../components/LessonsDirectories';
+import WorkbooksDirectories from '../components/directories/WorkbooksDirectories';
+import RequestsList from '../components/sharingList/RequestsList';
+import SimsDirectories from '../components/directories/SimsDirectories';
+import SharedLessons from '../components/sharingList/SharedLessons';
+import LessonsDirectories from '../components/directories/LessonsDirectories';
 import SideBar from '../components/SideBar';
 import SimPreview from '../components/SimPreview';
 import { Sims } from '../../api/sims';
-import SharedWorkbooks from '../components/SharedWorkbooks';
+import SharedWorkbooks from '../components/sharingList/SharedWorkbooks';
 import 'semantic-ui-css/semantic.min.css';
 import { generateSrc } from '../../functions/index.js';
-import Profile from '../components/Profile';
-import Classes from '../components/Classes';
-import Assessments from '../components/Assessments';
+import Profile from '../components/Profile/Profile';
+import Classes from '../components/classes/Classes';
+import Assessments from '../components/assessments/Assessments';
 
 /*
     This is the Component which renders the dashboard of the application.
