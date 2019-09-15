@@ -34,30 +34,14 @@ import SimsList from '../components/SimsList';
 import { Workbooks } from '../../api/workbooks';
 import DrawingBoardCmp from '../components/workbook/DrawingBoardCmp';
 
-/* This Component is intended for the development of a
-    workbook by the teachers. Each workbook
-    is composed of a sequence of slides. Each slide contains
-    a note (the drawing on the canvas which is
-    is of type string) and array of simulations.
-    The changes need to be saved explicitly by clicking
-    the save button for updating the database.
-*/
-
+/**
+ * renders the page in which teachers create, edit, save and present workbooks
+ */
 export class CreateWorkbook extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      /* Title holds the title of the workbook. CurSlide holds
-        the current slide on which we are in.
-        id holds the id of the current workbook. Initialzed is set
-        to true once data is fetched from the database and is filled in the state.
-        loginNotification becomes true when save button is pressed
-        and the user is not logged in. Checked holds the interact checkbox value.
-        RedirectToLogin is set to true if we want to redirect the user to the login page.
-        Checked holds the interact checkbox value. RedirectToDashboard set to true if
-        we want to redirect the user to the dashboard
-    */
 
       title: true,
       curSlide: 0,
@@ -78,11 +62,6 @@ export class CreateWorkbook extends React.Component {
       saving: false,
     };
 
-    /* PageCount holds the the value associated with the extra length of the canvas
-        pushSlide is for creation of new slide, save to save the slides to the db,
-        handleKeyDown for dealing with shortcuts (See the definitions below)
-    */
-
     this.pageCount = 0;
 
     this.undoStacks = [];
@@ -97,8 +76,8 @@ export class CreateWorkbook extends React.Component {
     this.db = this.drawingBoard;
 
     window.onresize = this.handleWindowResize;
-
     window.addEventListener('keydown', this.handleKeyDown, false);
+
     this.handleWindowResize();
     $(window).scroll(this.handleScroll);
   }
@@ -107,6 +86,7 @@ export class CreateWorkbook extends React.Component {
     // eslint-disable-next-line react/prop-types
     const { workbookExists, workbook } = nextProps;
     const { initialized } = this.state;
+
     if (workbookExists === false) return;
     if (initialized === true) return;
 
@@ -118,7 +98,7 @@ export class CreateWorkbook extends React.Component {
       () => {
         const { slides } = this.state;
 
-        this.interact();
+        this.toggleInteract();
 
         if (slides.length === 0) {
           this.addNewSlide();
@@ -136,6 +116,10 @@ export class CreateWorkbook extends React.Component {
     window.removeEventListener('keydown', this.handleKeyDown, false);
   }
 
+  /**
+   * Calculates and set scaleX, the factor by which the canvas container should be
+   * scaled so that it fits the window
+   */
   handleWindowResize = () => {
     this.setState({
       scaleX:
@@ -146,11 +130,22 @@ export class CreateWorkbook extends React.Component {
     this.forceUpdate();
   };
 
-  handleKeyDown = (e) => {
-    /*
-            This function handles the shortcut key functionalities.
-         */
+  /**
+   * Finds the top offset of the drawing board controls when scrolled down
+   */
+  handleScroll = () => {
+    if (Meteor.isTest) return;
 
+    const { scaleX } = this.state;
+    const scrollTop = $(window).scrollTop();
+    // While finding the top offset, we need to take into account of the scale factor also
+    $('.drawingBoardControls')[0].style.top = `${scrollTop / scaleX}px`;
+  };
+
+  /**
+   * Deals with actions to be performed when shortcut keys are pressed
+   */
+  handleKeyDown = (e) => {
     if (e.keyCode >= 37 && e.keyCode <= 40) {
       e.preventDefault();
     }
@@ -184,7 +179,7 @@ export class CreateWorkbook extends React.Component {
 
     if (e.keyCode === 68 && e.ctrlKey) {
       e.preventDefault();
-      this.interact();
+      this.toggleInteract();
     }
   };
 
@@ -197,27 +192,14 @@ export class CreateWorkbook extends React.Component {
     });
   };
 
-  handleScroll = () => {
-    if (Meteor.isTest) return;
-    /**
-     * When transform is used the fixed value of position of drawing-board-controls is disabled
-     * So as we scroll, the top value is explicitly brought down by changing the top value to
-     * the window.scrollTop
-     */
-    const { scaleX } = this.state;
-    const scrollTop = $(window).scrollTop();
-    $('.drawingBoardControls')[0].style.top = `${scrollTop / scaleX}px`;
-  };
-
+  /**
+   * Finds and sets the height of the canvas according to the pagecount
+   */
   setSizeOfPage = (pageCount) => {
-    /*
-      This function sets the size of the canvas. By default the size of the page is
-      900px. The user can add extra poges. With each addition the size of the page
-      increases by 300px.
-      First the size of the container is incremented, then the canvas's size is
-      incremented
-    */
-
+    /**
+     * The height when page count = 0 is 900px and for every additional pagecount,
+     * the height is increased by 300px
+     */
     $('.canvas-container')[0].style.height = `${900 + pageCount * 300}px`;
     $('.upper-canvas')[0].style.height = $('.canvas-container')[0].style.height;
     $('.lower-canvas')[0].style.height = $('.canvas-container')[0].style.height;
@@ -226,15 +208,13 @@ export class CreateWorkbook extends React.Component {
     this.db.b.setHeight($('.upper-canvas')[0].height);
   };
 
+  /**
+   * Triggered when somebody object gets added to the canvas
+   */
   onChange = () => {
-    /*
-      Whenever board:reset or board:StopDrawing event occurs, this function is called.
-      Here we retrieve the current slide no. and note from the states. The notes are
-      updated and stored back to the state.
-    */
     const { slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
+    const updatedSlides = Object.values($.extend(true, {}, slides));
     const note = this.db.getImg();
     updatedSlides[curSlide].note = note;
     updatedSlides[curSlide].pageCount = this.pageCount;
@@ -246,8 +226,9 @@ export class CreateWorkbook extends React.Component {
     const { slides } = this.state;
 
     this.pushSlide();
-    curSlide = slides.length - 1;
 
+    curSlide = slides.length - 1;
+    // When a slide is added, the current slide is updated to that
     this.changeSlide(curSlide);
   };
 
@@ -263,10 +244,6 @@ export class CreateWorkbook extends React.Component {
   };
 
   pushSlide = () => {
-    /* To create a new slide, first the structure of slide is defined and
-           then pushed to the slides array.
-        */
-
     const { slides } = this.state;
 
     const newSlide = {
@@ -284,11 +261,6 @@ export class CreateWorkbook extends React.Component {
   };
 
   reset = () => {
-    /* The current slide is made 0 and slides set to empty array.
-           The first slide is initialized here. And the old notes are
-           cleared.
-        */
-
     this.setState(
       {
         curSlide: 0,
@@ -303,10 +275,6 @@ export class CreateWorkbook extends React.Component {
   };
 
   saveToDatabase = () => {
-    /* This function is intended for saving the slides to the database.
-            If not logged in, user is asked to login first.
-        */
-
     if (!Meteor.userId()) {
       this.setState({ loginNotification: true });
       return;
@@ -316,12 +284,12 @@ export class CreateWorkbook extends React.Component {
 
     const { userId, title, slides } = this.state;
 
+    // If the user is not the owner of the workbook
+    // They need to fork before saving
     if (userId !== Meteor.userId()) {
-      const confirmation = confirm(
+      if (confirm(
         'Are you sure you want to fork this workbook?',
-      );
-
-      if (!confirmation) return;
+      )) return;
 
       Meteor.call('workbooks.insert', title, (err, id) => {
         Meteor.call('workbooks.update', id, slides);
@@ -341,13 +309,9 @@ export class CreateWorkbook extends React.Component {
 
       const workbook = Workbooks.findOne({ _id });
 
-      /* If the slides in the state has the same values as that of the slides
-            in the database, we need not save, expect to deep include by chai checks this equality.
-            If they are not same, an error is thrown. When we catch the error, we can see that the
-            data are different and we initiate the save.
-        */
-
       try {
+        // Checking if the workbook to be saved is same as that in the database
+        // If so, no need to save
         expect({ slides: workbook.slides }).to.deep.include({
           slides,
         });
@@ -368,33 +332,34 @@ export class CreateWorkbook extends React.Component {
     }
   };
 
+  /**
+   * Pushes the current slide state to the undoStacks
+   * undoStacks is an array in which each element is an array
+   * that stores the states of slides
+   */
   pushToUndoStacks = (oldSlide) => {
-    /**
-     * oldSlide is the object that get pushed to the undoStack
-     */
-
-    if (this.shouldNotUndo) return;
-
     const { curSlide } = this.state;
 
     this.undoStacks[curSlide] = this.undoStacks[curSlide] || [];
 
+    // Checks if the slide state to be saved is same as
+    // that already present at the top of the stack
     try {
       expect(oldSlide).to.deep.include(
         this.undoStacks[curSlide][this.undoStacks[curSlide].length - 1],
       );
     } catch (error) {
       if (error) {
+        // If the slide state is different, its pushed to the stack
         this.undoStacks[curSlide].push(oldSlide);
       }
     }
   };
 
+  /**
+   * Changes the current slide
+   */
   changeSlide = (toSlideNo) => {
-    // When slide no is changed,
-    // curSlide is updated first
-    // Then,
-
     const { slides } = this.state;
     this.setState(
       {
@@ -410,6 +375,9 @@ export class CreateWorkbook extends React.Component {
     );
   };
 
+  /**
+   * Updates the slides states
+   */
   updateSlides = (updatedSlides, shouldNotLoad, shouldNotPushToUndoStack) => {
     const { slides, curSlide } = this.state;
     const slide = slides[curSlide];
@@ -488,14 +456,7 @@ export class CreateWorkbook extends React.Component {
     this.updateSlides(updatedSlides);
   };
 
-  interact = () => {
-    /*
-    To interact with the simulation, interact should be enabled
-    which disables the pointer events in the canvas,
-    so that when we interact with the simulation, no drawings
-    are made. Unchecking the interact, unsets the
-    pointer events.
-    */
+  toggleInteract = () => {
     const { interactEnabled } = this.state;
 
     if (this.addSim.state.isOpen) return;
@@ -513,12 +474,18 @@ export class CreateWorkbook extends React.Component {
     }));
   };
 
+  /**
+   * Checks if the reduced canvas size is less than bottom point of
+   * bottom most text area or iframe
+   */
   checkCanvasSize = () => {
     let maxHeight = -Infinity;
 
     let j = $('textarea').length;
     let textarea;
 
+    // Loop finds the bottom most point of the bottom most textarea
+    // Stores it in maxHeight
     while (j > 0) {
       j -= 1;
       textarea = $('textarea')
@@ -545,6 +512,9 @@ export class CreateWorkbook extends React.Component {
     }
 
     const { scaleX } = this.state;
+
+    // If the reduced height is less than maxHeight, returns 1
+    // In this case, the canvas size should not be reduced
     if (($('.canvas-cont').height() - 300) * scaleX < maxHeight) return 1;
 
     return 0;
@@ -553,8 +523,11 @@ export class CreateWorkbook extends React.Component {
   undo = () => {
     const { curSlide, slides } = this.state;
 
+    // The latest saved state is popped off the undoStacks
     const slide = this.undoStacks[curSlide].pop();
 
+    // When undo is performed, the latest saved state is
+    // stored to the redo stacks
     if (!this.redoStacks[curSlide]) {
       this.redoStacks[curSlide] = [];
     }
@@ -576,6 +549,9 @@ export class CreateWorkbook extends React.Component {
     }
   };
 
+  /**
+   * Applies the state restored during undo or redo back
+   */
   restoreStateBack = (slide) => {
     const { slides, curSlide } = this.state;
     const updatedSlides = Object.values($.extend(true, {}, slides));
@@ -589,19 +565,14 @@ export class CreateWorkbook extends React.Component {
         // eslint-disable-next-line no-shadow
         const { curSlide, slides } = this.state;
         this.pageCount = slides[curSlide].pageCount || 0;
+
         this.setSizeOfPage(this.pageCount);
         this.simsList.loadDataToSketches();
-        /**
-         * When reset is called, we need not push the slide to undostack
-         */
         this.db.reset();
         this.db.setImg(slides[curSlide].note);
 
-        /**
-         * If note has empty string,
-         * we explicitly clear the canvas
-         */
-
+        // If after restoring the not in the slide is empty
+        // The drawingboard needs to be explicitly reset
         if (!slides[curSlide].note) {
           this.db.reset();
         }
@@ -614,14 +585,6 @@ export class CreateWorkbook extends React.Component {
   };
 
   changePageCount = (option) => {
-    /*
-            The function is used for increasing or decreasing the size of the page.
-            Option will receive either 1 or -1, 1 means to increase the size, -1 means to decrease
-            Theight attrubute of the canvas is obtained and 300 is added / subtracted to it
-            The image is restored to the canvas
-            The page count value is added to the slide
-        */
-
     const temp = this.db.getImg();
     this.pageCount += option;
     $('.upper-canvas')[0].style.height = `${(
@@ -899,7 +862,7 @@ export class CreateWorkbook extends React.Component {
               className="lprightbutton"
               toggle
               active={!interactEnabled}
-              onClick={this.interact}
+              onClick={this.toggleInteract}
             >
               {interactEnabled ? 'Draw' : 'Interact'}
             </Button>
@@ -1674,13 +1637,13 @@ export class CreateWorkbook extends React.Component {
                       this.simsList = e;
                     }}
                     save={this.saveToDatabase}
-                    interact={this.interact}
+                    interact={this.toggleInteract}
                     scale={scaleX}
                   />
 
                   <DrawingBoardCmp
                     interactEnabled={interactEnabled}
-                    interact={this.interact}
+                    interact={this.toggleInteract}
                     toolbarVisible
                     ref={(e) => {
                       this.drawingBoard = e;
