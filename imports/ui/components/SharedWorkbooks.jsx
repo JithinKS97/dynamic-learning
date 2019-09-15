@@ -6,7 +6,7 @@ import { GoRepoForked } from 'react-icons/go';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 // eslint-disable-next-line import/no-named-as-default
-import WorkbookViewer from './WorkbookViewer';
+import WorkbookViewer from './workbook/WorkbookViewer';
 import { WorkbooksIndex } from '../../api/workbooks';
 
 export default class SharedWorkbooks extends React.Component {

@@ -25,14 +25,14 @@ import { expect } from 'chai';
 import DOMPurify from 'dompurify';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { MdUndo, MdRedo } from 'react-icons/md';
-import TextBoxes from '../components/TextBoxes';
-import MCQs from '../components/MCQs';
-import ShortResponses from '../components/ShortResponses';
+import TextBoxes from '../components/workbook/TextBoxes';
+import MCQs from '../components/workbook/MCQs';
+import ShortResponses from '../components/workbook/ShortResponses';
 import AddSim from '../components/AddSim';
-import SlidesList from '../components/List';
+import SlidesList from '../components/workbook/List';
 import SimsList from '../components/SimsList';
 import { Workbooks } from '../../api/workbooks';
-import DrawingBoardCmp from '../components/DrawingBoardCmp';
+import DrawingBoardCmp from '../components/workbook/DrawingBoardCmp';
 
 /* This Component is intended for the development of a
     workbook by the teachers. Each workbook

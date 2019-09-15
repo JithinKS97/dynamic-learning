@@ -24,7 +24,7 @@ import TagsInput from 'react-tagsinput';
 
 import Classes from '../../api/classes';
 import { Workbooks } from '../../api/workbooks';
-import WorkbookViewer from './WorkbookViewer';
+import WorkbookViewer from './workbook/WorkbookViewer';
 
 /*
   This component displays the workbook files in nested tree structure.

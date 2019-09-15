@@ -1,29 +1,24 @@
 /* eslint-disable */
 import React from "react";
-import { Redirect } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
-import { Session } from "meteor/session";
 import { withTracker } from "meteor/react-meteor-data";
 import {
-  Button,
   Dimmer,
   Loader,
   Segment,
-  Modal,
-  Form,
   Grid,
   List
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { expect } from "chai";
 import DOMPurify from "dompurify";
-import TextBoxes from "../components/TextBoxes";
-import MCQs from "../components/MCQs";
-import ShortResponses from "../components/ShortResponses";
-import SlidesList from "../components/ListWithoutDelete";
-import SimsList from "../components/SimsList";
-import { Workbooks } from "../../api/workbooks";
-import DrawingBoardCmp from "../components/DrawingBoardCmp";
+import TextBoxes from "./TextBoxes";
+import MCQs from "./MCQs";
+import ShortResponses from "./ShortResponses";
+import SlidesList from "./ListWithoutDelete";
+import SimsList from "../SimsList";
+import { Workbooks } from "../../../api/workbooks";
+import DrawingBoardCmp from "./DrawingBoardCmp";
 
 export class WorkbookViewer extends React.Component {
   constructor(props) {

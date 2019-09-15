@@ -1,5 +1,6 @@
+/*eslint-disable*/
+
 import React from 'react';
-import PropTypes from 'prop-types';
 import ShortResponse from './ShortResponse';
 
 export default class ShortResponses extends React.Component {
