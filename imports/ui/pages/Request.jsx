@@ -478,23 +478,366 @@ export class Request extends React.Component {
     );
   };
 
-  render = () => {
+  renderTitleDescriptionModal = () => {
     const {
-      redirectToWorkbook,
-      pendingMembers,
-      show,
-      curSlide,
-      showMembershipRequests,
-      topicTitleModalOpen,
-      topicTitle,
-      showMembers,
       showEditDescription,
       editTitle,
       editDescription,
+    } = this.state;
+    const {
+      request: {
+        requestTitle, description,
+      },
+    } = this.props;
+
+    return (
+      <Modal open={showEditDescription} size="tiny">
+        <Modal.Header>
+          Details for the request
+          <Button
+            onClick={() => {
+              if (!(requestTitle && description)) {
+                this.setState({
+                  redirectToWorkbook: true,
+                });
+              } else {
+                this.setState({
+                  showEditDescription: false,
+                });
+              }
+            }}
+            className="close-button"
+          >
+            X
+          </Button>
+        </Modal.Header>
+
+        <Modal.Content>
+          <Modal.Description>
+            <Form onSubmit={() => { this.setTitleAndDescription(); }}>
+              <Form.Field>
+                <label>Title</label>
+                <Input
+                  value={editTitle}
+                  name="title"
+                  onChange={(e, { value }) => {
+                    this.setState({
+                      editTitle: value,
+                    });
+                  }}
+                />
+              </Form.Field>
+
+              <Form.Field>
+                <label>Add a description</label>
+                <TextArea
+                  name="description"
+                  value={editDescription}
+                  onChange={(e, { value }) => {
+                    this.setState({
+                      editDescription: value,
+                    });
+                  }}
+                />
+              </Form.Field>
+
+              <Form.Field>
+                <Button>Submit</Button>
+              </Form.Field>
+            </Form>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    );
+  }
+
+  renderMemberModal = () => {
+    const { showMembers } = this.state;
+    return (
+      <Modal size="tiny" open={showMembers}>
+        <Modal.Header>
+          Members
+          <Button
+            icon
+            style={{ float: 'right' }}
+            onClick={() => {
+              this.setState({ showMembers: false });
+            }}
+          >
+            X
+          </Button>
+        </Modal.Header>
+        <Modal.Content>
+          <ul style={{ marginLeft: '1.2rem' }}>
+            {this.displayMembersName()}
+          </ul>
+        </Modal.Content>
+      </Modal>
+    );
+  }
+
+  renderTopicTitleModal = () => {
+    const {
+      topicTitleModalOpen,
+      topicTitle,
+    } = this.state;
+    return (
+      <Modal size="tiny" open={topicTitleModalOpen}>
+        <Modal.Header>
+          Topic title
+          <Button
+            icon
+            onClick={() => {
+              this.setState({ topicTitleModalOpen: false });
+            }}
+            style={{ float: 'right' }}
+          >
+            X
+          </Button>
+        </Modal.Header>
+
+        <Modal.Content>
+          <Form>
+            <Form.Field>
+              <label>Title for the topic</label>
+              <Input
+                ref={(e) => { this.topicTitle = e; }}
+                onChange={(e, { value }) => {
+                  this.setState({
+                    topicTitle: value,
+                  });
+                }}
+              />
+            </Form.Field>
+            <Form.Field>
+              <Button
+                onClick={() => {
+                  this.push(topicTitle);
+
+                  this.setState({
+                    topicTitle: '',
+                    topicTitleModalOpen: false,
+                  });
+                }}
+              >
+                Submit
+              </Button>
+            </Form.Field>
+          </Form>
+        </Modal.Content>
+      </Modal>
+    );
+  }
+
+  renderMembershipRequestModal = () => {
+    const { showMembershipRequests, pendingMembers } = this.state;
+    return (
+      <Modal size="tiny" open={showMembershipRequests}>
+        <Modal.Header>
+          Membership requests
+          <Button
+            icon
+            style={{ float: 'right' }}
+            onClick={() => {
+              this.setState({ showMembershipRequests: false });
+            }}
+          >
+            X
+          </Button>
+        </Modal.Header>
+        <Modal.Content>
+          <div style={{ width: '100%' }}>
+            {this.pendingRequestsList()}
+            {pendingMembers.length === 0 ? (
+              <p>No requests to show</p>
+            ) : null}
+          </div>
+        </Modal.Content>
+      </Modal>
+    );
+  }
+
+  renderInfouserModal = () => {
+    const {
       infouser,
       infouserType,
       infouserEmail,
       viewinfo,
+    } = this.state;
+    return (
+      <Modal
+        open={viewinfo}
+        onClose={() => this.setState({ viewinfo: false })}
+        size="tiny"
+      >
+        <Modal.Header>
+          {infouser}
+          <Button className="close-button" onClick={() => this.setState({ viewinfo: false })}>
+          X
+          </Button>
+        </Modal.Header>
+
+        <Modal.Content>
+          <Modal.Description>
+          Account Type:
+            {' '}
+            {infouserType}
+            {' '}
+            <br />
+          Email:
+            {' '}
+            {infouserEmail}
+          </Modal.Description>
+
+        </Modal.Content>
+
+      </Modal>
+    );
+  }
+
+  renderTopMenu = () => {
+    const {
+      pendingMembers,
+    } = this.state;
+    const {
+      isOwner,
+      isAuthenticated,
+      isMember,
+      request: {
+        _id, createdAt,
+      },
+    } = this.props;
+    return (
+      <Menu style={{ margin: 0 }}>
+        <Menu.Item
+          onClick={() => {
+            this.setState({
+              backPressed: true,
+            });
+          }}
+        >
+          Back
+        </Menu.Item>
+
+        {isOwner ? (
+          <Menu.Item
+            onClick={() => {
+              const confirmation = confirm(
+                'Are you sure you want to close this forum?',
+              );
+
+              if (confirmation && isOwner) {
+                Meteor.call('requests.reset', _id);
+                history.back();
+              }
+            }}
+          >
+            Close this forum
+          </Menu.Item>
+        ) : null}
+
+        {isAuthenticated && !isMember ? (
+          <Menu.Item
+            onClick={() => {
+              this.handleJoin();
+            }}
+          >
+            Join
+          </Menu.Item>
+        ) : null}
+
+        {isAuthenticated
+        && isMember
+        && !isOwner ? (
+          <Menu.Item
+            onClick={() => {
+              this.handleLeave();
+            }}
+          >
+            Leave
+          </Menu.Item>
+          ) : null}
+
+        {isOwner && isMember ? (
+          <Menu.Item
+            onClick={() => {
+              this.setState({
+                showMembershipRequests: true,
+              });
+            }}
+          >
+            Membership requests
+            {pendingMembers.length > 0 ? (
+              <Label color="teal">{pendingMembers.length}</Label>
+            ) : null}
+          </Menu.Item>
+        ) : null}
+
+        <Menu.Item
+          onClick={() => {
+            this.setState({
+              showMembers: true,
+            });
+          }}
+        >
+          Members
+        </Menu.Item>
+
+        <Menu.Item style={{ backgroundColor: '#E5E4E2' }}>
+          Opened
+          {' '}
+          {this.findTime(createdAt || Date.now()).fromNow()}
+        </Menu.Item>
+      </Menu>
+    );
+  }
+
+  renderTitleAndDescription = () => {
+    const {
+      isOwner,
+      isMember,
+      request: {
+        requestTitle, description,
+      },
+    } = this.props;
+
+    return (
+      <div style={{ padding: '1.6rem', paddingTop: '0px' }}>
+        <Container textAlign="left" style={{ width: '100%' }}>
+          <div style={{ alignItems: 'center', display: 'flex' }}>
+            <div>
+              <h1 className="requestTitle" style={{ height: '2.4rem', margin: 'auto 0' }}>
+                {requestTitle}
+              </h1>
+            </div>
+            {isOwner && isMember ? (
+              <Button
+                onClick={() => {
+                  this.setState({
+                    showEditDescription: true,
+                  });
+                }}
+                icon
+                style={{ marginLeft: '1.2rem' }}
+              >
+                <FaPencilAlt />
+              </Button>
+            ) : null}
+          </div>
+
+          <p className="requestDescription" style={{ paddingLeft: '1.6rem', marginTop: '0.6rem' }}>
+            {description}
+          </p>
+        </Container>
+      </div>
+    );
+  }
+
+  render = () => {
+    const {
+      redirectToWorkbook,
+      show,
+      curSlide,
       backPressed,
       _idToNameMappings,
     } = this.state;
@@ -506,11 +849,12 @@ export class Request extends React.Component {
       isMember,
       currentUserId,
       request: {
-        slides, requestTitle, description, _id, createdAt,
+        slides, _id,
       },
     } = this.props;
 
     if (redirectToWorkbook) { return <Redirect to={`/createworkbook/${_id}`} />; }
+
     if (backPressed) {
       // eslint-disable-next-line react/prop-types
       const { location: { state: { from } } } = this.props;
@@ -521,124 +865,27 @@ export class Request extends React.Component {
         return <Redirect to={`/createworkbook/${_id}`} />;
       }
     }
+
     return (
-      <div>
-        <Menu style={{ margin: 0 }}>
-          <Menu.Item
-            onClick={() => {
-              this.setState({
-                backPressed: true,
-              });
-            }}
-          >
-            Back
-          </Menu.Item>
+      <>
+        {this.renderMembershipRequestModal()}
+        {this.renderTopicTitleModal()}
+        {this.renderMemberModal()}
+        {isOwner ? (
+          this.renderTitleDescriptionModal()
+        ) : null}
+        {this.renderInfouserModal()}
 
-          {isOwner ? (
-            <Menu.Item
-              onClick={() => {
-                const confirmation = confirm(
-                  'Are you sure you want to close this forum?',
-                );
-
-                if (confirmation && isOwner) {
-                  Meteor.call('requests.reset', _id);
-                  history.back();
-                }
-              }}
-            >
-              Close this forum
-            </Menu.Item>
-          ) : null}
-
-          {isAuthenticated && !isMember ? (
-            <Menu.Item
-              onClick={() => {
-                this.handleJoin();
-              }}
-            >
-              Join
-            </Menu.Item>
-          ) : null}
-
-          {isAuthenticated
-          && isMember
-          && !isOwner ? (
-            <Menu.Item
-              onClick={() => {
-                this.handleLeave();
-              }}
-            >
-              Leave
-            </Menu.Item>
-            ) : null}
-
-          {isOwner && isMember ? (
-            <Menu.Item
-              onClick={() => {
-                this.setState({
-                  showMembershipRequests: true,
-                });
-              }}
-            >
-              Membership requests
-              {pendingMembers.length > 0 ? (
-                <Label color="teal">{pendingMembers.length}</Label>
-              ) : null}
-            </Menu.Item>
-          ) : null}
-
-          <Menu.Item
-            onClick={() => {
-              this.setState({
-                showMembers: true,
-              });
-            }}
-          >
-            Members
-          </Menu.Item>
-
-          <Menu.Item style={{ backgroundColor: '#E5E4E2' }}>
-            Opened
-            {' '}
-            {this.findTime(createdAt || Date.now()).fromNow()}
-          </Menu.Item>
-        </Menu>
+        {this.renderTopMenu()}
         <Segment style={{ marginTop: '0px' }}>
           <Dimmer inverted active={!requestExists}>
             <Loader />
           </Dimmer>
 
           <Grid divided="vertically">
-            <Grid.Row style={{ height: '15vh' }}>
-              <div style={{ padding: '1.6rem', paddingTop: '0px' }}>
-                <Container textAlign="left" style={{ width: '100%' }}>
-                  <div style={{ alignItems: 'center', display: 'flex' }}>
-                    <div>
-                      <h1 className="requestTitle" style={{ height: '2.4rem', margin: 'auto 0' }}>
-                        {requestTitle}
-                      </h1>
-                    </div>
-                    {isOwner && isMember ? (
-                      <Button
-                        onClick={() => {
-                          this.setState({
-                            showEditDescription: true,
-                          });
-                        }}
-                        icon
-                        style={{ marginLeft: '1.2rem' }}
-                      >
-                        <FaPencilAlt />
-                      </Button>
-                    ) : null}
-                  </div>
 
-                  <p className="requestDescription" style={{ paddingLeft: '1.6rem', marginTop: '0.6rem' }}>
-                    {description}
-                  </p>
-                </Container>
-              </div>
+            <Grid.Row style={{ height: '15vh' }}>
+              {this.renderTitleAndDescription()}
             </Grid.Row>
 
             <Grid.Row
@@ -743,183 +990,8 @@ export class Request extends React.Component {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-
-          <Modal
-            open={viewinfo}
-            onClose={() => this.setState({ viewinfo: false })}
-            size="tiny"
-          >
-            <Modal.Header>
-              {infouser}
-              <Button className="close-button" onClick={() => this.setState({ viewinfo: false })}>
-              X
-              </Button>
-            </Modal.Header>
-
-            <Modal.Content>
-              <Modal.Description>
-              Account Type:
-                {' '}
-                {infouserType}
-                {' '}
-                <br />
-              Email:
-                {' '}
-                {infouserEmail}
-              </Modal.Description>
-
-            </Modal.Content>
-
-          </Modal>
-          <Modal size="tiny" open={showMembershipRequests}>
-            <Modal.Header>
-              Membership requests
-              <Button
-                icon
-                style={{ float: 'right' }}
-                onClick={() => {
-                  this.setState({ showMembershipRequests: false });
-                }}
-              >
-                X
-              </Button>
-            </Modal.Header>
-            <Modal.Content>
-              <div style={{ width: '100%' }}>
-                {this.pendingRequestsList()}
-                {pendingMembers.length === 0 ? (
-                  <p>No requests to show</p>
-                ) : null}
-              </div>
-            </Modal.Content>
-          </Modal>
-
-          <Modal size="tiny" open={topicTitleModalOpen}>
-            <Modal.Header>
-              Topic title
-              <Button
-                icon
-                onClick={() => {
-                  this.setState({ topicTitleModalOpen: false });
-                }}
-                style={{ float: 'right' }}
-              >
-                X
-              </Button>
-            </Modal.Header>
-
-            <Modal.Content>
-              <Form>
-                <Form.Field>
-                  <label>Title for the topic</label>
-                  <Input
-                    ref={(e) => { this.topicTitle = e; }}
-                    onChange={(e, { value }) => {
-                      this.setState({
-                        topicTitle: value,
-                      });
-                    }}
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Button
-                    onClick={() => {
-                      this.push(topicTitle);
-
-                      this.setState({
-                        topicTitle: '',
-                        topicTitleModalOpen: false,
-                      });
-                    }}
-                  >
-                    Submit
-                  </Button>
-                </Form.Field>
-              </Form>
-            </Modal.Content>
-          </Modal>
-
-          <Modal size="tiny" open={showMembers}>
-            <Modal.Header>
-              Members
-              <Button
-                icon
-                style={{ float: 'right' }}
-                onClick={() => {
-                  this.setState({ showMembers: false });
-                }}
-              >
-                X
-              </Button>
-            </Modal.Header>
-            <Modal.Content>
-              <ul style={{ marginLeft: '1.2rem' }}>
-                {this.displayMembersName()}
-              </ul>
-            </Modal.Content>
-          </Modal>
-
-          {isOwner ? (
-            <Modal open={showEditDescription} size="tiny">
-              <Modal.Header>
-                Details for the request
-                <Button
-                  onClick={() => {
-                    if (!(requestTitle && description)) {
-                      this.setState({
-                        redirectToWorkbook: true,
-                      });
-                    } else {
-                      this.setState({
-                        showEditDescription: false,
-                      });
-                    }
-                  }}
-                  className="close-button"
-                >
-                  X
-                </Button>
-              </Modal.Header>
-
-              <Modal.Content>
-                <Modal.Description>
-                  <Form onSubmit={() => { this.setTitleAndDescription(); }}>
-                    <Form.Field>
-                      <label>Title</label>
-                      <Input
-                        value={editTitle}
-                        name="title"
-                        onChange={(e, { value }) => {
-                          this.setState({
-                            editTitle: value,
-                          });
-                        }}
-                      />
-                    </Form.Field>
-
-                    <Form.Field>
-                      <label>Add a description</label>
-                      <TextArea
-                        name="description"
-                        value={editDescription}
-                        onChange={(e, { value }) => {
-                          this.setState({
-                            editDescription: value,
-                          });
-                        }}
-                      />
-                    </Form.Field>
-
-                    <Form.Field>
-                      <Button>Submit</Button>
-                    </Form.Field>
-                  </Form>
-                </Modal.Description>
-              </Modal.Content>
-            </Modal>
-          ) : null}
         </Segment>
-      </div>
+      </>
     );
   }
 }
