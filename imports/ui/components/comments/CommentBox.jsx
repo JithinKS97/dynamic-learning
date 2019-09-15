@@ -116,6 +116,7 @@ export default class CommentBox extends React.Component {
       comment: { userId },
       deleteComment,
       index,
+      // eslint-disable-next-line react/prop-types
       comment: { comment, _id },
       editComment,
       slides,

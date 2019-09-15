@@ -6,8 +6,8 @@ import {
 import { MdSave } from 'react-icons/md';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { generateSrc, isValidp5EmbedTag } from '../../functions/index.js';
-import SimPreview from './SimPreview';
+import { generateSrc, isValidp5EmbedTag } from '../../../functions/index.js';
+import SimPreview from '../SimPreview';
 
 const SimTile = (props) => {
   const {

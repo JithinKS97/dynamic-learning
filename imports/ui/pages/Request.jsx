@@ -21,12 +21,12 @@ import {
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { FaPencilAlt } from 'react-icons/fa';
-import DetailedList from '../components/DetailedList';
+import DetailedList from '../components/discussionForum/DetailedList';
 import Upload from '../components/Upload';
 import { Requests } from '../../api/requests';
-import CommentForm from '../components/CommentForm';
-import CommentsList from '../components/CommentsList';
-import SimTiles from '../components/SimTiles';
+import CommentForm from '../components/comments/CommentForm';
+import CommentsList from '../components/comments/CommentsList';
+import SimTiles from '../components/discussionForum/SimTiles';
 import 'semantic-ui-css/semantic.min.css';
 
 

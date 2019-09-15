@@ -15,8 +15,8 @@ import SimsList from '../components/SimsList';
 import AddSim from '../components/AddSim';
 // import LessonComment from '../components/LessonComment';
 import Votes from '../components/Votes';
-import CommentForm from '../components/CommentForm';
-import CommentsList from '../components/CommentsList';
+import CommentForm from '../components/comments/CommentForm';
+import CommentsList from '../components/comments/CommentsList';
 
 class Lesson extends React.Component {
   constructor(props) {
