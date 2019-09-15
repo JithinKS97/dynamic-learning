@@ -7,6 +7,7 @@ import { FaTimes, FaCopy } from 'react-icons/fa';
 import { MdNetworkCell } from 'react-icons/md';
 import { Tracker } from 'meteor/tracker';
 import { Button, Modal } from 'semantic-ui-react';
+import { cpus } from 'os';
 
 export default class MultipleChoice extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ export default class MultipleChoice extends React.Component {
         userId,
       } = this.props;
       const updatedSlides = JSON.parse(JSON.stringify(slides));
-      this.clicked = updatedSlides[curSlide].questions[index].responses[Meteor.userId()] || '';
+      this.clicked = updatedSlides[curSlide].questions[index].response || '';
       this.setState({
         acolor: this.clicked === 'a' ? 'red' : 'black',
         bcolor: this.clicked === 'b' ? 'red' : 'black',
@@ -44,10 +45,9 @@ export default class MultipleChoice extends React.Component {
       curSlide,
       slides,
       index,
-      userId,
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
-    this.clicked = updatedSlides[curSlide].questions[index].responses[Meteor.userId()] || '';
+    this.clicked = updatedSlides[curSlide].questions[index].response || '';
     const atemp = this.clicked === 'a' ? 'red' : 'black';
     const btemp = this.clicked === 'b' ? 'red' : 'black';
     const ctemp = this.clicked === 'c' ? 'red' : 'black';
@@ -59,6 +59,8 @@ export default class MultipleChoice extends React.Component {
         bcolor: this.clicked === 'b' ? 'red' : 'black',
         ccolor: this.clicked === 'c' ? 'red' : 'black',
         dcolor: this.clicked === 'd' ? 'red' : 'black',
+      },()=>{
+        console.log(this.state)
       });
     }
   }
@@ -81,7 +83,6 @@ export default class MultipleChoice extends React.Component {
 
   clickButton(option) {
     const {
-      userId,
       slides,
       curSlide,
       updateSlides,
@@ -89,26 +90,21 @@ export default class MultipleChoice extends React.Component {
     } = this.props;
     const updatedSlides = JSON.parse(JSON.stringify(slides));
     this.clicked = option;
-    this.setState({
-      acolor: this.clicked === 'a' ? 'red' : 'black',
-      bcolor: this.clicked === 'b' ? 'red' : 'black',
-      ccolor: this.clicked === 'c' ? 'red' : 'black',
-      dcolor: this.clicked === 'd' ? 'red' : 'black',
-    });
-    updatedSlides[curSlide].questions[index].responses[Meteor.userId()] = this.clicked;
-    updateSlides(updatedSlides);
-  }
 
-  answers() {
-    const {
-      curSlide,
-      index,
-      slides
-    } = this.props;
-    const updatedSlides = JSON.parse(JSON.stringify(slides));
-    const { responses } = updatedSlides[curSlide].questions[index];
-    const keys = Object.keys(responses);
-    return keys.map(key => <div> {`${Meteor.users.findOne({_id: key}) && Meteor.users.findOne({_id: key}).username}: ${responses[key]}`} </div>);
+    this.setState((state)=>{
+      return {
+        acolor: this.clicked === 'a' ? 'red' : 'black',
+        bcolor: this.clicked === 'b' ? 'red' : 'black',
+        ccolor: this.clicked === 'c' ? 'red' : 'black',
+        dcolor: this.clicked === 'd' ? 'red' : 'black',
+      }
+    });
+    if(this.state[this.clicked+'color'] === 'red') {
+      updatedSlides[curSlide].questions[index].response = '';
+    } else {
+      updatedSlides[curSlide].questions[index].response = this.clicked;
+    }
+    updateSlides(updatedSlides);
   }
 
   handleClose() {
@@ -304,8 +300,7 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> A </div> }
-            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.acolor }} onClick={() => this.clickButton('a')}> A </div> }
+             <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.acolor }} onClick={() => this.clickButton('a')}> A </div> 
             <textarea
               readOnly={Meteor.userId() !== userId}
               style={{
@@ -319,8 +314,7 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> B </div> }
-            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.bcolor }} onClick={() => this.clickButton('b')}> B </div> }
+             <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.bcolor }} onClick={() => this.clickButton('b')}> B </div> 
             <textarea
               readOnly={Meteor.userId() !== userId}
               style={{
@@ -334,8 +328,7 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> C </div>}
-            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.ccolor }} onClick={() => this.clickButton('c')}> C </div> }
+             <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.ccolor }} onClick={() => this.clickButton('c')}> C </div> 
             <textarea
               readOnly={Meteor.userId() !== userId}
               style={{
@@ -349,8 +342,7 @@ export default class MultipleChoice extends React.Component {
           <div
             style={{ color: 'white', bottom: 0, display: 'inline-grid' }}
           >
-            { Meteor.userId() === userId && <div style={{ paddingRight: '15px', border: '1px solid #404040' }}> D </div>}
-            { Meteor.userId() !== userId && <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.dcolor }} onClick={() => this.clickButton('d')}> D </div> }
+             <div style={{ paddingRight: '15px', border: '1px solid #404040', backgroundColor: this.state.dcolor }} onClick={() => this.clickButton('d')}> D </div> 
             <textarea
               readOnly={Meteor.userId() !== userId}
               style={{
@@ -360,28 +352,7 @@ export default class MultipleChoice extends React.Component {
               value={updatedSlides[curSlide].questions[index].d ? updatedSlides[curSlide].questions[index].d : ''}
             />
           </div>
-          { Meteor.userId() === userId && <Button style={{ marginTop: '15px' }} onClick={() => this.setState({ modalOpen: true })}> View Student Responses </Button> }
         </div>
-        <Modal
-          open={modalOpen}
-          onClose={() => this.handleClose()}
-          size="tiny"
-        >
-          <Modal.Header>
-            Answers to this question
-            <Button className="close-button" onClick={() => this.handleClose()}>
-              X
-            </Button>
-          </Modal.Header>
-
-          <Modal.Content>
-            <Modal.Description>
-              { this.answers() }
-            </Modal.Description>
-
-          </Modal.Content>
-
-        </Modal>
       </Rnd>
     );
   }
