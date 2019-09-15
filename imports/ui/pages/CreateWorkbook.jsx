@@ -185,10 +185,10 @@ export class CreateWorkbook extends React.Component {
 
   saveAfterReset = () => {
     const { slides, curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    updatedSlides[curSlide].note = this.db.getImg();
+    const clonedSlides = Object.values($.extend(true, {}, slides));
+    clonedSlides[curSlide].note = this.db.getImg();
     this.setState({
-      slides: updatedSlides,
+      slides: clonedSlides,
     });
   };
 
@@ -214,11 +214,11 @@ export class CreateWorkbook extends React.Component {
   onChange = () => {
     const { slides } = this.state;
     const { curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const clonedSlides = Object.values($.extend(true, {}, slides));
     const note = this.db.getImg();
-    updatedSlides[curSlide].note = note;
-    updatedSlides[curSlide].pageCount = this.pageCount;
-    this.updateSlides(updatedSlides);
+    clonedSlides[curSlide].note = note;
+    clonedSlides[curSlide].pageCount = this.pageCount;
+    this.updateSlides(clonedSlides);
   };
 
   addNewSlide = () => {
@@ -378,14 +378,14 @@ export class CreateWorkbook extends React.Component {
   /**
    * Updates the slides states
    */
-  updateSlides = (updatedSlides, shouldNotLoad, shouldNotPushToUndoStack) => {
+  updateSlides = (clonedSlides, shouldNotLoad, shouldNotPushToUndoStack) => {
     const { slides, curSlide } = this.state;
     const slide = slides[curSlide];
     if (!shouldNotPushToUndoStack) this.pushToUndoStacks(slide);
 
     this.setState(
       {
-        slides: updatedSlides,
+        slides: clonedSlides,
       },
       () => {
         if (shouldNotLoad) return;
@@ -397,10 +397,10 @@ export class CreateWorkbook extends React.Component {
 
   deleteSlide = (index) => {
     const { slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const clonedSlides = Object.values($.extend(true, {}, slides));
 
-    if (updatedSlides.length !== 1) {
-      updatedSlides.splice(index, 1);
+    if (clonedSlides.length !== 1) {
+      clonedSlides.splice(index, 1);
 
       let { curSlide } = this.state;
       this.undoStacks.splice(index, 1);
@@ -408,10 +408,10 @@ export class CreateWorkbook extends React.Component {
       if (index === 0) {
         curSlide = 0;
       }
-      if (curSlide === updatedSlides.length) { curSlide = updatedSlides.length - 1; }
+      if (curSlide === clonedSlides.length) { curSlide = clonedSlides.length - 1; }
 
       this.changeSlide(curSlide);
-      this.updateSlides(updatedSlides);
+      this.updateSlides(clonedSlides);
     } else {
       this.undoStacks = [];
       this.reset();
@@ -420,40 +420,40 @@ export class CreateWorkbook extends React.Component {
 
   deleteSim = (index) => {
     const { slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const clonedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
-    const { iframes } = updatedSlides[curSlide];
+    const { iframes } = clonedSlides[curSlide];
     iframes.splice(index, 1);
-    updatedSlides[curSlide].iframes = iframes;
-    this.updateSlides(updatedSlides);
+    clonedSlides[curSlide].iframes = iframes;
+    this.updateSlides(clonedSlides);
   };
 
   deleteQuestion = (index) => {
     const { slides, curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    const { questions } = updatedSlides[curSlide];
+    const clonedSlides = Object.values($.extend(true, {}, slides));
+    const { questions } = clonedSlides[curSlide];
     questions.splice(index, 1);
-    updatedSlides[curSlide].questions = questions;
-    this.updateSlides(updatedSlides);
+    clonedSlides[curSlide].questions = questions;
+    this.updateSlides(clonedSlides);
   };
 
   deleteShortResponse = (index) => {
     const { slides, curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    const { shortresponse } = updatedSlides[curSlide];
+    const clonedSlides = Object.values($.extend(true, {}, slides));
+    const { shortresponse } = clonedSlides[curSlide];
     shortresponse.splice(index, 1);
-    updatedSlides[curSlide].shortresponse = shortresponse;
-    this.updateSlides(updatedSlides);
+    clonedSlides[curSlide].shortresponse = shortresponse;
+    this.updateSlides(clonedSlides);
   };
 
   deleteTextBox = (index) => {
     const { slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const clonedSlides = Object.values($.extend(true, {}, slides));
     const { curSlide } = this.state;
-    const { textboxes } = updatedSlides[curSlide];
+    const { textboxes } = clonedSlides[curSlide];
     textboxes.splice(index, 1);
-    updatedSlides[curSlide].textboxes = textboxes;
-    this.updateSlides(updatedSlides);
+    clonedSlides[curSlide].textboxes = textboxes;
+    this.updateSlides(clonedSlides);
   };
 
   toggleInteract = () => {
@@ -554,12 +554,12 @@ export class CreateWorkbook extends React.Component {
    */
   restoreStateBack = (slide) => {
     const { slides, curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    updatedSlides[curSlide] = slide;
+    const clonedSlides = Object.values($.extend(true, {}, slides));
+    clonedSlides[curSlide] = slide;
 
     this.setState(
       {
-        slides: updatedSlides,
+        slides: clonedSlides,
       },
       () => {
         // eslint-disable-next-line no-shadow
@@ -584,6 +584,11 @@ export class CreateWorkbook extends React.Component {
     this.setState({ redirectToRequest: true });
   };
 
+  /**
+   * Increases or decreases the size of the canvas
+   * @param {Integer} option - option = 1, used to increase
+   *                           option = 2, used to decrease
+   */
   changePageCount = (option) => {
     const temp = this.db.getImg();
     this.pageCount += option;
@@ -601,17 +606,17 @@ export class CreateWorkbook extends React.Component {
     this.db.b.setHeight($('.upper-canvas')[0].height);
     this.db.setImg(temp);
     const { slides, curSlide } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
-    updatedSlides[curSlide].pageCount = this.pageCount;
-    this.updateSlides(updatedSlides);
+    const clonedSlides = Object.values($.extend(true, {}, slides));
+    clonedSlides[curSlide].pageCount = this.pageCount;
+    this.updateSlides(clonedSlides);
   };
 
   addShortResponse = () => {
     const { curSlide, slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const clonedSlides = Object.values($.extend(true, {}, slides));
 
-    if (!updatedSlides[curSlide].shortresponse) {
-      updatedSlides[curSlide].shortresponse = [];
+    if (!clonedSlides[curSlide].shortresponse) {
+      clonedSlides[curSlide].shortresponse = [];
     }
 
     const newQuestion = {
@@ -619,17 +624,17 @@ export class CreateWorkbook extends React.Component {
       responses: {},
     };
 
-    updatedSlides[curSlide].shortresponse.push(newQuestion);
-    this.updateSlides(updatedSlides);
+    clonedSlides[curSlide].shortresponse.push(newQuestion);
+    this.updateSlides(clonedSlides);
     this.setState({ question: false });
   };
 
   addMCQ = () => {
     const { curSlide, slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const clonedSlides = Object.values($.extend(true, {}, slides));
 
-    if (!updatedSlides[curSlide].questions) {
-      updatedSlides[curSlide].questions = [];
+    if (!clonedSlides[curSlide].questions) {
+      clonedSlides[curSlide].questions = [];
     }
 
     const newQuestion = {
@@ -641,8 +646,8 @@ export class CreateWorkbook extends React.Component {
       responses: {},
     };
 
-    updatedSlides[curSlide].questions.push(newQuestion);
-    this.updateSlides(updatedSlides);
+    clonedSlides[curSlide].questions.push(newQuestion);
+    this.updateSlides(clonedSlides);
     this.setState({ question: false });
   };
 
@@ -652,19 +657,19 @@ export class CreateWorkbook extends React.Component {
 
   addTextBox = () => {
     const { curSlide, slides } = this.state;
-    const updatedSlides = Object.values($.extend(true, {}, slides));
+    const clonedSlides = Object.values($.extend(true, {}, slides));
 
-    if (!updatedSlides[curSlide].textboxes) {
-      updatedSlides[curSlide].textboxes = [];
+    if (!clonedSlides[curSlide].textboxes) {
+      clonedSlides[curSlide].textboxes = [];
     }
 
     const newTextBox = {
       value: 'new text box',
     };
 
-    updatedSlides[curSlide].textboxes.push(newTextBox);
+    clonedSlides[curSlide].textboxes.push(newTextBox);
 
-    this.updateSlides(updatedSlides);
+    this.updateSlides(clonedSlides);
   };
 
   setCopiedState = (set) => {
@@ -1300,21 +1305,21 @@ export class CreateWorkbook extends React.Component {
                     if (Session.get('copiedObject')) {
                       const object = Session.get('copiedObject');
 
-                      const updatedSlides = Object.values(
+                      const clonedSlides = Object.values(
                         $.extend(true, {}, slides),
                       );
 
                       if (object.type === 'sim') {
-                        updatedSlides[curSlide].iframes.push(
+                        clonedSlides[curSlide].iframes.push(
                           object.copiedObject,
                         );
                       } else if (object.type === 'text') {
-                        updatedSlides[curSlide].textboxes.push(
+                        clonedSlides[curSlide].textboxes.push(
                           object.copiedObject,
                         );
                       }
 
-                      this.updateSlides(updatedSlides);
+                      this.updateSlides(clonedSlides);
                     }
                   }}
                   color="blue"
