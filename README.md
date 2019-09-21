@@ -28,6 +28,7 @@ https://github.com/JithinKS97/dynamic-learning
 
 #### Processing Medium post
 https://medium.com/processing-foundation/improving-science-and-math-education-using-p5-js-d434beea465c
+https://medium.com/processing-foundation/visualizing-stem-education-with-dynamic-learning-4106748c6fcd
 
 #### Tutorial manual created in Gitbook
 https://dynamic-learning.gitbook.io/dynamic-learning/
