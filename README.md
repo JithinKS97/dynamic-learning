@@ -73,7 +73,7 @@ of the components are provided in the components' js files.
 
 ### 1) Workbook creator
 
-##### Component - CreateWorkbook
+##### Component - Workbook Editor
 
 This is the area where teachers create the workbooks. It is basically a drawing app on which simulations and textboxes can be added. Each workbook consists of a sequence of slides which is an array. Each element in the array consists of annotations of string type, array of simulations, array of textboxes.
 

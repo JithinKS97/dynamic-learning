@@ -214,7 +214,7 @@ class WorkbooksDirectories extends Component {
     };
 
     if (redirectToWorkbook === true) {
-      return <Redirect to={`/createworkbook/${selectedWorkbookId}`} />;
+      return <Redirect to={`/workbookeditor/${selectedWorkbookId}`} />;
     }
 
     // To check if workbook is already added to the class

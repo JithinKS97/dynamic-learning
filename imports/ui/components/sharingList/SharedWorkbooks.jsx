@@ -130,7 +130,7 @@ export default class SharedWorkbooks extends React.Component {
             <div style={{ float: 'right' }}>
 
 
-              <Link to={`/createworkbook/${this.getId.bind(this)()}`}><Button>Open</Button></Link>
+              <Link to={`/workbookeditor/${this.getId.bind(this)()}`}><Button>Open</Button></Link>
 
               {Meteor.userId() ? (
                 <Button onClick={() => {

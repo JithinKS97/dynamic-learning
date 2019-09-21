@@ -853,7 +853,7 @@ export class Request extends React.Component {
       },
     } = this.props;
 
-    if (redirectToWorkbook) { return <Redirect to={`/createworkbook/${_id}`} />; }
+    if (redirectToWorkbook) { return <Redirect to={`/workbookeditor/${_id}`} />; }
 
     if (backPressed) {
       // eslint-disable-next-line react/prop-types
@@ -862,7 +862,7 @@ export class Request extends React.Component {
         return <Redirect to="/dashboard/requests" />;
       // eslint-disable-next-line no-else-return
       } else {
-        return <Redirect to={`/createworkbook/${_id}`} />;
+        return <Redirect to={`/workbookeditor/${_id}`} />;
       }
     }
 

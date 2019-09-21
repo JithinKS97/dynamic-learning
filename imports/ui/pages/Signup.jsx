@@ -24,7 +24,7 @@ export default class Signup extends React.Component {
   }
 
   componentDidMount() {
-    /* If the createworkbook is opened without logging in and the user requires to sign up,
+    /* If the workbook editor is opened without logging in and the user requires to sign up,
             The slides are stored to meteor sessions with the title stateToSave.
             It is obtained from here.
 

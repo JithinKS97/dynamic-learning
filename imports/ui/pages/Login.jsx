@@ -21,7 +21,7 @@ export default class Login extends React.Component {
   }
 
   componentDidMount() {
-    /* If the createworkbook is opened without logging in and the user requires to login,
+    /* If the workbook editor is opened without logging in and the user requires to login,
             The slides are stored to meteor sessions with the title stateToSave.
             It is obtained from here.
             If there is no value, returned, else the slides and the title is set to the state.

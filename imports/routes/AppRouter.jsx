@@ -6,20 +6,21 @@ import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
 
 import Login from '../ui/pages/Login';
-import CreateWorkbookContainer from '../ui/pages/CreateWorkbook';
+import workbookeditorContainer from '../ui/pages/WorkbookEditor';
 import Lesson from '../ui/pages/Lesson';
 import LoadScreen from '../ui/pages/LoadScreen';
 import Explore from '../ui/pages/Explore';
 import Signup from '../ui/pages/Signup';
 import NotFound from '../ui/pages/NotFound';
 
+// eslint-disable-next-line import/no-named-as-default
 import Request from '../ui/pages/Request';
 import SandBox from '../ui/pages/SandBox';
 import Dashboard from '../ui/pages/Dashboard';
 import About from '../ui/pages/About'; 
 
 export const history = createBrowserHistory();
-const publicPages = ['/', '/signup', '/createworkbook', '/login', '/explore'];
+const publicPages = ['/', '/signup', '/workbookeditor', '/login', '/explore'];
 const authenticatedPages = [
   '/dashboard/workbooks',
   '/dashboard/requests',
@@ -51,9 +52,9 @@ export const AppRouter = (
         <PublicRoute exact path="/about" component={About} />
         <PublicRoute exact path="/explore" component={Explore} />
         <PublicRoute exact path="/login" component={Login} />
-        <PublicRoute path="/createworkbook/:_id" component={CreateWorkbookContainer} />
+        <PublicRoute path="/workbookeditor/:_id" component={workbookeditorContainer} />
         <PublicRoute path="/lesson/:_id" component={Lesson} />
-        <PublicRoute path="/createworkbook" component={CreateWorkbookContainer} />
+        <PublicRoute path="/workbookeditor" component={workbookeditorContainer} />
         <PublicRoute path="/signup" component={Signup} />
         <PublicRoute path="/request/:_id" component={Request} />
         <PrivateRoute path="/sandbox" component={SandBox} />

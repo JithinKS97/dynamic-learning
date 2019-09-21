@@ -694,7 +694,7 @@ export class WorkbookViewer extends React.Component {
                 curSlide={curSlide}
                 deleteSlide={this.deleteSlide}
                 setStateAfterRearranging={this.setStateAfterRearranging}
-                from="createWorkbook"
+                from="workbookEditor"
                 isPreview
                 changeSlide={this.changeSlide}
               />

@@ -144,7 +144,7 @@ export default class TeacherClasses extends React.Component {
                   }).lessons && Classes.findOne({ classcode: cl.classcode }).lessons.map(lesson => (
                     <div>
                       {' '}
-                      <Link to={{ pathname: `/createworkbook/${lesson}`, state: { from: 'teacherclasses' } }}>
+                      <Link to={{ pathname: `/workbookeditor/${lesson}`, state: { from: 'teacherclasses' } }}>
                         {' '}
                         {Meteor.user() && Workbooks
                           .findOne({ _id: lesson }) && Workbooks

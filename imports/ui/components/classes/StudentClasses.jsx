@@ -124,7 +124,7 @@ export default class StudentClasses extends React.Component {
                     .findOne({ classcode: cl.classcode }).lessons.map(lesson => (
                       <div>
                         {' '}
-                        <Link to={`/createworkbook/${lesson}`}>
+                        <Link to={`/workbookeditor/${lesson}`}>
                           {' '}
                           {Meteor.user() && Workbooks
                             .findOne({ _id: lesson }) && Workbooks
