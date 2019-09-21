@@ -98,9 +98,9 @@ Meteor.methods({
 
     Workbooks.update({ _id }, { $set: { tags } });
   },
+  // eslint-disable-next-line meteor/audit-argument-checks
   'workbooks.folder.nameUpdate'(_id, tags) {
-      
-    Workbooks.update({ _id }, { $set: { title:tags } });
+    Workbooks.update({ _id }, { $set: { title: tags } });
   },
 
   'workbooks.folder.insert'(title) { // eslint-disable-line object-shorthand
@@ -166,7 +166,7 @@ Meteor.methods({
     check(_id, String);
     check(slides, Array);
     Workbooks.update(
-      { _id },
+      { _id, userId: this.userId },
       { $set: { slides, updatedAt: moment().valueOf() } },
     );
   },

@@ -37,7 +37,7 @@ import DrawingBoardCmp from '../components/workbook/DrawingBoardCmp';
 /**
  * renders the page in which teachers create, edit, save and present workbooks
  */
-export class workbookEditor extends React.Component {
+export class WorkbookEditor extends React.Component {
   constructor(props) {
     super(props);
 
@@ -1683,7 +1683,7 @@ export class workbookEditor extends React.Component {
   }
 }
 
-const workbookEditorContainer = withTracker(({ match }) => {
+const WorkbookEditorContainer = withTracker(({ match }) => {
   let workbooksHandle;
 
   if (Meteor.userId()) {
@@ -1712,6 +1712,6 @@ const workbookEditorContainer = withTracker(({ match }) => {
     workbookExists,
     workbook: workbookExists ? workbook : [],
   };
-})(workbookEditor);
+})(WorkbookEditor);
 
-export default workbookEditorContainer;
+export default WorkbookEditorContainer;
