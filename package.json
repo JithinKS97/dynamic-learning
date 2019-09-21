@@ -5,7 +5,8 @@
     "start": "meteor run",
     "test": "meteor test --once --full-app --driver-package meteortesting:mocha",
     "full-test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "coverage:watch": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_VERBOSE=1 COVERAGE_APP_FOLDER=$PWD/ TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.1",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
+    "babel-plugin-istanbul": "^5.2.0",
     "chai": "^4.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -55,5 +57,14 @@
   },
   "eslintConfig": {
     "extends": "@meteorjs/eslint-config-meteor"
+  },
+  "babel": {
+    "env": {
+      "COVERAGE": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
   }
 }
