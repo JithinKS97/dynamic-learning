@@ -29,7 +29,6 @@ const List = (props) => {
       <Menu vertical icon>
         {renderSlides()}
       </Menu>
-      <Button onClick={() => save()}> Submit Answers </Button>
     </div>
   );
 };

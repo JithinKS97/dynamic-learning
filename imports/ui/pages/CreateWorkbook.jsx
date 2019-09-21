@@ -287,7 +287,7 @@ export class CreateWorkbook extends React.Component {
     // If the user is not the owner of the workbook
     // They need to fork before saving
     if (userId !== Meteor.userId()) {
-      if (confirm(
+      if (!confirm(
         'Are you sure you want to fork this workbook?',
       )) return;
 
@@ -621,7 +621,7 @@ export class CreateWorkbook extends React.Component {
 
     const newQuestion = {
       content: '',
-      responses: {},
+      response: '',
     };
 
     clonedSlides[curSlide].shortresponse.push(newQuestion);
@@ -643,7 +643,7 @@ export class CreateWorkbook extends React.Component {
       b: '',
       c: '',
       d: '',
-      responses: {},
+      response: '',
     };
 
     clonedSlides[curSlide].questions.push(newQuestion);
@@ -1338,6 +1338,15 @@ export class CreateWorkbook extends React.Component {
               </div>
             </Menu.Item>
           ) : null}
+          <Menu.Item>
+            <Button
+              onClick={() => {
+                Meteor.call('workbook.submitAnswers');
+              }}
+            >
+              Submit answers
+            </Button>
+          </Menu.Item>
         </Menu>
       </>
     );

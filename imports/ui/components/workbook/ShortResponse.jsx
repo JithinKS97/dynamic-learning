@@ -13,18 +13,6 @@ export default class ShortResponse extends React.Component {
     this.keyStrokes = 0;
   }
 
-  answers = () => {
-    const {
-      curSlide,
-      index,
-      slides,
-    } = this.props;
-    const updatedSlides = JSON.parse(JSON.stringify(slides));
-    const { responses } = updatedSlides[curSlide].shortresponse[index];
-    const keys = Object.keys(responses);
-    return keys.map(key => <div> {`${Meteor.users.findOne({_id: key}) && Meteor.users.findOne({_id: key}).username}: ${responses[key]}`} </div>);
-  }
-
   handleClose = () => {
     this.setState({ modalOpen: false });
   }
@@ -59,7 +47,7 @@ export default class ShortResponse extends React.Component {
     const {
       modalOpen,
     } = this.state || false;
-    const updatedSlides = JSON.parse(JSON.stringify(slides));
+    const clonedSlides = JSON.parse(JSON.stringify(slides));
 
     return (
       <Rnd
@@ -67,26 +55,26 @@ export default class ShortResponse extends React.Component {
         className="textbox-floating"
         bounds=".canvas-container"
         size={{
-          width: updatedSlides[curSlide].shortresponse[index].w
-            ? updatedSlides[curSlide].shortresponse[index].w
+          width: clonedSlides[curSlide].shortresponse[index].w
+            ? clonedSlides[curSlide].shortresponse[index].w
             : 400,
-          height: updatedSlides[curSlide].shortresponse[index].h
-            ? updatedSlides[curSlide].shortresponse[index].h
+          height: clonedSlides[curSlide].shortresponse[index].h
+            ? clonedSlides[curSlide].shortresponse[index].h
             : 200,
         }}
         dragHandleClassName="textbox-handle"
         position={{
-          x: updatedSlides[curSlide].shortresponse[index].x
-            ? updatedSlides[curSlide].shortresponse[index].x
+          x: clonedSlides[curSlide].shortresponse[index].x
+            ? clonedSlides[curSlide].shortresponse[index].x
             : 100,
-          y: updatedSlides[curSlide].shortresponse[index].y
-            ? updatedSlides[curSlide].shortresponse[index].y
+          y: clonedSlides[curSlide].shortresponse[index].y
+            ? clonedSlides[curSlide].shortresponse[index].y
             : 100,
         }}
         onResize={(_e, _direction, ref) => {
-          updatedSlides[curSlide].shortresponse[index].w = ref.offsetWidth;
-          updatedSlides[curSlide].shortresponse[index].h = ref.offsetHeight;
-          updateSlides(updatedSlides);
+          clonedSlides[curSlide].shortresponse[index].w = ref.offsetWidth;
+          clonedSlides[curSlide].shortresponse[index].h = ref.offsetHeight;
+          updateSlides(clonedSlides);
         }}
         enableResizing={{
           bottom: false,
@@ -99,9 +87,9 @@ export default class ShortResponse extends React.Component {
           topRight: false,
         }}
         onDragStop={(_e, d) => {
-          updatedSlides[curSlide].shortresponse[index].x = d.lastX;
-          updatedSlides[curSlide].shortresponse[index].y = d.lastY;
-          updateSlides(updatedSlides);
+          clonedSlides[curSlide].shortresponse[index].x = d.lastX;
+          clonedSlides[curSlide].shortresponse[index].y = d.lastY;
+          updateSlides(clonedSlides);
         }}
       >
         <div
@@ -121,21 +109,21 @@ export default class ShortResponse extends React.Component {
               color: 'white',
               fontSize: '20px',
               border: '1px solid #404040',
-              width: updatedSlides[curSlide].shortresponse[index].w
-                ? `${updatedSlides[curSlide].shortresponse[index].w}px`
+              width: clonedSlides[curSlide].shortresponse[index].w
+                ? `${clonedSlides[curSlide].shortresponse[index].w}px`
                 : '400px',
-              height: updatedSlides[curSlide].shortresponse[index].h
-                ? `${updatedSlides[curSlide].shortresponse[index].h}px`
+              height: clonedSlides[curSlide].shortresponse[index].h
+                ? `${clonedSlides[curSlide].shortresponse[index].h}px`
                 : '200px',
             }}
             value={
-              updatedSlides[curSlide].shortresponse[index].content
-                ? updatedSlides[curSlide].shortresponse[index].content
+              clonedSlides[curSlide].shortresponse[index].content
+                ? clonedSlides[curSlide].shortresponse[index].content
                 : ''
             }
             readOnly={Meteor.userId() !== userId}
             onChange={(e) => {
-              updatedSlides[curSlide].shortresponse[index].content = e.target.value;
+              clonedSlides[curSlide].shortresponse[index].content = e.target.value;
 
               /**
                * The below code ensures that slides are pushed to the undo stack only when there is
@@ -162,13 +150,13 @@ export default class ShortResponse extends React.Component {
                 }
               }, 1500);
 
-              updateSlides(updatedSlides, undefined, true);
+              updateSlides(clonedSlides, undefined, true);
             }}
             onDrag={() => {
-              updatedSlides[curSlide].shortresponse[index].w = this.textarea.offsetWidth;
-              updatedSlides[curSlide].shortresponse[index].h = this.textarea.offsetHeight;
+              clonedSlides[curSlide].shortresponse[index].w = this.textarea.offsetWidth;
+              clonedSlides[curSlide].shortresponse[index].h = this.textarea.offsetHeight;
 
-              updateSlides(updatedSlides);
+              updateSlides(clonedSlides);
             }}
           />
           {isPreview ? null : (
@@ -213,7 +201,7 @@ export default class ShortResponse extends React.Component {
                   <FaCopy
                     style={{ marginTop: '0.5rem' }}
                     onClick={() => {
-                      this.handleCopy(updatedSlides, curSlide, index);
+                      this.handleCopy(clonedSlides, curSlide, index);
                     }}
                     className="sim-copy"
                     size="18"
@@ -229,45 +217,24 @@ export default class ShortResponse extends React.Component {
         </div>
         <div>
           <textarea
-            value={updatedSlides[curSlide].shortresponse[index].responses[Meteor.userId()]
-              ? updatedSlides[curSlide].shortresponse[index].responses[Meteor.userId()] : ''}
+            value={clonedSlides[curSlide].shortresponse[index].response
+              ? clonedSlides[curSlide].shortresponse[index].response : ''}
             style={{
               resize: 'none',
               backgroundColor: 'rgba(0,0,0,0)',
               color: 'white',
               fontSize: '20px',
               border: '1px solid #404040',
-              width: updatedSlides[curSlide].shortresponse[index].w
-                ? `${updatedSlides[curSlide].shortresponse[index].w * 0.92}px`
+              width: clonedSlides[curSlide].shortresponse[index].w
+                ? `${clonedSlides[curSlide].shortresponse[index].w * 0.92}px`
                 : '370px',
             }}
             onChange={(e) => {
-              updatedSlides[curSlide].shortresponse[index].responses[Meteor.userId()] = e ? e.target.value : '';
-              updateSlides(updatedSlides);
+              clonedSlides[curSlide].shortresponse[index].response = e ? e.target.value : '';
+              updateSlides(clonedSlides);
             }}
           />
-          { Meteor.userId() === userId && <Button style={{ marginTop: '15px' }} onClick={() => this.setState({ modalOpen: true })}> View Student Responses </Button> }
         </div>
-        <Modal
-          open={modalOpen}
-          onClose={() => this.handleClose()}
-          size="tiny"
-        >
-          <Modal.Header>
-            Answers to this question
-            <Button className="close-button" onClick={() => this.handleClose()}>
-              X
-            </Button>
-          </Modal.Header>
-
-          <Modal.Content>
-            <Modal.Description>
-              { this.answers() }
-            </Modal.Description>
-
-          </Modal.Content>
-
-        </Modal>
       </Rnd>
     );
   }
