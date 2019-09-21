@@ -10,13 +10,13 @@ import { createMemoryHistory } from 'history';
 /*
     Unit tests covered
 
-    1) Mounting of Component
+    1) Mounting of Component -check
     2) Addition and deletion ( different cases ) - check
-    3) Navigation between slides
-    4) Addition / deletion of textboxes
+    3) Navigation between slides -check
+    4) Addition / deletion of textboxes -check
     4) Interact and draw - check
     5) Undo and redo - check
-    6) Changing size fo canvas (conditional also) - check
+    6) Changing size of canvas (conditional also) - check
     5) Addition / deletion of simulations - check
     8) Interact and draw mode - check
 */
