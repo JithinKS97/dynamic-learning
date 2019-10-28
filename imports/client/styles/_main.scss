@@ -7,6 +7,12 @@
 @import './components/tags';
 @import './loadscreen';
 @import './components/text-box.scss';
+@import './about.scss';
+
+* {
+  box-sizing: border-box;
+}
+
 
 .drawing-board-canvas-wrapper {
   z-index:2;
