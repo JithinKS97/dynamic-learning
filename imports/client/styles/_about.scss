@@ -3,7 +3,7 @@ $teacher-width: 18vw;
 
 $min-width: 20rem;
 
-$logo-and-title-size:21.5rem;
+$logo-and-title-size:19vw;
 
 .about__programmer {
     width:$programmer-width;
@@ -44,6 +44,9 @@ $logo-and-title-size:21.5rem;
 .about__logo-and-title {
     width:$logo-and-title-size;
     height:$logo-and-title-size;
+
+    min-width:17rem;
+    min-height:17rem;
 }
 
 .about__title-description {
@@ -55,4 +58,8 @@ $logo-and-title-size:21.5rem;
     position:relative;
     top:40vh;
     padding:2rem;
+}
+
+.about__description-paragraphs {
+    width:70vw;
 }
