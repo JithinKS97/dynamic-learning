@@ -11,18 +11,20 @@ export default () => {
 
     return (
       <div style={headerContainer}>
-        <div 
-          onMouseEnter={()=>setFontColor('black')} style={{
-            color: fontColor,
-            float:'right',
-            display:'inline-block',
-            fontSize:'1.5rem',
-            cursor:'pointer'
-          }}
-          onMouseLeave={()=>setFontColor('white')}
-        >
-          About
-        </div>
+         <Link to='/about'>
+          <div 
+            onMouseEnter={()=>setFontColor('black')} style={{
+              color: fontColor,
+              float:'right',
+              display:'inline-block',
+              fontSize:'1.5rem',
+              cursor:'pointer'
+            }}
+            onMouseLeave={()=>setFontColor('white')}
+          >
+            About
+          </div>
+        </Link>
       </div>
     )
   }
@@ -44,9 +46,13 @@ export default () => {
     }
 
     return (
-      <div style={buttonContainerStyle}> 
-       <Button style={buttonStyle} inverted>Explore</Button>
-       <Button style={buttonStyle} inverted>Login</Button>
+      <div style={buttonContainerStyle}>
+        <Link to='/explore'>
+          <Button style={buttonStyle} inverted>Explore</Button>
+       </Link> 
+       <Link to='/login'>
+        <Button style={buttonStyle} inverted>Login</Button>
+       </Link>
       </div>
     )
   }
