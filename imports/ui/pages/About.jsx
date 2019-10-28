@@ -71,7 +71,7 @@ const Description = () => (
       In a similar fashion to workbooks, lessons are a set of slides that can be
       used by teachers in the classroom. Lessons, as opposed to workbooks, use
       the idea of pairing videos with simulations. The lefthand side contains a
-      YouTube video and the right side contains a simulation related to the
+      YouTube video and the right side contains a simulations to the
       topic of the slide.
     </div>
     <br />

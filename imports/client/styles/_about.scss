@@ -9,8 +9,8 @@ $logo-and-title-size:21.5rem;
     width:$programmer-width;
     height:$programmer-width * 1.2;
 
-    min-width: $min-width;
-    min-height: $min-width * 1.2;
+    min-width: $min-width/1.2;
+    min-height: $min-width * 1.2/1.2;
 
     position: absolute;
 }
@@ -19,8 +19,8 @@ $logo-and-title-size:21.5rem;
     width:$teacher-width;
     height:$teacher-width * 1.2;
 
-    min-width: $min-width;
-    min-height: $min-width * 1.2;
+    min-width: $min-width/1.2;
+    min-height: $min-width * 1.2/1.2;
 
     position: absolute;
     
