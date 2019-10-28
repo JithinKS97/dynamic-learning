@@ -17,7 +17,7 @@ export default () => {
               color: fontColor,
               float:'right',
               display:'inline-block',
-              fontSize:'1.5rem',
+              fontSize:'1.3rem',
               cursor:'pointer'
             }}
             onMouseLeave={()=>setFontColor('white')}
@@ -39,10 +39,10 @@ export default () => {
     }
 
     const buttonStyle = {
-      width:'10rem',
+      width:'8rem',
       borderRadius:'20px',
-      height:'3rem',
-      fontSize:'1.2rem'
+      height:'2.5rem',
+      fontSize:'1rem'
     }
 
     return (
@@ -77,18 +77,18 @@ const style = {
 }
 
 const imageStyle = {
-  width:'300px',
-  height:'300px',
-  minHeight: '250px',
-  minWidth:'250px',
+  width:'250px',
+  height:'250px',
+  minHeight: '200px',
+  minWidth:'200px',
   margin:'auto'
 }
 
 const ContainerStyle = {
-  width:'340px',
-  height:'300px',
-  minHeight: '250px',
-  minWidth:'250px',
+  width:'300px',
+  height:'270px',
+  minHeight: '200px',
+  minWidth:'200px',
   margin:'auto',
   textAlign:'center'
 }
