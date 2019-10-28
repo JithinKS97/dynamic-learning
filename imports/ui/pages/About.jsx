@@ -34,7 +34,7 @@ export default () => {
     return (
       <div className='loadscren__header-container'>
          <Link to='/'>
-          <div style={{color:'black'}} className = 'about__header-button '>
+          <div className = 'about__header-button'>
             X
           </div>
         </Link>
