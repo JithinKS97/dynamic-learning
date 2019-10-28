@@ -3,7 +3,7 @@ $teacher-width: 18vw;
 
 $min-width: 20rem;
 
-$logo-and-title-size:20rem;
+$logo-and-title-size:23rem;
 
 .about__programmer {
     width:$programmer-width;
@@ -24,8 +24,8 @@ $logo-and-title-size:20rem;
 
     position: absolute;
     
-    top:calc(100vh - #{$teacher-width * 1.2});
-    left:calc(100vw - #{$teacher-width});
+    top:calc(100vh - #{$teacher-width * 1.2} - 2rem);
+    left:calc(100vw - #{$teacher-width} - 2rem);
 }
 
 .about__main {
