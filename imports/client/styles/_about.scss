@@ -9,8 +9,8 @@ $logo-and-title-size:19vw;
     width:$programmer-width;
     height:$programmer-width * 1.2;
 
-    min-width: $min-width/1.2;
-    min-height: $min-width * 1.2/1.2;
+    min-width: $min-width/1.32;
+    min-height: $min-width * 1.2/1.32;
 
     position: absolute;
 }
@@ -19,8 +19,8 @@ $logo-and-title-size:19vw;
     width:$teacher-width;
     height:$teacher-width * 1.2;
 
-    min-width: $min-width/1.2;
-    min-height: $min-width * 1.2/1.2;
+    min-width: $min-width/1.32;
+    min-height: $min-width * 1.2/1.32;
 
     position: absolute;
     
@@ -45,8 +45,8 @@ $logo-and-title-size:19vw;
     width:$logo-and-title-size;
     height:$logo-and-title-size;
 
-    min-width:17rem;
-    min-height:17rem;
+    min-width:14rem;
+    min-height:14rem;
 }
 
 .about__title-description {
@@ -57,7 +57,7 @@ $logo-and-title-size:19vw;
 .about__description {
     position:relative;
     top:40vh;
-    padding:2rem;
+    padding-bottom:2rem;
 }
 
 .about__description-paragraphs {
