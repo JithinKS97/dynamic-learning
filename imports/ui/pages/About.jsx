@@ -57,7 +57,7 @@ const Description = () => (
       to students in their class.
     </div>
     <br />
-    <h4 style={{ marginTop: "0rem" }}> Workbooks </h4>
+    <h3 style={{ marginTop: "0rem" }}> Workbooks </h3>
     <div className='about__description-paragraphs'>
       Workbooks is a system in which slides can be created with embedded
       simulations made with p5.js. There is an interactive canvas which can be
@@ -66,7 +66,7 @@ const Description = () => (
       create requests for simulations which developers can then take on.
     </div>
     <br />
-    <h4 style={{ marginTop: "0rem" }}> Lessons </h4>
+    <h3 style={{ marginTop: "0rem" }}> Lessons </h3>
     <div className='about__description-paragraphs'>
       In a similar fashion to workbooks, lessons are a set of slides that can be
       used by teachers in the classroom. Lessons, as opposed to workbooks, use
@@ -75,7 +75,7 @@ const Description = () => (
       topic of the slide.
     </div>
     <br />
-    <h4 style={{ marginTop: "0rem" }}> Classes </h4>
+    <h3 style={{ marginTop: "0rem" }}> Classes </h3>
     <div className='about__description-paragraphs'>
       Classes can be created by teachers and a unique class code will be created
       along with the class. Teachers can give these codes to students and they
@@ -84,14 +84,14 @@ const Description = () => (
       to classes from the settings of a specific workbook.
     </div>
     <br />
-    <h1 style={{ marginTop: "0rem" }}> For Developers </h1>
-    <h4 style={{ marginTop: "0rem" }}> How to make simulations </h4>
+    <h2 style={{ marginTop: "0rem" }}> For Developers </h2>
+    <h3 style={{ marginTop: "0rem" }}> How to make simulations </h3>
     <div className='about__description-paragraphs'>
       If you are interested in making simulations, feel free to create an
       account and look at some of the existing requests for simulations! In
       order to create simulations that work with Dynamic Learning, it is
       important that they are developed in the
-      <a href="https://editor.p5js.org/"> p5 web editor. </a>
+      <a  target="_blank" href="https://editor.p5js.org/"> p5 web editor. </a>
     </div>
   </div>
 );
