@@ -60,6 +60,8 @@ export default class SimPreview extends React.Component {
             () => {
               if (!slides) return;
 
+              if (slides.length === 0) return;
+
               slides[curSlide].iframes[
                 index
               ].w = ref.offsetWidth;

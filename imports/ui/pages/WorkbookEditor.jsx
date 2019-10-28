@@ -775,6 +775,15 @@ export class WorkbookEditor extends React.Component {
     return Object.keys(desc).length === 0 && desc.constructor === Object;
   };
 
+
+  calcHeightOfCanvasContainer = () => {
+    const { slides, curSlide } = this.state;
+    if (slides.length > 0) {
+      return 900 + slides[curSlide].pageCount * 300;
+    }
+    return 900;
+  };
+
   renderDescription = () => {
     const { description } = this.state;
     if (
@@ -827,14 +836,6 @@ export class WorkbookEditor extends React.Component {
         </List.Item>
       </List>
     );
-  };
-
-  calcHeightOfCanvasContainer = () => {
-    const { slides, curSlide } = this.state;
-    if (slides.length > 0) {
-      return 900 + slides[curSlide].pageCount * 300;
-    }
-    return 900;
   };
 
   renderRightMenu = () => {
