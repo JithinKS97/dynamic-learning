@@ -10,7 +10,7 @@ export default () => {
     const [fontColor, setFontColor] = useState('white')
 
     return (
-      <div style={headerContainer}>
+      <div className='loadscren__header-container'>
          <Link to='/about'>
           <div 
             onMouseEnter={()=>setFontColor('black')} style={{
@@ -58,44 +58,12 @@ export default () => {
   }
  
   return (
-    <div style={style}>
+    <div className='load-screen__main'>
       <Header/>
-      <div style={ContainerStyle}>
-        <img style={imageStyle} src='/logo-and-title.png'></img>
+      <div className='loadscreen__container'>
+        <img className='loadscreen__image' src='/logo-and-title.png'></img>
         <Buttons/>
       </div>
     </div>
   )
-}
-
-const style = {
-  backgroundColor:'#1ed760',
-  height:'100vh',
-  display:'flex',
-  flexDirection:'column',
-  justifyContent:'center'
-}
-
-const imageStyle = {
-  width:'250px',
-  height:'250px',
-  minHeight: '200px',
-  minWidth:'200px',
-  margin:'auto'
-}
-
-const ContainerStyle = {
-  width:'280px',
-  height:'270px',
-  minHeight: '200px',
-  minWidth:'200px',
-  margin:'auto',
-  textAlign:'center'
-}
-
-const headerContainer ={
-  position:'fixed',
-  top:0,
-  width:'100vw',
-  padding:'1.5rem'
 }
