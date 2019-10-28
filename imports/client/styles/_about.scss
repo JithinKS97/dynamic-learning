@@ -64,3 +64,13 @@ $logo-and-title-size:17vw;
     width:70vw;
 }
 
+.about__header-button {
+    color:black;
+    float:right;
+    padding-right:2rem;
+    font-size: 2rem;
+}
+
+.about__header-button:hover {
+    color:white;
+}

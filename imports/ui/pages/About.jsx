@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+
 export default () => {
   const Programmer = () => (
     <div className="about__programmer-container">
@@ -27,9 +29,22 @@ export default () => {
       </div>
     </div>
   );
+  
+  const Header = () => {
+    return (
+      <div className='loadscren__header-container'>
+         <Link to='/'>
+          <div style={{color:'black'}} className = 'about__header-button '>
+            X
+          </div>
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div>
+      <Header/>
       <div className="about__main">
         <Programmer />
         <Teacher />
