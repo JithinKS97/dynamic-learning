@@ -85,7 +85,7 @@ const imageStyle = {
 }
 
 const ContainerStyle = {
-  width:'300px',
+  width:'280px',
   height:'270px',
   minHeight: '200px',
   minWidth:'200px',
