@@ -15,7 +15,7 @@
   }
   
 .loadscreen__container {
-	width:280px;
+	width:270px;
 	height:270px;
 	min-height: 200px;
 	min-width:200px;
@@ -28,4 +28,15 @@
 	top:0;
 	width:100vw;
 	padding:1.5rem;
+  }
+
+  .loadscreen__header-button {
+	color:white;
+	float: right;
+	font-size: 1.3rem;
+	cursor: pointer;
+  }
+
+  .loadscreen__header-button:hover {
+	  color:black;
   }

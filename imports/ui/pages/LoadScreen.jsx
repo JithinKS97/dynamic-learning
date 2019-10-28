@@ -1,27 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react'
-import { useState } from 'react'
 
 export default () => {
 
   const Header = () => {
-
-    const [fontColor, setFontColor] = useState('white')
-
     return (
       <div className='loadscren__header-container'>
          <Link to='/about'>
-          <div 
-            onMouseEnter={()=>setFontColor('black')} style={{
-              color: fontColor,
-              float:'right',
-              display:'inline-block',
-              fontSize:'1.3rem',
-              cursor:'pointer'
-            }}
-            onMouseLeave={()=>setFontColor('white')}
-          >
+          <div className = 'loadscreen__header-button'>
             About
           </div>
         </Link>
