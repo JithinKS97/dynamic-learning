@@ -1,10 +1,9 @@
 /*eslint-disable*/
 import React from 'react';
-import { Menu, Button } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const List = (props) => {
-  const { save } = props;
 
   const renderSlides = () => {
     const { slides } = props;
@@ -12,7 +11,8 @@ const List = (props) => {
     if (slides.length !== 0) {
       return slides.map((slide, index) => (
         <Menu.Item
-          style={{ width: '9rem' }}
+        
+          style={{ width: '9rem', backgroundColor: index === props.curSlide ? 'lightGreen' : '#e0e1e2' }}
           key={index}
           onClick={() => {
             props.changeSlide(index);
