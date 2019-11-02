@@ -232,13 +232,15 @@ export class WorkbookEditor extends React.Component {
     this.changeSlide(curSlide);
   };
 
-  setStateAfterRearranging = (slides, newIndex) => {
-    this.setState(
-      {
-        slides,
-      },
-      () => {
-        this.changeSlide(newIndex);
+  setStateAfterRearranging = (rearrangedSlide, toSlideNo) => {
+    /**
+     * The function is called after rearraging the slide in the slidesList
+     * This is done by dragging and swapping the slide
+     */
+    this.setState({
+        slides:rearrangedSlide,
+    }, () => {
+        this.changeSlide(toSlideNo);
       },
     );
   };
@@ -1583,8 +1585,6 @@ export class WorkbookEditor extends React.Component {
                     curSlide={curSlide}
                     deleteSlide={this.deleteSlide}
                     setStateAfterRearranging={this.setStateAfterRearranging}
-                    from="workbookEditor"
-                    isPreview={false}
                     changeSlide={this.changeSlide}
                   />
                 </div>
