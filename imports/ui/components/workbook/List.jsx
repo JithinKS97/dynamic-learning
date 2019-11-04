@@ -22,20 +22,18 @@ const SortableItem = SortableElement(({
       style={{ width: '100%', textAlign: 'left', backgroundColor: index === props.curSlide ? 'lightGreen' : '#e0e1e2' }}
       onClick={() => { props.changeSlide(slideNo); }}
     >
-      {props.isPreview ? slide.title : slideNo + 1}
+      {slideNo + 1}
     </div>
 
-    {!props.isPreview ? (
-      <div
+    <div
         className="ui button lessonplanleftbutton"
         onClick={() => {
           const confirmation = confirm('Are you sure you want to delete?');
           if (confirmation === true) { props.deleteSlide(slideNo); }
         }}
       >
-        X
-      </div>
-    ) : null}
+      X
+    </div>
 
   </Menu.Item>
 ));
