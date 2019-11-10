@@ -118,6 +118,17 @@ export default class Signup extends React.Component {
           {error ? <p>{error}</p> : undefined}
 
           <form noValidate onSubmit={this.onSubmit}>
+
+          <div style={{
+            float:'left', 
+            marginBottom:'1rem',
+            marginTop:'2rem',
+            marginLeft:'1rem',
+            color:'grey',
+            fontSize:'1.3rem',
+            display:'block'
+          }}>Sign up</div>
+
             <input
               className='login__input'
               ref={e => {
