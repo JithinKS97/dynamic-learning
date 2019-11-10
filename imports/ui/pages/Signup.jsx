@@ -108,6 +108,9 @@ export default class Signup extends React.Component {
     return (
       <div className="login__main">
         <div className="login-box">
+          <Link to='/'>
+            <div className='login-close__button'>X</div>
+          </Link>
           <img
             className="login__logo"
             src="/symbol.png"
