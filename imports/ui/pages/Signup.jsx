@@ -2,17 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
-
-import { button, Form, Card } from "semantic-ui-react";
 import { Session } from "meteor/session";
 
 import "semantic-ui-css/semantic.min.css";
 
-const vals = [
-  { key: "s", text: "Student", value: "Student" },
-  { key: "t", text: "Teacher", value: "Teacher" },
-  { key: "d", text: "Standard", value: "Standard" }
-];
 
 export default class Signup extends React.Component {
   constructor(props) {
@@ -21,6 +14,7 @@ export default class Signup extends React.Component {
       error: "",
       slides: null
     };
+    this.accountType = 'Teacher'
   }
 
   componentDidMount() {
@@ -104,6 +98,7 @@ export default class Signup extends React.Component {
   };
 
   render() {
+    const options = ['Teacher', 'Student', 'Standard']
     const { error } = this.state;
     return (
       <div className="login__main">
@@ -155,14 +150,19 @@ export default class Signup extends React.Component {
               placeholder="Password"
             />
 
-            <Form.Select
-              style={{marginTop:'1rem', width:'20rem', borderRadius:'1rem', padding:'1rem', color:'grey'}}
-              onChange={(_e, { value }) => {
-                this.accountType = value;
+            <select
+              onChange={(e)=>{
+                this.accountType = e.target.value
               }}
-              options={vals}
-              placeholder="Account Type"
-            />
+              className="login__input"
+              style={{ backgroundColor: "white", cursor:'pointer', color:'grey' }}
+            >
+              {options.map(option => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
 
             <button className='login__button'>Sign up</button>
 

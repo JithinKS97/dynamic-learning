@@ -16,6 +16,7 @@ $logo-and-title-size:17vw;
 }
 
 .about__teacher {
+    z-index: 1;
     width:$teacher-width;
     height:$teacher-width * 1.2;
 
