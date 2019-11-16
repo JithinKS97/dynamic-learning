@@ -1,20 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Accounts } from "meteor/accounts-base";
-import { Meteor } from "meteor/meteor";
-import { Session } from "meteor/session";
-
-import "semantic-ui-css/semantic.min.css";
-
+/* eslint-disable jsx-a11y/alt-text */
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Accounts } from 'meteor/accounts-base';
+import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
 
 export default class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: "",
-      slides: null
+      error: '',
+      slides: null,
     };
-    this.accountType = 'Teacher'
+    this.accountType = 'Teacher';
   }
 
   componentDidMount() {
@@ -25,17 +23,17 @@ export default class Signup extends React.Component {
             If there is no value, returned, else the slides and the title is set to the state.
         */
 
-    const state = Session.get("stateToSave");
+    const state = Session.get('stateToSave');
 
     if (!state) return;
 
     this.setState({
       slides: state.slides,
-      title: state.title
+      title: state.title,
     });
   }
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     const email = this.email.value.trim();
@@ -45,7 +43,7 @@ export default class Signup extends React.Component {
 
     if (password.length < 9) {
       this.setState({
-        error: "Password must be more than 8 characters long"
+        error: 'Password must be more than 8 characters long',
       });
       return;
     }
@@ -54,22 +52,22 @@ export default class Signup extends React.Component {
       email,
       username,
       password,
-      school: "",
+      school: '',
       classes: [],
       profile: {
-        accountType
-      }
+        accountType,
+      },
     };
 
-    Accounts.createUser(options, err => {
+    Accounts.createUser(options, (err) => {
       if (err) {
         this.setState({
-          error: err.reason
+          error: err.reason,
         });
       } else {
         this.setState(
           {
-            error: ""
+            error: '',
           },
           () => {
             const { slides, userId, title } = this.state;
@@ -86,76 +84,80 @@ export default class Signup extends React.Component {
                 is set to null.
             */
 
-            Meteor.call("workbooks.insert", title, (_err, _id) => {
-              Meteor.call("workbooks.update", _id, slides);
+            Meteor.call('workbooks.insert', title, (_err, _id) => {
+              Meteor.call('workbooks.update', _id, slides);
 
-              Session.set("stateToSave", null);
+              Session.set('stateToSave', null);
             });
-          }
+          },
         );
       }
     });
   };
 
   render() {
-    const options = ['Teacher', 'Student', 'Standard']
+    const options = ['Teacher', 'Student', 'Standard'];
     const { error } = this.state;
     return (
       <div className="login__main">
         <div className="login-box">
-          <Link to='/'>
-            <div className='login-close__button'>X</div>
+          <Link to="/">
+            <div className="login-close__button">X</div>
           </Link>
           <img
             className="login__logo"
             src="/symbol.png"
-          ></img>
+          />
           {error ? <p>{error}</p> : undefined}
 
           <form noValidate onSubmit={this.onSubmit}>
 
-          <div style={{
-            float:'left', 
-            marginBottom:'1rem',
-            marginTop:'2rem',
-            marginLeft:'1rem',
-            color:'grey',
-            fontSize:'1.3rem',
-            display:'block'
-          }}>Sign up</div>
+            <div style={{
+              float: 'left',
+              marginBottom: '1rem',
+              marginTop: '2rem',
+              marginLeft: '1rem',
+              color: 'grey',
+              fontSize: '1.3rem',
+              display: 'block',
+            }}
+            >
+Sign up
+
+            </div>
 
             <input
-              className='login__input'
-              ref={e => {
+              className="login__input"
+              ref={(e) => {
                 this.username = e;
               }}
               placeholder="Username"
             />
 
             <input
-              className='login__input'
+              className="login__input"
               type="email"
-              ref={e => {
+              ref={(e) => {
                 this.email = e;
               }}
               placeholder="Email"
             />
 
             <input
-              className='login__input'
+              className="login__input"
               type="password"
-              ref={e => {
+              ref={(e) => {
                 this.password = e;
               }}
               placeholder="Password"
             />
 
             <select
-              onChange={(e)=>{
-                this.accountType = e.target.value
+              onChange={(e) => {
+                this.accountType = e.target.value;
               }}
               className="login__input"
-              style={{ backgroundColor: "white", cursor:'pointer', color:'grey' }}
+              style={{ backgroundColor: 'white', cursor: 'pointer', color: 'grey' }}
             >
               {options.map(option => (
                 <option key={option} value={option}>
@@ -164,11 +166,11 @@ export default class Signup extends React.Component {
               ))}
             </select>
 
-            <button className='login__button'>Sign up</button>
+            <button className="login__button">Sign up</button>
 
-            <div style={{marginTop:'2rem'}}>
+            <div style={{ marginTop: '2rem' }}>
               <span>Already have an account ? </span>
-              <Link to='/login'><b><span className='login__create-one'>Log in</span></b></Link>
+              <Link to="/login"><b><span className="login__create-one">Log in</span></b></Link>
             </div>
 
           </form>
