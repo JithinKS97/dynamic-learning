@@ -72,12 +72,13 @@ export default class Signup extends React.Component {
           () => {
             const { slides, userId, title } = this.state;
 
+            Session.set('signedUpNow', true);
+
             if (!slides) {
               return;
             }
 
             if (userId === Meteor.userId()) return;
-
             /*
                 The values in the states are used to create a
                 new workbook and the session variable
