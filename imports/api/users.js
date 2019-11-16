@@ -13,8 +13,10 @@ export const validateNewUser = (user) => {
   if (user.services) {
     if (user.services.github) {
       email = user.services.github.email;
+      return true;
     } if (user.services.google) {
       email = user.services.google.email;
+      return true;
     }
   }
 
@@ -70,7 +72,6 @@ Meteor.methods({
 });
 
 if (Meteor.isServer) {
-  
   Accounts.validateNewUser(validateNewUser);
   Meteor.publish('getAccounts', () => Meteor.users.find());
   ServiceConfiguration.configurations.upsert({
