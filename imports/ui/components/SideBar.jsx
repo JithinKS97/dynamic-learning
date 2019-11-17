@@ -26,8 +26,14 @@ export default class SideBar extends React.Component {
       if (Meteor.user() && Meteor.user().services) {
         if (Meteor.user().services.github) {
           Meteor.call('setUsername', Meteor.userId(), Meteor.user().services.github.email);
+          this.setState({
+            user: Meteor.user().services.github.email,
+          });
         } else if (Meteor.user().services.google) {
           Meteor.call('setUsername', Meteor.userId(), Meteor.user().services.google.email);
+          this.setState({
+            user: Meteor.user().services.google.email,
+          });
         }
       }
     });
@@ -39,7 +45,6 @@ export default class SideBar extends React.Component {
       <div id="menu">
         <Link to="profile" style={{ paddingLeft: '0.8rem', marginTop: '0.8rem' }}>{`${user}`}</Link>
         <ul>
-
           <Menu vertical style={{ marginTop: '0.8rem' }}>
             <Link to="workbooks"><Menu.Item link>Manage workbooks</Menu.Item></Link>
             <Link to="lessons"><Menu.Item link>Manage lessons</Menu.Item></Link>
