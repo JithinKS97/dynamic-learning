@@ -72,6 +72,14 @@ export default class Signup extends React.Component {
           () => {
             const { slides, userId, title } = this.state;
 
+            if (Meteor.user().services) {
+              if (Meteor.user().services.github) {
+                Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.github.username);
+              } else if (Meteor.user().services.google) {
+                Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.google.email);
+              }
+            }
+
             Session.set('signedUpNow', true);
 
             if (!slides) {
