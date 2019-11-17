@@ -26,9 +26,9 @@ export default class SideBar extends React.Component {
       if (Meteor.user().services) {
         console.log(Meteor.user().services);
         if (Meteor.user().services.github) {
-          Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.github.username);
+          Meteor.call('setUsername', Meteor.userId(), Meteor.user().services.github.username);
         } else if (Meteor.user().services.google) {
-          Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.google.email);
+          Meteor.call('setUsername', Meteor.userId(), Meteor.user().services.google.email);
         }
       }
     });
