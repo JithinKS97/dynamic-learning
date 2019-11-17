@@ -8,6 +8,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 
+
 export const validateNewUser = (user) => {
   let email = '';
   if (user.services) {

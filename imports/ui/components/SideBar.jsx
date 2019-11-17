@@ -25,20 +25,26 @@ export default class SideBar extends React.Component {
       }
       if (Meteor.user() && Meteor.user().services) {
         if (Meteor.user().services.github) {
-          Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.github.username);
+          Meteor.call('setUsername', Meteor.userId(), Meteor.user().services.github.email);
+          this.setState({
+            user: Meteor.user().services.github.email,
+          });
         } else if (Meteor.user().services.google) {
-          Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.google.email);
+          Meteor.call('setUsername', Meteor.userId(), Meteor.user().services.google.email);
+          this.setState({
+            user: Meteor.user().services.google.email,
+          });
         }
       }
     });
   }
 
   render() {
+    const { user } = this.state;
     return (
       <div id="menu">
-        <Link to="profile" style={{ paddingLeft: '0.8rem', marginTop: '0.8rem' }}>{`${this.state.user}`}</Link>
+        <Link to="profile" style={{ paddingLeft: '0.8rem', marginTop: '0.8rem' }}>{`${user}`}</Link>
         <ul>
-
           <Menu vertical style={{ marginTop: '0.8rem' }}>
             <Link to="workbooks"><Menu.Item link>Manage workbooks</Menu.Item></Link>
             <Link to="lessons"><Menu.Item link>Manage lessons</Menu.Item></Link>
