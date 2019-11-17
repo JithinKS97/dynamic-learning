@@ -238,11 +238,10 @@ export class WorkbookEditor extends React.Component {
      * This is done by dragging and swapping the slide
      */
     this.setState({
-        slides:rearrangedSlide,
+      slides: rearrangedSlide,
     }, () => {
-        this.changeSlide(toSlideNo);
-      },
-    );
+      this.changeSlide(toSlideNo);
+    });
   };
 
   pushSlide = () => {
