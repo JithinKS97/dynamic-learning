@@ -34,9 +34,13 @@ export default class SideBar extends React.Component {
   }
 
   render() {
+    const { user } = this.state;
+    if (!user) {
+      this.forceUpdate();
+    }
     return (
       <div id="menu">
-        <Link to="profile" style={{ paddingLeft: '0.8rem', marginTop: '0.8rem' }}>{`${this.state.user}`}</Link>
+        <Link to="profile" style={{ paddingLeft: '0.8rem', marginTop: '0.8rem' }}>{`${user}`}</Link>
         <ul>
 
           <Menu vertical style={{ marginTop: '0.8rem' }}>
