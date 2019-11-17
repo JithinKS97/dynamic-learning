@@ -23,7 +23,7 @@ export default class SideBar extends React.Component {
           user: Meteor.user().username,
         });
       }
-      if (Meteor.user() && Meteor.user().services) {
+      if (Meteor.user().services) {
         console.log(Meteor.user().services);
         if (Meteor.user().services.github) {
           Meteor.call('setUsername', Meteor.user()._id, Meteor.user().services.github.username);
