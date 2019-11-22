@@ -1,3 +1,42 @@
 .sharedResources__main {
-    background-color:grey;
+  background-color: grey;
+}
+
+.sharedResources__listItem {
+  padding: 1rem;
+}
+
+.sharedResources__listItem:hover {
+  background-color: lighten(black, 25%);
+  cursor: pointer;
+  color: white;
+}
+
+.sharedResources__searchBoxContainer {
+  background-color: white;
+  width: 95%;
+  margin: auto;
+  border-radius: 2rem;
+  padding: 0.4rem;
+  display: flex;
+  border: 0.1rem solid #d3d3d3;
+}
+
+.sharedResources__input {
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  border: 0;
+}
+
+.sharedResources__workbookTitle {
+  font-size: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+.sharedResources__separatorLine {
+  height: 0.2rem;
+  background-color: #d3d3d3;
 }
