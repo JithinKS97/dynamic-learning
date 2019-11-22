@@ -1,13 +1,12 @@
-import React from 'react';
-import {
-  Modal, Button, Input, Dimmer, Loader, Card,
-} from 'semantic-ui-react';
-import { GoRepoForked } from 'react-icons/go';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
+import React from "react";
+import { Modal, Button, Input, Dimmer, Loader, Card } from "semantic-ui-react";
+import { GoRepoForked } from "react-icons/go";
+import { Link } from "react-router-dom";
+import moment from "moment";
+import SearchBar from "./SearchBar";
 // eslint-disable-next-line import/no-named-as-default
-import WorkbookViewer from '../workbook/WorkbookViewer';
-import { WorkbooksIndex } from '../../../api/workbooks';
+import WorkbookViewer from "../workbook/WorkbookViewer";
+import { WorkbooksIndex } from "../../../api/workbooks";
 
 export default class SharedWorkbooks extends React.Component {
   constructor(props) {
@@ -17,32 +16,39 @@ export default class SharedWorkbooks extends React.Component {
       workbooks: [],
       workbook: null,
       loading: true,
-      _idToNameMappings: {},
+      _idToNameMappings: {}
     };
     this.displayWorkbooks.bind(this);
   }
 
   componentDidMount() {
     this.workbooksTracker = Tracker.autorun(() => {
-      const workbooksHandle = Meteor.subscribe('workbooks.public');
+      const workbooksHandle = Meteor.subscribe("workbooks.public");
       const loading = !workbooksHandle.ready();
 
-      this.setState({
-        workbooks: WorkbooksIndex.search('').fetch(),
-        selectedWorkbook: null,
-        loading,
-      }, () => {
-        const { workbooks } = this.state;
-        Meteor.call('getUsernames', workbooks.map(workbook => workbook.userId), (err, users) => {
-          const _idToNameMappings = {};
-          users.map((user) => {
-            _idToNameMappings[user.userId] = user.username;
-          });
-          this.setState({
-            _idToNameMappings,
-          });
-        });
-      });
+      this.setState(
+        {
+          workbooks: WorkbooksIndex.search("").fetch(),
+          selectedWorkbook: null,
+          loading
+        },
+        () => {
+          const { workbooks } = this.state;
+          Meteor.call(
+            "getUsernames",
+            workbooks.map(workbook => workbook.userId),
+            (err, users) => {
+              const _idToNameMappings = {};
+              users.map(user => {
+                _idToNameMappings[user.userId] = user.username;
+              });
+              this.setState({
+                _idToNameMappings
+              });
+            }
+          );
+        }
+      );
     });
   }
 
@@ -52,116 +58,159 @@ export default class SharedWorkbooks extends React.Component {
 
   findTime = time => moment(time);
 
-  displayTime = (index) => {
+  displayTime = index => {
     const { workbooks } = this.state;
     if (workbooks.length > 0) {
       return this.findTime(workbooks[index].createdAt).fromNow();
     }
-  }
+  };
 
   displayWorkbooks = () => {
     const { workbooks, _idToNameMappings } = this.state;
 
     return workbooks.map((workbook, index) => (
-      <Card
-        style={{ width: '100%', margin: 0 }}
+      <div
+        className="sharedResources__listItem"
+        style={{ width: "100%", margin: 0 }}
         key={workbook.createdAt}
         onClick={() => {
           this.setState({
-            selectedWorkbook: workbook,
+            selectedWorkbook: workbook
           });
         }}
       >
-        <Card.Content onClick={() => { this.setState({ workbook }); }}>
-          <Card.Header>{workbook.title}</Card.Header>
-          <Card.Meta style={{
-            marginLeft: '0.4rem', marginTop: '0.4rem', display: 'flex', flexDirection: 'row',
+        <div
+          onClick={() => {
+            this.setState({ workbook });
           }}
+        >
+          <div className="sharedResources__workbookTitle">{workbook.title}</div>
+          <div
+            style={{
+              marginTop: "0.8rem",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              color: "#A9A3A3"
+            }}
           >
-            <div>
-              {_idToNameMappings[workbook.userId]}
-            </div>
-            {' | '}
-            <div style={{ marginLeft: '0.4rem' }}>
-                created
-            </div>
-            <div style={{ marginLeft: '0.1rem' }}>
+            <div>{_idToNameMappings[workbook.userId]}</div>
+            <div style={{ marginLeft: "0.1rem" }}>
               {this.displayTime(index)}
             </div>
-          </Card.Meta>
-        </Card.Content>
-      </Card>
+          </div>
+        </div>
+      </div>
     ));
-  }
+  };
 
   search = (event, data) => {
     Tracker.autorun(() => {
       this.setState({
-        workbooks: WorkbooksIndex.search(data.value).fetch(),
+        workbooks: WorkbooksIndex.search(data.value).fetch()
       });
     });
-  }
+  };
 
   getId = () => {
     const { selectedWorkbook } = this.state;
-    if (!selectedWorkbook) { return; }
+    if (!selectedWorkbook) {
+      return;
+    }
 
-    if (selectedWorkbook.__originalId === undefined) { return selectedWorkbook._id; }
+    if (selectedWorkbook.__originalId === undefined) {
+      return selectedWorkbook._id;
+    }
     return selectedWorkbook.__originalId;
-  }
+  };
 
   render() {
     const {
-      loading, workbook, _idToNameMappings, selectedWorkbook,
+      loading,
+      workbook,
+      _idToNameMappings,
+      selectedWorkbook
     } = this.state;
     return (
       <div>
-
         <Dimmer inverted active={loading}>
           <Loader />
         </Dimmer>
         <Modal
           open={!!workbook}
           size="fullscreen"
-          style={{ transform: 'scale(0.7, 0.7)', marginTop: '10vh' }}
+          style={{ transform: "scale(0.7, 0.7)", marginTop: "10vh" }}
         >
-          <Modal.Header style={{ transformOrigin: 'left' }}>
+          <Modal.Header style={{ transformOrigin: "left" }}>
             Preview
-            <div style={{ float: 'right' }}>
-
-
-              <Link to={`/workbookeditor/${this.getId.bind(this)()}`}><Button>Open</Button></Link>
+            <div style={{ float: "right" }}>
+              <Link to={`/workbookeditor/${this.getId.bind(this)()}`}>
+                <Button>Open</Button>
+              </Link>
 
               {Meteor.userId() ? (
-                <Button onClick={() => {
-                  const confirmation = confirm('Are you sure you want to fork this lesson?');
+                <Button
+                  onClick={() => {
+                    const confirmation = confirm(
+                      "Are you sure you want to fork this lesson?"
+                    );
 
-                  if (!confirmation) { return; }
+                    if (!confirmation) {
+                      return;
+                    }
 
-                  Meteor.call('workbooks.insert', workbook.title, (err, _id) => {
-                    if (!Meteor.userId()) { return; }
+                    Meteor.call(
+                      "workbooks.insert",
+                      workbook.title,
+                      (err, _id) => {
+                        if (!Meteor.userId()) {
+                          return;
+                        }
 
-                    Meteor.call('workbooks.update', _id, workbook.slides);
-                    this.setState({ workbook: null });
-                    confirm('Lesson has been succesfully forked');
-                  });
-                }}
+                        Meteor.call("workbooks.update", _id, workbook.slides);
+                        this.setState({ workbook: null });
+                        confirm("Lesson has been succesfully forked");
+                      }
+                    );
+                  }}
                 >
                   <GoRepoForked />
-                Fork
+                  Fork
                 </Button>
               ) : null}
 
-              <Button onClick={() => { this.setState({ workbook: null }); }}>X</Button>
+              <Button
+                onClick={() => {
+                  this.setState({ workbook: null });
+                }}
+              >
+                X
+              </Button>
             </div>
           </Modal.Header>
           <Modal.Content>
             <WorkbookViewer _id={this.getId.bind(this)()} />
-            <h3>{`Author: ${selectedWorkbook ? _idToNameMappings[selectedWorkbook.userId] : null}`}</h3>
+            <h3>{`Author: ${
+              selectedWorkbook
+                ? _idToNameMappings[selectedWorkbook.userId]
+                : null
+            }`}</h3>
           </Modal.Content>
         </Modal>
-        <Input ref={(e) => { this.searchTag = e; }} onChange={this.search} label="search" />
-        <div style={{ width: '100%', height: '100%', marginTop: '1.2rem' }}>
+
+        <SearchBar />
+
+        {/* <div className="sharedResources__searchBoxContainer">
+          <input
+            ref={e => {
+              this.searchTag = e;
+            }}
+            onChange={this.search}
+            label="search"
+          />
+        </div> */}
+
+        <div style={{ width: "100%", height: "100%", marginTop: "1.2rem" }}>
           {this.displayWorkbooks()}
         </div>
       </div>
