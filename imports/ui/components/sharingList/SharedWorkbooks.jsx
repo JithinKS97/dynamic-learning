@@ -104,10 +104,10 @@ export default class SharedWorkbooks extends React.Component {
     ));
   };
 
-  search = (event, data) => {
+  search = searchTag => {
     Tracker.autorun(() => {
       this.setState({
-        workbooks: WorkbooksIndex.search(data.value).fetch()
+        workbooks: WorkbooksIndex.search(searchTag).fetch()
       });
     });
   };
@@ -198,17 +198,7 @@ export default class SharedWorkbooks extends React.Component {
           </Modal.Content>
         </Modal>
 
-        <SearchBar />
-
-        {/* <div className="sharedResources__searchBoxContainer">
-          <input
-            ref={e => {
-              this.searchTag = e;
-            }}
-            onChange={this.search}
-            label="search"
-          />
-        </div> */}
+        <SearchBar onChange={this.search} />
 
         <div style={{ width: "100%", height: "100%", marginTop: "1.2rem" }}>
           {this.displayWorkbooks()}
