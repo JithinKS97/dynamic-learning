@@ -1,12 +1,14 @@
-import React from "react";
-import { Modal, Button, Input, Dimmer, Loader, Card } from "semantic-ui-react";
-import { GoRepoForked } from "react-icons/go";
-import { Link } from "react-router-dom";
-import moment from "moment";
-import SearchBar from "./SearchBar";
+import React from 'react';
+import {
+  Modal, Button, Dimmer, Loader,
+} from 'semantic-ui-react';
+import { GoRepoForked } from 'react-icons/go';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
+import SearchBar from './SearchBar';
 // eslint-disable-next-line import/no-named-as-default
-import WorkbookViewer from "../workbook/WorkbookViewer";
-import { WorkbooksIndex } from "../../../api/workbooks";
+import WorkbookViewer from '../workbook/WorkbookViewer';
+import { WorkbooksIndex } from '../../../api/workbooks';
 
 export default class SharedWorkbooks extends React.Component {
   constructor(props) {
@@ -16,38 +18,38 @@ export default class SharedWorkbooks extends React.Component {
       workbooks: [],
       workbook: null,
       loading: true,
-      _idToNameMappings: {}
+      _idToNameMappings: {},
     };
     this.displayWorkbooks.bind(this);
   }
 
   componentDidMount() {
     this.workbooksTracker = Tracker.autorun(() => {
-      const workbooksHandle = Meteor.subscribe("workbooks.public");
+      const workbooksHandle = Meteor.subscribe('workbooks.public');
       const loading = !workbooksHandle.ready();
 
       this.setState(
         {
-          workbooks: WorkbooksIndex.search("").fetch(),
+          workbooks: WorkbooksIndex.search('').fetch(),
           selectedWorkbook: null,
-          loading
+          loading,
         },
         () => {
           const { workbooks } = this.state;
           Meteor.call(
-            "getUsernames",
+            'getUsernames',
             workbooks.map(workbook => workbook.userId),
-            (err, users) => {
+            (_err, users) => {
               const _idToNameMappings = {};
-              users.map(user => {
+              users.map((user) => {
                 _idToNameMappings[user.userId] = user.username;
               });
               this.setState({
-                _idToNameMappings
+                _idToNameMappings,
               });
-            }
+            },
           );
-        }
+        },
       );
     });
   }
@@ -58,7 +60,7 @@ export default class SharedWorkbooks extends React.Component {
 
   findTime = time => moment(time);
 
-  displayTime = index => {
+  displayTime = (index) => {
     const { workbooks } = this.state;
     if (workbooks.length > 0) {
       return this.findTime(workbooks[index].createdAt).fromNow();
@@ -71,11 +73,11 @@ export default class SharedWorkbooks extends React.Component {
     return workbooks.map((workbook, index) => (
       <div
         className="sharedResources__listItem"
-        style={{ width: "100%", margin: 0 }}
+        style={{ width: '100%', margin: 0 }}
         key={workbook.createdAt}
         onClick={() => {
           this.setState({
-            selectedWorkbook: workbook
+            selectedWorkbook: workbook,
           });
         }}
       >
@@ -84,18 +86,10 @@ export default class SharedWorkbooks extends React.Component {
             this.setState({ workbook });
           }}
         >
-          <div className="sharedResources__workbookTitle">{workbook.title}</div>
-          <div
-            style={{
-              marginTop: "0.8rem",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              color: "#A9A3A3"
-            }}
-          >
+          <div className="sharedResources__listItem-title">{workbook.title}</div>
+          <div className="sharedResources__listItem-detail">
             <div>{_idToNameMappings[workbook.userId]}</div>
-            <div style={{ marginLeft: "0.1rem" }}>
+            <div style={{ marginLeft: '0.1rem' }}>
               {this.displayTime(index)}
             </div>
           </div>
@@ -104,10 +98,10 @@ export default class SharedWorkbooks extends React.Component {
     ));
   };
 
-  search = searchTag => {
+  search = (searchTag) => {
     Tracker.autorun(() => {
       this.setState({
-        workbooks: WorkbooksIndex.search(searchTag).fetch()
+        workbooks: WorkbooksIndex.search(searchTag).fetch(),
       });
     });
   };
@@ -129,7 +123,7 @@ export default class SharedWorkbooks extends React.Component {
       loading,
       workbook,
       _idToNameMappings,
-      selectedWorkbook
+      selectedWorkbook,
     } = this.state;
     return (
       <div>
@@ -139,11 +133,11 @@ export default class SharedWorkbooks extends React.Component {
         <Modal
           open={!!workbook}
           size="fullscreen"
-          style={{ transform: "scale(0.7, 0.7)", marginTop: "10vh" }}
+          style={{ transform: 'scale(0.7, 0.7)', marginTop: '10vh' }}
         >
-          <Modal.Header style={{ transformOrigin: "left" }}>
+          <Modal.Header style={{ transformOrigin: 'left' }}>
             Preview
-            <div style={{ float: "right" }}>
+            <div style={{ float: 'right' }}>
               <Link to={`/workbookeditor/${this.getId.bind(this)()}`}>
                 <Button>Open</Button>
               </Link>
@@ -152,7 +146,7 @@ export default class SharedWorkbooks extends React.Component {
                 <Button
                   onClick={() => {
                     const confirmation = confirm(
-                      "Are you sure you want to fork this lesson?"
+                      'Are you sure you want to fork this lesson?',
                     );
 
                     if (!confirmation) {
@@ -160,17 +154,17 @@ export default class SharedWorkbooks extends React.Component {
                     }
 
                     Meteor.call(
-                      "workbooks.insert",
+                      'workbooks.insert',
                       workbook.title,
                       (err, _id) => {
                         if (!Meteor.userId()) {
                           return;
                         }
 
-                        Meteor.call("workbooks.update", _id, workbook.slides);
+                        Meteor.call('workbooks.update', _id, workbook.slides);
                         this.setState({ workbook: null });
-                        confirm("Lesson has been succesfully forked");
-                      }
+                        confirm('Lesson has been succesfully forked');
+                      },
                     );
                   }}
                 >
@@ -190,17 +184,17 @@ export default class SharedWorkbooks extends React.Component {
           </Modal.Header>
           <Modal.Content>
             <WorkbookViewer _id={this.getId.bind(this)()} />
-            <h3>{`Author: ${
-              selectedWorkbook
-                ? _idToNameMappings[selectedWorkbook.userId]
-                : null
-            }`}</h3>
+            <h3>
+              {`Author: ${
+                selectedWorkbook
+                  ? _idToNameMappings[selectedWorkbook.userId]
+                  : null
+              }`}
+            </h3>
           </Modal.Content>
         </Modal>
-
         <SearchBar onChange={this.search} />
-
-        <div style={{ width: "100%", height: "100%", marginTop: "1.2rem" }}>
+        <div style={{ width: '100%', height: '100%', marginTop: '1.2rem' }}>
           {this.displayWorkbooks()}
         </div>
       </div>

@@ -35,7 +35,7 @@
   outline: none;
 }
 
-.sharedResources__workbookTitle {
+.sharedResources__listItem-title {
   font-size: 1.5rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid #d3d3d3;
@@ -44,4 +44,12 @@
 .sharedResources__separatorLine {
   height: 0.2rem;
   background-color: #d3d3d3;
+}
+
+.sharedResources__listItem-detail {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #A9A3A3
 }
