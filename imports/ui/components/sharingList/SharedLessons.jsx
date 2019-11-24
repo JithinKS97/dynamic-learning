@@ -1,20 +1,23 @@
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { Tracker } from 'meteor/tracker';
 import {
-  List, Input, Dimmer, Loader,
+  List, Dimmer, Loader,
 } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
+import moment from 'moment';
+import SearchBar from './SearchBar';
 import { LessonsIndex } from '../../../api/lessons';
 
 export default class SharedLessons extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
       lessons: [],
       redirectToLesson: false,
       selectedLesson: null,
       loading: true,
+      _idToNameMappings: {},
     };
   }
 
@@ -23,11 +26,24 @@ export default class SharedLessons extends React.Component {
       this.lessonsHandle = Meteor.subscribe('lessons.public');
       const loading = !this.lessonsHandle.ready();
       const lessons = LessonsIndex.search('').fetch();
-
       if (!lessons) { return; }
       this.setState({
         lessons,
         loading,
+      }, () => {
+        Meteor.call(
+          'getUsernames',
+          lessons.map(workbook => workbook.userId),
+          (_err, users) => {
+            const _idToNameMappings = {};
+            users.map((user) => {
+              _idToNameMappings[user.userId] = user.username;
+            });
+            this.setState({
+              _idToNameMappings,
+            });
+          },
+        );
       });
     });
   }
@@ -36,10 +52,20 @@ export default class SharedLessons extends React.Component {
     this.lessonsTracker.stop();
   }
 
-  renderLessons = () => {
+  findTime = time => moment(time);
+
+  displayTime = (index) => {
     const { lessons } = this.state;
-    return lessons.map(lesson => (
-      <List.Item
+    if (lessons.length > 0) {
+      return this.findTime(lessons[index].createdAt).fromNow();
+    }
+  };
+
+  renderLessons = () => {
+    const { lessons, _idToNameMappings } = this.state;
+    return lessons.map((lesson, index) => (
+      <div
+        className="sharedResources__listItem"
         onClick={() => {
           this.setState({
             selectedLesson: lesson,
@@ -52,8 +78,14 @@ export default class SharedLessons extends React.Component {
         style={{ paddingLeft: '2.4rem' }}
         key={lesson.createdAt}
       >
-        {lesson.title}
-      </List.Item>
+        <div className="sharedResources__listItem-title">
+          {lesson.title}
+        </div>
+        <div className="sharedResources__listItem-detail">
+          <div>{_idToNameMappings[lesson.userId]}</div>
+          <div>{this.displayTime(index)}</div>
+        </div>
+      </div>
     ));
   }
 
@@ -65,10 +97,10 @@ export default class SharedLessons extends React.Component {
     return selectedLesson.__originalId;
   }
 
-  search = (event, data) => {
+  search = (searchTag) => {
     Tracker.autorun(() => {
       this.setState({
-        lessons: LessonsIndex.search(data.value).fetch(),
+        lessons: LessonsIndex.search(searchTag).fetch(),
       });
     });
   }
@@ -84,12 +116,10 @@ export default class SharedLessons extends React.Component {
         <Dimmer inverted active={loading}>
           <Loader />
         </Dimmer>
-        <Input ref={(e) => { this.searchTag = e; }} onChange={this.search} label="search" />
+        <SearchBar onChange={this.search} />
         <List
-
           selection
           verticalAlign="middle"
-          style={{ height: window.innerHeight - 150 }}
         >
           {this.renderLessons()}
         </List>

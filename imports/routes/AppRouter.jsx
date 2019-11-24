@@ -1,6 +1,5 @@
 import { Router, Route, Switch } from 'react-router-dom';
 import React from 'react';
-import { createBrowserHistory } from 'history';
 
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
@@ -17,10 +16,12 @@ import NotFound from '../ui/pages/NotFound';
 import Request from '../ui/pages/Request';
 import SandBox from '../ui/pages/SandBox';
 import Dashboard from '../ui/pages/Dashboard';
-import About from '../ui/pages/About'; 
+import About from '../ui/pages/About';
+import HelpMakeSimulations from '../ui/pages/HelpMakeSimulations';
 
-export const history = createBrowserHistory();
-const publicPages = ['/', '/signup', '/workbookeditor', '/login', '/explore'];
+import history from './history';
+
+const publicPages = ['/', '/signup', '/workbookeditor', '/login', '/explore', '/help-make-simulations'];
 const authenticatedPages = [
   '/dashboard/workbooks',
   '/dashboard/requests',
@@ -57,6 +58,7 @@ export const AppRouter = (
         <PublicRoute path="/workbookeditor" component={workbookeditorContainer} />
         <PublicRoute path="/signup" component={Signup} />
         <PublicRoute path="/request/:_id" component={Request} />
+        <PublicRoute path="/help-make-simulations" component={HelpMakeSimulations} />
         <PrivateRoute path="/sandbox" component={SandBox} />
         <PrivateRoute path="/dashboard/:option" component={Dashboard} />
         <Route path="*" component={NotFound} />

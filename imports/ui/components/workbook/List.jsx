@@ -8,7 +8,6 @@ import {
 import PropTypes from 'prop-types';
 
 const SortableItem = SortableElement(({
-  slide,
   slideNo,
   props,
   index,
@@ -26,12 +25,12 @@ const SortableItem = SortableElement(({
     </div>
 
     <div
-        className="ui button lessonplanleftbutton"
-        onClick={() => {
-          const confirmation = confirm('Are you sure you want to delete?');
-          if (confirmation === true) { props.deleteSlide(slideNo); }
-        }}
-      >
+      className="ui button lessonplanleftbutton"
+      onClick={() => {
+        const confirmation = confirm('Are you sure you want to delete?');
+        if (confirmation === true) { props.deleteSlide(slideNo); }
+      }}
+    >
       X
     </div>
 

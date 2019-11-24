@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import {
-  List, Dimmer, Loader, Card,
+  List,
 } from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { FaCode } from 'react-icons/fa';
 import { Requests } from '../../../api/requests';
 
 const RequestsList = (props) => {
@@ -25,7 +26,6 @@ const RequestsList = (props) => {
   }, [props.requests]);
 
   const findTime = time => moment(time);
-  const { loading } = props;
 
   const displayTime = (index) => {
     const { requests } = props;
@@ -46,42 +46,36 @@ const RequestsList = (props) => {
   const renderRequests = () => props.requests.map((request, index) => {
     if (request.requestTitle) {
       return (
-        <Card
+        <div
+          className="sharedResources__listItem"
           onClick={() => {
             changeRequestId(request._id);
           }}
           style={{ width: '100%', margin: 0 }}
           key={request.createdAt}
         >
-          <Card.Content>
-            <Card.Header>{request.requestTitle}</Card.Header>
-            <Card.Description style={{ marginLeft: '0.4rem' }}>{request.description}</Card.Description>
-            <Card.Meta style={{
-              marginTop: '0.4rem', display: 'flex', flexDirection: 'row', marginLeft: '0.4rem',
-            }}
+          <div>
+            <div className="sharedResources__listItem-title">{request.requestTitle}</div>
+            <div className="sharedResources__listItem-description">{request.description}</div>
+            <div
+              className="sharedResources__listItem-detail"
             >
-              <div>
-                {_idToNameMappings[request.userId]}
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div>
+                  {_idToNameMappings[request.userId]}
+                </div>
+                <div style={{ marginLeft: '4rem' }}>
+                  active
+                  {' '}
+                  {displayTime(index)}
+                </div>
               </div>
               <div>
-                |
-              </div>
-              <div>
-                last activity
-                {' '}
-                {displayTime(index)}
-              </div>
-              <div>
-                |
-              </div>
-              <div>
-                created
-                {' '}
                 {displayCreatedTime(index)}
               </div>
-            </Card.Meta>
-          </Card.Content>
-        </Card>
+            </div>
+          </div>
+        </div>
       );
     }
   });
@@ -97,12 +91,11 @@ const RequestsList = (props) => {
   }
 
   return (
-    <div>
-      <Dimmer inverted active={loading}>
-        <Loader />
-      </Dimmer>
+    <div style={{ padding: '4rem', paddingTop: '0' }}>
+      <div style={{ width: '2rem', margin: 'auto', marginTop: '2rem' }}>
+        <FaCode style={{ marginRight: '2rem' }} size="3rem" />
+      </div>
       <List
-        style={{ height: window.innerHeight - 150, marginTop: '2.4rem' }}
         selection
         verticalAlign="middle"
       >
@@ -123,7 +116,6 @@ const RequestsListContainer = withTracker(() => {
 })(RequestsList);
 
 RequestsList.propTypes = {
-  loading: PropTypes.bool.isRequired,
   requests: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
