@@ -2,6 +2,7 @@
 import React from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import RequestsList from '../components/sharingList/RequestsList';
+import history from '../../routes/history';
 
 
 const HelpMakeSimulations = () => (

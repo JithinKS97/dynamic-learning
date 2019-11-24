@@ -66,9 +66,8 @@ const RequestsList = (props) => {
                 </div>
                 <div style={{ marginLeft: '4rem' }}>
                   active
-                  {displayTime(index)}
                   {' '}
-                  ago
+                  {displayTime(index)}
                 </div>
               </div>
               <div>
