@@ -53,3 +53,36 @@
   justify-content: space-between;
   color: #A9A3A3
 }
+
+.sharedResources__listItem-description {
+  margin: 0.8rem 0;
+}
+
+.sharedResources__back-button {
+  position:absolute;
+  top:2rem;
+  left:2rem;
+  padding: 2rem 0.6rem;
+  background-color: lightgrey;
+  cursor:pointer;
+}
+
+.sharedResources__back-button:hover {
+  background-color:#e8e8e8;
+}
+
+.sharedResources__help-button {
+  color:darken(#1ed760, 10%);
+  position:absolute;
+  bottom:2.5rem;
+  right:2rem;
+  border: 2px solid darken(#1ed760, 10%);
+  padding:0.8rem;
+  cursor:pointer;
+  font-size:1rem;
+}
+
+.sharedResources__help-button:hover {
+  color:lighten(#1ed760, 10%);
+  border: 2px solid lighten(#1ed760, 10%);
+}

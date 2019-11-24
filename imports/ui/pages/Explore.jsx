@@ -1,10 +1,10 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
-import { Grid, Header, Button } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
+import { FaBook, FaChalkboardTeacher, FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { FaBook, FaChalkboardTeacher, FaCode } from 'react-icons/fa';
 import SharedLessons from '../components/sharingList/SharedLessons';
 import SharedWorkbooks from '../components/sharingList/SharedWorkbooks';
-import RequestsList from '../components/sharingList/RequestsList';
 
 export default class Explore extends React.Component {
   constructor(props) {
@@ -15,41 +15,73 @@ export default class Explore extends React.Component {
 
   render() {
     return (
-      <div style={{ padding: '1.6rem' }}>
-        <Link to="/">
-          <Button>Back</Button>
-        </Link>
-        <Grid style={{ marginTop: '0.8rem' }} columns={3} divided>
-          <Grid.Row style={{ height: '100vh', scrolling: 'no' }}>
-            <Grid.Column
-              style={{ backgroundColor: '#F0F0F0', padding: '1rem' }}
-            >
-              <Header as="h3">
-                <FaBook />
-                {' '}
-                  Workbooks
-              </Header>
-              <SharedWorkbooks />
-            </Grid.Column>
-            <Grid.Column style={{ backgroundColor: '#F0F0F0', padding: '1rem' }}>
-              <Header as="h3">
-                <FaChalkboardTeacher />
-                {' '}
-                  Lessons
-              </Header>
-              <SharedLessons />
-            </Grid.Column>
-            <Grid.Column>
-              <Header as="h3">
-                <FaCode />
-                {' '}
-                  Help make simulations
-              </Header>
-              <RequestsList />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <BackButton />
+        <HelpMakeSimulationsButton />
+        <TitleBar />
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          width: '100vw',
+        }}
+        >
+          <div
+            style={{
+              backgroundColor: '#F0F0F0', padding: '1rem', width: '25vw', height: '80vh',
+            }}
+          >
+            <Header as="h3">
+              <FaBook />
+              {' '}
+                    Workbooks
+            </Header>
+            <SharedWorkbooks />
+          </div>
+          <div style={{ backgroundColor: '#F0F0F0', padding: '1rem', width: '25vw' }}>
+            <Header as="h3">
+              <FaChalkboardTeacher />
+              {' '}
+                    Lessons
+            </Header>
+            <SharedLessons />
+          </div>
+          {/* <div>
+            <Header as="h3">
+              <FaCode />
+              {' '}
+                Help make simulations
+            </Header>
+            <RequestsList />
+          </div> */}
+        </div>
       </div>
     );
   }
 }
+
+const TitleBar = () => (
+  <div style={{ textAlign: 'center', height: '20vh' }}>
+    <img
+      className="login__logo"
+      src="/symbol.png"
+    />
+  </div>
+);
+
+const BackButton = () => (
+  <Link to="/">
+    <div className="sharedResources__back-button">
+      <FaArrowLeft color="black" size="1.2rem" />
+    </div>
+  </Link>
+);
+
+// eslint-disable-next-line react/prop-types
+const HelpMakeSimulationsButton = () => (
+  <Link to="/help-make-simulations">
+    <div className="sharedResources__help-button">
+      Help make simulations
+    </div>
+  </Link>
+);

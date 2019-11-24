@@ -5,9 +5,9 @@ import {
   List, Dimmer, Loader,
 } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
+import moment from 'moment';
 import SearchBar from './SearchBar';
 import { LessonsIndex } from '../../../api/lessons';
-import moment from 'moment';
 
 export default class SharedLessons extends React.Component {
   constructor(props) {
@@ -120,7 +120,6 @@ export default class SharedLessons extends React.Component {
         <List
           selection
           verticalAlign="middle"
-          style={{ height: window.innerHeight - 150 }}
         >
           {this.renderLessons()}
         </List>
