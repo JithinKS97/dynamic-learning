@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import {
-  List, Dimmer, Loader,
+  List,
 } from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { FaCode } from 'react-icons/fa';
 import { Requests } from '../../../api/requests';
 
 const RequestsList = (props) => {
@@ -25,7 +26,6 @@ const RequestsList = (props) => {
   }, [props.requests]);
 
   const findTime = time => moment(time);
-  const { loading } = props;
 
   const displayTime = (index) => {
     const { requests } = props;
@@ -92,10 +92,10 @@ const RequestsList = (props) => {
   }
 
   return (
-    <div style={{ padding: '4rem', paddingTop: '4rem' }}>
-      <Dimmer inverted active={loading}>
-        <Loader />
-      </Dimmer>
+    <div style={{ padding: '4rem', paddingTop: '0' }}>
+      <div style={{ width: '2rem', margin: 'auto', marginTop: '2rem' }}>
+        <FaCode style={{ marginRight: '2rem' }} size="3rem" />
+      </div>
       <List
         selection
         verticalAlign="middle"
@@ -117,7 +117,6 @@ const RequestsListContainer = withTracker(() => {
 })(RequestsList);
 
 RequestsList.propTypes = {
-  loading: PropTypes.bool.isRequired,
   requests: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
