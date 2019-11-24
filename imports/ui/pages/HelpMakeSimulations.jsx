@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 import RequestsList from '../components/sharingList/RequestsList';
+
 
 const HelpMakeSimulations = () => (
   <div style={{ height: '100vh' }}>
@@ -23,11 +23,9 @@ const HelpMakeSimulations = () => (
 );
 
 const BackButton = () => (
-  <Link to="/explore">
-    <div className="sharedResources__back-button">
-      <FaArrowLeft color="black" size="1.2rem" />
-    </div>
-  </Link>
+  <div onClick={() => history.goBack()} className="sharedResources__back-button">
+    <FaArrowLeft color="black" size="1.2rem" />
+  </div>
 );
 
 export default HelpMakeSimulations;

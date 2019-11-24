@@ -28,6 +28,7 @@ import CommentForm from '../components/comments/CommentForm';
 import CommentsList from '../components/comments/CommentsList';
 import SimTiles from '../components/discussionForum/SimTiles';
 import 'semantic-ui-css/semantic.min.css';
+import history from '../../routes/history';
 
 
 export class Request extends React.Component {
@@ -709,13 +710,7 @@ export class Request extends React.Component {
     } = this.props;
     return (
       <Menu style={{ margin: 0 }}>
-        <Menu.Item
-          onClick={() => {
-            this.setState({
-              backPressed: true,
-            });
-          }}
-        >
+        <Menu.Item onClick={() => history.goBack()}>
           Back
         </Menu.Item>
 
@@ -728,7 +723,7 @@ export class Request extends React.Component {
 
               if (confirmation && isOwner) {
                 Meteor.call('requests.reset', _id);
-                history.back();
+                history.goBack();
               }
             }}
           >

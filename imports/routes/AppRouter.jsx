@@ -1,6 +1,5 @@
 import { Router, Route, Switch } from 'react-router-dom';
 import React from 'react';
-import { createBrowserHistory } from 'history';
 
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
@@ -20,7 +19,8 @@ import Dashboard from '../ui/pages/Dashboard';
 import About from '../ui/pages/About';
 import HelpMakeSimulations from '../ui/pages/HelpMakeSimulations';
 
-export const history = createBrowserHistory();
+import history from './history';
+
 const publicPages = ['/', '/signup', '/workbookeditor', '/login', '/explore', '/help-make-simulations'];
 const authenticatedPages = [
   '/dashboard/workbooks',

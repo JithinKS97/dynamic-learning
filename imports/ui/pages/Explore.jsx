@@ -5,6 +5,7 @@ import { FaBook, FaChalkboardTeacher, FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import SharedLessons from '../components/sharingList/SharedLessons';
 import SharedWorkbooks from '../components/sharingList/SharedWorkbooks';
+import history from '../../routes/history';
 
 export default class Explore extends React.Component {
   constructor(props) {
@@ -34,7 +35,7 @@ export default class Explore extends React.Component {
             <Header as="h3">
               <FaBook />
               {' '}
-                    Workbooks
+              Workbooks
             </Header>
             <SharedWorkbooks />
           </div>
@@ -42,18 +43,10 @@ export default class Explore extends React.Component {
             <Header as="h3">
               <FaChalkboardTeacher />
               {' '}
-                    Lessons
+              Lessons
             </Header>
             <SharedLessons />
           </div>
-          {/* <div>
-            <Header as="h3">
-              <FaCode />
-              {' '}
-                Help make simulations
-            </Header>
-            <RequestsList />
-          </div> */}
         </div>
       </div>
     );
@@ -70,11 +63,9 @@ const TitleBar = () => (
 );
 
 const BackButton = () => (
-  <Link to="/">
-    <div className="sharedResources__back-button">
-      <FaArrowLeft color="black" size="1.2rem" />
-    </div>
-  </Link>
+  <div onClick={() => history.goBack()} className="sharedResources__back-button">
+    <FaArrowLeft color="black" size="1.2rem" />
+  </div>
 );
 
 // eslint-disable-next-line react/prop-types
