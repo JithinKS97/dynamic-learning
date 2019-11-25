@@ -64,7 +64,7 @@ const TitleBar = () => (
 
 const BackButton = () => (
   <div onClick={() => history.goBack()} className="sharedResources__back-button">
-    <FaArrowLeft color="black" size="1.2rem" />
+    <FaArrowLeft color="3e3e3e" size="1.2rem" />
   </div>
 );
 
