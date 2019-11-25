@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
+
 import {
   Button, Modal, Form, Dimmer, Loader,
 } from 'semantic-ui-react';
-import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
 import 'semantic-ui-css/semantic.min.css';
 import { Tracker } from 'meteor/tracker';
-import { FaTrash, FaEdit } from 'react-icons/fa';
+import {
+  FaTrash, FaEdit, FaFile, FaFolder,
+} from 'react-icons/fa';
 import { Redirect } from 'react-router-dom';
 import { Lessons } from '../../../api/lessons';
 
@@ -192,6 +195,16 @@ export default class Tree extends Component {
           <SortableTree
             theme={FileExplorerTheme}
             generateNodeProps={({ node }) => ({
+              title: (
+                <div style={{
+                  display: 'flex', flexDirection: 'row', marginLeft: '1rem', marginTop: '0.5rem',
+                }}
+                >
+                  {node.isFile ? <FaFile /> : <FaFolder />}
+                  <div style={{ marginLeft: '1rem' }}>{node.title}</div>
+                </div>
+              ),
+
               buttons: [
                 <button
                   onClick={() => {

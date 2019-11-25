@@ -19,12 +19,14 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 import { FaTrash, FaEdit, FaPencilAlt } from 'react-icons/fa';
 import { MdSettings } from 'react-icons/md';
-import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
 import TagsInput from 'react-tagsinput';
 
 import Classes from '../../../api/classes';
 import { Workbooks } from '../../../api/workbooks';
 import WorkbookViewer from '../workbook/WorkbookViewer';
+
+import { FaFile, FaFolder } from "react-icons/fa";
 
 /*
   This component displays the workbook files in nested tree structure.
@@ -455,6 +457,7 @@ class WorkbooksDirectories extends Component {
 
         <div style={{ height: 400, padding: '1.6rem' }}>
           <SortableTree
+            theme={FileExplorerTheme}
             onVisibilityToggle={({ node: theNode, expanded }) => {
               Meteor.call('workbooks.folder.visibilityChange', theNode._id, expanded);
             }}
@@ -472,6 +475,12 @@ class WorkbooksDirectories extends Component {
               }
             }}
             generateNodeProps={({ node: theNode }) => ({
+              title: (
+                <div style={{ display:'flex', flexDirection:'row', marginLeft:'1rem', marginTop:'0.5rem' }}>
+                  {theNode.isFile?<FaFile/>:<FaFolder/>}
+                  <div style={{ marginLeft:'1rem' }}>{theNode.title}</div>
+                </div>
+              ),
               buttons: [
                 <button
                   onClick={() => {
