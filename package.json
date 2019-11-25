@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "meteor test --once --full-app --driver-package meteortesting:mocha",
+    "test": "TEST_BROWSER_DRIVER=puppeteer meteor test --once --driver-package meteortesting:mocha",
     "full-test": "TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "lint": "eslint .",
     "coverage:watch": "BABEL_ENV=COVERAGE COVERAGE=1 COVERAGE_VERBOSE=1 COVERAGE_APP_FOLDER=$PWD/ TEST_WATCH=1 meteor test --driver-package meteortesting:mocha"
@@ -51,7 +51,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-meteor": "^5.1.0",
     "eslint-plugin-react": "^7.14.2",
-    "mocha": "^6.1.4"
+    "mocha": "^6.1.4",
+    "puppeteer": "^1.20.0"
   },
   "engines": {
     "node": "8.11.1"
