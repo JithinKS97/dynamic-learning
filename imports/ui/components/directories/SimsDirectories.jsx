@@ -2,17 +2,18 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaFile, FaFolder } from 'react-icons/fa';
 import { MdSettings } from 'react-icons/md';
 import {
   Button, Modal, Form, Dimmer, Loader,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { Sims } from '../../../api/sims';
 import Upload from '../Upload';
+
 
 class SimsDirectories extends React.Component {
   constructor(props) {
@@ -172,6 +173,16 @@ class SimsDirectories extends React.Component {
 
                 getNode(node);
               },
+
+              title: (
+                <div style={{
+                  display: 'flex', flexDirection: 'row', marginLeft: '1rem', marginTop: '0.5rem',
+                }}
+                >
+                  {node.isFile ? <FaFile /> : <FaFolder />}
+                  <div style={{ marginLeft: '1rem' }}>{node.title}</div>
+                </div>
+              ),
 
               buttons: [
                 <button
