@@ -92,8 +92,8 @@ const RequestsList = (props) => {
 
   return (
     <div style={{ padding: '4rem', paddingTop: '0' }}>
-      <div style={{ width: '2rem', margin: 'auto', marginTop: '2rem' }}>
-        <FaCode style={{ marginRight: '2rem' }} size="3rem" />
+      <div style={{ width: '2rem', margin: 'auto' }}>
+        <FaCode color="#3e3e3e" style={{ marginRight: '2rem' }} size="3rem" />
       </div>
       <List
         selection
