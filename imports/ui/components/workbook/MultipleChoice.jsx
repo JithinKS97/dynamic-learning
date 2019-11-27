@@ -288,17 +288,7 @@ export default class MultipleChoice extends React.Component {
                     size="18"
                   />
                 </div>
-
-                <div
-                  style={{
-                    marginLeft: '0.5rem',
-                    display: 'absolute',
-                    bottom: 0,
-                    right: 0
-                  }}
-                >
-                  <MdNetworkCell />
-                </div>
+                <MdNetworkCell style={{ position: 'absolute', bottom: 0, right: 0 }} />
               </div>
             </div>
           )}
