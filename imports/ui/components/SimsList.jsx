@@ -163,10 +163,9 @@ export default class SimsList extends React.Component {
                     {...iframe}
                     ref={(e) => { this.simsRefArray[index] = e; }}
                   />
-                  <div>
+                  <div style={{ marginLeft: '0.5rem' }}>
                     <a
                       style={{
-                        marginLeft: '0.5rem',
                         display: isPreview ? 'block' : 'none',
                       }}
                       className="link-to-code"
@@ -181,11 +180,10 @@ export default class SimsList extends React.Component {
                   <div
                     className="sim-nav"
                     style={{
-                      marginLeft: '0.5rem',
                       visibility: !isPreview ? 'visible' : 'hidden',
                     }}
                   >
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', marginLeft:'0.5rem'}}>
                       <FaTimes
                         className="sim-delete"
                         onClick={() => {
@@ -220,15 +218,9 @@ export default class SimsList extends React.Component {
                       />
                     </div>
 
-                    <div
-                      style={{
-                        float: 'right',
-                        marginLeft: '0.6rem',
-                        marginBottom: '0.1rem',
-                      }}
-                    >
-                      <MdNetworkCell />
-                    </div>
+
+                    <MdNetworkCell style={{ position:'absolute', bottom:0, right:0 }}/>
+
                   </div>
                 </div>
               </Rnd>

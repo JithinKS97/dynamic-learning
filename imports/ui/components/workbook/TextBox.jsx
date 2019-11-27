@@ -199,9 +199,7 @@ export default class TextBox extends React.Component {
                   />
                 </div>
 
-                <div style={{ marginLeft: '0.6rem', float: 'right' }}>
-                  <MdNetworkCell />
-                </div>
+                <MdNetworkCell style={{ position: 'absolute', bottom: 0, right: 0 }} />
               </div>
             </div>
           )}
