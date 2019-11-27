@@ -26,6 +26,7 @@ import { generateSrc } from '../../functions/index.js';
 import Profile from '../components/Profile/Profile';
 import Classes from '../components/classes/Classes';
 import Assessments from '../components/assessments/Assessments';
+import HeaderWithLogo from '../components/HeaderWithLogo';
 
 /*
     This is the Component which renders the dashboard of the application.
@@ -138,7 +139,7 @@ export default class Dashboard extends React.Component {
       case 'workbooks':
         return (
           <div>
-            <Header>Manage Workbooks</Header>
+            <HeaderWithLogo title="Work Books" />
             <Tab panes={panes} />
           </div>
         );
@@ -146,7 +147,7 @@ export default class Dashboard extends React.Component {
       case 'requests':
         return (
           <div>
-            <Header>Requests</Header>
+            <HeaderWithLogo title="Discussion forums" />
             <RequestsList />
           </div>
         );
@@ -154,7 +155,7 @@ export default class Dashboard extends React.Component {
       case 'uploadsim':
         return (
           <div>
-            <Header>Manage Simulations</Header>
+            <HeaderWithLogo title="Manage Simulations" />
             <SimsDirectories
               height={window.innerHeight - 150}
               getNode={this.getNode}
@@ -165,28 +166,28 @@ export default class Dashboard extends React.Component {
       case 'lessons':
         return (
           <div>
-            <Header>Manage Lessons</Header>
+            <HeaderWithLogo title="Manage Lessons" />
             <LessonsDirectories />
           </div>
         );
       case 'watchlesson':
         return (
           <div>
-            <Header>Dynamic Lessons</Header>
+            <HeaderWithLogo title="Watch Lessons" />
             <SharedLessons />
           </div>
         );
       case 'profile':
         return (
           <div>
-            <Header>User Profile</Header>
+            <HeaderWithLogo title="Profile" />
             <Profile />
           </div>
         );
       case 'classes':
         return (
           <div>
-            <Header>Classes</Header>
+            <HeaderWithLogo title="Classes" />
             <Classes />
           </div>
         );
