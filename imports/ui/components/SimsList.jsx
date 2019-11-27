@@ -222,9 +222,10 @@ export default class SimsList extends React.Component {
 
                     <div
                       style={{
-                        float: 'right',
-                        marginLeft: '0.6rem',
-                        marginBottom: '0.1rem',
+                        marginLeft: '0.5rem',
+                        display:'absolute',
+                        bottom:0,
+                        right:0
                       }}
                     >
                       <MdNetworkCell />
