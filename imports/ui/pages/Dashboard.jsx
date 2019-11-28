@@ -2,7 +2,6 @@ import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
 import {
   Tab,
-  Grid,
   Button,
   Modal,
   Checkbox,
@@ -114,7 +113,7 @@ export default class Dashboard extends React.Component {
       {
         menuItem: 'My workbooks',
         render: () => (
-          <Tab.Pane style={{ height: `${window.innerHeight - 150}px` }}>
+          <Tab.Pane style={{ height: '70vh', backgroundColor: '#f8f8f8' }}>
             {' '}
             <WorkbooksDirectories />
           </Tab.Pane>
@@ -123,8 +122,8 @@ export default class Dashboard extends React.Component {
       {
         menuItem: 'Shared workbooks',
         render: () => (
-          <Tab.Pane style={{ height: `${window.innerHeight - 150}px` }}>
-            <SharedWorkbooks />
+          <Tab.Pane style={{ height: '70vh', backgroundColor: '#f8f8f8' }}>
+            <SharedWorkbooks height="70vh" />
           </Tab.Pane>
         ),
       },
@@ -148,7 +147,9 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Discussion forums" />
-            <RequestsList />
+            <div style={{ backgroundColor: '#f8f8f8', height: '75vh' }}>
+              <RequestsList />
+            </div>
           </div>
         );
 
@@ -157,7 +158,7 @@ export default class Dashboard extends React.Component {
           <div>
             <HeaderWithLogo title="Manage Simulations" />
             <SimsDirectories
-              height={window.innerHeight - 150}
+              height="75vh"
               getNode={this.getNode}
               isPreview={false}
             />
@@ -174,7 +175,9 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Watch Lessons" />
-            <SharedLessons />
+            <div style={{ height: '75vh', backgroundColor: '#f8f8f8', padding: '2rem' }}>
+              <SharedLessons />
+            </div>
           </div>
         );
       case 'profile':
@@ -326,25 +329,24 @@ export default class Dashboard extends React.Component {
             </Modal.Description>
           </Modal.Content>
         </Modal>
-
-        <Grid columns={3} divided>
-          <Grid.Row>
-            <Grid.Column width={3} style={{ margin: '1.6rem' }}>
-              <Button
-                style={{ marginBottom: '0.8rem' }}
-                onClick={() => {
-                  Accounts.logout();
-                }}
-              >
-                Log out
-              </Button>
-              <SideBar />
-            </Grid.Column>
-            <Grid.Column width={10} style={{ margin: '1.6rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', width: '100vw' }}>
+          <div style={{ width: '20vw', padding: '2rem' }}>
+            <Button
+              style={{ marginBottom: '0.8rem' }}
+              onClick={() => {
+                Accounts.logout();
+              }}
+            >
+              Log out
+            </Button>
+            <SideBar />
+          </div>
+          <div style={{ width: '80vw' }}>
+            <div style={{ width: '85%', margin: 'auto' }}>
               {this.renderOption()}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

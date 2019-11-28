@@ -191,7 +191,7 @@ export default class Tree extends Component {
           Create a folder
         </Button>
 
-        <div style={{ height: window.innerHeight - 150, padding: '1.6rem' }}>
+        <div style={{ height: '70vh', backgroundColor: '#f8f8f8', padding: '1.6rem' }}>
           <SortableTree
             theme={FileExplorerTheme}
             generateNodeProps={({ node }) => ({
