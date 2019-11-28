@@ -27,3 +27,17 @@
     background-color: #efefef;
 }
 
+.dashboard__folderfile-options__main {
+    background-color:$dark-primary;
+    padding: 1rem;
+}
+
+.dashboard__folderfile-options__icon {
+    color:white;
+    cursor: pointer;
+}
+
+.dashboard__folderfile-options__icon:hover {
+    color:$primary;
+}
+

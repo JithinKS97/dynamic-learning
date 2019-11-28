@@ -25,25 +25,14 @@ import { generateSrc } from '../../functions/index.js';
 import Profile from '../components/Profile/Profile';
 import Classes from '../components/classes/Classes';
 import Assessments from '../components/assessments/Assessments';
-import HeaderWithLogo from '../components/HeaderWithLogo';
+import HeaderWithLogo from '../components/dashboard/HeaderWithLogo';
+import FolderFileOptions from '../components/dashboard/FolderFileOptions';
 
 /*
     This is the Component which renders the dashboard of the application.
  */
 
 export default class Dashboard extends React.Component {
-  /*
-    node holds the value of the currently selected sim, modelOpen
-    is used to set the open status of the model
-    which displays the sim, isPublic holds the value in the checkbox
-    which decides whether the simuation is
-    shared with the other users, editable is turned active when
-    the title is editable.
-
-    Title holds the title of the selected simulation and tags holds
-    the search tags of the selected simulation.
-  */
-
   constructor(props) {
     super(props);
 
@@ -53,6 +42,7 @@ export default class Dashboard extends React.Component {
       editable: false,
       title: '',
       tags: [],
+      wbActiveIndex: 0,
     };
 
     this.renderOption.bind(this);
@@ -60,11 +50,6 @@ export default class Dashboard extends React.Component {
 
   componentDidMount() {
     this.simsTracker = Tracker.autorun(() => {
-    /* This code is for ensuring that when title gets updated,
-        then new data is fetched from the database
-        and set to state so that the new title value is rendered after its update.
-    */
-
       const { node } = this.state;
       if (node) {
         const sim = Sims.findOne({ _id: node._id });
@@ -80,14 +65,6 @@ export default class Dashboard extends React.Component {
   }
 
   getNode = (node) => {
-  /* This function is executed in the SimsDirectories component
-      (See the component, this function is passed as a prop to it)
-      whenever a sim node is selected, the selected node is set accepted as
-      the argument and set to state.
-      The latest title, sharing option and the tags data are
-      fetched from the database and set to the state.
-  */
-
     this.setState(
       {
         node,
@@ -104,6 +81,14 @@ export default class Dashboard extends React.Component {
     );
   }
 
+  addWB = () => {
+    this.wbDirRef.handleOpen();
+  }
+
+  addWBFolder = () => {
+    this.wbDirRef.handle2Open();
+  }
+
   renderOption = () => {
     /*  Panes is an array which holds the content to display under each tab.
         The first one is the Workbook directories and the second one is shared workbooks list.
@@ -115,7 +100,7 @@ export default class Dashboard extends React.Component {
         render: () => (
           <Tab.Pane style={{ height: '70vh', backgroundColor: '#f8f8f8' }}>
             {' '}
-            <WorkbooksDirectories />
+            <WorkbooksDirectories ref={(e) => { this.wbDirRef = e; }} />
           </Tab.Pane>
         ),
       },
@@ -131,6 +116,7 @@ export default class Dashboard extends React.Component {
 
     // eslint-disable-next-line react/prop-types
     const { match: { params: { option } } } = this.props;
+    const { wbActiveIndex } = this.state;
 
     /* The components are rendered depending upon the selection in the menu */
 
@@ -139,7 +125,21 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Work Books" />
-            <Tab panes={panes} />
+            <Tab
+              onTabChange={(e, d) => {
+                this.setState({
+                  wbActiveIndex: d.activeIndex,
+                });
+              }}
+              ref={(e) => { this.tabRef = e; }}
+              panes={panes}
+            />
+            {wbActiveIndex === 0 ? (
+              <FolderFileOptions
+                handleFolderAddPress={this.addWBFolder}
+                handleFileAddPress={this.addWB}
+              />
+            ) : null}
           </div>
         );
 

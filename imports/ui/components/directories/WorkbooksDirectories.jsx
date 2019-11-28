@@ -35,7 +35,8 @@ import { FaFile, FaFolder } from "react-icons/fa";
   along with the workbooks in all of the nested directories
   and the main directory.
 */
-class WorkbooksDirectories extends Component {
+
+export default class WorkbooksDirectories extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +54,8 @@ class WorkbooksDirectories extends Component {
       tempTitle: '',
       tempFolderTitle: '',
       selectedFolderId:'',
+      treeData:[],
+      showFileFolderMenu: true
     };
   }
 
@@ -61,11 +64,28 @@ class WorkbooksDirectories extends Component {
     Meteor.subscribe('classes');
 
     Tracker.autorun(() => {
-      if (Meteor.user()) {
-        // this.setState({
-        //   user: Meteor.user().username,
-        // });
-      }
+
+      const workbooksHandle = Meteor.subscribe('workbooks');
+      const loading = !workbooksHandle.ready();
+      const flatData = Workbooks.find({ userId: Meteor.userId() }).fetch();
+      const workbooksExists = !loading && !!flatData;
+    
+      const getKey = node => node._id;
+      const getParentKey = node => node.parent_id;
+      const rootKey = '0';
+    
+      const treeData = getTreeFromFlatData({
+        flatData,
+        getKey,
+        getParentKey,
+        rootKey,
+      });
+
+      this.setState({
+        workbooksExists,
+        treeData
+      })
+
       if (Meteor.user() && Meteor.user().classes) {
         this.setState({
           classes: Meteor.user().classes,
@@ -170,9 +190,10 @@ class WorkbooksDirectories extends Component {
       classmodal,
       addToClassId,
       classes,
+      treeData,
+      workbooksExists
     } = this.state;
-    // eslint-disable-next-line react/prop-types
-    const { workbooksExists, treeData } = this.props;
+
     const canDrop = ({ node: theNode, nextParent }) => {
       /* To prevent a file to be added as a child of a file
           and to prevent a directory to be added as a child of a file.
@@ -251,7 +272,6 @@ class WorkbooksDirectories extends Component {
           <Loader />
         </Dimmer>
         <Modal
-          trigger={<Button onClick={this.handleOpen}>Create new workbook</Button>}
           open={modalOpen}
           onClose={this.handleClose}
           size="tiny"
@@ -376,7 +396,6 @@ class WorkbooksDirectories extends Component {
           </Modal.Content>
         </Modal>
         <Modal
-          trigger={<Button onClick={this.handle2Open}>Create a folder</Button>}
           open={modal2Open}
           onClose={this.handle2Close}
           size="tiny"
@@ -401,8 +420,6 @@ class WorkbooksDirectories extends Component {
             </Modal.Description>
           </Modal.Content> 
         </Modal>
-
-
         <Modal open={this.state.folderNameModal}
         onClose={this.folderNameModalClose}
         size="tiny">
@@ -438,8 +455,6 @@ class WorkbooksDirectories extends Component {
                   }}
                    placeholder="Name" />
                    <br></br>
-                
-                
                 <Button onClick={() => {
               Meteor.call('workbooks.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value)
               this.setState({
@@ -448,8 +463,6 @@ class WorkbooksDirectories extends Component {
               })
             }}>Rename</Button>
           
-            
-            
             </Modal.Description>
         
             </Modal.Content>
@@ -485,7 +498,6 @@ class WorkbooksDirectories extends Component {
                 <button
                   onClick={() => {
                     this.setState({
-
                       selectedWorkbookId: theNode._id,
                     }, () => {
                       this.setState({
@@ -616,27 +628,3 @@ class WorkbooksDirectories extends Component {
     );
   }
 }
-
-export default withTracker(() => {
-  const workbooksHandle = Meteor.subscribe('workbooks');
-  const loading = !workbooksHandle.ready();
-  const flatData = Workbooks.find({ userId: Meteor.userId() }).fetch();
-  const workbooksExists = !loading && !!flatData;
-
-  const getKey = node => node._id;
-  const getParentKey = node => node.parent_id;
-  const rootKey = '0';
-
-  const treeData = getTreeFromFlatData({
-    flatData,
-    getKey,
-    getParentKey,
-    rootKey,
-  });
-
-
-  return {
-    workbooksExists,
-    treeData,
-  };
-})(WorkbooksDirectories);
