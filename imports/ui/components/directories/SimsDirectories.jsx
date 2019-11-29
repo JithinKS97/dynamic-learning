@@ -117,11 +117,11 @@ export default class SimsDirectories extends React.Component {
     };
 
     const {
-      simsExists, treeData, getNode,
+      simsExists, treeData,
     } = this.state;
     const { modalOpen } = this.state;
     // eslint-disable-next-line react/prop-types
-    const { height } = this.props;
+    const { height, getNode } = this.props;
 
     return (
       <div>
@@ -196,7 +196,6 @@ export default class SimsDirectories extends React.Component {
             generateNodeProps={({ node }) => ({
               onClick: () => {
                 if (!node.isFile) return;
-
                 getNode(node);
               },
 

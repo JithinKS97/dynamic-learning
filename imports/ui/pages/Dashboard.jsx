@@ -28,10 +28,6 @@ import Assessments from '../components/assessments/Assessments';
 import HeaderWithLogo from '../components/dashboard/HeaderWithLogo';
 import FolderFileOptions from '../components/dashboard/FolderFileOptions';
 
-/*
-    This is the Component which renders the dashboard of the application.
- */
-
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -44,8 +40,6 @@ export default class Dashboard extends React.Component {
       tags: [],
       wbActiveIndex: 0,
     };
-
-    this.renderOption.bind(this);
   }
 
   componentDidMount() {
@@ -105,17 +99,12 @@ export default class Dashboard extends React.Component {
     this.lessonsDirRef.openModalToCreate('folder');
   }
 
-  renderOption = () => {
-    /*  Panes is an array which holds the content to display under each tab.
-        The first one is the Workbook directories and the second one is shared workbooks list.
-    */
-
+  renderCurrentlySelectedOption = () => {
     const panes = [
       {
         menuItem: 'My workbooks',
         render: () => (
           <Tab.Pane style={{ height: '70vh', backgroundColor: '#f8f8f8' }}>
-            {' '}
             <WorkbooksDirectories ref={(e) => { this.wbDirRef = e; }} />
           </Tab.Pane>
         ),
@@ -133,8 +122,6 @@ export default class Dashboard extends React.Component {
     // eslint-disable-next-line react/prop-types
     const { match: { params: { option } } } = this.props;
     const { wbActiveIndex } = this.state;
-
-    /* The components are rendered depending upon the selection in the menu */
 
     switch (option) {
       case 'workbooks':
@@ -369,7 +356,7 @@ export default class Dashboard extends React.Component {
           </div>
           <div style={{ width: '80vw' }}>
             <div style={{ width: '85%', margin: 'auto' }}>
-              {this.renderOption()}
+              {this.renderCurrentlySelectedOption()}
             </div>
           </div>
         </div>
