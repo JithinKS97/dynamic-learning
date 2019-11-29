@@ -193,6 +193,8 @@ export default class WorkbooksDirectories extends Component {
       workbooksExists
     } = this.state;
 
+    const { height } = this.props;
+
     const canDrop = ({ node: theNode, nextParent }) => {
       /* To prevent a file to be added as a child of a file
           and to prevent a directory to be added as a child of a file.
@@ -371,7 +373,8 @@ export default class WorkbooksDirectories extends Component {
                   () => this.openClassModal(selectedWorkbookId, title)
                   }
                 >
-                Manage classes
+                Manage clas
+                ses
                 </Button>
               ) : null}
               <br />
@@ -467,7 +470,7 @@ export default class WorkbooksDirectories extends Component {
             </Modal.Content>
         </Modal>
 
-        <div style={{ height: 400, padding: '1.6rem' }}>
+        <div style={{ height, padding: '1.6rem' }}>
           <SortableTree
             theme={FileExplorerTheme}
             onVisibilityToggle={({ node: theNode, expanded }) => {

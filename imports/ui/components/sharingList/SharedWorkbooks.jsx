@@ -193,8 +193,22 @@ export default class SharedWorkbooks extends React.Component {
             </h3>
           </Modal.Content>
         </Modal>
-        <SearchBar onChange={this.search} />
-        <div style={{ width: '100%', height: '100%', marginTop: '1.2rem' }}>
+        <div style={{ 
+          position: 'sticky',
+          top: 0,
+          backgroundColor: '#f8f8f8',
+          padding: '1rem',
+        }}
+        >
+          <SearchBar onChange={this.search} />
+        </div>
+        <div style={{
+          width: '100%',
+          height: '100%',
+          marginTop: '1.2rem',
+          padding: '0 5rem',
+        }}
+        >
           {this.displayWorkbooks()}
         </div>
       </div>

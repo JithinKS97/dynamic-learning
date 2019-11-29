@@ -105,14 +105,14 @@ export default class Dashboard extends React.Component {
         menuItem: 'My workbooks',
         render: () => (
           <Tab.Pane style={{ height: '70vh', backgroundColor: '#f8f8f8' }}>
-            <WorkbooksDirectories ref={(e) => { this.wbDirRef = e; }} />
+            <WorkbooksDirectories height="70vh" ref={(e) => { this.wbDirRef = e; }} />
           </Tab.Pane>
         ),
       },
       {
         menuItem: 'Shared workbooks',
         render: () => (
-          <Tab.Pane style={{ height: '70vh', backgroundColor: '#f8f8f8' }}>
+          <Tab.Pane style={{ height: '70vh', overflow: 'auto', backgroundColor: '#f8f8f8' }}>
             <SharedWorkbooks height="70vh" />
           </Tab.Pane>
         ),
