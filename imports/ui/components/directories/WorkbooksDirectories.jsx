@@ -470,7 +470,7 @@ export default class WorkbooksDirectories extends Component {
             </Modal.Content>
         </Modal>
 
-        <div style={{ height, padding: '1.6rem' }}>
+        <div style={{ height, paddingTop: '1rem'}}>
           <SortableTree
             theme={FileExplorerTheme}
             onVisibilityToggle={({ node: theNode, expanded }) => {
