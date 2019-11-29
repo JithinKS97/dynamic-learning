@@ -19,6 +19,7 @@ export default class SimsDirectories extends React.Component {
     super(props);
     this.state = {
       modalOpen: false,
+      aboutToDelete: false,
     };
   }
 
@@ -195,8 +196,9 @@ export default class SimsDirectories extends React.Component {
             // eslint-disable-next-line no-shadow
             generateNodeProps={({ node }) => ({
               onClick: () => {
+                const { aboutToDelete } = this.state;
                 if (!node.isFile) return;
-                getNode(node);
+                if (!aboutToDelete) { getNode(node); }
               },
 
               title: (
@@ -225,13 +227,13 @@ export default class SimsDirectories extends React.Component {
 
                 <button
                   className="icon__button"
+                  onMouseEnter={() => this.setState({ aboutToDelete: true })}
+                  onMouseLeave={() => this.setState({ aboutToDelete: false })}
                   style={{ verticalAlign: 'middle' }}
                   onClick={() => {
-                    const input = confirm(
+                    if (!confirm(
                       'Are you sure you want to perform this deletion?',
-                    );
-                    if (!input) return;
-
+                    )) return;
                     if (!node.isFile) {
                       removeSimsInside(node);
                     }
