@@ -85,18 +85,15 @@ export default class Upload extends React.Component {
 
   render() {
     const {
-      isPreview, modalOpen, project_id, username,
+      modalOpen, project_id, username,
     } = this.state;
     return (
       <Modal
-
         closeOnRootNodeClick={false}
         style={{ height: 'auto', width: 'auto', minWidth: '36rem' }}
-        trigger={isPreview ? null : <Button style={{ display: Meteor.userId() ? 'inline' : 'none' }} onClick={this.handleOpen}>Add simulation</Button>}
         open={modalOpen}
         onClose={this.handleClose}
         size="tiny"
-
       >
         <Modal.Header>
           Add simulation

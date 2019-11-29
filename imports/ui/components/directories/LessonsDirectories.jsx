@@ -57,6 +57,13 @@ export default class Tree extends Component {
     this.lessonsTracker.stop();
   }
 
+  openModalToCreate = (typeOfContent) => {
+    this.setState({
+      isOpen: true,
+      toCreate: typeOfContent,
+    });
+  }
+
   handleSubmit = () => {
     const { title, toCreate } = this.state;
     if (!title) {
@@ -168,28 +175,6 @@ export default class Tree extends Component {
             </Form>
           </Modal.Content>
         </Modal>
-
-        <Button
-          onClick={() => {
-            this.setState({
-              isOpen: true,
-              toCreate: 'file',
-            });
-          }}
-        >
-          Create new dynamic lesson
-        </Button>
-
-        <Button
-          onClick={() => {
-            this.setState({
-              isOpen: true,
-              toCreate: 'folder',
-            });
-          }}
-        >
-          Create a folder
-        </Button>
 
         <div style={{ height: '70vh', backgroundColor: '#f8f8f8', padding: '1.6rem' }}>
           <SortableTree

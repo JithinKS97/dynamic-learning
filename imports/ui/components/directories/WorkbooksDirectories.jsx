@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import { withTracker } from 'meteor/react-meteor-data';
 import 'react-sortable-tree/style.css';
 import { Redirect } from 'react-router-dom';
 import {

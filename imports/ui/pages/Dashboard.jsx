@@ -89,6 +89,22 @@ export default class Dashboard extends React.Component {
     this.wbDirRef.handle2Open();
   }
 
+  addSim = () => {
+    this.simsDirRef.openSimUploadModal();
+  }
+
+  addSimFolder = () => {
+    this.simsDirRef.handleOpen();
+  }
+
+  addLesson = () => {
+    this.lessonsDirRef.openModalToCreate('file');
+  }
+
+  addLessonFolder = () => {
+    this.lessonsDirRef.openModalToCreate('folder');
+  }
+
   renderOption = () => {
     /*  Panes is an array which holds the content to display under each tab.
         The first one is the Workbook directories and the second one is shared workbooks list.
@@ -160,7 +176,11 @@ export default class Dashboard extends React.Component {
             <SimsDirectories
               height="75vh"
               getNode={this.getNode}
-              isPreview={false}
+              ref={(e) => { this.simsDirRef = e; }}
+            />
+            <FolderFileOptions
+              handleFolderAddPress={this.addSimFolder}
+              handleFileAddPress={this.addSim}
             />
           </div>
         );
@@ -168,7 +188,13 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Manage Lessons" />
-            <LessonsDirectories />
+            <LessonsDirectories
+              ref={(e) => { this.lessonsDirRef = e; }}
+            />
+            <FolderFileOptions
+              handleFolderAddPress={this.addLessonFolder}
+              handleFileAddPress={this.addLesson}
+            />
           </div>
         );
       case 'watchlesson':
