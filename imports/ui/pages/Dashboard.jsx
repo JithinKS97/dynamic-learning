@@ -356,26 +356,29 @@ export default class Dashboard extends React.Component {
 
   render() {
     return (
-      <div style={{ height: '100vh' }}>
-        <div style={{ display: 'flex', flexDirection: 'row', width: '100vw' }}>
-          <div style={{ width: '20vw', padding: '2rem' }}>
-            <Button
-              style={{ marginBottom: '0.8rem' }}
-              onClick={() => {
-                Accounts.logout();
-              }}
-            >
-              Log out
-            </Button>
-            <SideBar />
-          </div>
-          <div style={{ width: '80vw' }}>
-            <div style={{ width: '85%', margin: 'auto' }}>
-              {this.renderCurrentlySelectedOption()}
+      <>
+        {this.displaySimConfigModal()}
+        <div style={{ height: '100vh' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', width: '100vw' }}>
+            <div style={{ width: '20vw', padding: '2rem' }}>
+              <Button
+                style={{ marginBottom: '0.8rem' }}
+                onClick={() => {
+                  Accounts.logout();
+                }}
+              >
+                Log out
+              </Button>
+              <SideBar />
+            </div>
+            <div style={{ width: '80vw' }}>
+              <div style={{ width: '85%', margin: 'auto' }}>
+                {this.renderCurrentlySelectedOption()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }

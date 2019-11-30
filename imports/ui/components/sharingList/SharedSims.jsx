@@ -99,7 +99,7 @@ export default class SharedSims extends React.Component {
         <Dimmer inverted active={loading}>
           <Loader />
         </Dimmer>
-        <div style={{ position: 'sticky', top: 0, marginTop: '2rem' }}>
+        <div className="lighter-grey-background" style={{ position: 'sticky', top: 0, padding: '1rem 0' }}>
           <SearchBar onChange={this.search} />
         </div>
         <div style={{ padding: '1rem 2rem' }}>
