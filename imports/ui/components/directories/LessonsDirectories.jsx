@@ -84,7 +84,6 @@ export default class Tree extends Component {
   };
 
   render() {
-
     // eslint-disable-next-line react/prop-types
     const { height } = this.props;
 
@@ -180,7 +179,7 @@ export default class Tree extends Component {
           </Modal.Content>
         </Modal>
 
-        <div className="lighter-grey-background" style={{ height, padding: '1.6rem' }}>
+        <div className="lighter-grey-background" style={{ height, paddingTop: '1rem' }}>
           <SortableTree
             theme={FileExplorerTheme}
             generateNodeProps={({ node }) => ({

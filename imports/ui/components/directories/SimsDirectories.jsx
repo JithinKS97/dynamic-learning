@@ -162,7 +162,7 @@ export default class SimsDirectories extends React.Component {
           </Modal.Content>
         </Modal>
 
-        <div className="lighter-grey-background" style={{ height, padding: '1.6rem' }}>
+        <div className="lighter-grey-background" style={{ height, paddingTop: '1rem' }}>
           {Meteor.userId() ? null : (
             <h3>You need to login to add your own simulations</h3>
           )}
