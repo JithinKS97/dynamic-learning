@@ -176,7 +176,7 @@ export default class Tree extends Component {
           </Modal.Content>
         </Modal>
 
-        <div style={{ height: '70vh', backgroundColor: '#f8f8f8', padding: '1.6rem' }}>
+        <div className="lighter-grey-background" style={{ height: '70vh', padding: '1.6rem' }}>
           <SortableTree
             theme={FileExplorerTheme}
             generateNodeProps={({ node }) => ({

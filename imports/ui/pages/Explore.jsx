@@ -28,8 +28,9 @@ export default class Explore extends React.Component {
         }}
         >
           <div
+            className="lighter-grey-background"
             style={{
-              backgroundColor: '#F0F0F0', padding: '1rem', width: '25vw', height: '80vh',
+              padding: '1rem', width: '25vw', height: '80vh',
             }}
           >
             <Header as="h3">
@@ -39,7 +40,10 @@ export default class Explore extends React.Component {
             </Header>
             <SharedWorkbooks />
           </div>
-          <div style={{ backgroundColor: '#F0F0F0', padding: '1rem', width: '25vw' }}>
+          <div
+            className="lighter-grey-background"
+            style={{ padding: '1rem', width: '25vw' }}
+          >
             <Header as="h3">
               <FaChalkboardTeacher />
               {' '}

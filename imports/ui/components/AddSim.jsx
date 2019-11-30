@@ -85,7 +85,7 @@ export default class AddSim extends Component {
     const panes = [
       {
         menuItem: 'Shared simulations',
-        render: () => <Tab.Pane style={{ height: '429px', overflow: 'auto', backgroundColor: '#f8f8f8' }}><SharedSims getNode={this.getNode} /></Tab.Pane>,
+        render: () => <Tab.Pane className="lighter-grey-background" style={{ height: '429px', overflow: 'auto' }}><SharedSims getNode={this.getNode} /></Tab.Pane>,
       },
       {
         menuItem: 'My simulations',

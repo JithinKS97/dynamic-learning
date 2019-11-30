@@ -20,11 +20,11 @@
 }
 
 .ui.tabular.menu .active.item {
-    background-color: #f8f8f8 !important;
+    background-color: $lighter-grey !important;
 }
 
 .rstcustom__rowContents {
-    background-color: #efefef;
+    background-color: $light-grey;
 }
 
 .dashboard__folderfile-options__main {

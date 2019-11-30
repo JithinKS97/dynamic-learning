@@ -104,7 +104,7 @@ export default class Dashboard extends React.Component {
       {
         menuItem: 'My workbooks',
         render: () => (
-          <Tab.Pane style={{ height: '70vh', backgroundColor: '#f8f8f8' }}>
+          <Tab.Pane className="lighter-grey-background" style={{ height: '70vh' }}>
             <WorkbooksDirectories height="70vh" ref={(e) => { this.wbDirRef = e; }} />
           </Tab.Pane>
         ),
@@ -112,7 +112,7 @@ export default class Dashboard extends React.Component {
       {
         menuItem: 'Shared workbooks',
         render: () => (
-          <Tab.Pane style={{ height: '70vh', overflow: 'auto', backgroundColor: '#f8f8f8' }}>
+          <Tab.Pane className="lighter-grey-background" style={{ height: '70vh', overflow: 'auto' }}>
             <SharedWorkbooks height="70vh" />
           </Tab.Pane>
         ),
@@ -150,7 +150,7 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Discussion forums" />
-            <div style={{ backgroundColor: '#f8f8f8', height: '75vh' }}>
+            <div className="lighter-grey-background" style={{ height: '75vh' }}>
               <RequestsList />
             </div>
           </div>
@@ -188,7 +188,7 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Watch Lessons" />
-            <div style={{ height: '75vh', backgroundColor: '#f8f8f8', padding: '2rem' }}>
+            <div className="lighter-grey-background" style={{ height: '75vh', padding: '2rem' }}>
               <SharedLessons />
             </div>
           </div>

@@ -14,9 +14,11 @@ const HelpMakeSimulations = () => (
         src="/symbol.png"
       />
     </div>
-    <div style={{
-      height: '80vh', backgroundColor: '#F0F0F0', width: '60vw', margin: 'auto',
-    }}
+    <div
+      className="lighter-grey-background"
+      style={{
+        height: '80vh', width: '60vw', margin: 'auto',
+      }}
     >
       <RequestsList />
     </div>
