@@ -124,8 +124,8 @@ export default class Dashboard extends React.Component {
       {
         menuItem: 'Shared workbooks',
         render: () => (
-          <Tab.Pane className="lighter-grey-background" style={{ height: '70vh', overflow: 'auto' }}>
-            <SharedWorkbooks height="70vh" />
+          <Tab.Pane className="lighter-grey-background" style={{ height: '75vh', overflow: 'auto' }}>
+            <SharedWorkbooks height="75vh" />
           </Tab.Pane>
         ),
       },
