@@ -84,6 +84,10 @@ export default class Tree extends Component {
   };
 
   render() {
+
+    // eslint-disable-next-line react/prop-types
+    const { height } = this.props;
+
     const removeWorkbooksInside = (node) => {
       /* The deletion takes place recursively.
           If the node is a file, using the id in it, it is removed
@@ -176,7 +180,7 @@ export default class Tree extends Component {
           </Modal.Content>
         </Modal>
 
-        <div className="lighter-grey-background" style={{ height: '70vh', padding: '1.6rem' }}>
+        <div className="lighter-grey-background" style={{ height, padding: '1.6rem' }}>
           <SortableTree
             theme={FileExplorerTheme}
             generateNodeProps={({ node }) => ({

@@ -204,10 +204,10 @@ export default class SharedWorkbooks extends React.Component {
           <SearchBar onChange={this.search} />
         </div>
         <div style={{
-          width: '100%',
+          width: '90%',
           height: '100%',
           marginTop: '1.2rem',
-          padding: '0 5rem',
+          margin: 'auto',
         }}
         >
           {this.displayWorkbooks()}

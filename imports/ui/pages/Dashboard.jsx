@@ -150,7 +150,7 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Discussion forums" />
-            <div className="lighter-grey-background" style={{ height: '75vh' }}>
+            <div className="lighter-grey-background" style={{ height: '80vh' }}>
               <RequestsList />
             </div>
           </div>
@@ -176,6 +176,7 @@ export default class Dashboard extends React.Component {
           <div>
             <HeaderWithLogo title="Manage Lessons" />
             <LessonsDirectories
+              height="75vh"
               ref={(e) => { this.lessonsDirRef = e; }}
             />
             <FolderFileOptions
@@ -188,7 +189,7 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Watch Lessons" />
-            <div className="lighter-grey-background" style={{ height: '75vh', padding: '2rem' }}>
+            <div className="lighter-grey-background" style={{ height: '80vh', padding: '2rem' }}>
               <SharedLessons />
             </div>
           </div>
