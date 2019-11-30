@@ -60,3 +60,14 @@
 .rstcustom__node:hover {
     background-color:$lighter-grey !important; 
 }
+
+.tile_right_icon {
+    color:grey;
+    height:1.2rem;
+    width:1.2rem;
+    cursor: pointer;
+}
+
+.tile_right_icon:hover {
+    color:black;
+}

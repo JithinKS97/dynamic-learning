@@ -2,8 +2,9 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import { FaTrash, FaFile, FaFolder } from 'react-icons/fa';
-import { MdSettings } from 'react-icons/md';
+import { FaRegFile, FaRegFolder } from 'react-icons/fa';
+import { FiTrash } from 'react-icons/fi';
+import { MdBuild } from 'react-icons/md';
 import {
   Button, Modal, Form, Dimmer, Loader,
 } from 'semantic-ui-react';
@@ -207,7 +208,7 @@ export default class SimsDirectories extends React.Component {
                   display: 'flex', flexDirection: 'row', marginLeft: '1rem', marginTop: '0.5rem',
                 }}
                 >
-                  {node.isFile ? <FaFile /> : <FaFolder />}
+                  {node.isFile ? <FaRegFile size="1.1rem" /> : <FaRegFolder size="1.1rem" />}
                   <div style={{ marginLeft: '1rem' }}>{node.title}</div>
                 </div>
               ),
@@ -223,7 +224,7 @@ export default class SimsDirectories extends React.Component {
                     getNode(node);
                   }}
                 >
-                  <MdSettings size={22} color="black" />
+                  <MdBuild className="tile_right_icon" />
                 </button>,
 
                 <button
@@ -242,7 +243,7 @@ export default class SimsDirectories extends React.Component {
                     Meteor.call('sims.remove', node._id);
                   }}
                 >
-                  <FaTrash size={17} color="black" />
+                  <FiTrash className="tile_right_icon" />
                 </button>,
               ],
             })}
