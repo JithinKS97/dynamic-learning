@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-  List, Input, Dimmer, Loader, Card,
+  Dimmer, Loader,
 } from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { SimsIndex } from '../../../api/sims';
+import SearchBar from './SearchBar';
 
 export default class SharedSims extends React.Component {
   constructor(props) {
@@ -59,38 +60,35 @@ export default class SharedSims extends React.Component {
     const { getNode } = this.props;
 
     return sims.map((sim, index) => (
-      <Card
+      <div
+        className="sharedResources__listItem"
         style={{ width: '100%', margin: '0' }}
         key={sim.createdAt}
         onClick={() => {
           getNode(sim);
         }}
       >
-        <Card.Content>
-          <Card.Header>
-            {sim.title}
-          </Card.Header>
-          <Card.Meta style={{
-            marginTop: '0.4rem', marginLeft: '0.4rem', display: 'flex', flexDirection: 'row',
-          }}
-          >
-            <div>
-              {_idToNameMappings[sim.userId]}
-              {' | '}
-            </div>
-            <div>
-                added
-              {this.displayTime(index)}
-            </div>
-          </Card.Meta>
-        </Card.Content>
-      </Card>
+        <div className="sharedResources__listItem-title">
+          {sim.title}
+        </div>
+
+        <div className="sharedResources__listItem-detail">
+          <div>
+            {_idToNameMappings[sim.userId]}
+          </div>
+          <div>
+            {this.displayTime(index)}
+          </div>
+        </div>
+
+      </div>
+
     ));
   }
 
-  search = (event, data) => {
+  search = (searchTag) => {
     Tracker.autorun(() => {
-      this.setState({ sims: SimsIndex.search(data.value).fetch() });
+      this.setState({ sims: SimsIndex.search(searchTag).fetch() });
     });
   }
 
@@ -101,10 +99,12 @@ export default class SharedSims extends React.Component {
         <Dimmer inverted active={loading}>
           <Loader />
         </Dimmer>
-        <Input ref={(e) => { this.searchTag = e; }} onChange={this.search} label="search" />
-        <List selection verticalAlign="middle">
+        <div style={{ position: 'sticky', top: 0, marginTop: '2rem' }}>
+          <SearchBar onChange={this.search} />
+        </div>
+        <div style={{ padding: '1rem 2rem' }}>
           {this.displaySims()}
-        </List>
+        </div>
       </div>
     );
   }

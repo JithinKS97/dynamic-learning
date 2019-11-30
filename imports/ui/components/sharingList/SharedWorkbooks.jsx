@@ -89,7 +89,7 @@ export default class SharedWorkbooks extends React.Component {
           <div className="sharedResources__listItem-title">{workbook.title}</div>
           <div className="sharedResources__listItem-detail">
             <div>{_idToNameMappings[workbook.userId]}</div>
-            <div style={{ marginLeft: '0.1rem' }}>
+            <div>
               {this.displayTime(index)}
             </div>
           </div>
