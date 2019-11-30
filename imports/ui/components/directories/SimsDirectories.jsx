@@ -69,7 +69,8 @@ export default class SimsDirectories extends React.Component {
     const { simsExists, treeData } = this.state;
     if (simsExists) {
       if (treeData.length === 0 && Meteor.userId()) {
-        return <h3>You havent added any simulations yet!</h3>;
+        // eslint-disable-next-line react/no-unescaped-entities
+        return <h3 style={{ marginLeft: '1rem' }}>You haven't added any simulations yet!</h3>;
       } return null;
     }
   }

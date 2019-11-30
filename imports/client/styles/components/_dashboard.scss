@@ -44,3 +44,19 @@
 .ui.bottom.attached.segment.active.tab {
     padding:0 !important;
 }
+
+.rstcustom__rowContents {
+    box-shadow: none;
+    background-color: $lighter-grey !important;
+    border-bottom: 1px solid $dark-grey;
+}
+
+
+.rstcustom__rowContents:hover {
+    box-shadow: none;
+    background-color: $light-grey !important;
+}
+
+.rstcustom__node:hover {
+    background-color:$lighter-grey !important; 
+}
