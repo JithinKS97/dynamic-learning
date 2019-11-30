@@ -245,14 +245,14 @@ export default class Dashboard extends React.Component {
     }
   }
 
-  handleTagsInput(tags) {
+  handleTagsInput = (tags) => {
     const { node } = this.state;
     this.setState({ tags }, () => {
       Meteor.call('sims.tagsChange', node._id, tags);
     });
   }
 
-  render() {
+  displaySimConfigModal = () => {
     const {
       node,
       editable,
@@ -261,116 +261,124 @@ export default class Dashboard extends React.Component {
       tags,
     } = this.state;
     return (
-      <div style={{ height: '100vh' }}>
-        <Modal
-          closeOnRootNodeClick={false}
-          style={{ width: 'auto' }}
-          open={!!node}
-          onClose={this.handleClose}
-          size="small"
-        >
-          <Modal.Header>
-            Preview
-            <Button className="close-button" onClick={this.handleClose}>
-              X
-            </Button>
-          </Modal.Header>
+      <Modal
+        closeOnRootNodeClick={false}
+        style={{ width: 'auto' }}
+        open={!!node}
+        onClose={this.handleClose}
+        size="small"
+      >
+        <Modal.Header>
+        Preview
+          <Button className="close-button" onClick={this.handleClose}>
+          X
+          </Button>
+        </Modal.Header>
 
-          <Modal.Content>
-            <Modal.Description>
-              <SimPreview
-                src={
-                  node
-                    ? generateSrc(
-                      node.username,
-                      node.project_id,
-                    )
-                    : ''
-                }
-              />
-              <br />
-              {editable ? null : (
-                <Label
-                  style={{
-                    padding: '0.8rem',
-                    width: '18rem',
-                    textAlign: 'center',
-                  }}
-                >
-                  <h4>{node ? title : null}</h4>
-                </Label>
-              )}
-              {editable ? (
-                <input
-                  ref={(e) => { this.title = e; }}
-                  onChange={() => {
-                    this.setState({ title: this.title.value });
-                  }}
-                  style={{ padding: '0.8rem', width: '18rem' }}
-                />
-              ) : null}
-              <Button
-                onClick={this.editTitle}
-                style={{ marginLeft: '0.8rem' }}
-              >
-                {editable ? 'Submit' : 'Edit title'}
-              </Button>
-              <a
-                style={{ marginLeft: '0.8rem' }}
-                className="link-to-code"
-                target="_blank"
-                href={node ? node.linkToCode : ''}
-              >
-                <Button>
-                  <FaCode />
-                </Button>
-              </a>
-            </Modal.Description>
-            <Modal.Description>
-              <Checkbox
-                style={{ margin: '0.8rem 0' }}
-                checked={isPublic}
-                ref={(e) => { this.checkbox = e; }}
-                onChange={() => {
-                  Meteor.call(
-                    'sims.visibilityChange',
-                    node._id,
-                    !this.checkbox.state.checked,
-                  );
-                  this.setState({
-                    isPublic: !this.checkbox.state.checked,
-                  });
+        <Modal.Content>
+          <Modal.Description>
+            <SimPreview
+              src={
+              node
+                ? generateSrc(
+                  node.username,
+                  node.project_id,
+                )
+                : ''
+            }
+            />
+            <br />
+            {editable ? null : (
+              <Label
+                style={{
+                  padding: '0.8rem',
+                  width: '18rem',
+                  textAlign: 'center',
                 }}
-                label="Share with others"
+              >
+                <h4>{node ? title : null}</h4>
+              </Label>
+            )}
+            {editable ? (
+              <input
+                ref={(e) => { this.title = e; }}
+                onChange={() => {
+                  this.setState({ title: this.title.value });
+                }}
+                style={{ padding: '0.8rem', width: '18rem' }}
               />
-              {isPublic ? (
-                <TagsInput
-                  value={tags}
-                  onChange={this.handleTagsInput}
-                />
-              ) : null}
-            </Modal.Description>
-          </Modal.Content>
-        </Modal>
-        <div style={{ display: 'flex', flexDirection: 'row', width: '100vw' }}>
-          <div style={{ width: '20vw', padding: '2rem' }}>
+            ) : null}
             <Button
-              style={{ marginBottom: '0.8rem' }}
-              onClick={() => {
-                Accounts.logout();
-              }}
+              onClick={this.editTitle}
+              style={{ marginLeft: '0.8rem' }}
             >
-              Log out
+              {editable ? 'Submit' : 'Edit title'}
             </Button>
-            <SideBar />
-          </div>
-          <div style={{ width: '80vw' }}>
-            <div style={{ width: '85%', margin: 'auto' }}>
-              {this.renderCurrentlySelectedOption()}
+            <a
+              style={{ marginLeft: '0.8rem' }}
+              className="link-to-code"
+              target="_blank"
+              href={node ? node.linkToCode : ''}
+            >
+              <Button>
+                <FaCode />
+              </Button>
+            </a>
+          </Modal.Description>
+          <Modal.Description>
+            <Checkbox
+              style={{ margin: '0.8rem 0' }}
+              checked={isPublic}
+              ref={(e) => { this.checkbox = e; }}
+              onChange={() => {
+                Meteor.call(
+                  'sims.visibilityChange',
+                  node._id,
+                  !this.checkbox.state.checked,
+                );
+                this.setState({
+                  isPublic: !this.checkbox.state.checked,
+                });
+              }}
+              label="Share with others"
+            />
+            {isPublic ? (
+              <TagsInput
+                value={tags}
+                onChange={this.handleTagsInput}
+              />
+            ) : null}
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    );
+  }
+
+  render() {
+    return (
+      <>
+        {this.displaySimConfigModal()}
+        <div style={{ height: '100vh' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', width: '100vw' }}>
+            <div style={{ width: '20vw', padding: '2rem' }}>
+              <Button
+                style={{ marginBottom: '0.8rem' }}
+                onClick={() => {
+                  Accounts.logout();
+                }}
+              >
+                Log out
+              </Button>
+              <SideBar />
+            </div>
+            <div style={{ width: '80vw' }}>
+              <div style={{ width: '85%', margin: 'auto' }}>
+                {this.renderCurrentlySelectedOption()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }
