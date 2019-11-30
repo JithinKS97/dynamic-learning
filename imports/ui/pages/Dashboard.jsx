@@ -27,6 +27,8 @@ import Classes from '../components/classes/Classes';
 import Assessments from '../components/assessments/Assessments';
 import HeaderWithLogo from '../components/dashboard/HeaderWithLogo';
 import FolderFileOptions from '../components/dashboard/FolderFileOptions';
+import history from  '../../routes/history';
+
 
 export default class Dashboard extends React.Component {
   constructor(props) {
@@ -43,6 +45,16 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+
+    history.listen((location)=>{
+      console.log(location)
+      if(location.pathname === '/dashboard/workbooks') {
+        this.setState({
+          wbActiveIndex: 0,
+        })
+      }
+    })
+
     this.simsTracker = Tracker.autorun(() => {
       const { node } = this.state;
       if (node) {
