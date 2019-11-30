@@ -16,8 +16,9 @@ import {
   Card,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import { FaTrash, FaEdit, FaPencilAlt } from 'react-icons/fa';
-import { MdSettings } from 'react-icons/md';
+import { FaPen, FaPencilAlt } from 'react-icons/fa';
+import { FiTrash } from "react-icons/fi";
+import { MdBuild } from 'react-icons/md';
 import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
 import TagsInput from 'react-tagsinput';
 
@@ -25,7 +26,8 @@ import Classes from '../../../api/classes';
 import { Workbooks } from '../../../api/workbooks';
 import WorkbookViewer from '../workbook/WorkbookViewer';
 
-import { FaFile, FaFolder } from "react-icons/fa";
+import { FaRegFile, FaRegFolder } from "react-icons/fa";
+
 
 /*
   This component displays the workbook files in nested tree structure.
@@ -362,7 +364,7 @@ export default class WorkbooksDirectories extends Component {
                 onClick={this.editTitle}
                 style={{ marginLeft: '2rem' }}
               >
-                {editable ? 'Submit' : <FaPencilAlt /> }
+                {editable ? 'Submit' : <FaPencilAlt color="black"/> }
 
               </Button>
               {shouldDisplayManageClass() ? (
@@ -492,7 +494,7 @@ export default class WorkbooksDirectories extends Component {
             generateNodeProps={({ node: theNode }) => ({
               title: (
                 <div style={{ display:'flex', flexDirection:'row', marginLeft:'1rem', marginTop:'0.5rem' }}>
-                  {theNode.isFile?<FaFile/>:<FaFolder/>}
+                  {theNode.isFile?<FaRegFile size="1.1rem"/>:<FaRegFolder size="1.2rem"/>}
                   <div style={{ marginLeft:'1rem' }}>{theNode.title}</div>
                 </div>
               ),
@@ -511,7 +513,7 @@ export default class WorkbooksDirectories extends Component {
                   className="icon__button"
                   style={{ display: theNode.isFile ? 'block' : 'none' }}
                 >
-                  <FaEdit size={17} color="black" />
+                  <FaPen className="tile_right_icon" />
                 </button>,
                 <button
                   onClick={() => {
@@ -536,7 +538,7 @@ export default class WorkbooksDirectories extends Component {
    
                   className="icon__button"
                 >
-                  <MdSettings size={17} color="black" />
+                  <MdBuild className="tile_right_icon" />
                 </button>,
                 <button
                   className="icon__button"
@@ -554,7 +556,7 @@ export default class WorkbooksDirectories extends Component {
                     Meteor.call('workbooks.remove', theNode._id);
                   }}
                 >
-                  <FaTrash size={17} color="black" />
+                  <FiTrash size={17} className="tile_right_icon" />
                 </button>,
               ],
             })}
