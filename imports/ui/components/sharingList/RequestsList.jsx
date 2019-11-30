@@ -3,9 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
-import {
-  List,
-} from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { FaCode } from 'react-icons/fa';
@@ -95,12 +92,9 @@ const RequestsList = (props) => {
       <div style={{ width: '2rem', margin: 'auto' }}>
         <FaCode color="#3e3e3e" style={{ marginRight: '2rem' }} size="3rem" />
       </div>
-      <List
-        selection
-        verticalAlign="middle"
-      >
+      <div>
         {renderRequests()}
-      </List>
+      </div>
     </div>
   );
 };

@@ -38,7 +38,7 @@
 }
 
 .login__button{
-    background-color:#1ed760;
+    background-color:$primary;
     margin-top:1rem;
     width:8rem;
     padding:0.5rem;
@@ -51,7 +51,7 @@
 }
 
 .login__button:hover {
-    background-color: darken( #1ed760, 10% );
+    background-color: darken( $primary, 10% );
 }
 
 .login-close__button {
@@ -90,11 +90,11 @@
 }
 
 .login__create-one {
-    color: darken( #1ed760, 10% );
+    color: darken( $primary, 10% );
     cursor: pointer;
 }
 
 .login__create-one:hover {
-    color: #1ed760;
+    color: $primary;
     cursor: pointer;
 }

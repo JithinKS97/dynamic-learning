@@ -2,7 +2,7 @@
 import React from 'react';
 import { Tracker } from 'meteor/tracker';
 import {
-  List, Dimmer, Loader,
+  Dimmer, Loader,
 } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
@@ -117,12 +117,9 @@ export default class SharedLessons extends React.Component {
           <Loader />
         </Dimmer>
         <SearchBar onChange={this.search} />
-        <List
-          selection
-          verticalAlign="middle"
-        >
+        <div style={{ marginTop: '2rem' }}>
           {this.renderLessons()}
-        </List>
+        </div>
       </div>
     );
   }

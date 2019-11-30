@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:100&display=swap');
+
+.header-with-logo__main {
+    display:flex;
+    flex-direction:row;
+    padding:2rem 0;
+}
+
+.header-with-logo__logo {
+    width:3rem;
+    height:2.5rem;
+}
+
+.header-with-logo__header {
+    margin:0;
+    margin-left: 1rem;
+    font-size: 2.3rem;
+    font-family: 'Raleway', sans-serif;
+    color:#3f3f3f;
+}
+
+.ui.tabular.menu .active.item {
+    background-color: $lighter-grey !important;
+}
+
+.rstcustom__rowContents {
+    background-color: $light-grey;
+}
+
+.dashboard__folderfile-options__main {
+    background-color:$dark-primary;
+    padding: 1rem;
+}
+
+.dashboard__folderfile-options__icon {
+    color:white;
+    cursor: pointer;
+}
+
+.dashboard__folderfile-options__icon:hover {
+    color:$primary;
+}
+
+.ui.bottom.attached.segment.active.tab {
+    padding:0 !important;
+}

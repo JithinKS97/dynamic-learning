@@ -9,18 +9,43 @@ import {
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
-import { withTracker } from 'meteor/react-meteor-data';
-import PropTypes from 'prop-types';
+import { Tracker } from 'meteor/tracker';
 import { Sims } from '../../../api/sims';
 import Upload from '../Upload';
 
 
-class SimsDirectories extends React.Component {
+export default class SimsDirectories extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modalOpen: false,
+      aboutToDelete: false,
     };
+  }
+
+  componentDidMount() {
+    Tracker.autorun(() => {
+      const simsHandle = Meteor.subscribe('sims');
+      const loading = !simsHandle.ready();
+      const flatData = Sims.find({ userId: Meteor.userId() }).fetch();
+      const simsExists = !loading && !!flatData;
+
+      const getKey = node => node._id;
+      const getParentKey = node => node.parent_id;
+      const rootKey = '0';
+
+      const treeData = getTreeFromFlatData({
+        flatData,
+        getKey,
+        getParentKey,
+        rootKey,
+      });
+
+      this.setState({
+        simsExists,
+        treeData: simsExists ? treeData : [],
+      });
+    });
   }
 
   addNewFolder = (e) => {
@@ -41,12 +66,16 @@ class SimsDirectories extends React.Component {
   handleClose = () => this.setState({ modalOpen: false });
 
   simulationsNotAddedMessage = () => {
-    const { simsExists, treeData } = this.props;
+    const { simsExists, treeData } = this.state;
     if (simsExists) {
       if (treeData.length === 0 && Meteor.userId()) {
         return <h3>You havent added any simulations yet!</h3>;
       } return null;
     }
+  }
+
+  openSimUploadModal = () => {
+    this.uploadSimRef.handleOpen();
   }
 
   render() {
@@ -89,9 +118,11 @@ class SimsDirectories extends React.Component {
     };
 
     const {
-      simsExists, isPreview, height, treeData, getNode,
-    } = this.props;
+      simsExists, treeData,
+    } = this.state;
     const { modalOpen } = this.state;
+    // eslint-disable-next-line react/prop-types
+    const { height, getNode } = this.props;
 
     return (
       <div>
@@ -99,14 +130,13 @@ class SimsDirectories extends React.Component {
           <Loader />
         </Dimmer>
 
-        <Upload isPreview={false} methodToRun="sims.insert" />
+        <Upload
+          ref={(e) => { this.uploadSimRef = e; }}
+          isPreview={false}
+          methodToRun="sims.insert"
+        />
 
         <Modal
-          trigger={
-            isPreview ? null : (
-              <Button onClick={this.handleOpen}>Create a folder</Button>
-            )
-          }
           open={modalOpen}
           onClose={this.handleClose}
           size="tiny"
@@ -132,7 +162,7 @@ class SimsDirectories extends React.Component {
           </Modal.Content>
         </Modal>
 
-        <div style={{ height, padding: '1.6rem' }}>
+        <div className="lighter-grey-background" style={{ height, paddingTop: '1rem' }}>
           {Meteor.userId() ? null : (
             <h3>You need to login to add your own simulations</h3>
           )}
@@ -143,7 +173,6 @@ class SimsDirectories extends React.Component {
               Meteor.call('sims.folder.visibilityChange', node._id, expanded);
             }}
             theme={FileExplorerTheme}
-            canDrag={!isPreview}
             treeData={treeData}
             // eslint-disable-next-line react/no-unused-state
             onChange={t => this.setState({ treeData: t })}
@@ -167,11 +196,9 @@ class SimsDirectories extends React.Component {
             // eslint-disable-next-line no-shadow
             generateNodeProps={({ node }) => ({
               onClick: () => {
+                const { aboutToDelete } = this.state;
                 if (!node.isFile) return;
-
-                if (!isPreview) return;
-
-                getNode(node);
+                if (!aboutToDelete) { getNode(node); }
               },
 
               title: (
@@ -189,7 +216,6 @@ class SimsDirectories extends React.Component {
                   className="icon__button"
                   style={{
                     display: node.isFile ? 'block' : 'none',
-                    visibility: isPreview ? 'hidden' : 'visible',
                     verticalAlign: 'middle',
                   }}
                   onClick={() => {
@@ -201,13 +227,13 @@ class SimsDirectories extends React.Component {
 
                 <button
                   className="icon__button"
+                  onMouseEnter={() => this.setState({ aboutToDelete: true })}
+                  onMouseLeave={() => this.setState({ aboutToDelete: false })}
                   style={{ verticalAlign: 'middle' }}
                   onClick={() => {
-                    const input = confirm(
+                    if (!confirm(
                       'Are you sure you want to perform this deletion?',
-                    );
-                    if (!input) return;
-
+                    )) return;
                     if (!node.isFile) {
                       removeSimsInside(node);
                     }
@@ -221,48 +247,15 @@ class SimsDirectories extends React.Component {
             })}
           />
 
-          {isPreview
+          {/* {isPreview
           && Meteor.userId()
           && treeData.length > 0 ? (
             <p style={{ bottom: '0px' }}>
               Note: Go to dashboard to organize the sims into folders
             </p>
-            ) : null}
+            ) : null} */}
         </div>
       </div>
     );
   }
 }
-
-SimsDirectories.propTypes = {
-  simsExists: PropTypes.bool.isRequired,
-  isPreview: PropTypes.bool.isRequired,
-  height: PropTypes.number.isRequired,
-  treeData: PropTypes.arrayOf(PropTypes.object).isRequired,
-  getNode: PropTypes.func.isRequired,
-};
-
-const SimsDirectoriesContainer = withTracker(() => {
-  const simsHandle = Meteor.subscribe('sims');
-  const loading = !simsHandle.ready();
-  const flatData = Sims.find({ userId: Meteor.userId() }).fetch();
-  const simsExists = !loading && !!flatData;
-
-  const getKey = node => node._id;
-  const getParentKey = node => node.parent_id;
-  const rootKey = '0';
-
-  const treeData = getTreeFromFlatData({
-    flatData,
-    getKey,
-    getParentKey,
-    rootKey,
-  });
-
-  return {
-    simsExists,
-    treeData: simsExists ? treeData : [],
-  };
-})(SimsDirectories);
-
-export default SimsDirectoriesContainer;

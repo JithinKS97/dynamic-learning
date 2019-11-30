@@ -85,18 +85,15 @@ export default class Upload extends React.Component {
 
   render() {
     const {
-      isPreview, modalOpen, project_id, username,
+      modalOpen, project_id, username,
     } = this.state;
     return (
       <Modal
-
         closeOnRootNodeClick={false}
         style={{ height: 'auto', width: 'auto', minWidth: '36rem' }}
-        trigger={isPreview ? null : <Button style={{ display: Meteor.userId() ? 'inline' : 'none' }} onClick={this.handleOpen}>Add simulation</Button>}
         open={modalOpen}
         onClose={this.handleClose}
         size="tiny"
-
       >
         <Modal.Header>
           Add simulation
@@ -119,9 +116,11 @@ export default class Upload extends React.Component {
               <Form onSubmit={this.onSubmit} style={{ marginTop: '0.8rem' }}>
                 <Form.Field>
                   <label>Preview</label>
-                  <SimPreview
-                    src={generateSrc(username, project_id)}
-                  />
+                  <div style={{marginTop: '1rem' }}>
+                    <SimPreview
+                      src={generateSrc(username, project_id)}
+                    />
+                  </div>
                 </Form.Field>
 
                 <Form.Field>

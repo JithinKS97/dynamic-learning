@@ -57,6 +57,13 @@ export default class Tree extends Component {
     this.lessonsTracker.stop();
   }
 
+  openModalToCreate = (typeOfContent) => {
+    this.setState({
+      isOpen: true,
+      toCreate: typeOfContent,
+    });
+  }
+
   handleSubmit = () => {
     const { title, toCreate } = this.state;
     if (!title) {
@@ -77,6 +84,9 @@ export default class Tree extends Component {
   };
 
   render() {
+    // eslint-disable-next-line react/prop-types
+    const { height } = this.props;
+
     const removeWorkbooksInside = (node) => {
       /* The deletion takes place recursively.
           If the node is a file, using the id in it, it is removed
@@ -169,29 +179,7 @@ export default class Tree extends Component {
           </Modal.Content>
         </Modal>
 
-        <Button
-          onClick={() => {
-            this.setState({
-              isOpen: true,
-              toCreate: 'file',
-            });
-          }}
-        >
-          Create new dynamic lesson
-        </Button>
-
-        <Button
-          onClick={() => {
-            this.setState({
-              isOpen: true,
-              toCreate: 'folder',
-            });
-          }}
-        >
-          Create a folder
-        </Button>
-
-        <div style={{ height: window.innerHeight - 150, padding: '1.6rem' }}>
+        <div className="lighter-grey-background" style={{ height, paddingTop: '1rem' }}>
           <SortableTree
             theme={FileExplorerTheme}
             generateNodeProps={({ node }) => ({

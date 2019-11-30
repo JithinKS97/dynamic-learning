@@ -2,7 +2,6 @@ import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
 import {
   Tab,
-  Grid,
   Button,
   Modal,
   Checkbox,
@@ -26,24 +25,10 @@ import { generateSrc } from '../../functions/index.js';
 import Profile from '../components/Profile/Profile';
 import Classes from '../components/classes/Classes';
 import Assessments from '../components/assessments/Assessments';
-
-/*
-    This is the Component which renders the dashboard of the application.
- */
+import HeaderWithLogo from '../components/dashboard/HeaderWithLogo';
+import FolderFileOptions from '../components/dashboard/FolderFileOptions';
 
 export default class Dashboard extends React.Component {
-  /*
-    node holds the value of the currently selected sim, modelOpen
-    is used to set the open status of the model
-    which displays the sim, isPublic holds the value in the checkbox
-    which decides whether the simuation is
-    shared with the other users, editable is turned active when
-    the title is editable.
-
-    Title holds the title of the selected simulation and tags holds
-    the search tags of the selected simulation.
-  */
-
   constructor(props) {
     super(props);
 
@@ -53,18 +38,12 @@ export default class Dashboard extends React.Component {
       editable: false,
       title: '',
       tags: [],
+      wbActiveIndex: 0,
     };
-
-    this.renderOption.bind(this);
   }
 
   componentDidMount() {
     this.simsTracker = Tracker.autorun(() => {
-    /* This code is for ensuring that when title gets updated,
-        then new data is fetched from the database
-        and set to state so that the new title value is rendered after its update.
-    */
-
       const { node } = this.state;
       if (node) {
         const sim = Sims.findOne({ _id: node._id });
@@ -80,14 +59,6 @@ export default class Dashboard extends React.Component {
   }
 
   getNode = (node) => {
-  /* This function is executed in the SimsDirectories component
-      (See the component, this function is passed as a prop to it)
-      whenever a sim node is selected, the selected node is set accepted as
-      the argument and set to state.
-      The latest title, sharing option and the tags data are
-      fetched from the database and set to the state.
-  */
-
     this.setState(
       {
         node,
@@ -104,26 +75,45 @@ export default class Dashboard extends React.Component {
     );
   }
 
-  renderOption = () => {
-    /*  Panes is an array which holds the content to display under each tab.
-        The first one is the Workbook directories and the second one is shared workbooks list.
-    */
+  addWB = () => {
+    this.wbDirRef.handleOpen();
+  }
 
+  addWBFolder = () => {
+    this.wbDirRef.handle2Open();
+  }
+
+  addSim = () => {
+    this.simsDirRef.openSimUploadModal();
+  }
+
+  addSimFolder = () => {
+    this.simsDirRef.handleOpen();
+  }
+
+  addLesson = () => {
+    this.lessonsDirRef.openModalToCreate('file');
+  }
+
+  addLessonFolder = () => {
+    this.lessonsDirRef.openModalToCreate('folder');
+  }
+
+  renderCurrentlySelectedOption = () => {
     const panes = [
       {
         menuItem: 'My workbooks',
         render: () => (
-          <Tab.Pane style={{ height: `${window.innerHeight - 150}px` }}>
-            {' '}
-            <WorkbooksDirectories />
+          <Tab.Pane className="lighter-grey-background" style={{ height: '70vh' }}>
+            <WorkbooksDirectories height="70vh" ref={(e) => { this.wbDirRef = e; }} />
           </Tab.Pane>
         ),
       },
       {
         menuItem: 'Shared workbooks',
         render: () => (
-          <Tab.Pane style={{ height: `${window.innerHeight - 150}px` }}>
-            <SharedWorkbooks />
+          <Tab.Pane className="lighter-grey-background" style={{ height: '70vh', overflow: 'auto' }}>
+            <SharedWorkbooks height="70vh" />
           </Tab.Pane>
         ),
       },
@@ -131,62 +121,90 @@ export default class Dashboard extends React.Component {
 
     // eslint-disable-next-line react/prop-types
     const { match: { params: { option } } } = this.props;
-
-    /* The components are rendered depending upon the selection in the menu */
+    const { wbActiveIndex } = this.state;
 
     switch (option) {
       case 'workbooks':
         return (
           <div>
-            <Header>Manage Workbooks</Header>
-            <Tab panes={panes} />
+            <HeaderWithLogo title="Work Books" />
+            <Tab
+              onTabChange={(e, d) => {
+                this.setState({
+                  wbActiveIndex: d.activeIndex,
+                });
+              }}
+              ref={(e) => { this.tabRef = e; }}
+              panes={panes}
+            />
+            {wbActiveIndex === 0 ? (
+              <FolderFileOptions
+                handleFolderAddPress={this.addWBFolder}
+                handleFileAddPress={this.addWB}
+              />
+            ) : null}
           </div>
         );
 
       case 'requests':
         return (
           <div>
-            <Header>Requests</Header>
-            <RequestsList />
+            <HeaderWithLogo title="Discussion forums" />
+            <div className="lighter-grey-background" style={{ height: '80vh' }}>
+              <RequestsList />
+            </div>
           </div>
         );
 
       case 'uploadsim':
         return (
           <div>
-            <Header>Manage Simulations</Header>
+            <HeaderWithLogo title="Manage Simulations" />
             <SimsDirectories
-              height={window.innerHeight - 150}
+              height="75vh"
               getNode={this.getNode}
-              isPreview={false}
+              ref={(e) => { this.simsDirRef = e; }}
+            />
+            <FolderFileOptions
+              handleFolderAddPress={this.addSimFolder}
+              handleFileAddPress={this.addSim}
             />
           </div>
         );
       case 'lessons':
         return (
           <div>
-            <Header>Manage Lessons</Header>
-            <LessonsDirectories />
+            <HeaderWithLogo title="Manage Lessons" />
+            <LessonsDirectories
+              height="75vh"
+              ref={(e) => { this.lessonsDirRef = e; }}
+            />
+            <FolderFileOptions
+              handleFolderAddPress={this.addLessonFolder}
+              handleFileAddPress={this.addLesson}
+            />
           </div>
         );
       case 'watchlesson':
         return (
           <div>
-            <Header>Dynamic Lessons</Header>
-            <SharedLessons />
+            <HeaderWithLogo title="Watch Lessons" />
+            <div className="lighter-grey-background" style={{ height: '80vh', padding: '2rem' }}>
+              <SharedLessons />
+            </div>
           </div>
         );
       case 'profile':
         return (
           <div>
-            <Header>User Profile</Header>
+            <HeaderWithLogo title="Profile" />
             <Profile />
           </div>
         );
       case 'classes':
         return (
           <div>
-            <Header>Classes</Header>
+            <HeaderWithLogo title="Classes" />
             <Classes />
           </div>
         );
@@ -325,25 +343,24 @@ export default class Dashboard extends React.Component {
             </Modal.Description>
           </Modal.Content>
         </Modal>
-
-        <Grid columns={3} divided>
-          <Grid.Row>
-            <Grid.Column width={3} style={{ margin: '1.6rem' }}>
-              <Button
-                style={{ marginBottom: '0.8rem' }}
-                onClick={() => {
-                  Accounts.logout();
-                }}
-              >
-                Log out
-              </Button>
-              <SideBar />
-            </Grid.Column>
-            <Grid.Column width={10} style={{ margin: '1.6rem' }}>
-              {this.renderOption()}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <div style={{ display: 'flex', flexDirection: 'row', width: '100vw' }}>
+          <div style={{ width: '20vw', padding: '2rem' }}>
+            <Button
+              style={{ marginBottom: '0.8rem' }}
+              onClick={() => {
+                Accounts.logout();
+              }}
+            >
+              Log out
+            </Button>
+            <SideBar />
+          </div>
+          <div style={{ width: '80vw' }}>
+            <div style={{ width: '85%', margin: 'auto' }}>
+              {this.renderCurrentlySelectedOption()}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
