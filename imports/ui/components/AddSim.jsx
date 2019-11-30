@@ -138,9 +138,11 @@ export default class AddSim extends Component {
                 {node
                   ? (
                     <Grid.Column style={{ overflow: 'auto', marginTop: '43px' }}>
-                      <SimPreview
-                        src={generateSrc(node.username, node.project_id)}
-                      />
+                      <div>
+                        <SimPreview
+                          src={generateSrc(node.username, node.project_id)}
+                        />
+                      </div>
                     </Grid.Column>
                   ) : <h2 style={{ margin: 'auto' }}>Select a simulation</h2>
                 }

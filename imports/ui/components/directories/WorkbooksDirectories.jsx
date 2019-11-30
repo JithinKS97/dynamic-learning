@@ -375,8 +375,7 @@ export default class WorkbooksDirectories extends Component {
                   () => this.openClassModal(selectedWorkbookId, title)
                   }
                 >
-                Manage clas
-                ses
+                Manage classes
                 </Button>
               ) : null}
               <br />

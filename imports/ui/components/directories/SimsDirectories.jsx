@@ -124,7 +124,7 @@ export default class SimsDirectories extends React.Component {
     } = this.state;
     const { modalOpen } = this.state;
     // eslint-disable-next-line react/prop-types
-    const { height, getNode } = this.props;
+    const { height, getNode, isPreview } = this.props;
 
     return (
       <div>
@@ -217,7 +217,7 @@ export default class SimsDirectories extends React.Component {
                 <button
                   className="icon__button"
                   style={{
-                    display: node.isFile ? 'block' : 'none',
+                    display: node.isFile && !isPreview ? 'block' : 'none',
                     verticalAlign: 'middle',
                   }}
                   onClick={() => {
@@ -231,7 +231,7 @@ export default class SimsDirectories extends React.Component {
                   className="icon__button"
                   onMouseEnter={() => this.setState({ aboutToDelete: true })}
                   onMouseLeave={() => this.setState({ aboutToDelete: false })}
-                  style={{ verticalAlign: 'middle' }}
+                  style={{ verticalAlign: 'middle', display: isPreview ? 'none' : 'block' }}
                   onClick={() => {
                     if (!confirm(
                       'Are you sure you want to perform this deletion?',
