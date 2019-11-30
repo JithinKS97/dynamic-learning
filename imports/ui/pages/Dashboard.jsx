@@ -46,9 +46,11 @@ export default class Dashboard extends React.Component {
   componentDidMount() {
     history.listen((location) => {
       if (location.pathname === '/dashboard/workbooks') {
-        this.setState({
-          wbActiveIndex: 0,
-        });
+        if (this.tabRef) {
+          this.setState({
+            wbActiveIndex: this.tabRef.state.activeIndex,
+          });
+        }
       }
     });
 
