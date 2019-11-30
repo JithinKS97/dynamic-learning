@@ -46,9 +46,11 @@ export default class Dashboard extends React.Component {
   componentDidMount() {
     history.listen((location) => {
       if (location.pathname === '/dashboard/workbooks') {
-        this.setState({
-          wbActiveIndex: 0,
-        });
+        if (this.tabRef) {
+          this.setState({
+            wbActiveIndex: this.tabRef.state.activeIndex,
+          });
+        }
       }
     });
 
@@ -269,9 +271,9 @@ export default class Dashboard extends React.Component {
         size="small"
       >
         <Modal.Header>
-        Preview
+            Preview
           <Button className="close-button" onClick={this.handleClose}>
-          X
+              X
           </Button>
         </Modal.Header>
 
@@ -279,13 +281,13 @@ export default class Dashboard extends React.Component {
           <Modal.Description>
             <SimPreview
               src={
-              node
-                ? generateSrc(
-                  node.username,
-                  node.project_id,
-                )
-                : ''
-            }
+                  node
+                    ? generateSrc(
+                      node.username,
+                      node.project_id,
+                    )
+                    : ''
+                }
             />
             <br />
             {editable ? null : (
