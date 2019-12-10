@@ -16,7 +16,7 @@ import RequestsList from '../components/sharingList/RequestsList';
 import SimsDirectories from '../components/directories/SimsDirectories';
 import SharedLessons from '../components/sharingList/SharedLessons';
 import LessonsDirectories from '../components/directories/LessonsDirectories';
-import SideBar from '../components/SideBar';
+import SideBarMenu from '../components/SideBarMenu';
 import SimPreview from '../components/SimPreview';
 import { Sims } from '../../api/sims';
 import SharedWorkbooks from '../components/sharingList/SharedWorkbooks';
@@ -360,23 +360,22 @@ export default class Dashboard extends React.Component {
     return (
       <>
         {this.displaySimConfigModal()}
-        <div style={{ height: '100vh' }}>
-          <div style={{ display: 'flex', flexDirection: 'row', width: '100vw' }}>
-            <div style={{ width: '20vw', padding: '2rem' }}>
-              <Button
-                style={{ marginBottom: '0.8rem' }}
-                onClick={() => {
-                  Accounts.logout();
-                }}
-              >
-                Log out
-              </Button>
-              <SideBar />
+        <div className="dashboard">
+          <div className="dashboard__sidebar">
+            <img className="dashboard__sidebar__logo" alt="dynamic-learning-logo" src="/symbol.png" />
+            <SideBarMenu />
+            <div
+              onClick={() => {
+                Accounts.logout();
+              }}
+              className="dashboard__sidebar__logout-btn"
+            >
+            Logout
             </div>
-            <div style={{ width: '80vw' }}>
-              <div style={{ width: '85%', margin: 'auto' }}>
-                {this.renderCurrentlySelectedOption()}
-              </div>
+          </div>
+          <div className="dashboard__menu-option-viewer__wrapper">
+            <div className="dashboard__menu-option-viewer">
+              {this.renderCurrentlySelectedOption()}
             </div>
           </div>
         </div>
