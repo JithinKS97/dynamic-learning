@@ -47,22 +47,20 @@ export const onAuthChange = (isAuthenticated) => {
 
 export const AppRouter = (
   <Router history={history}>
-    <div>
-      <Switch>
-        <PublicRoute exact path="/" component={LoadScreen} />
-        <PublicRoute exact path="/about" component={About} />
-        <PublicRoute exact path="/explore" component={Explore} />
-        <PublicRoute exact path="/login" component={Login} />
-        <PublicRoute path="/workbookeditor/:_id" component={workbookeditorContainer} />
-        <PublicRoute path="/lesson/:_id" component={Lesson} />
-        <PublicRoute path="/workbookeditor" component={workbookeditorContainer} />
-        <PublicRoute path="/signup" component={Signup} />
-        <PublicRoute path="/request/:_id" component={Request} />
-        <PublicRoute path="/help-make-simulations" component={HelpMakeSimulations} />
-        <PrivateRoute path="/sandbox" component={SandBox} />
-        <PrivateRoute path="/dashboard/:option" component={Dashboard} />
-        <Route path="*" component={NotFound} />
-      </Switch>
-    </div>
+    <Switch>
+      <PublicRoute exact path="/" component={LoadScreen} />
+      <PublicRoute exact path="/about" component={About} />
+      <PublicRoute exact path="/explore" component={Explore} />
+      <PublicRoute exact path="/login" component={Login} />
+      <PublicRoute path="/workbookeditor/:_id" component={workbookeditorContainer} />
+      <PublicRoute path="/lesson/:_id" component={Lesson} />
+      <PublicRoute path="/workbookeditor" component={workbookeditorContainer} />
+      <PublicRoute path="/signup" component={Signup} />
+      <PublicRoute path="/request/:_id" component={Request} />
+      <PublicRoute path="/help-make-simulations" component={HelpMakeSimulations} />
+      <PrivateRoute path="/sandbox" component={SandBox} />
+      <PrivateRoute path="/dashboard/:option" component={Dashboard} />
+      <Route path="*" component={NotFound} />
+    </Switch>
   </Router>
 );

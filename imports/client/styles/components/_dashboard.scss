@@ -58,7 +58,7 @@
 }
 
 .rstcustom__node:hover {
-    background-color:$lighter-grey !important; 
+    background-color:$lighter-grey !important;
 }
 
 .tile_right_icon {
@@ -70,4 +70,82 @@
 
 .tile_right_icon:hover {
     color:black;
+}
+
+.dashboard {
+    height: 100%;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sidebar-menu {
+  text-align: left;
+}
+
+.sidebar-menu__item {
+  display: block;
+  padding: 0.6rem;
+  color: #acb5b9;
+  font-family: 2rem;
+}
+
+.sidebar-menu__item:hover {
+  color: #fff;
+}
+
+.sidebar-menu__item--accordion {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.sidebar-menu__item--accordion-items {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.dashboard__sidebar__logo {
+  height: 76px;
+  width: 92px;
+}
+
+.dashboard__sidebar {
+  width: 20vw;
+  height: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #203038;
+  font-family: Lato;
+}
+
+.dashboard__sidebar__logout-btn{
+  margin-bottom: 0.8rem;
+  color: #fff;
+  font-size: 1rem;
+  font-style: italic;
+  cursor: pointer;
+  transition: font-size 0.1s;
+}
+
+.dashboard__sidebar__logout-btn:hover{
+  font-size: 1.1rem;
+}
+
+.dashboard__menu-option-viewer__wrapper {
+   width: 80vw;
+   height: 100%;
+   overflow-y: scroll;
+   padding: 30px 0px;
+}
+
+.dashboard__menu-option-viewer {
+  width: 85%;
+  margin: 0 auto;
 }
