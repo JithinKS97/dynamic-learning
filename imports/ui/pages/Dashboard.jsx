@@ -115,15 +115,15 @@ export default class Dashboard extends React.Component {
       {
         menuItem: 'My workbooks',
         render: () => (
-          <Tab.Pane className="lighter-grey-background" style={{ height: '70vh' }}>
-            <WorkbooksDirectories height="70vh" ref={(e) => { this.wbDirRef = e; }} />
+          <Tab.Pane className="lighter-grey-background" style={{ height: '60vh' }}>
+            <WorkbooksDirectories height="60vh" ref={(e) => { this.wbDirRef = e; }} />
           </Tab.Pane>
         ),
       },
       {
         menuItem: 'Shared workbooks',
         render: () => (
-          <Tab.Pane className="lighter-grey-background" style={{ height: '75vh', overflow: 'auto' }}>
+          <Tab.Pane className="lighter-grey-background" style={{ height: '70vh', overflow: 'auto' }}>
             <SharedWorkbooks height="75vh" />
           </Tab.Pane>
         ),
@@ -161,7 +161,7 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Discussion forums" />
-            <div className="lighter-grey-background" style={{ height: '80vh' }}>
+            <div className="lighter-grey-background" style={{ height: '75vh' }}>
               <RequestsList />
             </div>
           </div>
@@ -172,7 +172,7 @@ export default class Dashboard extends React.Component {
           <div>
             <HeaderWithLogo title="Manage Simulations" />
             <SimsDirectories
-              height="75vh"
+              height="65vh"
               getNode={this.getNode}
               ref={(e) => { this.simsDirRef = e; }}
             />
@@ -187,7 +187,7 @@ export default class Dashboard extends React.Component {
           <div>
             <HeaderWithLogo title="Manage Lessons" />
             <LessonsDirectories
-              height="75vh"
+              height="65vh"
               ref={(e) => { this.lessonsDirRef = e; }}
             />
             <FolderFileOptions
@@ -200,7 +200,7 @@ export default class Dashboard extends React.Component {
         return (
           <div>
             <HeaderWithLogo title="Watch Lessons" />
-            <div className="lighter-grey-background" style={{ height: '80vh', padding: '2rem' }}>
+            <div className="lighter-grey-background" style={{ height: '65vh', padding: '2rem' }}>
               <SharedLessons />
             </div>
           </div>
@@ -363,14 +363,18 @@ export default class Dashboard extends React.Component {
         <div className="dashboard">
           <div className="dashboard__sidebar">
             <img className="dashboard__sidebar__logo" alt="dynamic-learning-logo" src="/symbol.png" />
-            <SideBarMenu />
-            <div
-              onClick={() => {
-                Accounts.logout();
-              }}
-              className="dashboard__sidebar__logout-btn"
-            >
-            Logout
+            <div className="dashboard__menu__and__logout">
+              <div className="dashboard__menu">
+                <SideBarMenu />
+              </div>
+              <div
+                onClick={() => {
+                  Accounts.logout();
+                }}
+                className="dashboard__sidebar__logout-btn"
+              >
+              Logout
+              </div>
             </div>
           </div>
           <div className="dashboard__menu-option-viewer__wrapper">
