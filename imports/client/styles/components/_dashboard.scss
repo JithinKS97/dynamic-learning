@@ -30,6 +30,7 @@
 .dashboard__folderfile-options__main {
     background-color:$dark-primary;
     padding: 1rem;
+    z-index:5;
 }
 
 .dashboard__folderfile-options__icon {
@@ -111,31 +112,46 @@
 .dashboard__sidebar__logo {
   height: 76px;
   width: 92px;
+  display:block;
+  margin:2rem auto;
 }
 
 .dashboard__sidebar {
   width: 20vw;
   height: 100%;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
   background-color: #203038;
   font-family: Lato;
+  display:flex;
+  flex-direction: column;
+  font-size: 1.2rem;
+}
+
+.dashboard__menu__and__logout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.dashboard__menu {
+  margin:auto;
+  margin-top:2rem;
 }
 
 .dashboard__sidebar__logout-btn{
   margin-bottom: 0.8rem;
   color: #fff;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-style: italic;
   cursor: pointer;
   transition: font-size 0.1s;
+  width:4rem;
+  margin:auto;
+  margin-bottom:2rem;
 }
 
 .dashboard__sidebar__logout-btn:hover{
-  font-size: 1.1rem;
+  font-size: 1.4rem;
 }
 
 .dashboard__menu-option-viewer__wrapper {
