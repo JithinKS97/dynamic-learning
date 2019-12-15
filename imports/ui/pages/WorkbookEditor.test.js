@@ -197,14 +197,14 @@ if (Meteor.isClient) {
         WorkbookEditorInstance.changePageCount(1);
 
         expect(
-          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
-        ).to.equal('1254px');
+          parseFloat(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')),
+        ).to.be.greaterThan(1200);
 
         WorkbookEditorInstance.changePageCount(1);
 
         expect(
-          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
-        ).to.equal('1500px');
+          parseFloat(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')),
+        ).to.be.greaterThan(1500);
 
         expect(WorkbookEditorWrapper.state().slides[0].note)
           .to
@@ -221,14 +221,14 @@ if (Meteor.isClient) {
         WorkbookEditorInstance.changePageCount(1);
 
         expect(
-          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
-        ).to.equal('1254px');
+          parseFloat(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')),
+        ).to.be.greaterThan(1200);
 
         WorkbookEditorInstance.changePageCount(-1);
 
         expect(
-          getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
-        ).to.equal('900px');
+          parseFloat(getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height')),
+        ).to.be.greaterThan(900);
       });
 
       it('should not reduce the size of the canvas if a textbox/sim overflows after the reduction ( checkCanvasSize returns 1)', () => {

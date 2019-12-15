@@ -1011,7 +1011,7 @@ export class WorkbookEditor extends React.Component {
           ) : null}
           {!Meteor.userId() ? (
             <Link to="/explore">
-              <Menu.Item link>Back</Menu.Item>
+              <div className="workbook-editor__right-menu__button" link>Back</div>
             </Link>
           ) : null}
 
