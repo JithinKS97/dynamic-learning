@@ -879,7 +879,7 @@ export class WorkbookEditor extends React.Component {
           </Menu.Item> */}
           <h2 style={{ color: '#1ed760' }}>DRAW</h2>
           <label className="switch">
-            <input type="checkbox" />
+            <input checked={!interactEnabled} onClick={this.toggleInteract} type="checkbox" />
             <span className="slider round" />
           </label>
 
@@ -1563,6 +1563,7 @@ export class WorkbookEditor extends React.Component {
       curSlide,
       interactEnabled,
       userId,
+      title,
     } = this.state;
 
     if (redirectToLogin) {
@@ -1626,6 +1627,7 @@ export class WorkbookEditor extends React.Component {
               flex: 10,
             }}
           >
+            <h1 style={{ color: 'white' }}>{title}</h1>
             <div
               className="canvas-cont"
               style={{

@@ -341,7 +341,8 @@ export default class DrawingBoardCmp extends Component {
           style={{
             height: '1.2rem',
             visibility: toolbarVisible ? 'visible' : 'hidden',
-            position: 'fixed',
+            position: 'sticky',
+            top: 0,
             zIndex: 3,
             display: 'flex',
             flexDirection: 'row',
