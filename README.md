@@ -11,11 +11,11 @@ The project was started as a part of GSoC 2018. The main objective in GSoC 2018 
 
 The three core objectives of the web app are -
 
-1) Teachers can create, present, save and share lessons which make use of interactive visualisations.
-2) Teachers are able to collaborate with programmers to produce new visualisations.
-3) Students are able to view the video lessons prepared by teachers and should be able to use the simulations at
-the same time they watch it.
+1) Teachers can create, present, save and share lessons that make use of interactive visualizations.
+2) Teachers can collaborate with programmers to produce new visualizations.
+3) Students can view the video lessons prepared by teachers and should be able to use the simulations at the same time they watch it
 
+![Screenshot](https://user-images.githubusercontent.com/43414928/70861418-9f163200-1f53-11ea-9d31-ef1bdb856498.png)
 ## Link to the webapp
 
 http://dynamiclearning.io
@@ -70,7 +70,7 @@ Below are the main React Components of the app and much of the work in GSoC 2018
 of these React components. These main React page components can be found in 'client/ui/pages'.
 
 The routes of each of the pages can be found in the 'clients/routes' directory. Detailed documentation for each
-of the components are provided in the components' js files.
+of the components is provided in the components' js files.
 
 
 ### 1) Workbook creator
@@ -124,7 +124,7 @@ Users who are not logged in visiting the app will be able to view all the lesson
 Simulations are added to the app by making use of the iframe export feature of the online p5 text editor. One of the challenges that I faced 
 was the implementation of the communication between the webapp and the iframe. [Cassie Tarakajian](https://github.com/catarak) helped me with this. She suggested me to use MessageChannel API.
 
-Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by alloting a Javascript object for each of the simulations in the database. The Javascript object can be saved and loaded using MessageChannel.
+Another functionality I wanted to add was the ability to save the state of the simulations. This can be achieved by allotting a Javascript object for each of the simulations in the database. The Javascript object can be saved and loaded using MessageChannel.
 
 #### Above are the main React Components of the app and you can find the other React Components in the'client/ui/components' folder.
 
