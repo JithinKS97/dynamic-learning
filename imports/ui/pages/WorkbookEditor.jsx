@@ -1149,7 +1149,8 @@ export class WorkbookEditor extends React.Component {
                   }}
                   open={showDescription}
                   trigger={(
-                    <Menu.Item
+                    <div
+                      className="workbook-editor__right-menu__button"
                       onClick={() => {
                         this.setState({ showDescription: true });
                         const res = Workbooks.find({
@@ -1159,7 +1160,7 @@ export class WorkbookEditor extends React.Component {
                       }}
                     >
                     View description
-                    </Menu.Item>
+                    </div>
 )}
                 >
                   <Modal.Header>
