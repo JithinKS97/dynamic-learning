@@ -1,46 +1,73 @@
-import React from 'react';
-import { Menu } from 'semantic-ui-react';
+import React, { useState } from 'react';
 import {
   SortableContainer,
   SortableElement,
   arrayMove,
 } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
+import { FiTrash } from 'react-icons/fi';
 
 const SortableItem = SortableElement(({
   slideNo,
   props,
-  index,
-}) => (
-  <Menu.Item
-    style={{ display: 'flex', justifyContent: 'space-between' }}
-    key={slideNo}
-  >
+}) => {
+  const [hoveringOnDelete, setHoveringOnDelete] = useState(false);
+  const [currentHovering, setCurrentHovering] = useState(-1);
+  return (
     <div
-      className="ui button lessonplanleftbutton slidenumber"
-      style={{ width: '100%', textAlign: 'left', backgroundColor: index === props.curSlide ? 'lightGreen' : '#e0e1e2' }}
-      onClick={() => { props.changeSlide(slideNo); }}
-    >
-      {slideNo + 1}
-    </div>
-
-    <div
-      className="ui button lessonplanleftbutton"
+      key={slideNo}
+      className="workbook-editor__slides-list__item"
+      style={{
+        backgroundColor: slideNo === props.curSlide ? '#102028' : null,
+        border: slideNo === props.curSlide ? '1px solid #102028' : null,
+      }}
       onClick={() => {
-        const confirmation = confirm('Are you sure you want to delete?');
-        if (confirmation === true) { props.deleteSlide(slideNo); }
+        if (!hoveringOnDelete) {
+          props.changeSlide(slideNo);
+        }
+      }}
+      onMouseEnter={() => {
+        setCurrentHovering(slideNo);
+      }}
+      onMouseLeave={() => {
+        setCurrentHovering(-1);
       }}
     >
-      X
+      <div
+        style={{
+          color: slideNo === props.curSlide ? '#1ed760' : null,
+          paddingTop: '0.2rem',
+        }}
+      >
+        Slide
+        {' '}
+        {slideNo + 1}
+      </div>
+      <div
+        style={{
+          visibility: slideNo === currentHovering ? 'visible' : 'hidden',
+        }}
+        onMouseEnter={() => {
+          setHoveringOnDelete(true);
+        }}
+        onMouseLeave={() => {
+          setHoveringOnDelete(false);
+        }}
+        onClick={() => {
+          const confirmation = confirm('Are you sure you want to delete?');
+          if (confirmation === true) { props.deleteSlide(slideNo); }
+        }}
+      >
+        <FiTrash className="workbook-editor__slides-list__delete-button" style={{ padding: 0, margin: 0 }} />
+      </div>
     </div>
-
-  </Menu.Item>
-));
+  );
+});
 
 const SortableList = SortableContainer(({ items }) => (
-  <Menu style={{ display: 'flex' }} icon vertical>
+  <div>
     {items}
-  </Menu>
+  </div>
 ));
 
 const List = (props) => {
@@ -62,14 +89,16 @@ const List = (props) => {
   };
 
   return (
-    <SortableList
-      pressDelay={200}
-      items={renderSlides()}
-      updateBeforeSortStart={(node) => {
-        props.changeSlide(node.index);
-      }}
-      onSortEnd={onSortEnd}
-    />
+    <div>
+      <SortableList
+        pressDelay={200}
+        items={renderSlides()}
+        updateBeforeSortStart={(node) => {
+          props.changeSlide(node.index);
+        }}
+        onSortEnd={onSortEnd}
+      />
+    </div>
   );
 };
 

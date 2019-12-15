@@ -87,3 +87,12 @@
   color:lighten($primary, 10%);
   border: 2px solid lighten($primary, 10%);
 }
+
+.workbook-editor__slides-list__item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border:1.5px solid $light-primary;
+  margin-top: 1rem;
+}

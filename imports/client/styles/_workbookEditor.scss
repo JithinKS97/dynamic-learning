@@ -1,18 +1,92 @@
 #container {
-    
-    background-color: black;
-    height: 900px;
-    width:1366px;
+  background-color: black;
+  height: 900px;
+  width: 1366px;
 }
 
 .drawingBoardControls {
-    transition: top 0.07s ease-out;
+  transition: top 0.07s ease-out;
 }
 
 .ui.ui.fullscreen.modal {
-    left: unset!important; 
+  left: unset !important;
 }
 
 .ui.ui.fullscreen.scrolling.modal {
-    left: unset!important; 
+  left: unset !important;
+}
+
+.workbook-editor__slides-list {
+  background-color: $dark-primary;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+}
+
+.workbook-editor__slides-list__add-slide {
+  background-color: $light-primary;
+  padding-top: 0.5rem;
+  cursor: pointer;
+}
+
+.workbook-editor__slides-list__add-slide:hover {
+  background-color: lighten($light-primary, 20%);
+}
+
+.workbook-editor__slides-list__item {
+  color: $light-primary;
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.workbook-editor__slides-list__item:hover {
+  color: $dark-grey;
+  background-color: $darker-primary;
+}
+
+.workbook-editor__slides-list__delete-button:hover {
+  color: $primary;
+}
+
+.workbook-editor__slides-list__logo {
+  width: 3rem;
+  height: 3rem;
+  margin-top: 2rem;
+}
+
+.workbook-editor__right-menu {
+  text-align: center;
+  padding-top: 2rem;
+  background-color: $dark-primary;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.workbook-editor__right-menu__button {
+  margin: 1rem;
+  padding: 0.5rem;
+  background-color: $darker-primary;
+  color:white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.workbook-editor__right-menu__button:hover {
+  background-color: lighten($darker-primary, 10%);
+}
+
+.workbook-editor__small-button {
+  background-color: $darker-primary;
+  color:white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding:0.5rem 1rem;
+  font-size: 1.2rem;
+}
+
+.workbook-editor__small-button:hover {
+  background-color: lighten($darker-primary, 10%);
 }

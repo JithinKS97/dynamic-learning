@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
@@ -24,7 +25,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 import DOMPurify from 'dompurify';
 import { FaTrash, FaEdit } from 'react-icons/fa';
-import { MdUndo, MdRedo } from 'react-icons/md';
+import { MdUndo, MdRedo, MdAddCircleOutline } from 'react-icons/md';
 import TextBoxes from '../components/workbook/TextBoxes';
 import MCQs from '../components/workbook/MCQs';
 import ShortResponses from '../components/workbook/ShortResponses';
@@ -34,7 +35,7 @@ import SimsList from '../components/SimsList';
 import { Workbooks } from '../../api/workbooks';
 import DrawingBoardCmp from '../components/workbook/DrawingBoardCmp';
 
-/**
+/*
  * renders the page in which teachers create, edit, save and present workbooks
  */
 export class WorkbookEditor extends React.Component {
@@ -80,6 +81,8 @@ export class WorkbookEditor extends React.Component {
 
     this.handleWindowResize();
     $(window).scroll(this.handleScroll);
+
+    $('body').css('background-color', '#102028');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -114,6 +117,7 @@ export class WorkbookEditor extends React.Component {
     window.removeEventListener('scroll', this.handleScroll, false);
     window.removeEventListener('resize', this.handleWindowResize, false);
     window.removeEventListener('keydown', this.handleKeyDown, false);
+    $('body').css('background-color', 'white');
   }
 
   /**
@@ -123,7 +127,7 @@ export class WorkbookEditor extends React.Component {
   handleWindowResize = () => {
     this.setState({
       scaleX:
-        document.getElementsByClassName('twelve wide column')[0].offsetWidth
+        (document.getElementsByClassName('canvas-outer-most-container')[0].offsetWidth - 14)
         / 1366,
     });
     this.handleScroll();
@@ -321,7 +325,6 @@ export class WorkbookEditor extends React.Component {
           this.setState({
             saving: true,
           });
-
           Meteor.call('workbooks.update', _id, slides, () => {
             alert('Saved successfully');
             this.setState({
@@ -863,8 +866,8 @@ export class WorkbookEditor extends React.Component {
           updateSlides={this.updateSlides}
         />
 
-        <Menu color="blue" icon vertical className="lpright">
-          <Menu.Item>
+        <div className="workbook-editor__right-menu">
+          {/* <Menu.Item>
             <Button
               className="lprightbutton"
               toggle
@@ -873,20 +876,22 @@ export class WorkbookEditor extends React.Component {
             >
               {interactEnabled ? 'Draw' : 'Interact'}
             </Button>
-          </Menu.Item>
+          </Menu.Item> */}
+          <h2 style={{ color: '#1ed760' }}>DRAW</h2>
+          <label className="switch">
+            <input type="checkbox" />
+            <span className="slider round" />
+          </label>
 
-          <Menu.Item>
-            <Button
-              className="lprightbutton"
-              onClick={() => {
-                this.addSim.addSim();
-              }}
-              color="black"
-            >
-              Add simulation
-            </Button>
-          </Menu.Item>
-
+          <div
+            className="workbook-editor__right-menu__button"
+            onClick={() => {
+              this.addSim.addSim();
+            }}
+            color="black"
+          >
+            + Simulation
+          </div>
           {!!Meteor.userId() && userId === Meteor.userId() ? (
             <Link
               to={{
@@ -894,12 +899,14 @@ export class WorkbookEditor extends React.Component {
                 state: { from: 'createlessonplan' },
               }}
             >
-              <Menu.Item link className="lprightbutton">
+              <div
+                className="workbook-editor__right-menu__button"
+              >
                 Discussion forum
-              </Menu.Item>
+              </div>
             </Link>
           ) : null}
-          <Menu.Item
+          {/* <Menu.Item
             className="lprightbutton"
             onClick={() => {
               const confirmation = confirm(
@@ -909,9 +916,9 @@ export class WorkbookEditor extends React.Component {
             }}
           >
             Reset workbook
-          </Menu.Item>
+          </Menu.Item> */}
 
-          <Menu.Item className="lprightbutton">
+          {/* <Menu.Item className="lprightbutton">
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div>
                 <Button
@@ -935,10 +942,10 @@ export class WorkbookEditor extends React.Component {
               </div>
               <p style={{ marginTop: '1rem' }}>Undo/redo</p>
             </div>
-          </Menu.Item>
+          </Menu.Item> */}
 
-          <Menu.Item
-            className="lprightbutton"
+          <div
+            className="workbook-editor__right-menu__button"
             onClick={() => {
               this.saveToDatabase();
             }}
@@ -946,36 +953,48 @@ export class WorkbookEditor extends React.Component {
             {Meteor.userId() === userId || !Meteor.userId()
               ? 'Save'
               : 'Fork and Save'}
-          </Menu.Item>
+          </div>
+          <div style={{ backgroundColor: '#102028', margin: '1rem' }}>
+            <div style={{ fontSize: '1.2rem', color: 'white', paddingTop: '1rem' }}>Canvas size</div>
+            <div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: '1rem',
+              }}
+              >
+                <div
+                  className="workbook-editor__small-button"
+                  // eslint-disable-next-line react/no-string-refs
+                  ref="increaseCanvasButton"
+                  onClick={() => {
+                    this.changePageCount(1);
+                  }}
+                >
+                  +
+                </div>
 
-          <Menu.Item
-            className="lprightbutton"
-            // eslint-disable-next-line react/no-string-refs
-            ref="increaseCanvasButton"
-            onClick={() => {
-              this.changePageCount(1);
-            }}
-          >
-            Increase Canvas size
-          </Menu.Item>
+                <div
+                  className="workbook-editor__small-button"
+                  onClick={() => {
+                    if (this.pageCount === 0 || this.checkCanvasSize()) {
+                      alert('Canvas size cannot be decreased further!');
+                      return;
+                    }
 
-          <Menu.Item
-            className="lprightbutton"
-            onClick={() => {
-              if (this.pageCount === 0 || this.checkCanvasSize()) {
-                alert('Canvas size cannot be decreased further!');
-                return;
-              }
-
-              this.changePageCount(-1);
-            }}
-          >
-            Decrease Canvas size
-          </Menu.Item>
+                    this.changePageCount(-1);
+                  }}
+                >
+                  -
+                </div>
+              </div>
+            </div>
+          </div>
 
           {!Meteor.userId() ? (
-            <Menu.Item
-              className="lprightbutton"
+            <div
+              className="workbook-editor__right-menu__button"
               onClick={() => {
                 const confirmation = confirm(
                   'You will be redirected to login page. Changes will be saved for you.',
@@ -988,7 +1007,7 @@ export class WorkbookEditor extends React.Component {
               }}
             >
               Login
-            </Menu.Item>
+            </div>
           ) : null}
           {!Meteor.userId() ? (
             <Link to="/explore">
@@ -996,23 +1015,23 @@ export class WorkbookEditor extends React.Component {
             </Link>
           ) : null}
 
-          <Menu.Item
-            className="lprightbutton"
+          <div
+            className="workbook-editor__right-menu__button"
             onClick={() => {
               this.addTextBox();
             }}
           >
             Add textbox
-          </Menu.Item>
+          </div>
 
-          <Menu.Item
-            className="lprightbutton"
+          <div
+            className="workbook-editor__right-menu__button"
             onClick={() => {
               this.addQuestion();
             }}
           >
             Add question
-          </Menu.Item>
+          </div>
           {this.checkDescExist() ? (
             !!Meteor.userId()
             && userId === Meteor.userId()
@@ -1024,14 +1043,14 @@ export class WorkbookEditor extends React.Component {
                 }}
                 open={addDescription}
                 trigger={(
-                  <Menu.Item
-                    className="lprightbutton"
+                  <div
+                    className="workbook-editor__right-menu__button"
                     onClick={() => {
                       this.setState({ addDescription: true });
                     }}
                   >
                     Add description
-                  </Menu.Item>
+                  </div>
 )}
               >
                 <Modal.Header>
@@ -1172,7 +1191,7 @@ export class WorkbookEditor extends React.Component {
                               this.setState({ addDescription: true });
                             }}
                           />
-)}
+                        )}
                       >
                         <Modal.Header>
                         Lesson Description
@@ -1296,7 +1315,7 @@ export class WorkbookEditor extends React.Component {
             target="_blank"
             href="https://github.com/JithinKS97/dynamic-learning"
           >
-            <Menu.Item link>Contribute</Menu.Item>
+            <div className="workbook-editor__right-menu__button" link>Contribute</div>
           </a>
 
           {copied ? (
@@ -1340,16 +1359,17 @@ export class WorkbookEditor extends React.Component {
               </div>
             </Menu.Item>
           ) : null}
-          <Menu.Item>
-            <Button
-              onClick={() => {
-                Meteor.call('workbook.submitAnswers');
-              }}
-            >
-              Submit answers
-            </Button>
-          </Menu.Item>
-        </Menu>
+
+          <div
+            className="workbook-editor__right-menu__button"
+            onClick={() => {
+              Meteor.call('workbook.submitAnswers');
+            }}
+          >
+            Submit answers
+          </div>
+
+        </div>
       </>
     );
   };
@@ -1363,55 +1383,66 @@ export class WorkbookEditor extends React.Component {
     } = this.state;
 
     return (
-      <div className="workbook-left-menu-header">
-        {saving ? <p>Saving...</p> : null}
+      <div
+        style={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: '#203038',
+          paddingBottom: '0.2rem',
+        }}
+        className="workbook-left-menu-header"
+      >
+        {saving?<div style={{ color: 'white', marginTop:'0.5rem' }}>Saving...</div>:null}
+        <div>
+          <img className="workbook-editor__slides-list__logo" alt="dynamic-learning-logo" src="/symbol.png" />
+        </div>
         {Meteor.userId() ? (
-          <Button
-            className="lprightbutton"
-            color="blue"
-            onClick={() => {
-              const workbook = Workbooks.findOne({
-                _id,
-              });
+        // <Button
+        //   className="lprightbutton"
+        //   color="blue"
+        //   onClick={() => {
+        //     const workbook = Workbooks.findOne({
+        //       _id,
+        //     });
 
-              try {
-                expect({ slides: workbook.slides }).to.deep.include({
-                  slides,
-                });
-              } catch (error) {
-                if (slides[0].note.length === 0 && slides.length === 1) {
-                  this.setState({
-                    redirectToDashboard: true,
-                  });
-                  return;
-                }
-                if (error) {
-                  if (
-                    !confirm(
-                      'Are you sure you want to leave. Any unsaved changes will be lost!',
-                    )
-                  ) {
-                    return;
-                  }
-                }
-              }
+        //     try {
+        //       expect({ slides: workbook.slides }).to.deep.include({
+        //         slides,
+        //       });
+        //     } catch (error) {
+        //       if (slides[0].note.length === 0 && slides.length === 1) {
+        //         this.setState({
+        //           redirectToDashboard: true,
+        //         });
+        //         return;
+        //       }
+        //       if (error) {
+        //         if (
+        //           !confirm(
+        //             'Are you sure you want to leave. Any unsaved changes will be lost!',
+        //           )
+        //         ) {
+        //           return;
+        //         }
+        //       }
+        //     }
 
-              this.setState({
-                redirectToDashboard: true,
-              });
-            }}
-          >
-            Dashboard
-          </Button>
+          //     this.setState({
+          //       redirectToDashboard: true,
+          //     });
+          //   }}
+          // >
+          //   Dashboard
+          // </Button>
+          <div />
         ) : null}
-        <Button
-          className="createslide"
-          style={{ marginTop: '0.8rem' }}
+        <div
+          className="workbook-editor__slides-list__add-slide"
+          style={{ marginTop: '0.8rem', marginLeft: '1rem', marginRight: '1rem' }}
           onClick={this.addNewSlide}
         >
-          Create Slide
-        </Button>
-        <h1 className="slidecounter">{curSlide + 1}</h1>
+          <MdAddCircleOutline size="1.8rem" />
+        </div>
       </div>
     );
   }
@@ -1525,6 +1556,7 @@ export class WorkbookEditor extends React.Component {
     const {
       redirectToLogin,
       redirectToDashboard,
+      // eslint-disable-next-line no-unused-vars
       initialized,
       scaleX,
       slides,
@@ -1551,133 +1583,124 @@ export class WorkbookEditor extends React.Component {
         {this.renderLoginNotificationModal()}
         {this.renderWorkBookTitleModal()}
         {this.renderResponseModal()}
-        <Segment style={{ padding: 0, margin: 0 }}>
-          <Dimmer active={!initialized}>
-            <Loader />
-          </Dimmer>
-          <Grid
+        <div
+          style={{
+            height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
+            padding: 0,
+            margin: 0,
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <div
             style={{
-              height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
+              textAlign: 'center',
               padding: 0,
-              margin: 0,
+              flex: 1.5,
             }}
-            columns={3}
-            divided
+            className="workbook-editor__slides-list"
           >
-            <Grid.Row style={{ overflow: 'hidden' }}>
-              <Grid.Column
-                style={{
-                  position: 'fixed',
-                  textAlign: 'center',
+            {this.renderLeftMenuHeader()}
+            <div
+              style={{
+                padding: '0 1rem',
+              }}
+            >
+              <SlidesList
+                slides={slides}
+                curSlide={curSlide}
+                deleteSlide={this.deleteSlide}
+                setStateAfterRearranging={this.setStateAfterRearranging}
+                changeSlide={this.changeSlide}
+              />
+            </div>
+          </div>
+          <div
+            className="canvas-outer-most-container"
+            style={{
+              margin: '0 auto',
+              padding: '1rem',
+              overflowX: 'hidden',
+              overflowY: 'hidden',
+              height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
+              flex: 10,
+            }}
+          >
+            <div
+              className="canvas-cont"
+              style={{
+                backgroundColor: 'black',
+                width: '1366px',
+                transform: `scale(${scaleX},${scaleX})`,
+                transformOrigin: 'top left',
+              }}
+            >
+              <TextBoxes
+                slides={slides}
+                curSlide={curSlide}
+                updateSlides={this.updateSlides}
+                deleteTextBox={this.deleteTextBox}
+                isPreview={false}
+                setCopiedState={this.setCopiedState}
+                scale={scaleX}
+              />
+
+              <MCQs
+                slides={slides}
+                curSlide={curSlide}
+                updateSlides={this.updateSlides}
+                deleteQuestion={this.deleteQuestion}
+                isPreview={false}
+                setCopiedState={this.setCopiedState}
+                userId={userId}
+                scale={scaleX}
+              />
+              <ShortResponses
+                slides={slides}
+                curSlide={curSlide}
+                updateSlides={this.updateSlides}
+                deleteShortResponse={this.deleteShortResponse}
+                isPreview={false}
+                setCopiedState={this.setCopiedState}
+                userId={userId}
+                scale={scaleX}
+              />
+              <SimsList
+                slides={slides}
+                curSlide={curSlide}
+                updateSlides={this.updateSlides}
+                deleteSim={this.deleteSim}
+                isPreview={false}
+                setCopiedState={this.setCopiedState}
+                isRndRequired
+                undo={this.undo}
+                redo={this.redo}
+                ref={(e) => {
+                  this.simsList = e;
                 }}
-                width={2}
-              >
-                {this.renderLeftMenuHeader()}
-                <div
-                  style={{
-                    height: `${this.calcHeightOfCanvasContainer() * scaleX - $('.workbook-left-menu-header').height() - 20}px`,
-                    overflowY: 'auto',
-                  }}
-                >
-                  <SlidesList
-                    slides={slides}
-                    curSlide={curSlide}
-                    deleteSlide={this.deleteSlide}
-                    setStateAfterRearranging={this.setStateAfterRearranging}
-                    changeSlide={this.changeSlide}
-                  />
-                </div>
-              </Grid.Column>
-              <Grid.Column
-                style={{
-                  margin: '0 auto',
-                  padding: 0,
-                  overflowX: 'hidden',
-                  overflowY: 'hidden',
-                  height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
+                save={this.saveToDatabase}
+                interact={this.toggleInteract}
+                scale={scaleX}
+              />
+
+              <DrawingBoardCmp
+                interactEnabled={interactEnabled}
+                interact={this.toggleInteract}
+                toolbarVisible
+                ref={(e) => {
+                  this.drawingBoard = e;
                 }}
-                width={12}
-              >
-                <div
-                  className="canvas-cont"
-                  style={{
-                    backgroundColor: 'black',
-                    width: '1366px',
-                    transform: `scale(${scaleX},${scaleX})`,
-                    transformOrigin: 'top left',
-                  }}
-                >
-                  <TextBoxes
-                    slides={slides}
-                    curSlide={curSlide}
-                    updateSlides={this.updateSlides}
-                    deleteTextBox={this.deleteTextBox}
-                    isPreview={false}
-                    setCopiedState={this.setCopiedState}
-                    scale={scaleX}
-                  />
-
-                  <MCQs
-                    slides={slides}
-                    curSlide={curSlide}
-                    updateSlides={this.updateSlides}
-                    deleteQuestion={this.deleteQuestion}
-                    isPreview={false}
-                    setCopiedState={this.setCopiedState}
-                    userId={userId}
-                    scale={scaleX}
-                  />
-                  <ShortResponses
-                    slides={slides}
-                    curSlide={curSlide}
-                    updateSlides={this.updateSlides}
-                    deleteShortResponse={this.deleteShortResponse}
-                    isPreview={false}
-                    setCopiedState={this.setCopiedState}
-                    userId={userId}
-                    scale={scaleX}
-                  />
-                  <SimsList
-                    slides={slides}
-                    curSlide={curSlide}
-                    updateSlides={this.updateSlides}
-                    deleteSim={this.deleteSim}
-                    isPreview={false}
-                    setCopiedState={this.setCopiedState}
-                    isRndRequired
-                    undo={this.undo}
-                    redo={this.redo}
-                    ref={(e) => {
-                      this.simsList = e;
-                    }}
-                    save={this.saveToDatabase}
-                    interact={this.toggleInteract}
-                    scale={scaleX}
-                  />
-
-                  <DrawingBoardCmp
-                    interactEnabled={interactEnabled}
-                    interact={this.toggleInteract}
-                    toolbarVisible
-                    ref={(e) => {
-                      this.drawingBoard = e;
-                    }}
-                    onChange={this.onChange}
-                    saveAfterReset={this.saveAfterReset}
-                  />
-                </div>
-              </Grid.Column>
-
-              <Grid.Column
-                width={2}
-                style={{ position: 'fixed', right: 0 }}
-              >
-                {this.renderRightMenu()}
-              </Grid.Column>
-
-            </Grid.Row>
-          </Grid>
-        </Segment>
+                onChange={this.onChange}
+                saveAfterReset={this.saveAfterReset}
+              />
+            </div>
+          </div>
+          <div
+            style={{ flex: 1.5, padding: 0, margin: 0 }}
+          >
+            {this.renderRightMenu()}
+          </div>
+        </div>
       </>
     );
   }
