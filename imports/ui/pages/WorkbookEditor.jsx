@@ -1584,123 +1584,128 @@ export class WorkbookEditor extends React.Component {
         {this.renderLoginNotificationModal()}
         {this.renderWorkBookTitleModal()}
         {this.renderResponseModal()}
-        <div
-          style={{
-            height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
-            padding: 0,
-            margin: 0,
-            display: 'flex',
-            flexDirection: 'row',
-          }}
-        >
+        <div>
+          <Dimmer active={!initialized}>
+            <Loader />
+          </Dimmer>
           <div
             style={{
-              textAlign: 'center',
-              padding: 0,
-              flex: 1.5,
-            }}
-            className="workbook-editor__slides-list"
-          >
-            {this.renderLeftMenuHeader()}
-            <div
-              style={{
-                padding: '0 1rem',
-              }}
-            >
-              <SlidesList
-                slides={slides}
-                curSlide={curSlide}
-                deleteSlide={this.deleteSlide}
-                setStateAfterRearranging={this.setStateAfterRearranging}
-                changeSlide={this.changeSlide}
-              />
-            </div>
-          </div>
-          <div
-            className="canvas-outer-most-container"
-            style={{
-              margin: '0 auto',
-              padding: '1rem',
-              overflowX: 'hidden',
-              overflowY: 'hidden',
               height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
-              flex: 10,
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'row',
             }}
           >
-            <h1 style={{ color: 'white' }}>{title}</h1>
             <div
-              className="canvas-cont"
               style={{
-                backgroundColor: 'black',
-                width: '1366px',
-                transform: `scale(${scaleX},${scaleX})`,
-                transformOrigin: 'top left',
+                textAlign: 'center',
+                padding: 0,
+                flex: 1.5,
+              }}
+              className="workbook-editor__slides-list"
+            >
+              {this.renderLeftMenuHeader()}
+              <div
+                style={{
+                  padding: '0 1rem',
+                }}
+              >
+                <SlidesList
+                  slides={slides}
+                  curSlide={curSlide}
+                  deleteSlide={this.deleteSlide}
+                  setStateAfterRearranging={this.setStateAfterRearranging}
+                  changeSlide={this.changeSlide}
+                />
+              </div>
+            </div>
+            <div
+              className="canvas-outer-most-container"
+              style={{
+                margin: '0 auto',
+                padding: '1rem',
+                overflowX: 'hidden',
+                overflowY: 'hidden',
+                height: `${this.calcHeightOfCanvasContainer() * scaleX}px`,
+                flex: 10,
               }}
             >
-              <TextBoxes
-                slides={slides}
-                curSlide={curSlide}
-                updateSlides={this.updateSlides}
-                deleteTextBox={this.deleteTextBox}
-                isPreview={false}
-                setCopiedState={this.setCopiedState}
-                scale={scaleX}
-              />
-
-              <MCQs
-                slides={slides}
-                curSlide={curSlide}
-                updateSlides={this.updateSlides}
-                deleteQuestion={this.deleteQuestion}
-                isPreview={false}
-                setCopiedState={this.setCopiedState}
-                userId={userId}
-                scale={scaleX}
-              />
-              <ShortResponses
-                slides={slides}
-                curSlide={curSlide}
-                updateSlides={this.updateSlides}
-                deleteShortResponse={this.deleteShortResponse}
-                isPreview={false}
-                setCopiedState={this.setCopiedState}
-                userId={userId}
-                scale={scaleX}
-              />
-              <SimsList
-                slides={slides}
-                curSlide={curSlide}
-                updateSlides={this.updateSlides}
-                deleteSim={this.deleteSim}
-                isPreview={false}
-                setCopiedState={this.setCopiedState}
-                isRndRequired
-                undo={this.undo}
-                redo={this.redo}
-                ref={(e) => {
-                  this.simsList = e;
+              <h1 style={{ color: 'white' }}>{title}</h1>
+              <div
+                className="canvas-cont"
+                style={{
+                  backgroundColor: 'black',
+                  width: '1366px',
+                  transform: `scale(${scaleX},${scaleX})`,
+                  transformOrigin: 'top left',
                 }}
-                save={this.saveToDatabase}
-                interact={this.toggleInteract}
-                scale={scaleX}
-              />
+              >
+                <TextBoxes
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteTextBox={this.deleteTextBox}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  scale={scaleX}
+                />
 
-              <DrawingBoardCmp
-                interactEnabled={interactEnabled}
-                interact={this.toggleInteract}
-                toolbarVisible
-                ref={(e) => {
-                  this.drawingBoard = e;
-                }}
-                onChange={this.onChange}
-                saveAfterReset={this.saveAfterReset}
-              />
+                <MCQs
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteQuestion={this.deleteQuestion}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  userId={userId}
+                  scale={scaleX}
+                />
+                <ShortResponses
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteShortResponse={this.deleteShortResponse}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  userId={userId}
+                  scale={scaleX}
+                />
+                <SimsList
+                  slides={slides}
+                  curSlide={curSlide}
+                  updateSlides={this.updateSlides}
+                  deleteSim={this.deleteSim}
+                  isPreview={false}
+                  setCopiedState={this.setCopiedState}
+                  isRndRequired
+                  undo={this.undo}
+                  redo={this.redo}
+                  ref={(e) => {
+                    this.simsList = e;
+                  }}
+                  save={this.saveToDatabase}
+                  interact={this.toggleInteract}
+                  scale={scaleX}
+                />
+
+                <DrawingBoardCmp
+                  interactEnabled={interactEnabled}
+                  interact={this.toggleInteract}
+                  toolbarVisible
+                  ref={(e) => {
+                    this.drawingBoard = e;
+                  }}
+                  onChange={this.onChange}
+                  saveAfterReset={this.saveAfterReset}
+                />
+              </div>
             </div>
-          </div>
-          <div
-            style={{ flex: 1.5, padding: 0, margin: 0 }}
-          >
-            {this.renderRightMenu()}
+            <div
+              style={{ flex: 1.5, padding: 0, margin: 0 }}
+            >
+              {this.renderRightMenu()}
+            </div>
           </div>
         </div>
       </>
