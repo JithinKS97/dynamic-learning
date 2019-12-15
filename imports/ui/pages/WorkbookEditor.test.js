@@ -198,7 +198,7 @@ if (Meteor.isClient) {
 
         expect(
           getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
-        ).to.equal('1200px');
+        ).to.equal('1254px');
 
         WorkbookEditorInstance.changePageCount(1);
 
@@ -222,7 +222,7 @@ if (Meteor.isClient) {
 
         expect(
           getComputedStyle(wrapper.find('.canvas-cont').at(0).getDOMNode()).getPropertyValue('height'),
-        ).to.equal('1200px');
+        ).to.equal('1254px');
 
         WorkbookEditorInstance.changePageCount(-1);
 
@@ -233,7 +233,7 @@ if (Meteor.isClient) {
 
       it('should not reduce the size of the canvas if a textbox/sim overflows after the reduction ( checkCanvasSize returns 1)', () => {
         WorkbookEditorWrapper.setState({ ...Oscillations });
-        WorkbookEditorInstance.changePageCount(1); // canvas size set to 1200px
+        WorkbookEditorInstance.changePageCount(1); // canvas size set to 1254px
         WorkbookEditorWrapper.setState({
           slides: [{
             note: [],

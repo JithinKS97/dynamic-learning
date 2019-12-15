@@ -1392,7 +1392,7 @@ export class WorkbookEditor extends React.Component {
         }}
         className="workbook-left-menu-header"
       >
-        {saving?<div style={{ color: 'white', marginTop:'0.5rem' }}>Saving...</div>:null}
+        {saving ? <div style={{ color: 'white', marginTop: '0.5rem' }}>Saving...</div> : null}
         <div>
           <img className="workbook-editor__slides-list__logo" alt="dynamic-learning-logo" src="/symbol.png" />
         </div>
