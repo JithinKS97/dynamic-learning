@@ -156,7 +156,7 @@ export class WorkbookViewer extends React.Component {
     if (Meteor.isTest) return;
     const { scaleX } = this.state;
     const scrollTop = $(window).scrollTop();
-    $(".drawingBoardControls")[0].style.top = `${scrollTop / scaleX}px`;
+    $(".drawing-board-controls")[0].style.top = `${scrollTop / scaleX}px`;
   };
 
   setSizeOfPage = pageCount => {
@@ -643,7 +643,7 @@ export class WorkbookViewer extends React.Component {
     } = this.state;
 
     return (
-      <div className = 'workbook-viewer-left-menu-header'>        
+      <div className = 'workbook-viewer-left-menu-header'>
         <h1 className="slidecounter">{curSlide + 1}</h1>
       </div>
     )
@@ -681,9 +681,9 @@ export class WorkbookViewer extends React.Component {
               }}
               width={2}
             >
-             
+
               {this.renderLeftMenuHeader()}
-              <div 
+              <div
                 style={{
                   overflowY:'auto',
                   height:`90vh`
@@ -777,12 +777,12 @@ export class WorkbookViewer extends React.Component {
                     this.drawingBoard = e;
                   }}
                   onChange={this.onChange}
-                 
+
                 />
               </div>
             </Grid.Column>
           </Grid.Row>
-        </Grid>      
+        </Grid>
       </Segment>
       </>
     );

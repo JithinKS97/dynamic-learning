@@ -27,8 +27,8 @@ export default class SimsList extends React.Component {
   handleCopy(slides, curSlide, index) {
     const copiedSim = $.extend(true, {}, slides[curSlide].iframes[index]);
 
-    copiedSim.x = 50;
-    copiedSim.y = 50;
+    copiedSim.x = 100;
+    copiedSim.y = 100;
 
     const { setCopiedState } = this.props;
     setCopiedState(true);
@@ -102,7 +102,7 @@ export default class SimsList extends React.Component {
         if (isRndRequired) {
 
           return (
-           
+
             <div key={index} className="sim-floating">
               <Rnd
                 scale={additionalScale?additionalScale*scale:scale}

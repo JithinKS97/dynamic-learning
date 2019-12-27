@@ -24,7 +24,7 @@ import 'semantic-ui-css/semantic.min.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
 import DOMPurify from 'dompurify';
-import { FaTrash, FaEdit } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaArrowLeft } from 'react-icons/fa';
 import { MdUndo, MdRedo, MdAddCircleOutline } from 'react-icons/md';
 import TextBoxes from '../components/workbook/TextBoxes';
 import MCQs from '../components/workbook/MCQs';
@@ -143,7 +143,7 @@ export class WorkbookEditor extends React.Component {
     const { scaleX } = this.state;
     const scrollTop = $(window).scrollTop();
     // While finding the top offset, we need to take into account of the scale factor also
-    $('.drawingBoardControls')[0].style.top = `${scrollTop / scaleX}px`;
+    $('.drawing-board-controls')[0].style.top = `${scrollTop / scaleX}px`;
   };
 
   /**
@@ -676,6 +676,12 @@ export class WorkbookEditor extends React.Component {
     this.updateSlides(clonedSlides);
   };
 
+  handleAddDescription = () => {
+    this.setState({
+      addDescription: true,
+    });
+  };
+
   setCopiedState = (set) => {
     if (set) this.setState({ copied: true });
     else this.setState({ copied: false });
@@ -1015,23 +1021,6 @@ export class WorkbookEditor extends React.Component {
             </Link>
           ) : null}
 
-          <div
-            className="workbook-editor__right-menu__button"
-            onClick={() => {
-              this.addTextBox();
-            }}
-          >
-            Add textbox
-          </div>
-
-          <div
-            className="workbook-editor__right-menu__button"
-            onClick={() => {
-              this.addQuestion();
-            }}
-          >
-            Add question
-          </div>
           {this.checkDescExist() ? (
             !!Meteor.userId()
             && userId === Meteor.userId()
@@ -1319,48 +1308,6 @@ export class WorkbookEditor extends React.Component {
             <div className="workbook-editor__right-menu__button" link>Contribute</div>
           </a>
 
-          {copied ? (
-            <Menu.Item>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <Button
-                  onClick={() => {
-                    if (Session.get('copiedObject')) {
-                      const object = Session.get('copiedObject');
-
-                      const clonedSlides = Object.values(
-                        $.extend(true, {}, slides),
-                      );
-
-                      if (object.type === 'sim') {
-                        clonedSlides[curSlide].iframes.push(
-                          object.copiedObject,
-                        );
-                      } else if (object.type === 'text') {
-                        clonedSlides[curSlide].textboxes.push(
-                          object.copiedObject,
-                        );
-                      }
-
-                      this.updateSlides(clonedSlides);
-                    }
-                  }}
-                  color="blue"
-                >
-                  Paste
-                </Button>
-                <Button
-                  onClick={() => {
-                    this.setCopiedState(false);
-                    Session.set('copiedObject', null);
-                  }}
-                  color="red"
-                >
-                  X
-                </Button>
-              </div>
-            </Menu.Item>
-          ) : null}
-
           <div
             className="workbook-editor__right-menu__button"
             onClick={() => {
@@ -1374,6 +1321,42 @@ export class WorkbookEditor extends React.Component {
       </>
     );
   };
+
+  handleRedirectToDashboard = () => {
+    const {
+      slides,
+      _id,
+    } = this.state;
+    const workbook = Workbooks.findOne({
+      _id,
+    });
+
+    try {
+      expect({ slides: workbook.slides }).to.deep.include({
+        slides,
+      });
+    } catch (error) {
+      if (slides[0].note.length === 0 && slides.length === 1) {
+        this.setState({
+          redirectToDashboard: true,
+        });
+        return;
+      }
+      if (error) {
+        if (
+          !confirm(
+            'Are you sure you want to leave. Any unsaved changes will be lost!',
+          )
+        ) {
+          return;
+        }
+      }
+    }
+
+    this.setState({
+      redirectToDashboard: true,
+    });
+  }
 
   renderLeftMenuHeader = () => {
     const {
@@ -1394,49 +1377,18 @@ export class WorkbookEditor extends React.Component {
         className="workbook-left-menu-header"
       >
         {saving ? <div style={{ color: 'white', marginTop: '0.5rem' }}>Saving...</div> : null}
+
+        {Meteor.userId() ? (
+          <div
+            className="dashboard-arrow-container"
+            onClick={this.handleRedirectToDashboard}
+          >
+            <FaArrowLeft color="fff" size="1.2rem" />
+          </div>
+        ) : null}
         <div>
           <img className="workbook-editor__slides-list__logo" alt="dynamic-learning-logo" src="/symbol.png" />
         </div>
-        {Meteor.userId() ? (
-        // <Button
-        //   className="lprightbutton"
-        //   color="blue"
-        //   onClick={() => {
-        //     const workbook = Workbooks.findOne({
-        //       _id,
-        //     });
-
-        //     try {
-        //       expect({ slides: workbook.slides }).to.deep.include({
-        //         slides,
-        //       });
-        //     } catch (error) {
-        //       if (slides[0].note.length === 0 && slides.length === 1) {
-        //         this.setState({
-        //           redirectToDashboard: true,
-        //         });
-        //         return;
-        //       }
-        //       if (error) {
-        //         if (
-        //           !confirm(
-        //             'Are you sure you want to leave. Any unsaved changes will be lost!',
-        //           )
-        //         ) {
-        //           return;
-        //         }
-        //       }
-        //     }
-
-          //     this.setState({
-          //       redirectToDashboard: true,
-          //     });
-          //   }}
-          // >
-          //   Dashboard
-          // </Button>
-          <div />
-        ) : null}
         <div
           className="workbook-editor__slides-list__add-slide"
           style={{ marginTop: '0.8rem', marginLeft: '1rem', marginRight: '1rem' }}
@@ -1562,11 +1514,11 @@ export class WorkbookEditor extends React.Component {
       scaleX,
       slides,
       curSlide,
+      copied,
       interactEnabled,
       userId,
       title,
     } = this.state;
-
     if (redirectToLogin) {
       return <Redirect to="/login" />;
     }
@@ -1579,7 +1531,6 @@ export class WorkbookEditor extends React.Component {
       }
       return <Redirect to="/dashboard/workbooks" />;
     }
-
     return (
       <>
         {this.renderLoginNotificationModal()}
@@ -1689,7 +1640,6 @@ export class WorkbookEditor extends React.Component {
                   interact={this.toggleInteract}
                   scale={scaleX}
                 />
-
                 <DrawingBoardCmp
                   interactEnabled={interactEnabled}
                   interact={this.toggleInteract}
@@ -1697,7 +1647,18 @@ export class WorkbookEditor extends React.Component {
                   ref={(e) => {
                     this.drawingBoard = e;
                   }}
+                  curSlide={curSlide}
+                  undo={this.undo}
+                  redo={this.redo}
+                  addQuestion={this.addQuestion}
+                  handleAddDescription={this.handleAddDescription}
+                  addTextBox={this.addTextBox}
+                  copied={copied}
+                  updateSlides={this.updateSlides}
+                  slides={slides}
+                  userId={userId}
                   onChange={this.onChange}
+                  saveToDatabase={this.saveToDatabase}
                   saveAfterReset={this.saveAfterReset}
                 />
               </div>
