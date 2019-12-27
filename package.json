@@ -23,7 +23,7 @@
     "react-addons-test-utils": "^15.6.2",
     "react-color": "^2.17.3",
     "react-dom": "^16.8.6",
-    "react-icons": "^3.7.0",
+    "react-icons": "^3.8.0",
     "react-mathquill": "^0.1.9",
     "react-meteor-data": "^0.2.11",
     "react-rnd": "^10.0.0",
