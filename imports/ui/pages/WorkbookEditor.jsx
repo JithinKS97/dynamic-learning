@@ -14,10 +14,8 @@ import {
   Button,
   Dimmer,
   Loader,
-  Segment,
   Modal,
   Form,
-  Grid,
   List,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
@@ -34,6 +32,7 @@ import SlidesList from '../components/workbook/List';
 import SimsList from '../components/SimsList';
 import { Workbooks } from '../../api/workbooks';
 import DrawingBoardCmp from '../components/workbook/DrawingBoardCmp';
+import history from '../../routes/history';
 
 /*
  * renders the page in which teachers create, edit, save and present workbooks
@@ -1015,12 +1014,6 @@ export class WorkbookEditor extends React.Component {
               Login
             </div>
           ) : null}
-          {!Meteor.userId() ? (
-            <Link to="/explore">
-              <div className="workbook-editor__right-menu__button" link>Back</div>
-            </Link>
-          ) : null}
-
           {this.checkDescExist() ? (
             !!Meteor.userId()
             && userId === Meteor.userId()
