@@ -15,8 +15,8 @@ export default class TextBox extends React.Component {
   handleCopy(slides, curSlide, index) {
     const copiedText = $.extend(true, {}, slides[curSlide].textboxes[index]);
 
-    copiedText.x = 100;
-    copiedText.y = 100;
+    copiedText.x = 50;
+    copiedText.y = 50;
 
     const { setCopiedState } = this.props;
 

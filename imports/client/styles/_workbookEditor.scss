@@ -86,16 +86,3 @@
 .workbook-editor__small-button:hover {
   background-color: lighten($darker-primary, 10%);
 }
-
-.dashboard-arrow-container {
-  margin: 0 auto;
-  text-align: center;
-  cursor: pointer;
-  color: white;
-  width: fit-content;
-  margin-top: 20px;
-  padding: 7px;
-  border: 1px solid grey;
-  border-radius: 50%;
-  line-height: 1px;
-}
