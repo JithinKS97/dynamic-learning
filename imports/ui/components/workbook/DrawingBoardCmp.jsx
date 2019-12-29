@@ -19,6 +19,7 @@ import {
   MdTextFields,
   MdQuestionAnswer,
   MdSave,
+  MdInvertColorsOff,
 } from 'react-icons/md';
 import PropTypes from 'prop-types';
 
@@ -53,7 +54,7 @@ export default class DrawingBoardCmp extends Component {
     this.b.on('mouse:move', this.handleMouseMove);
 
     this.pencil = new fabric.PencilBrush(this.b);
-    this.pencil.color = 'white';
+    this.pencil.color = '#d9d9d9';
     this.pencil.width = 5;
 
     this.b.freeDrawingBrush = this.pencil;

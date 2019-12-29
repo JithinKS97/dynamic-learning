@@ -54,11 +54,14 @@
 
 .workbook-editor__right-menu {
   text-align: center;
-  padding-top: 2rem;
   background-color: $dark-primary;
   position: sticky;
   top: 0;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 0;
 }
 
 .workbook-editor__right-menu__button {
@@ -98,4 +101,18 @@
   border: 1px solid grey;
   border-radius: 50%;
   line-height: 1px;
+}
+
+.reset-workbook-icon {
+  background-color: #f5f5dc;
+  border-radius: 50%;
+  padding: 5px;
+  height: 2em;
+  width: 2em;
+}
+
+.reset-workbook-text {
+  color: beige;
+  margin-top: 6px;
+  cursor: pointer;
 }
