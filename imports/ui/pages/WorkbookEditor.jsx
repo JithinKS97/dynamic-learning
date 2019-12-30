@@ -675,12 +675,6 @@ export class WorkbookEditor extends React.Component {
     this.updateSlides(clonedSlides);
   };
 
-  handleAddDescription = () => {
-    this.setState({
-      addDescription: true,
-    });
-  };
-
   setCopiedState = (set) => {
     if (set) this.setState({ copied: true });
     else this.setState({ copied: false });
@@ -1334,42 +1328,6 @@ export class WorkbookEditor extends React.Component {
     );
   };
 
-  handleRedirectToDashboard = () => {
-    const {
-      slides,
-      _id,
-    } = this.state;
-    const workbook = Workbooks.findOne({
-      _id,
-    });
-
-    try {
-      expect({ slides: workbook.slides }).to.deep.include({
-        slides,
-      });
-    } catch (error) {
-      if (slides[0].note.length === 0 && slides.length === 1) {
-        this.setState({
-          redirectToDashboard: true,
-        });
-        return;
-      }
-      if (error) {
-        if (
-          !confirm(
-            'Are you sure you want to leave. Any unsaved changes will be lost!',
-          )
-        ) {
-          return;
-        }
-      }
-    }
-
-    this.setState({
-      redirectToDashboard: true,
-    });
-  }
-
   renderLeftMenuHeader = () => {
     const {
       saving,
@@ -1389,18 +1347,49 @@ export class WorkbookEditor extends React.Component {
         className="workbook-left-menu-header"
       >
         {saving ? <div style={{ color: 'white', marginTop: '0.5rem' }}>Saving...</div> : null}
-
-        {Meteor.userId() ? (
-          <div
-            className="dashboard-arrow-container"
-            onClick={this.handleRedirectToDashboard}
-          >
-            <FaArrowLeft color="fff" size="1.2rem" />
-          </div>
-        ) : null}
         <div>
           <img className="workbook-editor__slides-list__logo" alt="dynamic-learning-logo" src="/symbol.png" />
         </div>
+        {Meteor.userId() ? (
+        // <Button
+        //   className="lprightbutton"
+        //   color="blue"
+        //   onClick={() => {
+        //     const workbook = Workbooks.findOne({
+        //       _id,
+        //     });
+
+        //     try {
+        //       expect({ slides: workbook.slides }).to.deep.include({
+        //         slides,
+        //       });
+        //     } catch (error) {
+        //       if (slides[0].note.length === 0 && slides.length === 1) {
+        //         this.setState({
+        //           redirectToDashboard: true,
+        //         });
+        //         return;
+        //       }
+        //       if (error) {
+        //         if (
+        //           !confirm(
+        //             'Are you sure you want to leave. Any unsaved changes will be lost!',
+        //           )
+        //         ) {
+        //           return;
+        //         }
+        //       }
+        //     }
+
+          //     this.setState({
+          //       redirectToDashboard: true,
+          //     });
+          //   }}
+          // >
+          //   Dashboard
+          // </Button>
+          <div />
+        ) : null}
         <div
           className="workbook-editor__slides-list__add-slide"
           style={{ marginTop: '0.8rem', marginLeft: '1rem', marginRight: '1rem' }}
@@ -1526,11 +1515,11 @@ export class WorkbookEditor extends React.Component {
       scaleX,
       slides,
       curSlide,
-      copied,
       interactEnabled,
       userId,
       title,
     } = this.state;
+
     if (redirectToLogin) {
       return <Redirect to="/login" />;
     }
@@ -1543,6 +1532,7 @@ export class WorkbookEditor extends React.Component {
       }
       return <Redirect to="/dashboard/workbooks" />;
     }
+
     return (
       <>
         {this.renderLoginNotificationModal()}
@@ -1652,6 +1642,7 @@ export class WorkbookEditor extends React.Component {
                   interact={this.toggleInteract}
                   scale={scaleX}
                 />
+
                 <DrawingBoardCmp
                   interactEnabled={interactEnabled}
                   interact={this.toggleInteract}
@@ -1659,18 +1650,7 @@ export class WorkbookEditor extends React.Component {
                   ref={(e) => {
                     this.drawingBoard = e;
                   }}
-                  curSlide={curSlide}
-                  undo={this.undo}
-                  redo={this.redo}
-                  addQuestion={this.addQuestion}
-                  handleAddDescription={this.handleAddDescription}
-                  addTextBox={this.addTextBox}
-                  copied={copied}
-                  updateSlides={this.updateSlides}
-                  slides={slides}
-                  userId={userId}
                   onChange={this.onChange}
-                  saveToDatabase={this.saveToDatabase}
                   saveAfterReset={this.saveAfterReset}
                 />
               </div>
