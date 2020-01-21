@@ -1,8 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react'
+import { Accounts } from 'meteor/accounts-base'
 
 export default () => {
+
+  // Accounts.onResetPasswordLink((token, done) => {
+  //   // Display the password reset UI, get the new password...
+  
+  //   Accounts.resetPassword(token, newPassword, (err) => {
+  //     if (err) {
+  //       // Display error
+  //     } else {
+  //       // Resume normal operation
+  //       done();
+  //     }
+  //   });
+  // })
 
   const Header = () => {
     return (
