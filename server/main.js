@@ -29,3 +29,7 @@ Meteor.users.find().fetch().map(user => {
         }
     }
 })
+
+if(Meteor.isServer){
+    process.env.MAIL_URL = 'smtp://postmaster@sandboxdd77e675df254d58af95c8a9eb06bebf.mailgun.org:f32659377cc77529df45c704a792dfa0-0a4b0c40-01791ab1@smtp.mailgun.org:587';
+}

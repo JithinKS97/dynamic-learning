@@ -2,6 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
+import { Accounts } from 'meteor/accounts-base'
 
 import "semantic-ui-css/semantic.min.css";
 
@@ -104,6 +105,28 @@ export default class Login extends React.Component {
     });
   }
 
+  forgotPassword = (e) => {
+    e.preventDefault();
+    
+    const email = 'jashi202jg@gmail.com';
+    const options = {
+      email
+    };
+
+    Accounts.forgotPassword(options, (err) => {
+      if (err) {
+        if(err.message === 'User not found [403]'){
+          this.setState({ error: "Email not registered." });
+        }
+        else{
+          this.setState({error: "We are sorry but something went wrong."});
+        }
+      } else {
+        this.setState({ error: "Password reset Email sent" });
+      }
+    });
+  }
+
   render() {
     const { error } = this.state;
     return (
@@ -149,6 +172,16 @@ export default class Login extends React.Component {
                 />
 
               <button className='login__button' type="submit">Log in</button>
+
+              <br/>
+
+              <button 
+              className="ui basic button" 
+              style={{ marginTop: '1.0rem'}}
+              onClick={this.forgotPassword}
+              >
+              Forgot Password?
+              </button>
 
               <div style={{margin:'1rem'}}>OR</div>
 
