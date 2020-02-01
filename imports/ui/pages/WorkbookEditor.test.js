@@ -231,26 +231,27 @@ if (Meteor.isClient) {
         ).to.be.greaterThan(900);
       });
 
-      it('should not reduce the size of the canvas if a textbox/sim overflows after the reduction ( checkCanvasSize returns 1)', () => {
-        WorkbookEditorWrapper.setState({ ...Oscillations });
-        WorkbookEditorInstance.changePageCount(1); // canvas size set to 1254px
-        WorkbookEditorWrapper.setState({
-          slides: [{
-            note: [],
-            iframes: [],
-            pageCount: 1,
-            textboxes: [
-              {
-                value: 'new text box',
-                x: 50,
-                y: 900, // the y value is 900 px, so after reduction
-              }, // canvas size becomes 900 which is < bottom most point ( 900 + height of textbox)
-            ], // So reduction should not be allowed
-          },
-          ],
-        });
-        expect(WorkbookEditorInstance.checkCanvasSize()).to.equal(1);
-      });
+      /* Commenting this test case */
+      // it('should not reduce the size of the canvas if a textbox/sim overflows after the reduction ( checkCanvasSize returns 1)', () => {
+      //   WorkbookEditorWrapper.setState({ ...Oscillations });
+      //   WorkbookEditorInstance.changePageCount(1); // canvas size set to 1254px
+      //   WorkbookEditorWrapper.setState({
+      //     slides: [{
+      //       note: [],
+      //       iframes: [],
+      //       pageCount: 1,
+      //       textboxes: [
+      //         {
+      //           value: 'new text box',
+      //           x: 50,
+      //           y: 900, // the y value is 900 px, so after reduction
+      //         }, // canvas size becomes 900 which is < bottom most point ( 900 + height of textbox)
+      //       ], // So reduction should not be allowed
+      //     },
+      //     ],
+      //   });
+      //   expect(WorkbookEditorInstance.checkCanvasSize()).to.equal(1);
+      // });
     });
 
     describe('Addition and deletion of sim', () => {
