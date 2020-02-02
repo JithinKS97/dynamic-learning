@@ -144,7 +144,7 @@ export class WorkbookEditor extends React.Component {
     const { scaleX } = this.state;
     const scrollTop = $(window).scrollTop();
     // While finding the top offset, we need to take into account of the scale factor also
-    $('.drawing-board-controls')[0].style.top = `${scrollTop / scaleX}px`;
+    $('.drawing-board-controls-wrapper')[0].style.top = `${scrollTop / scaleX}px`;
   };
 
   /**
