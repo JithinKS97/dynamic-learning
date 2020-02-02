@@ -14,10 +14,8 @@ import {
   Button,
   Dimmer,
   Loader,
-  Segment,
   Modal,
   Form,
-  Grid,
   List,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
@@ -25,7 +23,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { expect } from 'chai';
 import DOMPurify from 'dompurify';
 import { FaTrash, FaEdit, FaArrowLeft } from 'react-icons/fa';
-import { MdUndo, MdRedo, MdAddCircleOutline } from 'react-icons/md';
+import { MdAddCircleOutline } from 'react-icons/md';
 import { GiBackwardTime } from 'react-icons/gi';
 import TextBoxes from '../components/workbook/TextBoxes';
 import MCQs from '../components/workbook/MCQs';
@@ -142,8 +140,11 @@ export class WorkbookEditor extends React.Component {
     if (Meteor.isTest) return;
 
     const { scaleX } = this.state;
-    const scrollTop = $(window).scrollTop();
+    let scrollTop = $(window).scrollTop();
     // While finding the top offset, we need to take into account of the scale factor also
+    if (scrollTop > 10) {
+      scrollTop -= 60;
+    }
     $('.drawing-board-controls-wrapper')[0].style.top = `${scrollTop / scaleX}px`;
   };
 
