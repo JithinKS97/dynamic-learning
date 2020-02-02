@@ -10,7 +10,6 @@ import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 import { withTracker } from 'meteor/react-meteor-data';
 import {
-  Menu,
   Button,
   Dimmer,
   Loader,
@@ -22,7 +21,7 @@ import 'semantic-ui-css/semantic.min.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
 import DOMPurify from 'dompurify';
-import { FaTrash, FaEdit, FaArrowLeft } from 'react-icons/fa';
+import { FaEdit, FaArrowLeft } from 'react-icons/fa';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { GiBackwardTime } from 'react-icons/gi';
 import TextBoxes from '../components/workbook/TextBoxes';
@@ -58,7 +57,8 @@ export class WorkbookEditor extends React.Component {
       scaleX: 1,
       description: [],
       showDescription: false,
-      addDescription: false,
+      showAddDescription: false,
+      showEditDescription: false,
       saving: false,
     };
 
@@ -90,8 +90,6 @@ export class WorkbookEditor extends React.Component {
     const { initialized } = this.state;
 
     if (workbookExists === false) return;
-    if (initialized === true) return;
-
     this.setState(
       {
         ...workbook,
@@ -680,9 +678,21 @@ export class WorkbookEditor extends React.Component {
 
   handleAddDescription = () => {
     this.setState({
-      addDescription: true,
+      showAddDescription: true,
     });
   };
+
+  handleShowDescription = () => {
+    this.setState({
+      showDescription: true,
+    });
+  }
+
+  handleShowEditDescription = () => {
+    this.setState({
+      showEditDescription: true,
+    });
+  }
 
   setCopiedState = (set) => {
     if (set) this.setState({ copied: true });
@@ -690,7 +700,7 @@ export class WorkbookEditor extends React.Component {
   };
 
   addDescription = () => {
-    this.setState({ showDescription: false });
+    this.setState({ showEditDescription: false });
     this.setState({ addDescription: false });
 
     let subject;
@@ -796,8 +806,8 @@ export class WorkbookEditor extends React.Component {
     return 900;
   };
 
-  renderDescription = () => {
-    const { description } = this.state;
+  renderDescriptionModal = () => {
+    const { description, showDescription } = this.state;
     if (
       Object.keys(description).length === 0
       && description.constructor === Object
@@ -805,57 +815,284 @@ export class WorkbookEditor extends React.Component {
       return <p>No description to show</p>;
     }
     return (
-      <List divided relaxed>
-        <List.Item>
-          <List.Header>Subject</List.Header>
-          {description.subject}
-        </List.Item>
-        <List.Item>
-          <List.Header>Topic</List.Header>
-          {description.topic}
-        </List.Item>
-        <List.Item>
-          <List.Header>Learning Objectives</List.Header>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: description.learningObjectives,
-            }}
-          />
-        </List.Item>
-        <List.Item>
-          <List.Header>In-Class Activites</List.Header>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: description.inClassActivities,
-            }}
-          />
-        </List.Item>
-        <List.Item>
-          <List.Header>Resources</List.Header>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: description.resources,
-            }}
-          />
-        </List.Item>
-        <List.Item>
-          <List.Header>Assessments</List.Header>
-          {description.assessments}
-        </List.Item>
-        <List.Item>
-          <List.Header>Standards</List.Header>
-          {description.standards}
-        </List.Item>
-      </List>
+      <Modal open={showDescription}>
+        <Modal.Header>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>Description</div>
+            <div>
+              <Button onClick={() => {
+                this.setState({
+                  showDescription: false,
+                  showEditDescription: true,
+                });
+              }}
+              >
+                <FaEdit />
+              </Button>
+              <Button
+                className="close-button"
+                onClick={() => {
+                  this.setState({ showDescription: false });
+                }}
+              >
+              X
+              </Button>
+            </div>
+          </div>
+        </Modal.Header>
+        <Modal.Content>
+          <List divided relaxed>
+            <List.Item>
+              <List.Header>Subject</List.Header>
+              {description.subject}
+            </List.Item>
+            <List.Item>
+              <List.Header>Topic</List.Header>
+              {description.topic}
+            </List.Item>
+            <List.Item>
+              <List.Header>Learning Objectives</List.Header>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: description.learningObjectives,
+                }}
+              />
+            </List.Item>
+            <List.Item>
+              <List.Header>In-Class Activites</List.Header>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: description.inClassActivities,
+                }}
+              />
+            </List.Item>
+            <List.Item>
+              <List.Header>Resources</List.Header>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: description.resources,
+                }}
+              />
+            </List.Item>
+            <List.Item>
+              <List.Header>Assessments</List.Header>
+              {description.assessments}
+            </List.Item>
+            <List.Item>
+              <List.Header>Standards</List.Header>
+              {description.standards}
+            </List.Item>
+          </List>
+        </Modal.Content>
+      </Modal>
     );
   };
 
+  renderAddDescription = () => {
+    const { addDescription } = this.state;
+
+    return (
+      <Modal
+        size="small"
+        onClose={() => {
+          this.setState({ addDescription: false });
+        }}
+        open={addDescription}
+      >
+        <Modal.Header>
+        Lesson Description
+          <Button
+            className="close-button"
+            onClick={() => {
+              this.setState({ addDescription: false });
+            }}
+          >
+          X
+          </Button>
+        </Modal.Header>
+
+        <Modal.Content>
+          <Modal.Description>
+            <Form onSubmit={this.addDescription}>
+              <Form.Field required>
+                <label>Subject</label>
+                <input
+                  ref={(e) => {
+                    this.subject = e;
+                  }}
+                  required
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Topic</label>
+                <input
+                  ref={(e) => {
+                    this.topic = e;
+                  }}
+                  placeholder="-"
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Learning Objective(s)</label>
+                <textArea
+                  rows={1}
+                  ref={(e) => {
+                    this.learningObjectives = e;
+                  }}
+                  placeholder="-"
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>In-Class Activities</label>
+                <textArea
+                  rows={1}
+                  ref={(e) => {
+                    this.inClassActivities = e;
+                  }}
+                  placeholder="-"
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>References/Resources</label>
+                <textArea
+                  rows={1}
+                  ref={(e) => {
+                    this.resources = e;
+                  }}
+                  placeholder="-"
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Assessments</label>
+                <input
+                  ref={(e) => {
+                    this.assessments = e;
+                  }}
+                  placeholder="-"
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Standards</label>
+                <input
+                  ref={(e) => {
+                    this.standards = e;
+                  }}
+                  placeholder="-"
+                />
+              </Form.Field>
+              <Form.Field>
+                <Button type="submit">Submit</Button>
+              </Form.Field>
+            </Form>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    );
+  }
+
+  renderEditDescription = () => {
+    const {
+      description,
+      showEditDescription,
+    } = this.state;
+    return (
+      <Modal
+        size="small"
+        open={showEditDescription}
+      >
+        <Modal.Header>
+              Lesson Description
+          <Button
+            className="close-button"
+            onClick={() => {
+              this.setState({ showEditDescription: false });
+            }}
+          >
+                X
+          </Button>
+        </Modal.Header>
+
+        <Modal.Content>
+          <Modal.Description>
+            <Form onSubmit={this.addDescription}>
+              <Form.Field>
+                <label>Subject</label>
+                <input
+                  ref={(e) => {
+                    this.subject = e;
+                  }}
+                  placeholder={description.subject}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Topic</label>
+                <input
+                  ref={(e) => {
+                    this.topic = e;
+                  }}
+                  placeholder={description.topic}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Learning Objective(s)</label>
+                <textArea
+                  rows={1}
+                  ref={(e) => {
+                    this.learningObjectives = e;
+                  }}
+                  placeholder={description.learningObjectives}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>In-Class Activities</label>
+                <textArea
+                  rows={1}
+                  ref={(e) => {
+                    this.inClassActivities = e;
+                  }}
+                  placeholder={description.inClassActivities}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>References/Resources</label>
+                <textArea
+                  rows={1}
+                  ref={(e) => {
+                    this.resources = e;
+                  }}
+                  placeholder={description.resources}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Assessments</label>
+                <input
+                  ref={(e) => {
+                    this.assessments = e;
+                  }}
+                  placeholder={description.assessments}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Standards</label>
+                <input
+                  ref={(e) => {
+                    this.standards = e;
+                  }}
+                  placeholder={description.standards}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Button type="submit">Update</Button>
+              </Form.Field>
+            </Form>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    );
+  }
+
   renderRightMenu = () => {
     const {
-      showDescription,
-      addDescription,
-      copied,
-      description,
       curSlide,
       slides,
       interactEnabled,
@@ -876,16 +1113,6 @@ export class WorkbookEditor extends React.Component {
 
         <div className="workbook-editor__right-menu">
           <div>
-            {/* <Menu.Item>
-              <Button
-                className="lprightbutton"
-                toggle
-                active={!interactEnabled}
-                onClick={this.toggleInteract}
-              >
-                {interactEnabled ? 'Draw' : 'Interact'}
-              </Button>
-            </Menu.Item> */}
             <h2 style={{ color: '#1ed760' }}>DRAW</h2>
             <label className="switch">
               <input checked={!interactEnabled} onClick={this.toggleInteract} type="checkbox" />
@@ -915,44 +1142,6 @@ export class WorkbookEditor extends React.Component {
                 </div>
               </Link>
             ) : null}
-            {/* <Menu.Item
-              className="lprightbutton"
-              onClick={() => {
-                const confirmation = confirm(
-                  'Are you sure you want to reset all?',
-                );
-                if (confirmation === true) this.reset();
-              }}
-            >
-              Reset workbook
-            </Menu.Item> */}
-
-            {/* <Menu.Item className="lprightbutton">
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div>
-                  <Button
-                    color="teal"
-                    onClick={() => {
-                      this.undo();
-                    }}
-                    attached="left"
-                  >
-                    <MdUndo />
-                  </Button>
-                  <Button
-                    color="teal"
-                    onClick={() => {
-                      this.redo();
-                    }}
-                    attached="right"
-                  >
-                    <MdRedo />
-                  </Button>
-                </div>
-                <p style={{ marginTop: '1rem' }}>Undo/redo</p>
-              </div>
-            </Menu.Item> */}
-
             <div
               className="workbook-editor__right-menu__button"
               onClick={() => {
@@ -1023,287 +1212,25 @@ export class WorkbookEditor extends React.Component {
                 <div className="workbook-editor__right-menu__button" link>Back</div>
               </Link>
             ) : null}
-
-            {this.checkDescExist() ? (
-              !!Meteor.userId()
-              && userId === Meteor.userId()
-              && this.checkDescription() ? (
-                <Modal
-                  size="small"
-                  onClose={() => {
-                    this.setState({ addDescription: false });
-                  }}
-                  open={addDescription}
-                  trigger={(
-                    <div
-                      className="workbook-editor__right-menu__button"
-                      onClick={() => {
-                        this.setState({ addDescription: true });
-                      }}
-                    >
-                      Add description
-                    </div>
-                )}
-                >
-                  <Modal.Header>
-                    Lesson Description
-                    <Button
-                      className="close-button"
-                      onClick={() => {
-                        this.setState({ addDescription: false });
-                      }}
-                    >
-                      X
-                    </Button>
-                  </Modal.Header>
-
-                  <Modal.Content>
-                    <Modal.Description>
-                      <Form onSubmit={this.addDescription}>
-                        <Form.Field required>
-                          <label>Subject</label>
-                          <input
-                            ref={(e) => {
-                              this.subject = e;
-                            }}
-                            required
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <label>Topic</label>
-                          <input
-                            ref={(e) => {
-                              this.topic = e;
-                            }}
-                            placeholder="-"
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <label>Learning Objective(s)</label>
-                          <textArea
-                            rows={1}
-                            ref={(e) => {
-                              this.learningObjectives = e;
-                            }}
-                            placeholder="-"
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <label>In-Class Activities</label>
-                          <textArea
-                            rows={1}
-                            ref={(e) => {
-                              this.inClassActivities = e;
-                            }}
-                            placeholder="-"
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <label>References/Resources</label>
-                          <textArea
-                            rows={1}
-                            ref={(e) => {
-                              this.resources = e;
-                            }}
-                            placeholder="-"
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <label>Assessments</label>
-                          <input
-                            ref={(e) => {
-                              this.assessments = e;
-                            }}
-                            placeholder="-"
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <label>Standards</label>
-                          <input
-                            ref={(e) => {
-                              this.standards = e;
-                            }}
-                            placeholder="-"
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <Button type="submit">Submit</Button>
-                        </Form.Field>
-                      </Form>
-                    </Modal.Description>
-                  </Modal.Content>
-                </Modal>
-                ) : (
-                  <Modal
-                    size="small"
-                    onClose={() => {
-                      this.setState({ showDescription: false });
-                    }}
-                    open={showDescription}
-                    trigger={(
-                      <div
-                        className="workbook-editor__right-menu__button"
-                        onClick={() => {
-                          this.setState({ showDescription: true });
-                          const res = Workbooks.find({
-                            _id,
-                          }).fetch();
-                          this.setState({ description: res[0].description });
-                        }}
-                      >
-                      View description
-                      </div>
-  )}
-                  >
-                    <Modal.Header>
-                    Lesson Description
-                      <Button
-                        className="close-button"
-                        onClick={() => {
-                          this.setState({ showDescription: false });
-                        }}
-                      >
-                      X
-                      </Button>
-                      {!!Meteor.userId() && userId === Meteor.userId() ? (
-                        <Modal
-                          size="small"
-                          onClose={() => {
-                            this.setState({ addDescription: false });
-                          }}
-                          open={addDescription}
-                          trigger={(
-                            <FaEdit
-                              style={{
-                                cursor: 'pointer',
-                                marginLeft: '15px',
-                              }}
-                              size={17}
-                              color="black"
-                              onClick={() => {
-                                this.setState({ addDescription: true });
-                              }}
-                            />
-                          )}
-                        >
-                          <Modal.Header>
-                          Lesson Description
-                            <Button
-                              className="close-button"
-                              onClick={() => {
-                                this.setState({ addDescription: false });
-                              }}
-                            >
-                            X
-                            </Button>
-                          </Modal.Header>
-
-                          <Modal.Content>
-                            <Modal.Description>
-                              <Form onSubmit={this.addDescription}>
-                                <Form.Field>
-                                  <label>Subject</label>
-                                  <input
-                                    ref={(e) => {
-                                      this.subject = e;
-                                    }}
-                                    placeholder={description.subject}
-                                  />
-                                </Form.Field>
-                                <Form.Field>
-                                  <label>Topic</label>
-                                  <input
-                                    ref={(e) => {
-                                      this.topic = e;
-                                    }}
-                                    placeholder={description.topic}
-                                  />
-                                </Form.Field>
-                                <Form.Field>
-                                  <label>Learning Objective(s)</label>
-                                  <textArea
-                                    rows={1}
-                                    ref={(e) => {
-                                      this.learningObjectives = e;
-                                    }}
-                                    placeholder={description.learningObjectives}
-                                  />
-                                </Form.Field>
-                                <Form.Field>
-                                  <label>In-Class Activities</label>
-                                  <textArea
-                                    rows={1}
-                                    ref={(e) => {
-                                      this.inClassActivities = e;
-                                    }}
-                                    placeholder={description.inClassActivities}
-                                  />
-                                </Form.Field>
-                                <Form.Field>
-                                  <label>References/Resources</label>
-                                  <textArea
-                                    rows={1}
-                                    ref={(e) => {
-                                      this.resources = e;
-                                    }}
-                                    placeholder={description.resources}
-                                  />
-                                </Form.Field>
-                                <Form.Field>
-                                  <label>Assessments</label>
-                                  <input
-                                    ref={(e) => {
-                                      this.assessments = e;
-                                    }}
-                                    placeholder={description.assessments}
-                                  />
-                                </Form.Field>
-                                <Form.Field>
-                                  <label>Standards</label>
-                                  <input
-                                    ref={(e) => {
-                                      this.standards = e;
-                                    }}
-                                    placeholder={description.standards}
-                                  />
-                                </Form.Field>
-                                <Form.Field>
-                                  <Button type="submit">Update</Button>
-                                </Form.Field>
-                              </Form>
-                            </Modal.Description>
-                          </Modal.Content>
-                        </Modal>
-                      ) : null}
-                      {!!Meteor.userId() && userId === Meteor.userId() ? (
-                        <FaTrash
-                          style={{ cursor: 'pointer', marginLeft: '15px' }}
-                          size={17}
-                          color="black"
-                          onClick={() => {
-                            const confirmation = confirm(
-                              'Are you sure you want to perform this deletion?',
-                            );
-
-                            if (!confirmation) return;
-
-                            Meteor.call('workbooks.removeDescription', _id, () => {
-                              this.setState({ description: [] });
-                            });
-                          }}
-                        />
-                      ) : null}
-                    </Modal.Header>
-
-                    <Modal.Content>
-                      <Modal.Description>
-                        {this.renderDescription()}
-                      </Modal.Description>
-                    </Modal.Content>
-                  </Modal>
-                )
-            ) : null}
-
+            {!this.checkDescExist() ? (
+              <div
+                className="workbook-editor__right-menu__button"
+                onClick={() => {
+                  this.handleAddDescription();
+                }}
+              >
+            Add description
+              </div>
+            ) : (
+              <div
+                onClick={() => {
+                  this.handleShowDescription();
+                }}
+                className="workbook-editor__right-menu__button"
+              >
+            View description
+              </div>
+            )}
             <a
               target="_blank"
               href="https://github.com/JithinKS97/dynamic-learning"
@@ -1377,9 +1304,6 @@ export class WorkbookEditor extends React.Component {
   renderLeftMenuHeader = () => {
     const {
       saving,
-      slides,
-      curSlide,
-      _id,
     } = this.state;
 
     return (
@@ -1418,7 +1342,6 @@ export class WorkbookEditor extends React.Component {
 
   renderLoginNotificationModal = () => {
     const {
-
       loginNotification,
     } = this.state;
 
@@ -1552,6 +1475,9 @@ export class WorkbookEditor extends React.Component {
         {this.renderLoginNotificationModal()}
         {this.renderWorkBookTitleModal()}
         {this.renderResponseModal()}
+        {this.renderAddDescription()}
+        {this.renderDescriptionModal()}
+        {this.renderEditDescription()}
         <div>
           <Dimmer active={!initialized}>
             <Loader />
