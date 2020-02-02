@@ -42,12 +42,6 @@ export const renderResponseModal = editorRef => (
 
 export const renderDescriptionModal = (editorRef) => {
   const { description, showDescription } = editorRef.state;
-  if (
-    Object.keys(description).length === 0
-      && description.constructor === Object
-  ) {
-    return <p>No description to show</p>;
-  }
   return (
     <Modal open={showDescription}>
       <Modal.Header>
@@ -74,50 +68,54 @@ export const renderDescriptionModal = (editorRef) => {
           </div>
         </div>
       </Modal.Header>
-      <Modal.Content>
-        <List divided relaxed>
-          <List.Item>
-            <List.Header>Subject</List.Header>
-            {description.subject}
-          </List.Item>
-          <List.Item>
-            <List.Header>Topic</List.Header>
-            {description.topic}
-          </List.Item>
-          <List.Item>
-            <List.Header>Learning Objectives</List.Header>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: description.learningObjectives,
-              }}
-            />
-          </List.Item>
-          <List.Item>
-            <List.Header>In-Class Activites</List.Header>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: description.inClassActivities,
-              }}
-            />
-          </List.Item>
-          <List.Item>
-            <List.Header>Resources</List.Header>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: description.resources,
-              }}
-            />
-          </List.Item>
-          <List.Item>
-            <List.Header>Assessments</List.Header>
-            {description.assessments}
-          </List.Item>
-          <List.Item>
-            <List.Header>Standards</List.Header>
-            {description.standards}
-          </List.Item>
-        </List>
-      </Modal.Content>
+      {Object.keys(description).length === 0
+      && description.constructor === Object ? <Modal.Content></Modal.Content> : (
+        <Modal.Content>
+          <List divided relaxed>
+            <List.Item>
+              <List.Header>Subject</List.Header>
+              {description.subject}
+            </List.Item>
+            <List.Item>
+              <List.Header>Topic</List.Header>
+              {description.topic}
+            </List.Item>
+            <List.Item>
+              <List.Header>Learning Objectives</List.Header>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: description.learningObjectives,
+                }}
+              />
+            </List.Item>
+            <List.Item>
+              <List.Header>In-Class Activites</List.Header>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: description.inClassActivities,
+                }}
+              />
+            </List.Item>
+            <List.Item>
+              <List.Header>Resources</List.Header>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: description.resources,
+                }}
+              />
+            </List.Item>
+            <List.Item>
+              <List.Header>Assessments</List.Header>
+              {description.assessments}
+            </List.Item>
+            <List.Item>
+              <List.Header>Standards</List.Header>
+              {description.standards}
+            </List.Item>
+          </List>
+        </Modal.Content>
+      )}
+
     </Modal>
   );
 };
