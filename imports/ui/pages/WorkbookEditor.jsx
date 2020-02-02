@@ -1042,7 +1042,7 @@ export class WorkbookEditor extends React.Component {
                     >
                       Add description
                     </div>
-  )}
+                )}
                 >
                   <Modal.Header>
                     Lesson Description
