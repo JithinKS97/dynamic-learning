@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/destructuring-assignment */
@@ -5,33 +6,35 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-control-regex */
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import { Session } from 'meteor/session';
 import { withTracker } from 'meteor/react-meteor-data';
 import {
-  Button,
   Dimmer,
   Loader,
-  Modal,
-  Form,
-  List,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
 import DOMPurify from 'dompurify';
-import { FaEdit, FaArrowLeft } from 'react-icons/fa';
-import { MdAddCircleOutline } from 'react-icons/md';
-import { GiBackwardTime } from 'react-icons/gi';
-import TextBoxes from '../components/workbook/TextBoxes';
-import MCQs from '../components/workbook/MCQs';
-import ShortResponses from '../components/workbook/ShortResponses';
-import AddSim from '../components/AddSim';
-import SlidesList from '../components/workbook/List';
-import SimsList from '../components/SimsList';
-import { Workbooks } from '../../api/workbooks';
-import DrawingBoardCmp from '../components/workbook/DrawingBoardCmp';
+import TextBoxes from '../../components/workbook/TextBoxes';
+import MCQs from '../../components/workbook/MCQs';
+import ShortResponses from '../../components/workbook/ShortResponses';
+import SlidesList from '../../components/workbook/List';
+import SimsList from '../../components/SimsList';
+import { Workbooks } from '../../../api/workbooks';
+import DrawingBoardCmp from '../../components/workbook/DrawingBoardCmp';
+
+import {
+  renderResponseModal,
+  renderDescriptionModal,
+  renderAddDescription,
+  renderEditDescription,
+  renderLoginNotificationModal,
+  renderWorkBookTitleModal,
+} from './Modals';
+
+import { renderRightMenu, renderLeftMenuHeader } from './Menu';
 
 /*
  * renders the page in which teachers create, edit, save and present workbooks
@@ -87,13 +90,13 @@ export class WorkbookEditor extends React.Component {
   componentWillReceiveProps(nextProps) {
     // eslint-disable-next-line react/prop-types
     const { workbookExists, workbook } = nextProps;
-    const { initialized } = this.state;
 
     if (workbookExists === false) return;
     this.setState(
       {
         ...workbook,
         initialized: true,
+        workbookExists,
       },
       () => {
         const { slides } = this.state;
@@ -806,465 +809,6 @@ export class WorkbookEditor extends React.Component {
     return 900;
   };
 
-  renderDescriptionModal = () => {
-    const { description, showDescription } = this.state;
-    if (
-      Object.keys(description).length === 0
-      && description.constructor === Object
-    ) {
-      return <p>No description to show</p>;
-    }
-    return (
-      <Modal open={showDescription}>
-        <Modal.Header>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>Description</div>
-            <div>
-              <Button onClick={() => {
-                this.setState({
-                  showDescription: false,
-                  showEditDescription: true,
-                });
-              }}
-              >
-                <FaEdit />
-              </Button>
-              <Button
-                className="close-button"
-                onClick={() => {
-                  this.setState({ showDescription: false });
-                }}
-              >
-              X
-              </Button>
-            </div>
-          </div>
-        </Modal.Header>
-        <Modal.Content>
-          <List divided relaxed>
-            <List.Item>
-              <List.Header>Subject</List.Header>
-              {description.subject}
-            </List.Item>
-            <List.Item>
-              <List.Header>Topic</List.Header>
-              {description.topic}
-            </List.Item>
-            <List.Item>
-              <List.Header>Learning Objectives</List.Header>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: description.learningObjectives,
-                }}
-              />
-            </List.Item>
-            <List.Item>
-              <List.Header>In-Class Activites</List.Header>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: description.inClassActivities,
-                }}
-              />
-            </List.Item>
-            <List.Item>
-              <List.Header>Resources</List.Header>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: description.resources,
-                }}
-              />
-            </List.Item>
-            <List.Item>
-              <List.Header>Assessments</List.Header>
-              {description.assessments}
-            </List.Item>
-            <List.Item>
-              <List.Header>Standards</List.Header>
-              {description.standards}
-            </List.Item>
-          </List>
-        </Modal.Content>
-      </Modal>
-    );
-  };
-
-  renderAddDescription = () => {
-    const { addDescription } = this.state;
-
-    return (
-      <Modal
-        size="small"
-        onClose={() => {
-          this.setState({ addDescription: false });
-        }}
-        open={addDescription}
-      >
-        <Modal.Header>
-        Lesson Description
-          <Button
-            className="close-button"
-            onClick={() => {
-              this.setState({ addDescription: false });
-            }}
-          >
-          X
-          </Button>
-        </Modal.Header>
-
-        <Modal.Content>
-          <Modal.Description>
-            <Form onSubmit={this.addDescription}>
-              <Form.Field required>
-                <label>Subject</label>
-                <input
-                  ref={(e) => {
-                    this.subject = e;
-                  }}
-                  required
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Topic</label>
-                <input
-                  ref={(e) => {
-                    this.topic = e;
-                  }}
-                  placeholder="-"
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Learning Objective(s)</label>
-                <textArea
-                  rows={1}
-                  ref={(e) => {
-                    this.learningObjectives = e;
-                  }}
-                  placeholder="-"
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>In-Class Activities</label>
-                <textArea
-                  rows={1}
-                  ref={(e) => {
-                    this.inClassActivities = e;
-                  }}
-                  placeholder="-"
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>References/Resources</label>
-                <textArea
-                  rows={1}
-                  ref={(e) => {
-                    this.resources = e;
-                  }}
-                  placeholder="-"
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Assessments</label>
-                <input
-                  ref={(e) => {
-                    this.assessments = e;
-                  }}
-                  placeholder="-"
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Standards</label>
-                <input
-                  ref={(e) => {
-                    this.standards = e;
-                  }}
-                  placeholder="-"
-                />
-              </Form.Field>
-              <Form.Field>
-                <Button type="submit">Submit</Button>
-              </Form.Field>
-            </Form>
-          </Modal.Description>
-        </Modal.Content>
-      </Modal>
-    );
-  }
-
-  renderEditDescription = () => {
-    const {
-      description,
-      showEditDescription,
-    } = this.state;
-    return (
-      <Modal
-        size="small"
-        open={showEditDescription}
-      >
-        <Modal.Header>
-              Lesson Description
-          <Button
-            className="close-button"
-            onClick={() => {
-              this.setState({ showEditDescription: false });
-            }}
-          >
-                X
-          </Button>
-        </Modal.Header>
-
-        <Modal.Content>
-          <Modal.Description>
-            <Form onSubmit={this.addDescription}>
-              <Form.Field>
-                <label>Subject</label>
-                <input
-                  ref={(e) => {
-                    this.subject = e;
-                  }}
-                  placeholder={description.subject}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Topic</label>
-                <input
-                  ref={(e) => {
-                    this.topic = e;
-                  }}
-                  placeholder={description.topic}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Learning Objective(s)</label>
-                <textArea
-                  rows={1}
-                  ref={(e) => {
-                    this.learningObjectives = e;
-                  }}
-                  placeholder={description.learningObjectives}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>In-Class Activities</label>
-                <textArea
-                  rows={1}
-                  ref={(e) => {
-                    this.inClassActivities = e;
-                  }}
-                  placeholder={description.inClassActivities}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>References/Resources</label>
-                <textArea
-                  rows={1}
-                  ref={(e) => {
-                    this.resources = e;
-                  }}
-                  placeholder={description.resources}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Assessments</label>
-                <input
-                  ref={(e) => {
-                    this.assessments = e;
-                  }}
-                  placeholder={description.assessments}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Standards</label>
-                <input
-                  ref={(e) => {
-                    this.standards = e;
-                  }}
-                  placeholder={description.standards}
-                />
-              </Form.Field>
-              <Form.Field>
-                <Button type="submit">Update</Button>
-              </Form.Field>
-            </Form>
-          </Modal.Description>
-        </Modal.Content>
-      </Modal>
-    );
-  }
-
-  renderRightMenu = () => {
-    const {
-      curSlide,
-      slides,
-      interactEnabled,
-      userId,
-      _id,
-    } = this.state;
-
-    return (
-      <>
-        <AddSim
-          ref={(e) => {
-            this.addSim = e;
-          }}
-          curSlide={curSlide}
-          slides={slides}
-          updateSlides={this.updateSlides}
-        />
-
-        <div className="workbook-editor__right-menu">
-          <div>
-            <h2 style={{ color: '#1ed760' }}>DRAW</h2>
-            <label className="switch">
-              <input checked={!interactEnabled} onClick={this.toggleInteract} type="checkbox" />
-              <span className="slider round" />
-            </label>
-
-            <div
-              className="workbook-editor__right-menu__button"
-              onClick={() => {
-                this.addSim.addSim();
-              }}
-              color="black"
-            >
-              + Simulation
-            </div>
-            {!!Meteor.userId() && userId === Meteor.userId() ? (
-              <Link
-                to={{
-                  pathname: `/request/${_id}`,
-                  state: { from: 'createlessonplan' },
-                }}
-              >
-                <div
-                  className="workbook-editor__right-menu__button"
-                >
-                  Discussion forum
-                </div>
-              </Link>
-            ) : null}
-            <div
-              className="workbook-editor__right-menu__button"
-              onClick={() => {
-                this.saveToDatabase();
-              }}
-            >
-              {Meteor.userId() === userId || !Meteor.userId()
-                ? 'Save'
-                : 'Fork and Save'}
-            </div>
-            <div style={{ backgroundColor: '#102028', margin: '1rem' }}>
-              <div style={{ fontSize: '1.2rem', color: 'white', paddingTop: '1rem' }}>Canvas size</div>
-              <div>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '1rem',
-                }}
-                >
-                  <div
-                    className="workbook-editor__small-button"
-                    // eslint-disable-next-line react/no-string-refs
-                    ref="increaseCanvasButton"
-                    onClick={() => {
-                      this.changePageCount(1);
-                    }}
-                  >
-                    +
-                  </div>
-
-                  <div
-                    className="workbook-editor__small-button"
-                    onClick={() => {
-                      if (this.pageCount === 0 || this.checkCanvasSize()) {
-                        alert('Canvas size cannot be decreased further!');
-                        return;
-                      }
-
-                      this.changePageCount(-1);
-                    }}
-                  >
-                    -
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {!Meteor.userId() ? (
-              <div
-                className="workbook-editor__right-menu__button"
-                onClick={() => {
-                  const confirmation = confirm(
-                    'You will be redirected to login page. Changes will be saved for you.',
-                  );
-                  if (!confirmation) return;
-
-                  Session.set('stateToSave', this.state);
-
-                  this.setState({ redirectToLogin: true });
-                }}
-              >
-                Login
-              </div>
-            ) : null}
-            {!Meteor.userId() ? (
-              <Link to="/explore">
-                <div className="workbook-editor__right-menu__button" link>Back</div>
-              </Link>
-            ) : null}
-            {!this.checkDescExist() ? (
-              <div
-                className="workbook-editor__right-menu__button"
-                onClick={() => {
-                  this.handleAddDescription();
-                }}
-              >
-            Add description
-              </div>
-            ) : (
-              <div
-                onClick={() => {
-                  this.handleShowDescription();
-                }}
-                className="workbook-editor__right-menu__button"
-              >
-            View description
-              </div>
-            )}
-            <a
-              target="_blank"
-              href="https://github.com/JithinKS97/dynamic-learning"
-            >
-              <div className="workbook-editor__right-menu__button" link>Contribute</div>
-            </a>
-
-            <div
-              className="workbook-editor__right-menu__button"
-              onClick={() => {
-                Meteor.call('workbook.submitAnswers');
-              }}
-            >
-              Submit answers
-            </div>
-          </div>
-          <div>
-            <div className="reset-workbook-container">
-              <div
-                className="reset-workbook-container__icon"
-                onClick={this.reset}
-              >
-                <GiBackwardTime size="1.7em" />
-              </div>
-              <div className="reset-workbook-container__text">
-                Reset Workbook
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  };
-
   handleRedirectToDashboard = () => {
     const {
       slides,
@@ -1301,149 +845,6 @@ export class WorkbookEditor extends React.Component {
     });
   }
 
-  renderLeftMenuHeader = () => {
-    const {
-      saving,
-    } = this.state;
-
-    return (
-      <div
-        style={{
-          position: 'sticky',
-          top: 0,
-          backgroundColor: '#203038',
-          paddingBottom: '0.2rem',
-        }}
-        className="workbook-left-menu-header"
-      >
-        {saving ? <div style={{ color: 'white', marginTop: '0.5rem' }}>Saving...</div> : null}
-
-        {Meteor.userId() ? (
-          <div
-            className="dashboard-arrow-container"
-            onClick={this.handleRedirectToDashboard}
-          >
-            <FaArrowLeft color="fff" size="1.2rem" />
-          </div>
-        ) : null}
-        <div>
-          <img className="workbook-editor__slides-list__logo" alt="dynamic-learning-logo" src="/symbol.png" />
-        </div>
-        <div
-          className="workbook-editor__slides-list__add-slide"
-          style={{ marginTop: '0.8rem', marginLeft: '1rem', marginRight: '1rem' }}
-          onClick={this.addNewSlide}
-        >
-          <MdAddCircleOutline size="1.8rem" />
-        </div>
-      </div>
-    );
-  }
-
-  renderLoginNotificationModal = () => {
-    const {
-      loginNotification,
-    } = this.state;
-
-    return (
-      <Modal size="tiny" open={loginNotification}>
-        <Modal.Header>
-            You need to login to save changes
-          <Button
-            style={{ float: 'right' }}
-            onClick={() => {
-              this.setState({ loginNotification: false });
-            }}
-          >
-              X
-          </Button>
-        </Modal.Header>
-        <Modal.Content>
-          <Modal.Description style={{ textAlign: 'center' }}>
-            <Button
-              onClick={() => {
-                Session.set('stateToSave', this.state);
-
-                this.setState({ redirectToLogin: true });
-              }}
-              style={{ marginTop: '1.6rem' }}
-            >
-                Login
-            </Button>
-          </Modal.Description>
-        </Modal.Content>
-      </Modal>
-    );
-  }
-
-  renderWorkBookTitleModal = () => {
-    const {
-      title,
-    } = this.state;
-
-    return (
-      <Modal size="tiny" open={!title}>
-        <Modal.Header>Enter the title for the Workbook</Modal.Header>
-
-        <Modal.Content>
-          <Modal.Description>
-            <Form
-              onSubmit={() => {
-                if (!this.title.value) return;
-
-                this.setState({
-                  title: this.title.value,
-                });
-              }}
-            >
-              <Form.Field>
-                <label>Title</label>
-                <input
-                  ref={(e) => {
-                    this.title = e;
-                  }}
-                />
-              </Form.Field>
-              <Form.Field>
-                <Button type="submit">Submit</Button>
-              </Form.Field>
-            </Form>
-          </Modal.Description>
-        </Modal.Content>
-      </Modal>
-    );
-  }
-
-  renderResponseModal = () => (
-    <Modal
-      size="tiny"
-      // eslint-disable-next-line react/destructuring-assignment
-      open={this.state.question}
-      onClose={() => this.setState({ question: false })}
-    >
-      <Modal.Header>
-          Choose a question type.
-        <Button
-          className="close-button"
-          onClick={() => this.setState({ question: false })}
-        >
-            &times;
-        </Button>
-      </Modal.Header>
-
-      <Modal.Content>
-        <Modal.Description>
-          <Button onClick={() => this.addMCQ()}> Multiple Choice </Button>
-          <Button onClick={() => this.addShortResponse()}>
-            {' '}
-              Short Response
-            {' '}
-          </Button>
-        </Modal.Description>
-      </Modal.Content>
-    </Modal>
-  )
-
   render() {
     const {
       redirectToLogin,
@@ -1472,12 +873,12 @@ export class WorkbookEditor extends React.Component {
     }
     return (
       <>
-        {this.renderLoginNotificationModal()}
-        {this.renderWorkBookTitleModal()}
-        {this.renderResponseModal()}
-        {this.renderAddDescription()}
-        {this.renderDescriptionModal()}
-        {this.renderEditDescription()}
+        {renderLoginNotificationModal(this)}
+        {renderWorkBookTitleModal(this)}
+        {renderResponseModal(this)}
+        {renderAddDescription(this)}
+        {renderDescriptionModal(this)}
+        {renderEditDescription(this)}
         <div>
           <Dimmer active={!initialized}>
             <Loader />
@@ -1499,7 +900,7 @@ export class WorkbookEditor extends React.Component {
               }}
               className="workbook-editor__slides-list"
             >
-              {this.renderLeftMenuHeader()}
+              {renderLeftMenuHeader(this)}
               <div
                 style={{
                   padding: '0 1rem',
@@ -1608,7 +1009,7 @@ export class WorkbookEditor extends React.Component {
             <div
               style={{ flex: 1.5, padding: 0, margin: 0 }}
             >
-              {this.renderRightMenu()}
+              {renderRightMenu(this)}
             </div>
           </div>
         </div>
