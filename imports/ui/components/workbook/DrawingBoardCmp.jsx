@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
@@ -211,7 +212,7 @@ export default class DrawingBoardCmp extends Component {
     });
   };
 
-/*  handleNoFill = () => {
+  /*  handleNoFill = () => {
     const { option } = this.state;
     const { onChange } = this.props;
     if (option === 'select') {
@@ -450,11 +451,12 @@ export default class DrawingBoardCmp extends Component {
       addTextBox,
       addQuestion,
       copied,
+      showToolbar,
     } = this.props;
 
     return (
       <div>
-        <div className="drawing-board-controls-wrapper">
+        <div style={{ display: showToolbar ? 'block' : 'none' }} className="drawing-board-controls-wrapper">
           <div className="drawing-board-controls">
             <div
               className={option === 'select' ? 'drawing-board-controls__item drawing-board-controls__item--selected tooltip' : 'drawing-board-controls__item tooltip'}

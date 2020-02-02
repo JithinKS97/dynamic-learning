@@ -1658,7 +1658,7 @@ export class WorkbookEditor extends React.Component {
                 <DrawingBoardCmp
                   interactEnabled={interactEnabled}
                   interact={this.toggleInteract}
-                  toolbarVisible
+                  showToolbar
                   ref={(e) => {
                     this.drawingBoard = e;
                   }}
