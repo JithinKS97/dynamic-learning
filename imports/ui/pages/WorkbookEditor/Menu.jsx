@@ -129,7 +129,7 @@ export const renderRightMenu = (editorRef) => {
               <div className="workbook-editor__right-menu__button" link>Back</div>
             </Link>
           ) : null}
-          {!editorRef.checkDescExist() ? (
+          {!editorRef.checkDescription() && Meteor.userId() ? (
             <div
               className="workbook-editor__right-menu__button"
               onClick={() => {

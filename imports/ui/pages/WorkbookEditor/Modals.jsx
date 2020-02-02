@@ -48,15 +48,17 @@ export const renderDescriptionModal = (editorRef) => {
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>Description</div>
           <div>
-            <Button onClick={() => {
-              editorRef.setState({
-                showDescription: false,
-                showEditDescription: true,
-              });
-            }}
-            >
-              <FaEdit />
-            </Button>
+            {Meteor.userId() ? (
+              <Button onClick={() => {
+                editorRef.setState({
+                  showDescription: false,
+                  showEditDescription: true,
+                });
+              }}
+              >
+                <FaEdit />
+              </Button>
+            ) : null}
             <Button
               className="close-button"
               onClick={() => {
@@ -69,74 +71,78 @@ export const renderDescriptionModal = (editorRef) => {
         </div>
       </Modal.Header>
       {Object.keys(description).length === 0
-      && description.constructor === Object ? <Modal.Content></Modal.Content> : (
+      && description.constructor === Object ? (
         <Modal.Content>
-          <List divided relaxed>
-            <List.Item>
-              <List.Header>Subject</List.Header>
-              {description.subject}
-            </List.Item>
-            <List.Item>
-              <List.Header>Topic</List.Header>
-              {description.topic}
-            </List.Item>
-            <List.Item>
-              <List.Header>Learning Objectives</List.Header>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: description.learningObjectives,
-                }}
-              />
-            </List.Item>
-            <List.Item>
-              <List.Header>In-Class Activites</List.Header>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: description.inClassActivities,
-                }}
-              />
-            </List.Item>
-            <List.Item>
-              <List.Header>Resources</List.Header>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: description.resources,
-                }}
-              />
-            </List.Item>
-            <List.Item>
-              <List.Header>Assessments</List.Header>
-              {description.assessments}
-            </List.Item>
-            <List.Item>
-              <List.Header>Standards</List.Header>
-              {description.standards}
-            </List.Item>
-          </List>
+          No description to show
         </Modal.Content>
-      )}
+        ) : (
+          <Modal.Content>
+            <List divided relaxed>
+              <List.Item>
+                <List.Header>Subject</List.Header>
+                {description.subject}
+              </List.Item>
+              <List.Item>
+                <List.Header>Topic</List.Header>
+                {description.topic}
+              </List.Item>
+              <List.Item>
+                <List.Header>Learning Objectives</List.Header>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: description.learningObjectives,
+                  }}
+                />
+              </List.Item>
+              <List.Item>
+                <List.Header>In-Class Activites</List.Header>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: description.inClassActivities,
+                  }}
+                />
+              </List.Item>
+              <List.Item>
+                <List.Header>Resources</List.Header>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: description.resources,
+                  }}
+                />
+              </List.Item>
+              <List.Item>
+                <List.Header>Assessments</List.Header>
+                {description.assessments}
+              </List.Item>
+              <List.Item>
+                <List.Header>Standards</List.Header>
+                {description.standards}
+              </List.Item>
+            </List>
+          </Modal.Content>
+        )}
 
     </Modal>
   );
 };
 
 export const renderAddDescription = (editorRef) => {
-  const { addDescription } = editorRef.state;
+  const { showAddDescription } = editorRef.state;
 
   return (
     <Modal
       size="small"
       onClose={() => {
-        editorRef.setState({ addDescription: false });
+        editorRef.setState({ showAddDescription: false });
       }}
-      open={addDescription}
+      open={showAddDescription}
     >
       <Modal.Header>
         Lesson Description
         <Button
           className="close-button"
           onClick={() => {
-            editorRef.setState({ addDescription: false });
+            editorRef.setState({ showAddDescription: false });
           }}
         >
           X

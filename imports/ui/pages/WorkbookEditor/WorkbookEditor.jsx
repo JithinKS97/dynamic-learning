@@ -63,6 +63,7 @@ export class WorkbookEditor extends React.Component {
       showAddDescription: false,
       showEditDescription: false,
       saving: false,
+      descriptionExists: false,
     };
 
     this.pageCount = 0;
@@ -97,6 +98,8 @@ export class WorkbookEditor extends React.Component {
         ...workbook,
         initialized: true,
         workbookExists,
+        // eslint-disable-next-line max-len
+        descriptionExists: !(Object.keys(workbook.description).length === 0 && workbook.description.constructor === Object),
       },
       () => {
         const { slides } = this.state;
@@ -704,7 +707,7 @@ export class WorkbookEditor extends React.Component {
 
   addDescription = () => {
     this.setState({ showEditDescription: false });
-    this.setState({ addDescription: false });
+    this.setState({ showAddDescription: false });
 
     let subject;
     let topic;
@@ -793,13 +796,7 @@ export class WorkbookEditor extends React.Component {
     Meteor.call('workbooks.addDescriptionField', _id);
   };
 
-  checkDescription = () => {
-    const { _id } = this.state;
-    const res = Workbooks.find({ _id }).fetch();
-    const desc = res[0].description;
-    return Object.keys(desc).length === 0 && desc.constructor === Object;
-  };
-
+  checkDescription = () => this.state.descriptionExists;
 
   calcHeightOfCanvasContainer = () => {
     const { slides, curSlide } = this.state;
