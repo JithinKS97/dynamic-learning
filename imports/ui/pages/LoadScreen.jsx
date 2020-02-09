@@ -5,19 +5,6 @@ import { Accounts } from 'meteor/accounts-base'
 
 export default () => {
 
-  // Accounts.onResetPasswordLink((token, done) => {
-  //   // Display the password reset UI, get the new password...
-  
-  //   Accounts.resetPassword(token, newPassword, (err) => {
-  //     if (err) {
-  //       // Display error
-  //     } else {
-  //       // Resume normal operation
-  //       done();
-  //     }
-  //   });
-  // })
-
   const Header = () => {
     return (
       <div className='loadscren__header-container'>

@@ -29,7 +29,3 @@ Meteor.users.find().fetch().map(user => {
         }
     }
 })
-
-if(Meteor.isServer){
-    process.env.MAIL_URL = 'smtp://postmaster@sandboxxxxxxx.mailgun.org:xxxxxxxxxx@smtp.mailgun.org:587';
-}
