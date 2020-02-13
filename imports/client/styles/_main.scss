@@ -34,6 +34,9 @@
 }
 // full width
 @media (max-width: 1400px) {
+  html {
+    font-size:12px;
+  }
   .slidescontrols {
     font-size: 12px !important;
   }
