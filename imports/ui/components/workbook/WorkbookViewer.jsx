@@ -777,7 +777,6 @@ export class WorkbookViewer extends React.Component {
                     this.drawingBoard = e;
                   }}
                   onChange={this.onChange}
-
                 />
               </div>
             </Grid.Column>

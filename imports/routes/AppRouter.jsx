@@ -5,7 +5,7 @@ import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
 
 import Login from '../ui/pages/Login';
-import workbookeditorContainer from '../ui/pages/WorkbookEditor';
+import workbookeditorContainer from '../ui/pages/WorkbookEditor/WorkbookEditor';
 import Lesson from '../ui/pages/Lesson';
 import LoadScreen from '../ui/pages/LoadScreen';
 import Explore from '../ui/pages/Explore';
