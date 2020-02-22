@@ -38,6 +38,7 @@
     "array-callback-return":"off",
     "jsx-a11y/iframe-has-title":"off",
     "react/jsx-no-target-blank":"off",
+    "react/destructuring-assignment": "off",
     "import/extensions": "off",
     "meteor/no-session":"off"
   }

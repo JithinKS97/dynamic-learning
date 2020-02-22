@@ -1,0 +1,26 @@
+.discussion-forum__topbar {
+  background-color: #203038;
+  height: 9vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.discussion-forum__topbar__icon {
+  height: 5vh;
+  width: 5vh;
+  margin: 0px 20px;
+  cursor: pointer;
+}
+
+
+.discussion-forum__topbar__item {
+  margin: 0px 20px;
+  color: #acb5b9;
+  cursor: pointer;
+}
+
+.discussion-forum__topbar__item:hover {
+  color: #fff;
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import moment from 'moment';
+
 import {
   Grid,
   Button,
@@ -15,8 +15,6 @@ import {
   Header,
   Container,
   Card,
-  Menu,
-  Label,
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -28,8 +26,9 @@ import CommentForm from '../components/comments/CommentForm';
 import CommentsList from '../components/comments/CommentsList';
 import SimTiles from '../components/discussionForum/SimTiles';
 import 'semantic-ui-css/semantic.min.css';
-import history from '../../routes/history';
-
+import {
+  TopBarIcon, CloseForumBtn, JoinBtn, LeaveBtn, PendingRequests, ShowMembers, CreatedTime,
+} from '../components/discussionForum/TopBarComponents';
 
 export class Request extends React.Component {
   constructor(props) {
@@ -214,8 +213,6 @@ export class Request extends React.Component {
     return memberNameUserIds.map(member => <li key={member.userId}>{member.username}</li>);
   };
 
-
-  findTime = time => moment(time)
 
   push = (title) => {
     // isOwner is true when the current user is the one who opened the forum
@@ -479,6 +476,18 @@ export class Request extends React.Component {
     );
   };
 
+  handleShowMembershipRequests = () => {
+    this.setState({
+      showMembershipRequests: true,
+    });
+  }
+
+  handleShowMembers = () => {
+    this.setState({
+      showMembers: true,
+    });
+  }
+
   renderTitleDescriptionModal = () => {
     const {
       showEditDescription,
@@ -696,96 +705,34 @@ export class Request extends React.Component {
     );
   }
 
-  renderTopMenu = () => {
-    const {
-      pendingMembers,
-    } = this.state;
-    const {
-      isOwner,
-      isAuthenticated,
-      isMember,
-      request: {
-        _id, createdAt,
-      },
-    } = this.props;
-    return (
-      <Menu style={{ margin: 0 }}>
-        <Menu.Item onClick={() => history.goBack()}>
-          Back
-        </Menu.Item>
-
-        {isOwner ? (
-          <Menu.Item
-            onClick={() => {
-              const confirmation = confirm(
-                'Are you sure you want to close this forum?',
-              );
-
-              if (confirmation && isOwner) {
-                Meteor.call('requests.reset', _id);
-                history.goBack();
-              }
-            }}
-          >
-            Close this forum
-          </Menu.Item>
-        ) : null}
-
-        {isAuthenticated && !isMember ? (
-          <Menu.Item
-            onClick={() => {
-              this.handleJoin();
-            }}
-          >
-            Join
-          </Menu.Item>
-        ) : null}
-
-        {isAuthenticated
-        && isMember
-        && !isOwner ? (
-          <Menu.Item
-            onClick={() => {
-              this.handleLeave();
-            }}
-          >
-            Leave
-          </Menu.Item>
-          ) : null}
-
-        {isOwner && isMember ? (
-          <Menu.Item
-            onClick={() => {
-              this.setState({
-                showMembershipRequests: true,
-              });
-            }}
-          >
-            Membership requests
-            {pendingMembers.length > 0 ? (
-              <Label color="teal">{pendingMembers.length}</Label>
-            ) : null}
-          </Menu.Item>
-        ) : null}
-
-        <Menu.Item
-          onClick={() => {
-            this.setState({
-              showMembers: true,
-            });
-          }}
-        >
-          Members
-        </Menu.Item>
-
-        <Menu.Item style={{ backgroundColor: '#E5E4E2' }}>
-          Opened
-          {' '}
-          {this.findTime(createdAt || Date.now()).fromNow()}
-        </Menu.Item>
-      </Menu>
-    );
-  }
+renderTopMenu = () => (
+  <div className="discussion-forum__topbar">
+    <TopBarIcon />
+    <CloseForumBtn
+      isOwner={this.props.isOwner}
+      _id={this.props.request._id}
+    />
+    <JoinBtn
+      isAuthenticated={this.props.isAuthenticated}
+      isMember={this.props.isMember}
+      handleJoin={this.handleJoin}
+    />
+    <LeaveBtn
+      isAuthenticated={this.props.isAuthenticated}
+      isOwner={this.props.isOwner}
+      isMember={this.props.isMember}
+      handleLeave={this.handleLeave}
+    />
+    <PendingRequests
+      isOwner={this.props.isOwner}
+      isMember={this.props.isMember}
+      pendingMembers={this.state.pendingMembers}
+      handleShowMembershipRequests={this.handleShowMembershipRequests}
+    />
+    <ShowMembers handleShowMembers={this.handleShowMembers} />
+    <CreatedTime createdAt={this.props.request.createdAt} />
+  </div>
+);
 
   renderTitleAndDescription = () => {
     const {
