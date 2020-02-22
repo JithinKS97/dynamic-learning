@@ -74,7 +74,7 @@ export const PendingRequests = (props) => {
         }}
       >
         Membership requests
-        {props.pendingMembers.length > 0 ? ` ${props.pendingMembers.length}` : null}
+        {props.pendingMembers.length > 0 ? ` (${props.pendingMembers.length})` : null}
       </div>
     );
   }
