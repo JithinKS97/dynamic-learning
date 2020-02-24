@@ -150,6 +150,10 @@ export default class Login extends React.Component {
 
               <button className='login__button' type="submit">Log in</button>
 
+              <br/>
+
+              <Link to='/forgotpassword'><b><span className='login__create-one'>Forgot Password?</span></b></Link>
+
               <div style={{margin:'1rem'}}>OR</div>
 
             </form>
