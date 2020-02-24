@@ -196,7 +196,7 @@ Meteor.methods({
 
   'workbooks.description'(_id, description) { // eslint-disable-line object-shorthand
     check(_id, String);
-    check(description, String);
+    check(description, Object);
     Workbooks.update({ _id }, { $set: { description } });
   },
 

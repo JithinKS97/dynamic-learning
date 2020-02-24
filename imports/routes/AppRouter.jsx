@@ -7,7 +7,7 @@ import { PublicRoute } from './PublicRoute';
 import Login from '../ui/pages/Login';
 import ForgotPassword from '../ui/pages/ForgotPassword';
 import ResetPassword from '../ui/pages/ResetPassword';
-import workbookeditorContainer from '../ui/pages/WorkbookEditor';
+import workbookeditorContainer from '../ui/pages/WorkbookEditor/WorkbookEditor';
 import Lesson from '../ui/pages/Lesson';
 import LoadScreen from '../ui/pages/LoadScreen';
 import Explore from '../ui/pages/Explore';

@@ -63,13 +63,13 @@ export default class WorkbooksDirectories extends Component {
   componentDidMount() {
     Meteor.subscribe('getAccounts');
     Meteor.subscribe('classes');
-
+    const workbooksHandle = Meteor.subscribe('workbooks');
     Tracker.autorun(() => {
-
-      const workbooksHandle = Meteor.subscribe('workbooks');
       const loading = !workbooksHandle.ready();
       const flatData = Workbooks.find({ userId: Meteor.userId() }).fetch();
       const workbooksExists = !loading && !!flatData;
+
+      console.log(workbooksExists)
     
       const getKey = node => node._id;
       const getParentKey = node => node.parent_id;
@@ -84,7 +84,7 @@ export default class WorkbooksDirectories extends Component {
 
       this.setState({
         workbooksExists,
-        treeData
+        treeData,
       })
 
       if (Meteor.user() && Meteor.user().classes) {
