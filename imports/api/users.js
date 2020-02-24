@@ -94,7 +94,7 @@ if (Meteor.isServer) {
     },
   });
 
-  process.env.MAIL_URL = 'smtp://'+ process.env.MAILGUN_SMTP_LOGIN +':'+ process.env.MAILGUN_SMTP_PASSWORD +'@'+ process.env.MAILGUN_SMTP_SERVER +':'+ process.env.MAILGUN_SMTP_PORT;
+  process.env.MAIL_URL = 'smtp://'+ process.env.SENDGRID_USERNAME +':'+ process.env.SENDGRID_PASSWORD +'@smtp.sendgrid.net:587';
 
 }
 
