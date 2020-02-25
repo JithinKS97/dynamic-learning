@@ -94,19 +94,18 @@ if (Meteor.isServer) {
     },
   });
 
-  process.env.MAIL_URL = 'smtp://'+ process.env.SENDGRID_USERNAME +':'+ process.env.SENDGRID_PASSWORD +'@smtp.sendgrid.net:587';
-
+  process.env.MAIL_URL = `smtp://${process.env.SENDGRID_USERNAME}:${process.env.SENDGRID_PASSWORD}@smtp.sendgrid.net:587`;
 }
 
 Meteor.startup(() => {
-  Accounts.emailTemplates.siteName = 'Dynamic Learning';
-  Accounts.emailTemplates.from = 'DynamicLearning Admin <admin@dynamiclearning.com>';
-  Accounts.emailTemplates.resetPassword.subject = (user) => {
-      return `Reset password link - ${user.username}`;
-  };
-  Accounts.emailTemplates.resetPassword.html = function (user, url) {
-      var id = url.split('/')[5];
-      var siteurl = process.env.ROOT_URL;
-      return '<p>Hi '+user.username+',</p><p>Click the link below to reset your password.</p><a href="'+ siteurl +'/resetpassword/' + id + '">Reset Password link</a>';
+  if (Accounts) {
+    Accounts.emailTemplates.siteName = 'Dynamic Learning';
+    Accounts.emailTemplates.from = 'DynamicLearning Admin <admin@dynamiclearning.com>';
+    Accounts.emailTemplates.resetPassword.subject = user => `Reset password link - ${user.username}`;
+    Accounts.emailTemplates.resetPassword.html = (user, url) => {
+      const id = url.split('/')[5];
+      const siteurl = process.env.ROOT_URL;
+      return `<p>Hi ${user.username},</p><p>Click the link below to reset your password.</p><a href="${siteurl}/resetpassword/${id}">Reset Password link</a>`;
+    };
   }
-})
+});
