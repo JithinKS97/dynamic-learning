@@ -5,7 +5,9 @@ import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
 
 import Login from '../ui/pages/Login';
-import workbookeditorContainer from '../ui/pages/WorkbookEditor';
+import ForgotPassword from '../ui/pages/ForgotPassword';
+import ResetPassword from '../ui/pages/ResetPassword';
+import workbookeditorContainer from '../ui/pages/WorkbookEditor/WorkbookEditor';
 import Lesson from '../ui/pages/Lesson';
 import LoadScreen from '../ui/pages/LoadScreen';
 import Explore from '../ui/pages/Explore';
@@ -52,6 +54,8 @@ export const AppRouter = (
       <PublicRoute exact path="/about" component={About} />
       <PublicRoute exact path="/explore" component={Explore} />
       <PublicRoute exact path="/login" component={Login} />
+      <PublicRoute exact path="/forgotpassword" component={ForgotPassword} />
+      <PublicRoute exact path="/resetpassword/:_id" component={ResetPassword} />
       <PublicRoute path="/workbookeditor/:_id" component={workbookeditorContainer} />
       <PublicRoute path="/lesson/:_id" component={Lesson} />
       <PublicRoute path="/workbookeditor" component={workbookeditorContainer} />

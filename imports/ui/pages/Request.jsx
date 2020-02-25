@@ -964,10 +964,22 @@ export class Request extends React.Component {
                   Uploaded sims
                 </Header>
 
+                {isMember && isAuthenticated && show ? (
+                  <Button onClick={() => {
+                    this.uploadSimRef.handleOpen();
+                  }}
+                  >
+                  Upload
+                  </Button>
+                ) : null}
+
                 {isAuthenticated && isMember ? (
                   <div style={{ marginBottom: '1.6rem' }}>
                     {show ? (
-                      <Upload methodToRun={this.pushSim} />
+                      <Upload
+                        ref={(e) => { this.uploadSimRef = e; }}
+                        methodToRun={this.pushSim}
+                      />
                     ) : null}
                   </div>
                 ) : null}

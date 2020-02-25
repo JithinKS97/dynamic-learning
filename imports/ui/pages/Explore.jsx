@@ -30,7 +30,7 @@ export default class Explore extends React.Component {
           <div
             className="lighter-grey-background"
             style={{
-              padding: '1rem', width: '25vw', height: '80vh',
+              padding: '1rem', width: '25vw', height: '80vh', paddingRight: 0,
             }}
           >
             <Header as="h3">
@@ -38,7 +38,9 @@ export default class Explore extends React.Component {
               {' '}
               Workbooks
             </Header>
-            <SharedWorkbooks />
+            <div style={{ maxHeight: '70vh', overflow: 'auto' }}>
+              <SharedWorkbooks />
+            </div>
           </div>
           <div
             className="lighter-grey-background"
@@ -49,7 +51,9 @@ export default class Explore extends React.Component {
               {' '}
               Lessons
             </Header>
-            <SharedLessons />
+            <div style={{ maxHeight: '70vh', overflow: 'auto' }}>
+              <SharedLessons />
+            </div>
           </div>
         </div>
       </div>

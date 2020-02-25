@@ -175,13 +175,7 @@ export default class Login extends React.Component {
 
               <br/>
 
-              <button 
-              className="ui basic button" 
-              style={{ marginTop: '1.0rem'}}
-              onClick={this.forgotPassword}
-              >
-              Forgot Password?
-              </button>
+              <Link to='/forgotpassword'><b><span className='login__create-one'>Forgot Password?</span></b></Link>
 
               <div style={{margin:'1rem'}}>OR</div>
 

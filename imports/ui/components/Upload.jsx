@@ -116,7 +116,7 @@ export default class Upload extends React.Component {
               <Form onSubmit={this.onSubmit} style={{ marginTop: '0.8rem' }}>
                 <Form.Field>
                   <label>Preview</label>
-                  <div style={{marginTop: '1rem' }}>
+                  <div style={{ marginTop: '1rem' }}>
                     <SimPreview
                       src={generateSrc(username, project_id)}
                     />
