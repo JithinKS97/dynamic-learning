@@ -98,7 +98,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.startup(() => {
-  if (Accounts) {
+  if (Accounts.emailTemplates) {
     Accounts.emailTemplates.siteName = 'Dynamic Learning';
     Accounts.emailTemplates.from = 'DynamicLearning Admin <admin@dynamiclearning.com>';
     Accounts.emailTemplates.resetPassword.subject = user => `Reset password link - ${user.username}`;
