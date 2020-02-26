@@ -10,7 +10,7 @@ import { Lessons } from '../../api/lessons';
 
 import { Icon } from 'react-icons-kit';
 import {thumbsOUp} from 'react-icons-kit/fa/thumbsOUp'
-import {thumbsODown} from 'react-icons-kit/fa/thumbsOUp'
+import {thumbsODown} from 'react-icons-kit/fa/thumbsODown'
 
 export default class Votes extends React.Component {
 
