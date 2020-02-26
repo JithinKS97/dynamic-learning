@@ -8,7 +8,8 @@ import {
   Form,
   List,
 } from 'semantic-ui-react';
-import { FaEdit } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import { edit } from 'react-icons-kit/fa/edit';
 
 export const renderResponseModal = editorRef => (
   <Modal
@@ -56,7 +57,7 @@ export const renderDescriptionModal = (editorRef) => {
                 });
               }}
               >
-                <FaEdit />
+                <Icon icon={edit} />
               </Button>
             ) : null}
             <Button

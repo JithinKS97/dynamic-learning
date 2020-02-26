@@ -5,7 +5,8 @@ import { Redirect } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { FaCode } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import { code } from 'react-icons-kit/fa/code'
 import { Requests } from '../../../api/requests';
 
 const RequestsList = (props) => {
@@ -90,7 +91,7 @@ const RequestsList = (props) => {
   return (
     <div style={{ padding: '4rem', paddingTop: '0' }}>
       <div style={{ width: '2rem', margin: 'auto' }}>
-        <FaCode color="#3e3e3e" style={{ marginRight: '2rem' }} size="3rem" />
+        <Icon icon={code} color="#3e3e3e" style={{ marginRight: '2rem' }} size="3rem" />
       </div>
       <div>
         {renderRequests()}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { IoMdArrowDropdown } from 'react-icons/io';
-
+import { Icon } from 'react-icons-kit';
+import { ic_arrow_drop_down } from 'react-icons-kit/md/ic_arrow_drop_down';
 
 export default class SideBarMenu extends React.Component {
   toggleAccordion = () => {
@@ -20,7 +20,7 @@ export default class SideBarMenu extends React.Component {
           <Link to="profile" className="sidebar-menu__item">Profile</Link>
           <div className="sidebar-menu__item sidebar-menu__item--accordion" onClick={this.toggleAccordion}>
             <div>Manage</div>
-            <IoMdArrowDropdown />
+            <Icon icon={ic_arrow_drop_down} />
           </div>
           <div className="sidebar-menu__item--accordion-items">
             <Link to="workbooks" className="sidebar-menu__item">Workbooks</Link>

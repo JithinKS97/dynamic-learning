@@ -1,9 +1,10 @@
 import React from 'react';
 import MathQuill, { addStyles as addMathquillStyles } from 'react-mathquill';
 import { Rnd } from 'react-rnd';
-import { TiArrowMove } from 'react-icons/ti';
-import { FaTimes } from 'react-icons/fa';
-import { MdNetworkCell } from 'react-icons/md';
+import { Icon } from 'react-icons-kit';
+import { move } from 'react-icons-kit/iconic/move';
+import { remove } from 'react-icons-kit/fa/remove';
+import { ic_signal_cellular_4_bar } from 'react-icons-kit/md/ic_signal_cellular_4_bar';
 import PropTypes from 'prop-types';
 
 // inserts the required css to the <head> block.
@@ -63,7 +64,8 @@ export default class App extends React.Component {
           >
 
             <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '0.1rem' }}>
-              <FaTimes
+              <Icon
+                icon={remove}
                 className="sim-delete"
                 size="20"
                 onClick={() => {
@@ -73,13 +75,13 @@ export default class App extends React.Component {
                 }}
               >
                 X
-              </FaTimes>
+              </Icon>
 
-              <TiArrowMove size="22" className="textbox-handle" />
+              <Icon icon={move} size="22" className="textbox-handle" />
 
             </div>
 
-            <div style={{ marginLeft: '0.6rem', float: 'right' }}><MdNetworkCell /></div>
+            <div style={{ marginLeft: '0.6rem', float: 'right' }}><Icon icon={ic_signal_cellular_4_bar} /></div>
 
           </div>
         </div>

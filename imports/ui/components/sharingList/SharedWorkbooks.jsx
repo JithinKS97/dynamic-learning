@@ -2,7 +2,8 @@ import React from 'react';
 import {
   Modal, Button, Dimmer, Loader,
 } from 'semantic-ui-react';
-import { GoRepoForked } from 'react-icons/go';
+import { Icon } from 'react-icons-kit';
+import { codeFork } from 'react-icons-kit/fa/codeFork';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import SearchBar from './SearchBar';
@@ -168,7 +169,7 @@ export default class SharedWorkbooks extends React.Component {
                     );
                   }}
                 >
-                  <GoRepoForked />
+                  <Icon icon={codeFork} />
                   Fork
                 </Button>
               ) : null}

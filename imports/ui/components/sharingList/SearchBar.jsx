@@ -1,9 +1,11 @@
 import React from 'react';
-import { GoSearch } from 'react-icons/go';
+
+import { Icon } from 'react-icons-kit';
+import { ic_search } from 'react-icons-kit/md/ic_search';
 
 const SearchBar = props => (
   <div className="sharedResources__searchBoxContainer">
-    <GoSearch style={{ marginTop: '0.2rem' }} size={25} />
+    <Icon icon={ic_search} style={{ marginTop: '0.2rem' }} size={25} />
     <input
       className="sharedResources__input"
       onChange={(e) => {

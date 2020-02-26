@@ -1,8 +1,10 @@
 import React from 'react';
 import { Rnd } from 'react-rnd';
-import { TiArrowMove } from 'react-icons/ti';
-import { FaTimes, FaCopy } from 'react-icons/fa';
-import { MdNetworkCell } from 'react-icons/md';
+import { Icon } from 'react-icons-kit';
+import { move } from 'react-icons-kit/iconic/move';
+import { remove } from 'react-icons-kit/fa/remove';
+import { copy } from 'react-icons-kit/fa/copy';
+import { ic_signal_cellular_4_bar } from 'react-icons-kit/md/ic_signal_cellular_4_bar';
 import PropTypes from 'prop-types';
 
 export default class TextBox extends React.Component {
@@ -171,7 +173,8 @@ export default class TextBox extends React.Component {
                     marginLeft: '0.1rem',
                   }}
                 >
-                  <FaTimes
+                  <Icon
+                    icon={remove}
                     className="sim-delete"
                     size="20"
                     onClick={() => {
@@ -185,11 +188,12 @@ export default class TextBox extends React.Component {
                     }}
                   >
                     X
-                  </FaTimes>
+                  </Icon>
 
-                  <TiArrowMove size="22" className="textbox-handle" />
+                  <Icon icon={move} size="22" className="textbox-handle" />
 
-                  <FaCopy
+                  <Icon
+                    icon={copy}
                     style={{ marginTop: '0.5rem' }}
                     onClick={() => {
                       this.handleCopy(updatedSlides, curSlide, index);
@@ -199,7 +203,7 @@ export default class TextBox extends React.Component {
                   />
                 </div>
 
-                <MdNetworkCell style={{ position: 'absolute', bottom: 0, right: 0 }} />
+                <Icon icon={ic_signal_cellular_4_bar} style={{ position: 'absolute', bottom: 0, right: 0 }} />
               </div>
             </div>
           )}
