@@ -9,7 +9,8 @@ import {
   Header,
 } from 'semantic-ui-react';
 import { Tracker } from 'meteor/tracker';
-import { FaCode } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import { code } from 'react-icons-kit/fa/code';
 import TagsInput from 'react-tagsinput';
 import WorkbooksDirectories from '../components/directories/WorkbooksDirectories';
 import RequestsList from '../components/sharingList/RequestsList';
@@ -323,7 +324,7 @@ export default class Dashboard extends React.Component {
               href={node ? node.linkToCode : ''}
             >
               <Button>
-                <FaCode />
+                <Icon icon={code} />
               </Button>
             </a>
           </Modal.Description>

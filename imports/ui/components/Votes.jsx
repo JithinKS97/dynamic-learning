@@ -7,7 +7,10 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 import { Meteor } from 'meteor/meteor';
 import { Lessons } from '../../api/lessons';
-import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+
+import { Icon } from 'react-icons-kit';
+import {thumbsOUp} from 'react-icons-kit/fa/thumbsOUp'
+import {thumbsODown} from 'react-icons-kit/fa/thumbsOUp'
 
 export default class Votes extends React.Component {
 
@@ -95,13 +98,13 @@ export default class Votes extends React.Component {
                     onClick={() => this.upvote()} 
                     className="lessonbutton"
                 >
-                    <FaThumbsUp color={this.upvoted()} /> ({this.numupvotes()})
+                    <Icon icon={thumbsOUp} color={this.upvoted()} /> ({this.numupvotes()})
                 </Button>
                 <Button 
                     onClick={() => this.downvote()} 
                     className="lessonbutton"
                 >
-                    <FaThumbsDown color={this.downvoted()} /> ({this.numdownvotes()})
+                    <Icon icon={thumbsODown} color={this.downvoted()} /> ({this.numdownvotes()})
                 </Button>
             </div>
         );

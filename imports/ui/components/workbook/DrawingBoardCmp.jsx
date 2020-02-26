@@ -2,26 +2,22 @@
 /* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import {
-  FaPencilAlt,
-  FaCircle,
-  FaSquareFull,
-} from 'react-icons/fa';
-import {
-  IoMdUndo,
-  IoMdRedo,
-  IoIosCopy,
-} from 'react-icons/io';
-import { TiCancel } from 'react-icons/ti';
 import { SwatchesPicker } from 'react-color';
-import { GoRepoForked } from 'react-icons/go';
-import {
-  MdPhotoSizeSelectSmall,
-  MdTextFields,
-  MdQuestionAnswer,
-  MdSave,
-} from 'react-icons/md';
 import PropTypes from 'prop-types';
+
+import { Icon } from 'react-icons-kit';
+import { codeFork } from 'react-icons-kit/fa/codeFork';
+import { pencil } from 'react-icons-kit/fa/pencil';
+import { circle } from 'react-icons-kit/fa/circle';
+import { square } from 'react-icons-kit/fa/square';
+import { ic_tab_unselected } from 'react-icons-kit/md/ic_tab_unselected';
+import { ic_text_fields } from 'react-icons-kit/md/ic_text_fields';
+import { ic_question_answer } from 'react-icons-kit/md/ic_question_answer';
+import { ic_cancel } from 'react-icons-kit/md/ic_cancel';
+import { ic_save } from 'react-icons-kit/md/ic_save';
+import { ic_undo } from 'react-icons-kit/md/ic_undo';
+import { ic_redo } from 'react-icons-kit/md/ic_redo';
+import { copy } from 'react-icons-kit/fa/copy';
 
 export default class DrawingBoardCmp extends Component {
   constructor(props) {
@@ -425,14 +421,14 @@ export default class DrawingBoardCmp extends Component {
     if (Meteor.userId() === userId || !Meteor.userId()) {
       return (
         <>
-          <MdSave size="1.7em" />
+          <Icon icon={ic_save} size="1.7em" />
           <span className="tooltiptext">Save</span>
         </>
       );
     }
     return (
       <>
-        <GoRepoForked size="1.7em" />
+        <Icon icon={codeFork} size="1.7em" />
         <span className="tooltiptext">Fork and save</span>
       </>
     );
@@ -462,14 +458,14 @@ export default class DrawingBoardCmp extends Component {
               className={option === 'select' ? 'drawing-board-controls__item drawing-board-controls__item--selected tooltip' : 'drawing-board-controls__item tooltip'}
               onClick={() => { this.closePopups(); this.setOption('select'); }}
             >
-              <MdPhotoSizeSelectSmall size="1.7em" />
+              <Icon icon={ic_tab_unselected} size="1.7em" />
               <span className="tooltiptext">Select</span>
             </div>
             <div
               className={option === 'pencil' ? 'drawing-board-controls__item drawing-board-controls__item--selected tooltip' : 'drawing-board-controls__item tooltip'}
               onClick={() => { this.setOption('pencil'); }}
             >
-              <FaPencilAlt size="1.7em" />
+              <Icon icon={pencil} size="1.7em" />
               <span className="tooltiptext">Pencil</span>
             </div>
             <div
@@ -490,14 +486,14 @@ export default class DrawingBoardCmp extends Component {
               className={option === 'ellipse' ? 'drawing-board-controls__item drawing-board-controls__item--selected tooltip' : 'drawing-board-controls__item tooltip'}
               onClick={() => { this.closePopups(); this.setOption('ellipse'); }}
             >
-              <FaCircle size="1.7em" />
+              <Icon icon={circle} size="1.7em" />
               <span className="tooltiptext">Ellipse</span>
             </div>
             <div
               className={option === 'rect' ? 'drawing-board-controls__item drawing-board-controls__item--selected tooltip' : 'drawing-board-controls__item tooltip'}
               onClick={() => { this.closePopups(); this.setOption('rect'); }}
             >
-              <FaSquareFull size="1.7em" />
+              <Icon icon={square} size="1.7em" />
               <span className="tooltiptext">Rectangle</span>
             </div>
             <div
@@ -513,21 +509,21 @@ export default class DrawingBoardCmp extends Component {
               className="drawing-board-controls__item tooltip"
               onClick={() => { this.closePopups(); undo(); }}
             >
-              <IoMdUndo size="1.7em" />
+              <Icon icon={ic_undo} size="1.7em" />
               <span className="tooltiptext">Undo</span>
             </div>
             <div
               className="drawing-board-controls__item tooltip"
               onClick={() => { this.closePopups(); redo(); }}
             >
-              <IoMdRedo size="1.7em" />
+              <Icon icon={ic_redo} size="1.7em" />
               <span className="tooltiptext">Redo</span>
             </div>
             <div
               className="drawing-board-controls__item tooltip"
               onClick={() => { this.closePopups(); this.handleClearCanvas(); }}
             >
-              <TiCancel size="1.7em" />
+              <Icon icon={ic_cancel} size="1.7em" />
               <span className="tooltiptext">Clear canvas</span>
             </div>
             {/* <div
@@ -541,14 +537,14 @@ export default class DrawingBoardCmp extends Component {
               className="drawing-board-controls__item tooltip"
               onClick={() => { this.closePopups(); addTextBox(); }}
             >
-              <MdTextFields size="1.7em" />
+              <Icon icon={ic_text_fields} size="1.7em" />
               <span className="tooltiptext">Add textbox</span>
             </div>
             <div
               className="drawing-board-controls__item tooltip"
               onClick={() => { this.closePopups(); addQuestion(); }}
             >
-              <MdQuestionAnswer size="1.7em" />
+              <Icon icon={ic_question_answer} size="1.7em" />
               <span className="tooltiptext">Add question</span>
             </div>
             <div
@@ -561,7 +557,7 @@ export default class DrawingBoardCmp extends Component {
               className={copied === true ? 'drawing-board-controls__item tooltip' : 'drawing-board-controls__item empty-clipboard tooltip'}
               onClick={() => { this.closePopups(); this.handlePaste(); }}
             >
-              <IoIosCopy size="1.7em" />
+              <Icon icon={copy} size="1.7em" />
               <span className="tooltiptext">Paste</span>
             </div>
           </div>

@@ -8,11 +8,12 @@ import {
 import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
 import 'semantic-ui-css/semantic.min.css';
 import { Tracker } from 'meteor/tracker';
-import {
-  FaRegFile, FaRegFolder, FaPen,
-} from 'react-icons/fa';
-import { FiTrash } from 'react-icons/fi';
+import { Icon } from 'react-icons-kit';
+import { fileO } from 'react-icons-kit/fa/fileO';
+import { folderO } from 'react-icons-kit/fa/folderO';
+import { trash } from 'react-icons-kit/fa/trash';
 import { Redirect } from 'react-router-dom';
+import { pencil } from 'react-icons-kit/fa/pencil';
 import { Lessons } from '../../../api/lessons';
 
 export default class Tree extends Component {
@@ -189,7 +190,7 @@ export default class Tree extends Component {
                   display: 'flex', flexDirection: 'row', marginLeft: '1rem', marginTop: '0.5rem',
                 }}
                 >
-                  {node.isFile ? <FaRegFile size="1.1rem" /> : <FaRegFolder size="1.1rem" />}
+                  {node.isFile ? <Icon icon={fileO} size="1.1rem" /> : <Icon icon={folderO} size="1.1rem" />}
                   <div style={{ marginLeft: '1rem' }}>{node.title}</div>
                 </div>
               ),
@@ -211,7 +212,7 @@ export default class Tree extends Component {
                   className="icon__button"
                   style={{ display: node.isFile ? 'block' : 'none' }}
                 >
-                  <FaPen className="tile_right_icon" />
+                  <Icon icon={pencil} className="tile_right_icon" />
                 </button>,
 
                 <button
@@ -231,7 +232,7 @@ export default class Tree extends Component {
                     Meteor.call('lessons.remove', node._id);
                   }}
                 >
-                  <FiTrash className="tile_right_icon" />
+                  <Icon icon={trash} className="tile_right_icon" />
                 </button>,
               ],
             })}

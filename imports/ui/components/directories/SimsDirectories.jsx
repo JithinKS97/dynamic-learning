@@ -2,15 +2,19 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import { FaRegFile, FaRegFolder } from 'react-icons/fa';
-import { FiTrash } from 'react-icons/fi';
-import { MdBuild } from 'react-icons/md';
+
+import { trash } from 'react-icons-kit/fa/trash';
+import { ic_build } from 'react-icons-kit/md/ic_build';
 import {
   Button, Modal, Form, Dimmer, Loader,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FileExplorerTheme from 'react-sortable-tree-theme-minimal';
 import { Tracker } from 'meteor/tracker';
+
+import { Icon } from 'react-icons-kit';
+import { fileO } from 'react-icons-kit/fa/fileO';
+import { folderO } from 'react-icons-kit/fa/folderO';
 import { Sims } from '../../../api/sims';
 import Upload from '../Upload';
 
@@ -208,7 +212,7 @@ export default class SimsDirectories extends React.Component {
                   display: 'flex', flexDirection: 'row', marginLeft: '1rem', marginTop: '0.5rem',
                 }}
                 >
-                  {node.isFile ? <FaRegFile size="1.1rem" /> : <FaRegFolder size="1.1rem" />}
+                  {node.isFile ? <Icon icon={fileO} size="1.1rem" /> : <Icon icon={folderO} size="1.1rem" />}
                   <div style={{ marginLeft: '1rem' }}>{node.title}</div>
                 </div>
               ),
@@ -224,7 +228,7 @@ export default class SimsDirectories extends React.Component {
                     getNode(node);
                   }}
                 >
-                  <MdBuild className="tile_right_icon" />
+                  <Icon icon={ic_build} className="tile_right_icon" />
                 </button>,
 
                 <button
@@ -243,7 +247,7 @@ export default class SimsDirectories extends React.Component {
                     Meteor.call('sims.remove', node._id);
                   }}
                 >
-                  <FiTrash className="tile_right_icon" />
+                  <Icon icon={trash} className="tile_right_icon" />
                 </button>,
               ],
             })}

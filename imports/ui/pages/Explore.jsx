@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { Header } from 'semantic-ui-react';
-import { FaBook, FaChalkboardTeacher, FaArrowLeft } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import { book } from 'react-icons-kit/fa/book';
+import { arrowLeft } from 'react-icons-kit/fa/arrowLeft';
+import { toggleRight } from 'react-icons-kit/fa/toggleRight';
 import { Link } from 'react-router-dom';
 import SharedLessons from '../components/sharingList/SharedLessons';
 import SharedWorkbooks from '../components/sharingList/SharedWorkbooks';
@@ -34,7 +37,7 @@ export default class Explore extends React.Component {
             }}
           >
             <Header as="h3">
-              <FaBook />
+              <Icon icon={book} />
               {' '}
               Workbooks
             </Header>
@@ -47,7 +50,7 @@ export default class Explore extends React.Component {
             style={{ padding: '1rem', width: '25vw' }}
           >
             <Header as="h3">
-              <FaChalkboardTeacher />
+              <Icon icon={toggleRight} />
               {' '}
               Lessons
             </Header>
@@ -72,7 +75,7 @@ const TitleBar = () => (
 
 const BackButton = () => (
   <div onClick={() => history.goBack()} className="sharedResources__back-button">
-    <FaArrowLeft color="3e3e3e" size="1.2rem" />
+    <Icon icon={arrowLeft} color="3e3e3e" size="1.2rem" />
   </div>
 );
 

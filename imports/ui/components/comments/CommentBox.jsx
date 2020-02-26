@@ -7,7 +7,8 @@ import {
   Form,
 } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import { FaAngleDown } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import {angleDown} from 'react-icons-kit/fa/angleDown';
 import PropTypes from 'prop-types';
 import CommentForm from './CommentForm';
 import CommentReply from './CommentReply';
@@ -76,7 +77,8 @@ export default class CommentBox extends React.Component {
 
         return (
 
-          <FaAngleDown
+          <Icon
+            icon={angleDown}
             className="arrow"
             size={17}
             onClick={() => {
@@ -87,7 +89,7 @@ export default class CommentBox extends React.Component {
             }}
           >
             Show
-          </FaAngleDown>
+          </Icon>
         );
       }
       if (isEditable === false) {

@@ -1,11 +1,13 @@
-import { FaPen, FaCode } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import { code } from 'react-icons-kit/fa/code';
 import React, { useState, Fragment } from 'react';
 import {
   Card, Button, Menu, Modal, Input,
 } from 'semantic-ui-react';
-import { MdSave } from 'react-icons/md';
+import { ic_save } from 'react-icons-kit/md/ic_save';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { pencil } from 'react-icons-kit/fa/pencil';
 import { generateSrc, isValidp5EmbedTag } from '../../../functions/index.js';
 import SimPreview from '../SimPreview';
 
@@ -82,7 +84,7 @@ const SimTile = (props) => {
               }
             >
               <Button icon>
-                <FaCode />
+                <Icon icon={code} />
               </Button>
             </a>
             <Button
@@ -153,7 +155,7 @@ const SimTile = (props) => {
                       }}
                       style={{ float: 'right', flex: 1 }}
                     >
-                      {titleEditable ? <MdSave /> : <FaPen icon />}
+                      {titleEditable ? <Icon icon={ic_save} /> : <Icon icon={pencil} />}
                     </Button>
                   ) : null}
                 </Card.Content>
@@ -204,7 +206,7 @@ const SimTile = (props) => {
                       }}
                       style={{ flex: 1 }}
                     >
-                      {tagEditable ? <MdSave icon /> : <FaPen icon />}
+                      {tagEditable ? <Icon icon={ic_save} /> : <Icon icon={pencil} />}
                     </Button>
                   ) : null}
                 </Card.Content>
