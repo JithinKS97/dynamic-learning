@@ -33,6 +33,7 @@ export default class Tree extends Component {
       redirectToLesson: false,
       tempFolderTitle: '',
       selectedFolderId: '',
+      folderRenameModel: false
     };
   }
 
@@ -151,7 +152,7 @@ export default class Tree extends Component {
 
         <Modal size="tiny" open={isOpen}>
           <Modal.Header>
-            New Folder
+            New {this.state.toCreate}
             <Button
               className="close-button"
               onClick={() => {
@@ -187,14 +188,14 @@ export default class Tree extends Component {
           </Modal.Content>
         </Modal>
 
-        <Modal size="tiny" open={isOpen}>
+        <Modal size="tiny" open={this.state.folderRenameModel}>
           <Modal.Header>
             Folder Details
             <Button
               className="close-button"
               onClick={() => {
                 this.setState({
-                  isOpen: false,
+                  folderRenameModel: false,
                 });
               }}
             >
@@ -232,7 +233,7 @@ export default class Tree extends Component {
               <Button onClick={() => {
                 Meteor.call('lessons.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value);
                 this.setState({
-                  isOpen: false,
+                  folderRenameModel: false,
                 });
               }}
               >
@@ -280,7 +281,7 @@ export default class Tree extends Component {
                   onClick={() => {
                     if (!node.isFile) {
                       this.setState({
-                        isOpen: true,
+                        folderRenameModel: true,
                         selectedFolderId: node._id,
                         tempFolderTitle: node.title,
                       });
