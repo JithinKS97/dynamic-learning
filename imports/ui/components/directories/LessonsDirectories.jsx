@@ -1,3 +1,5 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import SortableTree, { getTreeFromFlatData } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
@@ -14,8 +16,8 @@ import { folderO } from 'react-icons-kit/fa/folderO';
 import { trash } from 'react-icons-kit/fa/trash';
 import { Redirect } from 'react-router-dom';
 import { pencil } from 'react-icons-kit/fa/pencil';
+import { ic_build } from 'react-icons-kit/md/ic_build';
 import { Lessons } from '../../../api/lessons';
-import { MdBuild } from 'react-icons/md';
 
 export default class Tree extends Component {
   constructor(props) {
@@ -30,7 +32,7 @@ export default class Tree extends Component {
       selectedLessonId: null,
       redirectToLesson: false,
       tempFolderTitle: '',
-      selectedFolderId:''
+      selectedFolderId: '',
     };
   }
 
@@ -189,13 +191,13 @@ export default class Tree extends Component {
           <Modal.Header>
             Folder Details
             <Button
-                  className="close-button"
-                  onClick={() => {
-                    this.setState({
-                      isOpen: false,
-                    });
-                  }}
-                >
+              className="close-button"
+              onClick={() => {
+                this.setState({
+                  isOpen: false,
+                });
+              }}
+            >
                   X
             </Button>
           </Modal.Header>
@@ -205,9 +207,10 @@ export default class Tree extends Component {
 
               {/* eslint-disable-next-line */}
               <label>Name</label>
-              <br></br>
+              <br />
               {/* eslint-disable-next-line no-return-assign */}
-              <input value={this.state.tempFolderTitle}
+              <input
+                value={this.state.tempFolderTitle}
                 ref={e => this.folderRenameInput = e}
                 style={{
                   width: '20rem',
@@ -223,14 +226,18 @@ export default class Tree extends Component {
                     tempFolderTitle: this.folderRenameInput.value,
                   });
                 }}
-                placeholder="Name" />
-              <br></br>
+                placeholder="Name"
+              />
+              <br />
               <Button onClick={() => {
-                Meteor.call('lessons.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value)
+                Meteor.call('lessons.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value);
                 this.setState({
-                  isOpen: false
-                })
-              }}>Rename</Button>
+                  isOpen: false,
+                });
+              }}
+              >
+                Rename
+              </Button>
 
             </Modal.Description>
           </Modal.Content>
@@ -275,15 +282,15 @@ export default class Tree extends Component {
                       this.setState({
                         isOpen: true,
                         selectedFolderId: node._id,
-                        tempFolderTitle: node.title
+                        tempFolderTitle: node.title,
                       });
-                    } 
+                    }
                   }}
 
                   className="icon__button"
                   style={{ display: node.isFile ? 'none' : 'block' }}
                 >
-                  <MdBuild className="tile_right_icon" />
+                  <Icon icon={ic_build} className="tile_right_icon" />
                 </button>,
                 <button
                   className="icon__button"
