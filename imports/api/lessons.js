@@ -102,6 +102,10 @@ Meteor.methods({
 
     Lessons.update({ _id }, { $set: { expanded } });
   },
+  
+  'lessons.folder.nameUpdate'(_id, tags) {
+    Lessons.update({ _id }, { $set: { title: tags } });
+  },
 
   'lessons.remove'(_id) {
     if (!this.userId) {

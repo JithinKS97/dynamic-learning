@@ -15,6 +15,7 @@ import { trash } from 'react-icons-kit/fa/trash';
 import { Redirect } from 'react-router-dom';
 import { pencil } from 'react-icons-kit/fa/pencil';
 import { Lessons } from '../../../api/lessons';
+import { MdBuild } from 'react-icons/md';
 
 export default class Tree extends Component {
   constructor(props) {
@@ -28,6 +29,8 @@ export default class Tree extends Component {
       loading: true,
       selectedLessonId: null,
       redirectToLesson: false,
+      tempFolderTitle: '',
+      selectedFolderId:''
     };
   }
 
@@ -146,7 +149,7 @@ export default class Tree extends Component {
 
         <Modal size="tiny" open={isOpen}>
           <Modal.Header>
-            Enter the title
+            New Folder
             <Button
               className="close-button"
               onClick={() => {
@@ -172,12 +175,64 @@ export default class Tree extends Component {
                       title: this.title.value,
                     });
                   }}
+                  placeholder="Title"
                 />
               </Form.Field>
               <Form.Field>
                 <Button type="submit">Submit</Button>
               </Form.Field>
             </Form>
+          </Modal.Content>
+        </Modal>
+
+        <Modal size="tiny" open={isOpen}>
+          <Modal.Header>
+            Folder Details
+            <Button
+                  className="close-button"
+                  onClick={() => {
+                    this.setState({
+                      isOpen: false,
+                    });
+                  }}
+                >
+                  X
+            </Button>
+          </Modal.Header>
+
+          <Modal.Content>
+            <Modal.Description>
+
+              {/* eslint-disable-next-line */}
+              <label>Name</label>
+              <br></br>
+              {/* eslint-disable-next-line no-return-assign */}
+              <input value={this.state.tempFolderTitle}
+                ref={e => this.folderRenameInput = e}
+                style={{
+                  width: '20rem',
+                  padding: '0.4rem',
+                  marginTop: '1rem',
+                  marginBottom: '2rem',
+                  fontSize: '1.2rem',
+
+                }}
+                onChange={() => {
+                  this.setState({
+
+                    tempFolderTitle: this.folderRenameInput.value,
+                  });
+                }}
+                placeholder="Name" />
+              <br></br>
+              <Button onClick={() => {
+                Meteor.call('lessons.folder.nameUpdate', this.state.selectedFolderId, this.folderRenameInput.value)
+                this.setState({
+                  isOpen: false
+                })
+              }}>Rename</Button>
+
+            </Modal.Description>
           </Modal.Content>
         </Modal>
 
@@ -214,7 +269,22 @@ export default class Tree extends Component {
                 >
                   <Icon icon={pencil} className="tile_right_icon" />
                 </button>,
+                <button
+                  onClick={() => {
+                    if (!node.isFile) {
+                      this.setState({
+                        isOpen: true,
+                        selectedFolderId: node._id,
+                        tempFolderTitle: node.title
+                      });
+                    } 
+                  }}
 
+                  className="icon__button"
+                  style={{ display: node.isFile ? 'none' : 'block' }}
+                >
+                  <MdBuild className="tile_right_icon" />
+                </button>,
                 <button
                   className="icon__button"
                   onClick={() => {
