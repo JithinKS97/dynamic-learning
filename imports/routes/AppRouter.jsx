@@ -23,7 +23,16 @@ import HelpMakeSimulations from '../ui/pages/HelpMakeSimulations';
 
 import history from './history';
 
-const publicPages = ['/', '/signup', '/workbookeditor', '/login', '/explore', '/help-make-simulations'];
+const publicPages = [
+  '/', 
+  '/signup', 
+  '/workbookeditor', 
+  '/login', 
+  '/explore', 
+  '/help-make-simulations',
+  '/forgotpassword',
+  '/resetpassword'
+];
 const authenticatedPages = [
   '/dashboard/workbooks',
   '/dashboard/requests',
