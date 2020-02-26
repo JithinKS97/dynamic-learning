@@ -5,7 +5,8 @@ import {
   arrayMove,
 } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
-import { FiTrash } from 'react-icons/fi';
+import { Icon } from 'react-icons-kit';
+import { trash } from 'react-icons-kit/fa/trash';
 
 const SortableItem = SortableElement(({
   slideNo,
@@ -58,7 +59,7 @@ const SortableItem = SortableElement(({
           if (confirmation === true) { props.deleteSlide(slideNo); }
         }}
       >
-        <FiTrash className="workbook-editor__slides-list__delete-button" style={{ padding: 0, margin: 0 }} />
+        <Icon icon={trash} className="workbook-editor__slides-list__delete-button" style={{ padding: 0, margin: 0 }} />
       </div>
     </div>
   );

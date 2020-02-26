@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
-import { FaArrowLeft } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import { arrowLeft } from 'react-icons-kit/fa/arrowLeft';
 import RequestsList from '../components/sharingList/RequestsList';
 import history from '../../routes/history';
 
@@ -27,7 +28,7 @@ const HelpMakeSimulations = () => (
 
 const BackButton = () => (
   <div onClick={() => history.goBack()} className="sharedResources__back-button">
-    <FaArrowLeft color="#3e3e3e" size="1rem" />
+    <Icon icon={arrowLeft} color="#3e3e3e" size="1rem" />
   </div>
 );
 

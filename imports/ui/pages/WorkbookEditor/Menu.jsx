@@ -2,10 +2,11 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { GiBackwardTime } from 'react-icons/gi';
+import { Icon } from 'react-icons-kit';
+import { history } from 'react-icons-kit/fa/history';
 import { Session } from 'meteor/session';
-import { FaArrowLeft } from 'react-icons/fa';
-import { MdAddCircleOutline } from 'react-icons/md';
+import { arrowLeft } from 'react-icons-kit/fa/arrowLeft';
+import { ic_add_circle_outline } from 'react-icons-kit/md/ic_add_circle_outline';
 import AddSim from '../../components/AddSim';
 
 export const renderRightMenu = (editorRef) => {
@@ -170,7 +171,7 @@ export const renderRightMenu = (editorRef) => {
               className="reset-workbook-container__icon"
               onClick={editorRef.reset}
             >
-              <GiBackwardTime size="1.7em" />
+              <Icon icon={history} size="1.7em" />
             </div>
             <div className="reset-workbook-container__text">
                 Reset Workbook
@@ -204,7 +205,7 @@ export const renderLeftMenuHeader = (editorRef) => {
           className="dashboard-arrow-container"
           onClick={editorRef.handleRedirectToDashboard}
         >
-          <FaArrowLeft color="fff" size="1.2rem" />
+          <Icon icon={arrowLeft} color="fff" size="1.2rem" />
         </div>
       ) : null}
       <div>
@@ -215,7 +216,9 @@ export const renderLeftMenuHeader = (editorRef) => {
         style={{ marginTop: '0.8rem', marginLeft: '1rem', marginRight: '1rem' }}
         onClick={editorRef.addNewSlide}
       >
-        <MdAddCircleOutline size="1.8rem" />
+        <div style={{ height: '1.8rem' }}>
+          <Icon icon={ic_add_circle_outline} />
+        </div>
       </div>
     </div>
   );

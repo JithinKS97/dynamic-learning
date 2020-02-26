@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { FaCode } from 'react-icons/fa';
+import { Icon } from 'react-icons-kit';
+import { code } from 'react-icons-kit/fa/code';
 import { Meteor } from 'meteor/meteor';
 import {
   Button,
@@ -164,7 +165,7 @@ export default class AddSim extends Component {
                       rel="noopener noreferrer"
                       href={node ? `https://editor.p5js.org/${node.username}/sketches/${node.project_id}` : ''}
                     >
-                      <Button><FaCode /></Button>
+                      <Button><Icon icon={code} /></Button>
                     </a>
                   ) : null
                 }
