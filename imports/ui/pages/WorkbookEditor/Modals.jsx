@@ -89,27 +89,15 @@ export const renderDescriptionModal = (editorRef) => {
               </List.Item>
               <List.Item>
                 <List.Header>Learning Objectives</List.Header>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: description.learningObjectives,
-                  }}
-                />
+                {description.learningObjectives}
               </List.Item>
               <List.Item>
                 <List.Header>In-Class Activites</List.Header>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: description.inClassActivities,
-                  }}
-                />
+                {description.inClassActivities}
               </List.Item>
               <List.Item>
                 <List.Header>Resources</List.Header>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: description.resources,
-                  }}
-                />
+                {description.resources}
               </List.Item>
               <List.Item>
                 <List.Header>Assessments</List.Header>

@@ -16,7 +16,6 @@ import {
 import 'semantic-ui-css/semantic.min.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
-import DOMPurify from 'dompurify';
 import TextBoxes from '../../components/workbook/TextBoxes';
 import MCQs from '../../components/workbook/MCQs';
 import ShortResponses from '../../components/workbook/ShortResponses';
@@ -732,28 +731,19 @@ export class WorkbookEditor extends React.Component {
     if (this.learningObjectives.value === '') {
       learningObjectives = this.learningObjectives.placeholder;
     } else {
-      learningObjectives = DOMPurify.sanitize(
-        this.learningObjectives.value.replace(
-          new RegExp('\r?\n', 'g'),
-          '<br />',
-        ),
-      );
+      learningObjectives = this.learningObjectives.value;
     }
 
     if (this.inClassActivities.value === '') {
       inClassActivities = this.inClassActivities.placeholder;
     } else {
-      inClassActivities = DOMPurify.sanitize(
-        this.inClassActivities.value.replace(new RegExp('\r?\n', 'g'), '<br />'),
-      );
+      inClassActivities = this.inClassActivities.value;
     }
 
     if (this.resources.value === '') {
       resources = this.resources.placeholder;
     } else {
-      resources = DOMPurify.sanitize(
-        this.resources.value.replace(new RegExp('\r?\n', 'g'), '<br />'),
-      );
+      resources = this.resources.value;
     }
 
     if (this.assessments.value === '') {
