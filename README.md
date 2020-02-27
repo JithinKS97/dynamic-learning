@@ -27,7 +27,8 @@ https://github.com/JithinKS97/dynamic-learning
 ## Guidelines for contributing code
 
 1) Take a branch from the test branch
-2) Submit pull request to the test branch
+2) Add/Edit code
+3) Submit pull request to the test branch
 
 ## To know more about the project, take a look at these
 
