@@ -24,6 +24,11 @@ http://dynamiclearning.io
 
 https://github.com/JithinKS97/dynamic-learning
 
+## Guidelines for contributing code
+
+1) Take a branch from the test branch
+2) Submit pull request to the test branch
+
 ## To know more about the project, take a look at these
 
 #### Processing Medium post
@@ -132,7 +137,7 @@ I've provided necessary documentation in the components' js files in all the are
 
 #### Icons
 
-Icons have been used from the site `http://react-icons.github.io`
+Icons have been used from the site `https://react-icons-kit.now.sh/`
 
 ## Features that can be added
 
