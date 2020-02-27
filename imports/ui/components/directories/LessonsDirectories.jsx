@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
@@ -33,7 +34,7 @@ export default class Tree extends Component {
       redirectToLesson: false,
       tempFolderTitle: '',
       selectedFolderId: '',
-      folderRenameModel: false
+      folderRenameModel: false,
     };
   }
 
