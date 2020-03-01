@@ -11,7 +11,6 @@ import {
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { expect } from "chai";
-import DOMPurify from "dompurify";
 import TextBoxes from "./TextBoxes";
 import MCQs from "./MCQs";
 import ShortResponses from "./ShortResponses";
@@ -511,28 +510,19 @@ export class WorkbookViewer extends React.Component {
     if (this.learningObjectives.value === "") {
       learningObjectives = this.learningObjectives.placeholder;
     } else {
-      learningObjectives = DOMPurify.sanitize(
-        this.learningObjectives.value.replace(
-          new RegExp("\r?\n", "g"),
-          "<br />"
-        )
-      );
+      learningObjectives = this.learningObjectives.value;
     }
 
     if (this.inClassActivities.value === "") {
       inClassActivities = this.inClassActivities.placeholder;
     } else {
-      inClassActivities = DOMPurify.sanitize(
-        this.inClassActivities.value.replace(new RegExp("\r?\n", "g"), "<br />")
-      );
+      inClassActivities = this.inClassActivities.value;
     }
 
     if (this.resources.value === "") {
       resources = this.resources.placeholder;
     } else {
-      resources = DOMPurify.sanitize(
-        this.resources.value.replace(new RegExp("\r?\n", "g"), "<br />")
-      );
+      resources = this.resources.value;
     }
 
     if (this.assessments.value === "") {
@@ -602,27 +592,15 @@ export class WorkbookViewer extends React.Component {
         </List.Item>
         <List.Item>
           <List.Header>Learning Objectives</List.Header>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: description.learningObjectives
-            }}
-          />
+          {description.learningObjectives}
         </List.Item>
         <List.Item>
           <List.Header>In-Class Activites</List.Header>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: description.inClassActivities
-            }}
-          />
+          {description.inClassActivities}
         </List.Item>
         <List.Item>
           <List.Header>Resources</List.Header>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: description.resources
-            }}
-          />
+          {description.resources}
         </List.Item>
         <List.Item>
           <List.Header>Assessments</List.Header>

@@ -1,5 +1,6 @@
 import { Router, Route, Switch } from 'react-router-dom';
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
@@ -13,6 +14,7 @@ import LoadScreen from '../ui/pages/LoadScreen';
 import Explore from '../ui/pages/Explore';
 import Signup from '../ui/pages/Signup';
 import NotFound from '../ui/pages/NotFound';
+import ConfigureAccounts from '../ui/pages/ConfigureAccounts';
 
 // eslint-disable-next-line import/no-named-as-default
 import Request from '../ui/pages/Request';
@@ -43,6 +45,7 @@ const authenticatedPages = [
   '/dashboard/profile',
   '/dashboard/classes',
   '/dashboard/assessments',
+  '/setupAccount',
 ];
 
 export const onAuthChange = (isAuthenticated) => {
@@ -50,7 +53,13 @@ export const onAuthChange = (isAuthenticated) => {
   const isAuthenticatedPage = authenticatedPages.includes(window.location.pathname);
 
   if (isPublicPage && isAuthenticated) {
-    history.replace('/dashboard/workbooks');
+    Meteor.call('getUsername', Meteor.userId(), (_err, username) => {
+      if (!username) {
+        history.replace('/setupAccount');
+      } else {
+        history.replace('/dashboard/workbooks');
+      }
+    });
   } else if (isAuthenticatedPage && !isAuthenticated) {
     history.replace('/');
   }
@@ -73,6 +82,7 @@ export const AppRouter = (
       <PublicRoute path="/help-make-simulations" component={HelpMakeSimulations} />
       <PrivateRoute path="/sandbox" component={SandBox} />
       <PrivateRoute path="/dashboard/:option" component={Dashboard} />
+      <PrivateRoute path="/setupAccount" component={ConfigureAccounts} />
       <Route path="*" component={NotFound} />
     </Switch>
   </Router>

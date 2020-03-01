@@ -47,10 +47,16 @@ Meteor.methods({
       username: user.username,
     }));
   },
+  getUserId(username) {
+    const user = Accounts.findUserByUsername(username);
+    return user;
+  },
   updateSchool(username, school) {
     Meteor.users.update({ username }, { $set: { school } });
   },
-
+  updateType(username, accountType) {
+    Meteor.users.update({_id: username}, {$set: {'profile.accountType': accountType}});
+  },
   'users.addClass'(username, classcode) {
     Meteor.users.update({ username }, { $push: { classes: classcode } });
   },
