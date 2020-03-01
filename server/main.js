@@ -18,14 +18,3 @@ Lessons.find().fetch().map(lesson => {
         Meteor.call('lessons.addupdown', lesson._id); 
     }
 })
-
-Meteor.users.find().fetch().map(user => {
-    if (user.services) {
-        if (user.services.github) {
-            Meteor.call('setUsername', user._id, user.services.github.username); 
-        }
-        else if (user.services.google) {
-            Meteor.call('setUsername', user._id, user.services.google.email);
-        }
-    }
-})
