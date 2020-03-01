@@ -1,31 +1,35 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
-import { withTracker } from 'meteor/react-meteor-data';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import { Icon } from 'react-icons-kit';
-import { code } from 'react-icons-kit/fa/code'
-import { Requests } from '../../../api/requests';
+import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
+import { withTracker } from "meteor/react-meteor-data";
+import moment from "moment";
+import PropTypes from "prop-types";
+import { Icon } from "react-icons-kit";
+import { code } from "react-icons-kit/fa/code";
+import { Requests } from "../../../api/requests";
 
-const RequestsList = (props) => {
-  const [requestId, changeRequestId] = useState('');
+const RequestsList = props => {
+  const [requestId, changeRequestId] = useState("");
   const [_idToNameMappings, changeIdToNameMappings] = useState({});
 
   useEffect(() => {
-    Meteor.call('getUsernames', props.requests.map(request => request.userId), (_err, users) => {
-      const tempMappings = {};
-      users.map((user) => {
-        tempMappings[user.userId] = user.username;
-      });
-      changeIdToNameMappings(tempMappings);
-    });
+    Meteor.call(
+      "getUsernames",
+      props.requests.map(request => request.userId),
+      (_err, users) => {
+        const tempMappings = {};
+        users.map(user => {
+          tempMappings[user.userId] = user.username;
+        });
+        changeIdToNameMappings(tempMappings);
+      }
+    );
   }, [props.requests]);
 
   const findTime = time => moment(time);
 
-  const displayTime = (index) => {
+  const displayTime = index => {
     const { requests } = props;
 
     if (requests.length > 0) {
@@ -33,7 +37,7 @@ const RequestsList = (props) => {
     }
   };
 
-  const displayCreatedTime = (index) => {
+  const displayCreatedTime = index => {
     const { requests } = props;
 
     if (requests.length > 0) {
@@ -41,59 +45,68 @@ const RequestsList = (props) => {
     }
   };
 
-  const renderRequests = () => props.requests.map((request, index) => {
-    if (request.requestTitle) {
-      return (
-        <div
-          className="sharedResources__listItem"
-          onClick={() => {
-            changeRequestId(request._id);
-          }}
-          style={{ width: '100%', margin: 0 }}
-          key={request.createdAt}
-        >
-          <div>
-            <div className="sharedResources__listItem-title">{request.requestTitle}</div>
-            <div className="sharedResources__listItem-description">{request.description}</div>
-            <div
-              className="sharedResources__listItem-detail"
-            >
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div>
-                  {_idToNameMappings[request.userId]}
-                </div>
-                <div style={{ marginLeft: '4rem' }}>
-                  active
-                  {' '}
-                  {displayTime(index)}
-                </div>
+  const renderRequests = () =>
+    props.requests.map((request, index) => {
+      if (request.requestTitle) {
+        return (
+          <div
+            className="sharedResources__listItem"
+            onClick={() => {
+              changeRequestId(request._id);
+            }}
+            style={{ width: "100%", margin: 0 }}
+            key={request.createdAt}
+          >
+            <div>
+              <div className="sharedResources__listItem-title">
+                {request.requestTitle}
               </div>
-              <div>
-                {displayCreatedTime(index)}
+              <div className="sharedResources__listItem-description">
+                {request.description}
+              </div>
+              <div className="sharedResources__listItem-detail">
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div>{_idToNameMappings[request.userId]}</div>
+                  <div style={{ marginLeft: "4rem" }}>
+                    active {displayTime(index)}
+                  </div>
+                </div>
+                <div>{displayCreatedTime(index)}</div>
               </div>
             </div>
           </div>
-        </div>
-      );
-    }
-  });
+        );
+      }
+    });
 
   if (requestId) {
     return (
-      <Redirect to={{
-        pathname: `/request/${requestId}`,
-        state: { from: 'dashboard' },
-      }}
+      <Redirect
+        to={{
+          pathname: `/request/${requestId}`,
+          state: { from: "dashboard" }
+        }}
       />
     );
   }
 
   return (
-    <div style={{ padding: '4rem', paddingTop: '0' }}>
-      <div style={{ width: '2rem', margin: 'auto' }}>
-        <Icon icon={code} color="#3e3e3e" style={{ marginRight: '2rem' }} size="3rem" />
+    <div style={{ paddingTop: "0" }}>
+      <div style={{ width: "2rem", margin: "auto" }}>
+        <Icon
+          icon={code}
+          color="#3e3e3e"
+          style={{ marginRight: "2rem" }}
+          size="3rem"
+        />
       </div>
-      <div>
+      <div
+        style={{
+          padding: "0 4rem",
+          height: "70vh",
+          overflow: "auto"
+        }}
+      >
         {renderRequests()}
       </div>
     </div>
@@ -101,17 +114,17 @@ const RequestsList = (props) => {
 };
 
 const RequestsListContainer = withTracker(() => {
-  const requestsHandle = Meteor.subscribe('requests');
+  const requestsHandle = Meteor.subscribe("requests");
   const loading = !requestsHandle.ready();
 
   return {
     requests: Requests.find().fetch(),
-    loading,
+    loading
   };
 })(RequestsList);
 
 RequestsList.propTypes = {
-  requests: PropTypes.arrayOf(PropTypes.object).isRequired,
+  requests: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default RequestsListContainer;
