@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export default () => {
   const Programmer = () => (
@@ -29,22 +29,20 @@ export default () => {
       </div>
     </div>
   );
-  
+
   const Header = () => {
     return (
-      <div className='loadscren__header-container'>
-         <Link to='/'>
-          <div className = 'about__header-button'>
-            X
-          </div>
+      <div className="loadscren__header-container">
+        <Link to="/">
+          <div className="about__header-button">X</div>
         </Link>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div>
-      <Header/>
+      <Header />
       <div className="about__main">
         <Programmer />
         <Teacher />
@@ -59,54 +57,65 @@ const Description = () => (
   <div className="about__description">
     <h1 style={{ marginTop: "0.8rem" }}> About Dynamic Learning </h1>
     <h3 style={{ marginTop: "0rem" }}> What is Dynamic Learning? </h3>
-    <div className='about__description-paragraphs'>
-      In the modern day and age where technology is such a prominent and
-      important tool, STEM education has a lack of interactive and visual
-      learning for interested students. Dynamic Learning is an application that
-      allows teachers and creative coders to collaborate in creating interactive
-      simulations to improve the classroom experience using p5.js. It has
-      support for workbooks and lessons which can be assigned to specific
-      classes which are created by teachers. Requests can be made to create new
-      simulations, which can then be viewed by coders on the requests page.
-      There will soon be support for assessments which can be given by teachers
-      to students in their class.
-    </div>
-    <br />
-    <h3 style={{ marginTop: "0rem" }}> Workbooks </h3>
-    <div className='about__description-paragraphs'>
-      Workbooks is a system in which slides can be created with embedded
-      simulations made with p5.js. There is an interactive canvas which can be
-      drawn on. The canvas can also include textboxes and descriptions of other
-      content which it contains. From the workbook area, teachers can also
-      create requests for simulations which developers can then take on.
-    </div>
-    <br />
-    <h3 style={{ marginTop: "0rem" }}> Lessons </h3>
-    <div className='about__description-paragraphs'>
-      In a similar fashion to workbooks, lessons are a set of slides that can be
-      used by teachers in the classroom. Lessons, as opposed to workbooks, use
-      the idea of pairing videos with simulations. The lefthand side contains a
-      YouTube video and the right side contains a simulations to the
-      topic of the slide.
-    </div>
-    <br />
-    <h3 style={{ marginTop: "0rem" }}> Classes </h3>
-    <div className='about__description-paragraphs'>
-      Classes can be created by teachers and a unique class code will be created
-      along with the class. Teachers can give these codes to students and they
-      can add the classes to their own account. From the classes page, students
-      can view workbooks associated with the class. Teachers can add workbooks
-      to classes from the settings of a specific workbook.
-    </div>
-    <br />
-    <h2 style={{ marginTop: "0rem" }}> For Developers </h2>
-    <h3 style={{ marginTop: "0rem" }}> How to make simulations </h3>
-    <div className='about__description-paragraphs'>
-      If you are interested in making simulations, feel free to create an
-      account and look at some of the existing requests for simulations! In
-      order to create simulations that work with Dynamic Learning, it is
-      important that they are developed in the
-      <a  target="_blank" href="https://editor.p5js.org/"> p5 web editor. </a>
-    </div>
+    <p className="about__description-paragraphs">
+      Dynamic learning is an{" "}
+      <a target="blank" href="https://github.com/JithinKS97/dynamic-learning">
+        open source online platform
+      </a>{" "}
+      where STEM teachers can collaborate with creative coders to create, share
+      and present lessons that make use of interactive visualizations created
+      using web technologies like{" "}
+      <a target="blank" href="https://p5js.org/">
+        p5.js.
+      </a>
+    </p>
+    <h3 style={{ marginTop: "0rem" }}>
+      What dynamc learning aims to accomplish?{" "}
+    </h3>
+    <p className="about__description-paragraphs">
+      Science and Math has always helped us in understanding the world better.
+      But when it comes to understanding it fully, we are are nowhere near. A
+      famous author once said "We are atleast 5 Einsteins away from
+      understanding its true nature". Dynamic learning takes up the big goal to
+      accelerate this understanding by improving Science and Math education. Its
+      goal is to create a huge collection of interactive STEM visualizations and
+      lessons that anybody will have access to, to improve their understanding
+      of the world.
+    </p>
+    <h3 style={{ marginTop: "0rem" }}> Why interactive visualizations? </h3>
+    <p className="about__description-paragraphs">
+      Human visual processing system is highly sophisticated and has been
+      evolved to be extremely good at interpreting and extracting information.
+      This is the reason why information presented through visuals can be
+      understood way better than that conveyed using written or spoken words
+      alone. Images short circuit brain to understand information better. But we
+      can do even better. When compared to images or videos, interactive
+      visualizations and simulations have way more explanatory power because it
+      allows the users to directly interact with the system in whichever way
+      they want to observe how it behaves in different situations.
+    </p>
+    <p>
+      But interactive visualizations are difficult to create. Only through a
+      collective effort, we can produce a good collection of them. As more and
+      more teachers and creative coders come and collaborate through Dynamic
+      learning, an ever increasing collection of interactive visualizations that
+      anybody can customize and use according to their needs will be created.
+    </p>
+    <h3 style={{ marginTop: "0rem" }}>p5.js and p5.js web editor</h3>
+    <p className="about__description-paragraphs">
+      <a target="blank" href="https://p5js.org/">
+        p5.js
+      </a>{" "}
+      is a Javascript library that helps to create interactive visualizations
+      very easily and quickly. The{" "}
+      <a target="blank" href="https://editor.p5js.org/">
+        online text editor
+      </a>{" "}
+      for p5 enables you to very quickly spin up a p5 project and develop the
+      simulations fully online. You are not limited to p5.js alone. You are free
+      to use any other Javascript libraries which will serve the purpose.The
+      simulations created in the editor can then be imported to Dynamic learning
+      to create lessons.
+    </p>
   </div>
 );
