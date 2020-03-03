@@ -48,6 +48,13 @@ export default class Signup extends React.Component {
       return;
     }
 
+    if (!username) {
+      this.setState({
+        error: 'Username cannot be blank',
+      });
+      return;
+    }
+
     const options = {
       email,
       username,

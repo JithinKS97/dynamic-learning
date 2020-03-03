@@ -6,6 +6,7 @@ import { Meteor } from "meteor/meteor";
 import "semantic-ui-css/semantic.min.css";
 
 import { Session } from "meteor/session";
+import history from "../../routes/history";
 
 document.title = "Dynamic Learning";
 
@@ -88,6 +89,11 @@ export default class Login extends React.Component {
         console.log(err);
         this.setState({ error: "Unable to login with GitHub." });
       } else {
+        Meteor.call('getUsername', Meteor.userId(), (_err, username) => {
+          if (!username) {
+            history.replace('/setupAccount');
+          }
+        });
         this.setState({ error: "" });
       }
     });
@@ -99,6 +105,11 @@ export default class Login extends React.Component {
         console.log(err);
         this.setState({ error: "Unable to login with Google." });
       } else {
+        Meteor.call('getUsername', Meteor.userId(), (_err, username) => {
+          if (!username) {
+            history.replace('/setupAccount');
+          }
+        });
         this.setState({ error: "" });
       }
     });
