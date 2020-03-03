@@ -53,13 +53,7 @@ export const onAuthChange = (isAuthenticated) => {
   const isAuthenticatedPage = authenticatedPages.includes(window.location.pathname);
 
   if (isPublicPage && isAuthenticated) {
-    Meteor.call('getUsername', Meteor.userId(), (_err, username) => {
-      if (!username) {
-        history.replace('/setupAccount');
-      } else {
-        history.replace('/dashboard/workbooks');
-      }
-    });
+    history.replace('/dashboard/workbooks');
   } else if (isAuthenticatedPage && !isAuthenticated) {
     history.replace('/');
   }
