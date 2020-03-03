@@ -77,7 +77,7 @@ const Description = () => (
       which we live. But when it comes to getting answers to very deep questions
       like why does it exist in the first place, we are are nowhere near. A
       famous author once said "We are atleast 5 Einsteins away from
-      understanding why does the Universe exist in the first place". Dynamic learning hopes to
+      understanding why does the Universe exist". Dynamic learning hopes to
       contribute towards accelerating this understanding by improving Science
       and Math education. Its goal is to create a huge collection of interactive
       STEM visualizations and lessons that anybody will have access to, to
