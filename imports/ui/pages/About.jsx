@@ -81,7 +81,7 @@ const Description = () => (
       contribute towards accelerating this understanding by improving Science
       and Math education. Its goal is to create a huge collection of interactive
       STEM visualizations and lessons that anybody will have access to, to
-      improve their understanding of the world.
+      improve their understanding of the Science and Math concepts.
     </p>
     <h3 style={{ marginTop: "0rem" }}> Why interactive visualizations? </h3>
     <p className="about__description-paragraphs">
