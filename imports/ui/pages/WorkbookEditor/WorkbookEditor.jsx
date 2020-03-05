@@ -108,7 +108,7 @@ export class WorkbookEditor extends React.Component {
         if (slides.length === 0) {
           this.addNewSlide();
         } else {
-          this.changeSlide(0);
+          //this.changeSlide(0);
         }
       },
     );
