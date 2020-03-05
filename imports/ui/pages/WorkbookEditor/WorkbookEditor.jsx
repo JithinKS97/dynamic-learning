@@ -108,7 +108,7 @@ export class WorkbookEditor extends React.Component {
         if (slides.length === 0) {
           this.addNewSlide();
         } else {
-          //this.changeSlide(0);
+          this.changeSlide(this.state.curSlide);
         }
       },
     );
@@ -330,10 +330,12 @@ export class WorkbookEditor extends React.Component {
           this.setState({
             saving: true,
           });
+          const { curSlide } = this.state;
           Meteor.call('workbooks.update', _id, slides, () => {
             alert('Saved successfully');
             this.setState({
               saving: false,
+              curSlide
             });
           });
         }
