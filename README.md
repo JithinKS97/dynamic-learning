@@ -18,7 +18,7 @@ The three core objectives of the web app are -
 ![Screenshot](https://user-images.githubusercontent.com/43414928/70861418-9f163200-1f53-11ea-9d31-ef1bdb856498.png)
 ## Link to the webapp
 
-http://dynamiclearning.io
+https://dynamic-learning.herokuapp.com/
 
 ## Link to Github repo
 
