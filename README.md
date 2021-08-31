@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/JithinKS97/dynamic-learning.svg?branch=master)](https://travis-ci.org/JithinKS97/dynamic-learning)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+# !!! This is the old project and is archived. To see the new project, go to https://github.com/dynamic-learning
+
 # Dynamic Learning
 #### by Jithin KS ([@JithinKS97](https://github.com/JithinKS97))
 
